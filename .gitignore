@@ -3,3 +3,4 @@
 .settings/
 gmon.out
 Debug/
+.sconsign.dblite
