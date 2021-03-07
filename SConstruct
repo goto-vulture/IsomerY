@@ -193,7 +193,7 @@ if (target_system == "linux"):
     program_name_release += "_Linux"
 elif (target_system == "windows"):
     cpp_defines.append("__win__")
-    
+
     program_name_debug += "_Win"
     program_name_release += "_Win"
 else:
@@ -203,34 +203,34 @@ else:
 
 
 if (debug_int == 1):
-    debug_cpp.Program(program_name_debug,
+    debug_c.Program(program_name_debug,
         [
             # C-Objektdateien einbinden
             c_object_list_debug,
 
             # Cpp-Objektdateien einbinden
-            cpp_object_list_debug
+            #cpp_object_list_debug
         ],
 
         # CPP-Defines setzen
-        CPPDEFINES=cpp_defines,
+        #CPPDEFINES=cpp_defines,
 
         # Linkerflags setzen
         LINKFLAGS=linker_flags
     )
 
 if (release_int == 1):
-    release_cpp.Program(program_name_release,
+    release_c.Program(program_name_release,
         [
             # C-Objektdateien einbinden
             c_object_list_release,
 
             # Cpp-Objektdateien einbinden
-            cpp_object_list_release
+            #cpp_object_list_release
         ],
 
         # CPP-Defines setzen
-        CPPDEFINES=cpp_defines,
+        #CPPDEFINES=cpp_defines,
 
         # Linkerflags setzen
         LINKFLAGS=linker_flags
