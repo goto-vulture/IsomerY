@@ -1,3 +1,10 @@
+/**
+ * main.c
+ *
+ *  Created on: 07.03.2021
+ *      Author: x86
+ */
+
 #include "Error_Handling/Dynamic_Memory.h"
 
 
