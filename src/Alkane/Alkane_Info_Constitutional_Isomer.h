@@ -5,8 +5,8 @@
  *      Author: x86
  */
 
-#ifndef ALKANE_ALKANE_CONSTITUTIONAL_ISOMER_H
-#define ALKANE_ALKANE_CONSTITUTIONAL_ISOMER_H
+#ifndef ALKANE_INFO_CONSTITUTIONAL_ISOMER_H
+#define ALKANE_INFO_CONSTITUTIONAL_ISOMER_H
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -37,4 +37,4 @@ extern const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF
 }
 #endif /* __cplusplus */
 
-#endif /* ALKANE_ALKANE_CONSTITUTIONAL_ISOMER_H */
+#endif /* ALKANE_INFO_CONSTITUTIONAL_ISOMER_H */
