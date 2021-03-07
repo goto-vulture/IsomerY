@@ -11,8 +11,11 @@
 
 
 
+// Die static_asserts funktionieren aktuell nur unter Linux
+#if defined(__linux__) || defined(unix) || defined(__unix__) || defined(__unix)
 static_assert (sizeof (int) == 4, "sizeof (int) needs to be exact 4 byte !");
 static_assert (CHAR_BIT == 8, "A byte needs to be exact 8 bit !");
+#endif /* defined(__linux__) || defined(unix) || defined(__unix__) || defined(__unix) */
 
 
 
