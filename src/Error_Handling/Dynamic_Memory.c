@@ -27,10 +27,10 @@ void Show_Dynamic_Memory_Status (void)
 {
     const uint_fast64_t missing_free_calls = (GLOBAL_malloc_calls + GLOBAL_calloc_calls) - GLOBAL_free_calls;
 
-    printf ("malloc () calls:       %"PRIuFAST64"\n"
-            "calloc () calls:       %"PRIuFAST64"\n"
-            "free () calls:         %"PRIuFAST64"\n"
-            "Missing free () calls: %"PRIuFAST64" %s",
+    printf ("malloc () calls:       %10"PRIuFAST64"\n"
+            "calloc () calls:       %10"PRIuFAST64"\n"
+            "free () calls:         %10"PRIuFAST64"\n"
+            "Missing free () calls: %10"PRIuFAST64" %s",
             GLOBAL_malloc_calls,
             GLOBAL_calloc_calls,
             GLOBAL_free_calls,
