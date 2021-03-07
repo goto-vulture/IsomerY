@@ -30,7 +30,7 @@ void Show_Dynamic_Memory_Status (void)
     printf ("malloc () calls:       %10"PRIuFAST64"\n"
             "calloc () calls:       %10"PRIuFAST64"\n"
             "free () calls:         %10"PRIuFAST64"\n"
-            "Missing free () calls: %10"PRIuFAST64" %s",
+            "Missing free () calls: %10"PRIuFAST64" %s\n",
             GLOBAL_malloc_calls,
             GLOBAL_calloc_calls,
             GLOBAL_free_calls,
