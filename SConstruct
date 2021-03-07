@@ -67,6 +67,9 @@ c_file_list = [
     # Dateien fuer das Error Handling
     "src/Error_Handling/Dynamic_Memory.c",
 
+    # Dateien fuer die Erstellung der Alkane
+    "src/Alkane/Alkane_Info_Constitutional_Isomer.c",
+
     # str2int Konverter
     "src/str2int.c"
 ]
