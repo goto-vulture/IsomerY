@@ -192,8 +192,10 @@ if (target_system == "linux"):
     program_name_debug += "_Linux"
     program_name_release += "_Linux"
 elif (target_system == "windows"):
-    print "Windows as target platform is not supported yet !"
-    exit(1)
+    cpp_defines.append("__win__")
+    
+    program_name_debug += "_Win"
+    program_name_release += "_Win"
 else:
     print "No target system specified !"
     exit(1)
