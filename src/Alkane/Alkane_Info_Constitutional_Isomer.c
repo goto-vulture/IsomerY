@@ -5,4 +5,4 @@
  *      Author: x86
  */
 
-#include "Alkane_Constitutional_Isomer.h"
+#include "Alkane_Info_Constitutional_Isomer.h"
