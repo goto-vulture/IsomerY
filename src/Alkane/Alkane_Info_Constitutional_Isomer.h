@@ -1,5 +1,5 @@
 /**
- * Alkane_Constitutional_Isomer.h
+ * Alkane_Info_Constitutional_Isomer.h
  *
  *  Created on: 07.03.2021
  *      Author: x86
