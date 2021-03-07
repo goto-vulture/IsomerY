@@ -27,7 +27,7 @@ extern "C"
 
 
 
-// Anzahl der Konsitutionsisomere bei gegebener Anzahl an C-Atomen
+// Anzahl der Konsitutionsisomere (Strukturisomere) bei gegebener Anzahl an C-Atomen
 extern const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOMS];
 
 
