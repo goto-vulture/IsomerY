@@ -3,6 +3,15 @@
  *
  *  Created on: 07.03.2021
  *      Author: x86
+ *
+ *        .-..-.__
+ *       /`  |\_( "\__
+ *       |   / __/`'--)
+ *       |  /  | |
+ *       /_/ _/_/
+ * jgs  `|/))))
+ *
+ * For me, a vulture is more desirable than money.
  */
 
 #include <assert.h>
