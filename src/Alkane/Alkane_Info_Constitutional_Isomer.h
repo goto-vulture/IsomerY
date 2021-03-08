@@ -2,7 +2,7 @@
  * Alkane_Info_Constitutional_Isomer.h
  *
  *  Created on: 07.03.2021
- *      Author: x86
+ *      Author: x86 / Gyps
  */
 
 #ifndef ALKANE_INFO_CONSTITUTIONAL_ISOMER_H

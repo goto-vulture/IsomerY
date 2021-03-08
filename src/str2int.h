@@ -2,7 +2,7 @@
  * str2int.h
  *
  *  Created on: 07.03.2021
- *      Author: x86
+ *      Author: x86 / Gyps
  */
 
 #ifndef STR2INT_H
