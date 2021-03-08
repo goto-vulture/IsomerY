@@ -70,6 +70,7 @@ c_file_list = [
     # Dateien fuer die Erstellung der Alkane
     "src/Alkane/Alkane_Info_Constitutional_Isomer.c",
     "src/Alkane/Alkane_Create_Constitutional_Isomer.c",
+    "src/Alkane/Alkane_Branch.c",
 
     # str2int Konverter
     "src/str2int.c"
