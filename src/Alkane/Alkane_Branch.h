@@ -91,6 +91,8 @@ Create_Alkane_Branch
 /**
  * Alkane_Branch Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
  *
+ * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
+ *
  * Asserts:
  *      branch != NULL,
  *      string_memory != NULL,
