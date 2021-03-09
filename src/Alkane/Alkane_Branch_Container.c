@@ -49,3 +49,46 @@ Create_Alkane_Branch_Container
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Ein Alkane_Branch_Container loeschen.
+ *
+ * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane_Branch-Objekte aufgerufen, sodass am Ende
+ * sowohl der Container, als auch der Inhalt geloescht wurde.
+ *
+ * Daher gilt fuer den Container und fuer alle darin enthaltene Elemente:
+ * Es muss sichergestellt werden, dass alle Container geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger
+ * - und die im Container enthaltenen Zeiger - nicht mehr dereferenziert werden !
+ *
+ * Asserts:
+ *      container != NULL
+ */
+void
+Delete_Alkane_Branch_Container
+(
+        struct Alkane_Branch_Container* restrict container  // Alkane_Branch_Container-Objekt, welches geloescht werden
+                                                            // soll
+)
+{
+    ASSERT_MSG(container != NULL, "container is NULL !");
+
+    // Status auf "Geloescht" setzen
+    container->state = ALKANE_BRANCH_CONTAINER_DELETED;
+
+    // Containerinhalt loeschen -> Also alle Alkane_Branch-Objekte
+    for (uint_fast64_t i = 0; i < container->size; ++ i)
+    {
+        Delete_Alkane_Branch (container->data [i]);
+        container->data [i] = NULL;
+    }
+
+    // Speicherbereich, wo der Containerinhalt lag, loeschen
+    FREE_AND_SET_TO_NULL(container->data);
+
+    // Container an sich loeschen
+    FREE_AND_SET_TO_NULL(container);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
