@@ -26,6 +26,10 @@ enum str2int_errno
 
 /**
  * C-String zu long int konvertieren.
+ * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt.
+ *
+ * Asserts:
+ *      N/A
  */
 extern enum str2int_errno str2int (long int* out, const char* input_string, const int base);
 

@@ -17,6 +17,10 @@
 
 /**
  * C-String zu long int konvertieren.
+ * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt.
+ *
+ * Asserts:
+ *      N/A
  */
 enum str2int_errno                          // Error-enum (STR2INT_SUCCESS: Erfolgreich durchgefuehrt)
 str2int
