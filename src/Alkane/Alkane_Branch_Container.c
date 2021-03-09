@@ -75,8 +75,8 @@ Add_Alkane_Branch_To_Container
     if (container->size > container->allocated_size)
     {
         // Neuen groesseren Speicherbereich anfordern
-        container->data = (struct Alkane_Branch**) REALLOC (container->data, container->allocated_size +
-                sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE);
+        container->data = (struct Alkane_Branch**) REALLOC (container->data, (size_t) (container->allocated_size +
+                sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE));
         ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Branch_Container failed !",
                 (size_t) (container->allocated_size + sizeof (struct Alkane_Branch*) *
                         ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE));
