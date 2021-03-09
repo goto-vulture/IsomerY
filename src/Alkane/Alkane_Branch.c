@@ -64,3 +64,26 @@ Create_Alkane_Branch
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alkane_Branch Objekt loeschen.
+ * Da es sich bei dem Objekt um dynamischen Speicher handelt, muss sichergestellt werden, dass alle Objekte, die zuvor
+ * erstellt wurden, geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger nicht mehr dereferenziert werden !
+ *
+ * Asserts:
+ *      branch != NULL
+ */
+void
+Delete_Alkane_Branch
+(
+        struct Alkane_Branch* restrict branch   // Alkane_Branch, welches geloescht werden soll
+)
+{
+    ASSERT_MSG(branch != NULL, "Branch is NULL !")
+
+    FREE_AND_SET_TO_NULL(branch)
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
