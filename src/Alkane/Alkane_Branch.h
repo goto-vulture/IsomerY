@@ -69,7 +69,7 @@ struct Alkane_Branch
     enum Alkane_Branch_State state;                         // Status des Objektes
 };
 
-
+//=====================================================================================================================
 
 /**
  * Alkane_Branch Objekt dynamisch erzeugen.
