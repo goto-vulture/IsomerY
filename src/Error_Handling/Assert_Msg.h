@@ -32,6 +32,25 @@ extern "C"
 #endif /* ASSERT_MSG */
 
 /**
+ * Ein Assert mit benutzerdefinierter Fehlermeldung in Form eines Format-Strings.
+ * Der Einfachheit halber wird die Fehlermeldung - inkl. der Parameter - auf stderr ausgegeben.
+ * Zusaetzlich wird ein Zeilenumbruch auf stderr ausgegeben, damit die Format-String Fehlermeldung und die
+ * Fehlermeldung vom ASSERT-Makro nicht in einer Zeile stehen.
+ */
+#ifndef ASSERT_FMSG
+    #define ASSERT_FMSG(expr, format_string, ...)                       \
+    if (! (expr))                                                       \
+    {                                                                   \
+        fprintf (stderr, format_string, __VA_ARGS__);                   \
+        fputc ('\n', stderr);                                           \
+        fflush (stderr);                                                \
+        ASSERT_MSG(false, "See error message above !")                  \
+    }
+#else
+    #error "The macro \"ASSERT_FMSG\" is already defined !"
+#endif /* ASSERT_FMSG */
+
+/**
  * Ein Assert fuer Fehlerfaelle bei der Allokation von Speicher.
  * Vor der eigentlichen Assert-Meldung wird die Groesse des Speichers angegeben, der allokiert werden sollte.
  */
