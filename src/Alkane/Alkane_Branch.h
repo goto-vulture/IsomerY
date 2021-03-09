@@ -17,6 +17,7 @@ extern "C"
 
 
 #include "Alkane_Info_Constitutional_Isomer.h"
+#include <stddef.h>
 
 
 
@@ -67,6 +68,72 @@ struct Alkane_Branch
                                                             // tatsaechlich verwendet ?
     enum Alkane_Branch_State state;                         // Status des Objektes
 };
+
+
+
+/**
+ * Alkane_Branch Objekt dynamisch erzeugen.
+ *
+ * Asserts:
+ *      lenght > 0, wenn branch != NULL
+ */
+extern struct Alkane_Branch*                // Erzeugtes Alkane_Branch Objekt
+Create_Alkane_Branch
+(
+        const unsigned char* const branch,  // Astinformationen, mit denen das Alkane_Branch Objekt initialisiert
+                                            // werden kann
+                                            // Oder NULL, falls eine Initialisierung mit Nullbyes durchgefuehrt werden
+                                            // soll
+        const uint_fast8_t length           // Laenge der Astinformationen
+                                            // Wenn branch == NULL ist, dann wird dieser Wert ignoriert
+);
+
+/**
+ * Alkane_Branch Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
+ *
+ * Asserts:
+ *      branch != NULL,
+ *      string_memory != NULL,
+ *      string_memory_size > 0
+ */
+extern const char*                                  // Adresse der Eingabe-Zeichenkette
+Alkane_Branch_To_String
+(
+        const struct Alkane_Branch* const branch,   // Alkane_Branch, der als Zeichenkette dargestellt werden soll
+        const char* string_memory,                  // Speicher, der fuer die Zeichenkettenerzeugung verwendet werden
+                                                    // soll
+                                                    // Der Speicher muss vorher vom Aufrufer allokiert werden
+        const size_t string_memory_size             // Groesse des Zeichenkettenspeichers
+                                                    // Wenn der Speicher nicht ausreicht, dann wird am vorletzten
+                                                    // Zeichen die Zeichenkette abgeschnitten
+);
+
+/**
+ * Alkane_Branch Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die
+ * Funktion "Alkane_Branch_To_String" verwendet.
+ *
+ * Asserts:
+ *      branch != NULL
+ */
+extern void
+Print_Alkane_Branch
+(
+        const struct Alkane_Branch* const branch    // Alkane_Branch, welches ausgegeben werden soll
+);
+
+/**
+ * Alkane_Branch Objekt loeschen.
+ * Da es sich bei dem Objekt um dynamischen Speicher handelt, muss sichergestellt werden, dass alle Objekte, die zuvor
+ * erstellt wurden, geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger nicht mehr dereferenziert werden !
+ *
+ * Asserts:
+ *      branch != NULL
+ */
+extern void
+Delete_Alkane_Branch
+(
+        struct Alkane_Branch* branch    // Alkane_Branch, welches geloescht werden soll
+);
 
 
 
