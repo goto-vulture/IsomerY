@@ -7,6 +7,7 @@
 
 #include "Alkane_Branch_Container.h"
 #include <stdlib.h>
+#include <string.h>
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 
@@ -187,6 +188,34 @@ Alkane_Branch_Container_To_String
     string_memory [string_memory_size - 1] = '\0';  // Nullterminierung garantieren
 
     return string_memory;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alkane_Branch_Container Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird
+ * die Funktion "Alkane_Branch_To_String" verwendet.
+ *
+ * Asserts:
+ *      container != NULL
+ */
+void
+Print_Alkane_Branch_Container
+(
+        const struct Alkane_Branch_Container* const container   // Alkane_Branch_Container, welcher ausgegeben werden
+                                                                // soll
+)
+{
+    ASSERT_MSG(container != NULL, "container is NULL !");
+
+    char container_to_string [150];
+    memset (container_to_string, '\0', sizeof (container_to_string));
+
+    // Zeichenkettendarstellung auf stdout ausgeben
+    printf ("%s", Alkane_Branch_Container_To_String (container, container_to_string, sizeof (container_to_string)));
+    fflush (stdout);
+
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
