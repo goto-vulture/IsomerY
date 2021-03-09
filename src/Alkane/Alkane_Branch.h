@@ -93,6 +93,10 @@ Create_Alkane_Branch
  *
  * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
  *
+ * (<Inhalt des Astes>)
+ * Length: <Laenge>
+ * State: <Status>
+ *
  * Asserts:
  *      branch != NULL,
  *      string_memory != NULL,
