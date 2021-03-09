@@ -5,9 +5,9 @@
  *      Author: x86 / Gyps
  */
 
-#ifndef ALKANE_ALKANE_BRANCH_H
-#define ALKANE_ALKANE_BRANCH_H
+#ifndef ALKANE_BRANCH_H
+#define ALKANE_BRANCH_H
 
 
 
-#endif /* ALKANE_ALKANE_BRANCH_H */
+#endif /* ALKANE_BRANCH_H */
