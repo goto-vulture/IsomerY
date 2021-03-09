@@ -61,7 +61,7 @@ extern void Show_Dynamic_Memory_Status (void);
 #ifndef FREE_AND_SET_TO_NULL
     #define FREE_AND_SET_TO_NULL(pointer)                                                                               \
         free (pointer);                                                                                                 \
-        pointer = nullptr;                                                                                              \
+        pointer = NULL;                                                                                                 \
         ++ GLOBAL_free_calls;
 #else
     #error "The macro \"FREE_AND_SET_TO_NULL\" is already defined !"
