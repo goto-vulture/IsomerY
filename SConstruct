@@ -71,6 +71,7 @@ c_file_list = [
     "src/Alkane/Alkane_Info_Constitutional_Isomer.c",
     "src/Alkane/Alkane_Create_Constitutional_Isomer.c",
     "src/Alkane/Alkane_Branch.c",
+    "src/Alkane/Alkane_Branch_Container.c",
 
     # str2int Konverter
     "src/str2int.c"
