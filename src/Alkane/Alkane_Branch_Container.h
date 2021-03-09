@@ -102,7 +102,6 @@ Add_Alkane_Branch_To_Container
  *
  * Size: <Groesse>
  * Allocated size: <allokierte Groesse>
- * Length: <Laenge>
  * State: <Status>
  *
  * Asserts:
