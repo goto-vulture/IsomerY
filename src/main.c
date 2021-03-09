@@ -14,6 +14,7 @@
  * For me, a vulture is more desirable than money.
  */
 
+#include <stdlib.h>
 #include <assert.h>
 #include <limits.h>
 #include <time.h>
@@ -56,7 +57,7 @@ int main (const int argc, const char* const argv [])
 
     Show_Dynamic_Memory_Status ();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 //=====================================================================================================================
