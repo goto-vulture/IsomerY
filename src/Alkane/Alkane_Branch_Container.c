@@ -105,6 +105,93 @@ Add_Alkane_Branch_To_Container
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Alkane_Branch_Container Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging
+ * hilfreich.
+ *
+ * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
+ *
+ * Size: <Groesse>
+ * Allocated size: <allokierte Groesse>
+ * State: <Status>
+ *
+ * Asserts:
+ *      container != NULL,
+ *      string_memory != NULL,
+ *      string_memory_size > 0
+ */
+const char*                                                     // Adresse der Eingabe-Zeichenkette
+Alkane_Branch_Container_To_String
+(
+        const struct Alkane_Branch_Container* restrict const container,
+                                                                // Alkane_Branch, der als Zeichenkette dargestellt
+                                                                // werden soll
+        char* const string_memory,                              // Speicher, der fuer die Zeichenkettenerzeugung
+                                                                // verwendet werden soll
+                                                                // Der Speicher muss vorher vom Aufrufer allokiert
+                                                                // werden !
+        const size_t string_memory_size                         // Groesse des Zeichenkettenspeichers
+                                                                // Wenn der Speicher nicht ausreicht, dann wird am
+                                                                // vorletzten Zeichen die Zeichenkette abgeschnitten
+)
+{
+    ASSERT_MSG(container != NULL,       "container is NULL !");
+    ASSERT_MSG(string_memory != NULL,   "string_memory is NULL !");
+    ASSERT_MSG(string_memory_size > 0,  "string_memory_size is 0 !");
+
+    size_t next_free_byte   = 0;                        // Naechstes freies Zeichen im Speicher
+    size_t remaining_memory = string_memory_size - 1;   // Noch freie Zeichen im Speicher
+    size_t used_char        = 0;                        // Anzahl an Zeichen, die im aktuellen snprintf-Aufruf in den
+                                                        // Speicher geschrieben wurde
+
+    // Das size-Attribut in die Zeichenkettendarstellung einbinden
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Size: %" PRIuFAST64 "\n",
+            container->size);
+    next_free_byte += used_char;
+    remaining_memory -= used_char;
+
+    // Das allocated_size-Attribut in die Zeichenkettendarstellung einbinden
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Allocated Size: %" PRIuFAST64
+            "\n", container->allocated_size);
+    next_free_byte += used_char;
+    remaining_memory -= used_char;
+
+    // Status in die Zeichenkettendarstellung einbringen
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    switch (container->state)
+    {
+    case ALKANE_BRANCH_CONTAINER_CREATED:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_CREATED\n");
+        break;
+    case ALKANE_BRANCH_CONTAINER_DELETED:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_DELETED\n");
+        break;
+    case ALKANE_BRANCH_CONTAINER_INITIALIZED_WITH_ZERO_BYTES:
+        snprintf (string_memory + next_free_byte, remaining_memory,
+                "ALKANE_BRANCH_CONTAINER_INITIALIZED_WITH_ZERO_BYTES\n");
+        break;
+    case ALKANE_BRANCH_CONTAINER_INVALID_DATA:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_INVALID_DATA\n");
+        break;
+    case ALKANE_BRANCH_CONTAINER_UNKNOWN_STATE:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_UNKNOWN_STATE\n");
+        break;
+
+        // Der default-Pfad soll nie ausgefuehrt werden ! Wenn dies dennoch der Fall ist, dann ist dies ein Fehler !
+    default:
+        ASSERT_MSG(false, "default path of a switch case statement executed !");
+    }
+
+    no_remaining_memory:
+    string_memory [string_memory_size - 1] = '\0';  // Nullterminierung garantieren
+
+    return string_memory;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Ein Alkane_Branch_Container loeschen.
  *
  * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane_Branch-Objekte aufgerufen, sodass am Ende
