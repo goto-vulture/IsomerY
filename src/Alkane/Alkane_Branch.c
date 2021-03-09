@@ -170,6 +170,33 @@ Alkane_Branch_To_String
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Alkane_Branch Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die
+ * Funktion "Alkane_Branch_To_String" verwendet.
+ *
+ * Asserts:
+ *      branch != NULL
+ */
+extern void
+Print_Alkane_Branch
+(
+        const struct Alkane_Branch* const branch    // Alkane_Branch, welches ausgegeben werden soll
+)
+{
+    ASSERT_MSG(branch != NULL, "branch is NULL !");
+
+    char branch_to_string [150];
+    memset (branch_to_string, '\0', sizeof (branch_to_string));
+
+    // Zeichenkettendarstellung auf stdout ausgeben
+    printf ("%s", Alkane_Branch_To_String (branch, branch_to_string, sizeof (branch_to_string)));
+    fflush (stdout);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Alkane_Branch Objekt loeschen.
  * Da es sich bei dem Objekt um dynamischen Speicher handelt, muss sichergestellt werden, dass alle Objekte, die zuvor
  * erstellt wurden, geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger nicht mehr dereferenziert werden !
