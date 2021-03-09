@@ -53,6 +53,15 @@ extern void Show_Dynamic_Memory_Status (void);
     #error "The macro \"CALLOC\" is already defined !"
 #endif /* CALLOC */
 
+// realloc-Aufrufe mitzaehlen
+#ifndef REALLOC
+    #define REALLOC(number_of_elements, element_size)                                                                 \
+        realloc (number_of_elements, element_size);                                                                   \
+        ++ GLOBAL_malloc_calls;
+#else
+    #error "The macro \"REALLOC\" is already defined !"
+#endif /* REALLOC */
+
 // Das uebergebene Objekt wird geloescht und auf nullptr gesetzt
 // Eine Abfrage auf nullptr, vor dem Loeschen, ist NICHT erforderlich, da dies die free-Funktion bzw. dies sowieso vor
 // dem eigentlichen Loeschprozess machen ! Falls der Zeiger wirklich ein Nullzeiger sein sollte, dann wird von diesen
