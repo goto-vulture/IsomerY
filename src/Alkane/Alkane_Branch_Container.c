@@ -51,6 +51,60 @@ Create_Alkane_Branch_Container
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Ein Alkane_Branch-Objekt zu einem existierenden Alkane_Branch_Container hinzufuegen.
+ *
+ * Der Container kopiert das Alkane_Branch-Objekt NICHT ! Es wird nur die Speicheradresse im Container abgelegt !
+ *
+ * Asserts:
+ *      container != NULL
+ *      new_element != NULL
+ */
+void
+Add_Alkane_Branch_To_Container
+(
+        struct Alkane_Branch_Container* restrict const container,   // Container, welches das neue Objekt entgegennimmt
+        const struct Alkane_Branch* restrict const new_element      // Existierendes Alkane_Branch-Objekt, welches
+                                                                    // hinzugefuegt werden soll
+)
+{
+    ASSERT_MSG(container != NULL, "container is NULL !");
+    ASSERT_MSG(new_element != NULL, "new_element is NULL !");
+
+    // Muss der Speicher im Container vergroessert werden ?
+    if (container->size > container->allocated_size)
+    {
+        // Neuen groesseren Speicherbereich anfordern
+        container->data = (struct Alkane_Branch**) REALLOC (container->data, container->allocated_size +
+                sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE);
+        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Branch_Container failed !",
+                sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE);
+        container->allocated_size += ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE;
+
+        // Die neuen Zeiger auf einen definerten Zustand bringen
+        // "i = 1", da der neuste Speicherbereich gleich durch das neue Alkane_Branch-Objekt belegt wird
+        for (uint_fast64_t i = 1; i < ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE; ++ i)
+        {
+            container->data [container->size + i] = NULL;
+        }
+    }
+
+    // Der Cast ist hier notwendig, damit die beiden const Schluesselwoerter wiederrufen werden. Ohne den Cast entsteht
+    // eine Compilerwarnung.
+    container->data [container->size] = (struct Alkane_Branch*) new_element;
+    container->size ++;
+
+    // Wenn ungueltige Daten zum Container hinzugefuegt werden, dann wird dies auch im Container markiert
+    if (new_element->state == ALKANE_BRANCH_INVALID_BRANCH)
+    {
+        container->state = ALKANE_BRANCH_CONTAINER_INVALID_DATA;
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Ein Alkane_Branch_Container loeschen.
  *
  * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane_Branch-Objekte aufgerufen, sodass am Ende
