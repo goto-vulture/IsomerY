@@ -212,6 +212,7 @@ Delete_Alkane_Branch
 {
     ASSERT_MSG(branch != NULL, "Branch is NULL !");
 
+    // Status auf "Geloescht" setzen
     branch->state = ALKANE_BRANCH_DELETED;
     FREE_AND_SET_TO_NULL(branch);
 
