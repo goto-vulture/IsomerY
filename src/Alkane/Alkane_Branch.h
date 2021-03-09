@@ -75,7 +75,7 @@ struct Alkane_Branch
  * Alkane_Branch Objekt dynamisch erzeugen.
  *
  * Asserts:
- *      lenght > 0, wenn branch != NULL
+ *      lenght > 0 && length < (MAX_NUMBER_OF_C_ATOMS + 1) / 2, wenn branch != NULL
  */
 extern struct Alkane_Branch*                // Erzeugtes Alkane_Branch Objekt
 Create_Alkane_Branch
