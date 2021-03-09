@@ -67,6 +67,11 @@ Create_Alkane_Branch
 
 /**
  * Alkane_Branch Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
+ * Die Darstellung sieht in etwa so aus:
+ *
+ * (<Inhalt des Astes>)
+ * Length: <Laenge>
+ * State: <Status>
  *
  * Asserts:
  *      branch != NULL,
