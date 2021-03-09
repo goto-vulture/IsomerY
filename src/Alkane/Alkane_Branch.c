@@ -38,8 +38,8 @@ Create_Alkane_Branch
     // Wenn Astinformationen vorhanden sind, dann muss die Laengenangabe ueberprueft werden
     if (branch != NULL)
     {
-        ASSERT_MSG(length > 0, "The length for the branch values is 0 !");
-        ASSERT_MSG(length <= (MAX_NUMBER_OF_C_ATOMS + 1) / 2, "The length value is too large !");
+        ASSERT_MSG(length > 0,                                  "The length for the branch values is 0 !");
+        ASSERT_MSG(length <= (MAX_NUMBER_OF_C_ATOMS + 1) / 2,   "The length value is too large !");
     }
 
     // Neues Objekt anlegen und Allokation ueberpruefen
@@ -86,9 +86,9 @@ Alkane_Branch_To_String
                                                     // Zeichen die Zeichenkette abgeschnitten
 )
 {
-    ASSERT_MSG(branch != NULL, "branch is NULL !");
-    ASSERT_MSG(string_memory != NULL, "string_memory is NULL !");
-    ASSERT_MSG(string_memory_size > 0, "string_memory_size is 0 !");
+    ASSERT_MSG(branch != NULL,          "branch is NULL !");
+    ASSERT_MSG(string_memory != NULL,   "string_memory is NULL !");
+    ASSERT_MSG(string_memory_size > 0,  "string_memory_size is 0 !");
 
     size_t next_free_byte   = 0;                        // Naechstes freies Zeichen im Speicher
     size_t remaining_memory = string_memory_size - 1;   // Noch freie Zeichen im Speicher
