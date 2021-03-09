@@ -4,3 +4,11 @@
 gmon.out
 Debug/
 .sconsign.dblite
+
+IsomerY_Debug_Linux
+IsomerY_Debug_Win
+IsomerY_Release_Linux
+IsomerY_Release_Win
+
+debug_c_object_*
+release_c_object_*
