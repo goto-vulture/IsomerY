@@ -210,7 +210,7 @@ Delete_Alkane_Branch
         struct Alkane_Branch* restrict branch   // Alkane_Branch, welches geloescht werden soll
 )
 {
-    ASSERT_MSG(branch != NULL, "Branch is NULL !");
+    ASSERT_MSG(branch != NULL, "branch is NULL !");
 
     // Status auf "Geloescht" setzen
     branch->state = ALKANE_BRANCH_DELETED;
