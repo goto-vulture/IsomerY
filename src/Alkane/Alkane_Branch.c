@@ -43,7 +43,7 @@ Create_Alkane_Branch
     }
 
     // Neues Objekt anlegen und Allokation ueberpruefen
-    struct Alkane_Branch* new_branch = (struct Alkane_Branch*) calloc (1, sizeof (struct Alkane_Branch));
+    struct Alkane_Branch* new_branch = (struct Alkane_Branch*) CALLOC (1, sizeof (struct Alkane_Branch));
     ASSERT_ALLOC(new_branch, "Cannot allocate an Alkane_Branch object !", sizeof (struct Alkane_Branch))
 
     // Neues Objekt mit den uebergebenen Astinformationen initialisieren, falls vorhanden
