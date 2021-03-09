@@ -78,7 +78,8 @@ Add_Alkane_Branch_To_Container
         container->data = (struct Alkane_Branch**) REALLOC (container->data, container->allocated_size +
                 sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE);
         ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Branch_Container failed !",
-                sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE);
+                (size_t) (container->allocated_size + sizeof (struct Alkane_Branch*) *
+                        ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE));
         container->allocated_size += ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE;
 
         // Die neuen Zeiger auf einen definerten Zustand bringen
