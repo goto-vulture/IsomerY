@@ -16,6 +16,11 @@ extern "C"
 
 
 
+/**
+ * Maximale Anzahl an C-Atomen, die das Programm unterstuetzt.
+ * Die Algorithmen besitzen an sich kein Limit. Es wurde aber eine obere Grenze gewaehlt, damit die Speicherverwaltung
+ * einfacher wird.
+ */
 #ifndef MAX_NUMBER_OF_C_ATOMS
     #define MAX_NUMBER_OF_C_ATOMS 40
 #else
@@ -40,6 +45,15 @@ extern "C"
 #error "The macro \"TO_STRING_HELPER\" is already defined !"
 #endif /* TO_STRING_HELPER */
 
+/**
+ * Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
+ * Diesmal mit einem Formatstring.
+ *
+ * Diese Unterteilung ist - leider - notwendig, da bei einem Makro, welches __VA_ARGS__ verwendet, ein Kommata zu viel
+ * erzeugt wird, wenn __VA_ARGS__ leer ist.
+ * Es gibt zwar compilerspezifische Erweiterungen, die dies unterbinden. Eine standardkonforme Loesung existiert aber
+ * nicht !
+ */
 #ifndef TO_STRING_HELPER_VA_ARGS
 #define TO_STRING_HELPER_VA_ARGS(format_string, ...)                                                                    \
         if (remaining_memory == 0) { goto no_remaining_memory; }                                                        \
