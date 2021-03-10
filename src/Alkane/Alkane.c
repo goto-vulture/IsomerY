@@ -118,6 +118,156 @@ Create_Alkane
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Alkane Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
+ *
+ * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
+ *
+ * Branch 1:
+ * <To_String Darstellung des 1. Astes>
+ * Branch 2:
+ * <To_String Darstellung des 2. Astes>
+ * Branch 3:
+ * <To_String Darstellung des 3. Astes>
+ * Branch 4:
+ * <To_String Darstellung des 4. Astes>
+ *
+ * (<Aufbau des Alkans>)
+ *
+ * Length: <Laenge>
+ * State: <Status>
+ *
+ * Asserts:
+ *      alkane != NULL,
+ *      string_memory != NULL,
+ *      string_memory_size > 0
+ */
+const char*                                 // Adresse der Eingabe-Zeichenkette
+Alkane_To_String
+(
+        const struct Alkane* const alkane,  // Alkane der als Zeichenkette dargestellt werden soll
+        char* const string_memory,          // Speicher, der fuer die Zeichenkettenerzeugung verwendet werden soll
+                                            // Der Speicher muss vorher vom Aufrufer allokiert werden
+        const size_t string_memory_size     // Groesse des Zeichenkettenspeichers
+                                            // Wenn der Speicher nicht ausreicht, dann wird am vorletzten Zeichen die
+                                            // Zeichenkette abgeschnitten
+)
+{
+    ASSERT_MSG(alkane != NULL,          "alkane is NULL !");
+    ASSERT_MSG(string_memory != NULL,   "string_memory is NULL !");
+    ASSERT_MSG(string_memory_size > 0,  "string_memory_size is 0 !");
+
+    size_t next_free_byte   = 0;                        // Naechstes freies Zeichen im Speicher
+    size_t remaining_memory = string_memory_size - 1;   // Noch freie Zeichen im Speicher
+    size_t used_char        = 0;                        // Anzahl an Zeichen, die im aktuellen snprintf-Aufruf in den
+                                                        // Speicher geschrieben wurde
+
+    // Die Aeste des Alkans in die Zeichenkettendarstellung einbinden
+    for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
+    {
+        if (remaining_memory == 0) { goto no_remaining_memory; }
+        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Branch %zu:\n", i);
+        next_free_byte += used_char;
+        remaining_memory -= used_char;
+
+        if (alkane->branches [i] != NULL)
+        {
+            char temp_string [150];
+            memset (temp_string, '\0', sizeof (temp_string));
+
+            // Das aktuelle Alkane_Branch-Objekt in eine Zeichenkettendarstellung ueberfuehren
+            Alkane_Branch_To_String(alkane->branches [i], temp_string, sizeof (temp_string));
+
+            const size_t temp_string_length = strlen (temp_string);
+            strncpy (string_memory + next_free_byte, temp_string, remaining_memory);
+            next_free_byte += temp_string_length;
+            remaining_memory -= temp_string_length;
+        }
+        else
+        {
+            if (remaining_memory == 0) { goto no_remaining_memory; }
+            used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "NULL");
+            next_free_byte += used_char;
+            remaining_memory -= used_char;
+        }
+
+        if (remaining_memory == 0) { goto no_remaining_memory; }
+        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "\n");
+        next_free_byte += used_char;
+        remaining_memory -= used_char;
+    }
+
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "\n(");
+    next_free_byte += used_char;
+    remaining_memory -= used_char;
+
+    // Aufbau des Alkans in eine Zeichenkettendarstellung ueberfuehren
+    for (uint_fast8_t i = 0; i < alkane->number_of_c_atoms; ++ i)
+    {
+        if (remaining_memory == 0) { goto no_remaining_memory; }
+        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "%" PRIuFAST8,
+                alkane->merged_numbercode [i]);
+        next_free_byte += used_char;
+        remaining_memory -= used_char;
+
+        if ((i + 1) < alkane->number_of_c_atoms)
+        {
+            if (remaining_memory == 0) { goto no_remaining_memory; }
+            used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, ", ");
+            next_free_byte += used_char;
+            remaining_memory -= used_char;
+        }
+    }
+
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, ")\n\n");
+    next_free_byte += used_char;
+    remaining_memory -= used_char;
+
+    // Laengeninformation einfuegen
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "%" PRIuFAST8 "\n",
+            alkane->number_of_c_atoms);
+    next_free_byte += used_char;
+    remaining_memory -= used_char;
+
+    // Status in die Zeichenkettendarstellung einbringen
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    switch (alkane->state)
+    {
+    case ALKANE_CREATED:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_CREATED\n");
+        break;
+    case ALKANE_DELETED:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_DELETED\n");
+        break;
+    case ALKANE_INITIALIZED_WITH_DATA:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_INITIALIZED_WITH_DATA\n");
+        break;
+    case ALKANE_INITIALIZED_WITH_ZERO_BYTES:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_INITIALIZED_WITH_ZERO_BYTES\n");
+        break;
+    case ALKANE_INVALID_BRANCH:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_INVALID_BRANCH\n");
+        break;
+    case ALKANE_UNKNOWN_STATE:
+        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_UNKNOWN_STATE\n");
+        break;
+
+        // Der default-Pfad soll nie ausgefuehrt werden ! Wenn dies dennoch der Fall ist, dann ist dies ein Fehler !
+    default:
+        ASSERT_MSG(false, "default path of a switch case statement executed !");
+    }
+
+    no_remaining_memory:
+    string_memory [string_memory_size - 1] = '\0';  // Nullterminierung garantieren
+
+    return string_memory;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Alkane Objekt loeschen.
  *
  * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden
