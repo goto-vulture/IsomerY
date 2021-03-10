@@ -268,6 +268,33 @@ Alkane_To_String
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * AlkaneObjekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die Funktion
+ * "Alkane_To_String" verwendet.
+ *
+ * Asserts:
+ *      alkane != NULL
+ */
+void
+Print_Alkane
+(
+        const struct Alkane* const alkane   // Alkane, welches ausgegeben werden soll
+)
+{
+    ASSERT_MSG(alkane != NULL, "branch is NULL !");
+
+    char alkane_to_string [1024];
+    memset (alkane_to_string, '\0', sizeof (alkane_to_string));
+
+    // Zeichenkettendarstellung auf stdout ausgeben
+    printf ("%s", Alkane_To_String (alkane, alkane_to_string, sizeof (alkane_to_string)));
+    fflush (stdout);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Alkane Objekt loeschen.
  *
  * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden
