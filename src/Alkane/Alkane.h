@@ -84,13 +84,13 @@ struct Alkane
  * Asserts:
  *      N/A
  */
-extern struct Alkane*                               // Erzeugtes Alkane-Objekt
+extern struct Alkane*                   // Erzeugtes Alkane-Objekt
 Create_Alkane
 (
-        const struct Alkane_Branch* const branch_1, // 1. Ast des neuen Alkane-Objektes
-        const struct Alkane_Branch* const branch_2, // 2. Ast des neuen Alkane-Objektes
-        const struct Alkane_Branch* const branch_3, // 3. Ast des neuen Alkane-Objektes
-        const struct Alkane_Branch* const branch_4  // 4. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* branch_1, // 1. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* branch_2, // 2. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* branch_3, // 3. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* branch_4  // 4. Ast des neuen Alkane-Objektes
 );
 
 /**
