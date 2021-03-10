@@ -73,6 +73,7 @@ c_file_list = [
     "src/Alkane/Alkane_Branch.c",
     "src/Alkane/Alkane_Branch_Container.c",
     "src/Alkane/Alkane.c",
+    "src/Alkane/Alkane_Container.c",
 
     # str2int Konverter
     "src/str2int.c"
