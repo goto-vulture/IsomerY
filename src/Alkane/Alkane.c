@@ -230,8 +230,13 @@ Alkane_To_String
 
     // Laengeninformation einfuegen
     if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "%" PRIuFAST8 "\n",
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Length: %" PRIuFAST8 "\n",
             alkane->number_of_c_atoms);
+    next_free_byte += used_char;
+    remaining_memory -= used_char;
+
+    if (remaining_memory == 0) { goto no_remaining_memory; }
+    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "State: ");
     next_free_byte += used_char;
     remaining_memory -= used_char;
 
