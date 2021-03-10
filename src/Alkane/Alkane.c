@@ -54,7 +54,11 @@ Create_Alkane
     unsigned int number_of_c_atoms = 0;
     for (size_t i = 0; i < (sizeof (new_alkane->branches) / sizeof (new_alkane->branches [0])); ++ i)
     {
-        number_of_c_atoms += new_alkane->branches [i]->length;
+        // Hier koennen noch Nullzeiger auftreten !
+        if (new_alkane->branches [i] != NULL)
+        {
+            number_of_c_atoms += new_alkane->branches [i]->length;
+        }
     }
     new_alkane->number_of_c_atoms = (uint_fast8_t) number_of_c_atoms;
 
