@@ -178,6 +178,7 @@ Alkane_To_String
             // Das aktuelle Alkane_Branch-Objekt in eine Zeichenkettendarstellung ueberfuehren
             Alkane_Branch_To_String(alkane->branches [i], temp_string, sizeof (temp_string));
 
+            if (remaining_memory == 0) { goto no_remaining_memory; }
             const size_t temp_string_length = strlen (temp_string);
             strncpy (string_memory + next_free_byte, temp_string, remaining_memory);
             next_free_byte += temp_string_length;
