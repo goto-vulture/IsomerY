@@ -10,6 +10,7 @@
 #include <string.h>
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Error_Handling/Assert_Msg.h"
+#include "Alkane_Info_Constitutional_Isomer.h"
 
 
 
@@ -168,11 +169,7 @@ Alkane_To_String
     // Die Aeste des Alkans in die Zeichenkettendarstellung einbinden
     for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
     {
-        if (remaining_memory == 0) { goto no_remaining_memory; }
-        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Branch %zu:\n", i);
-        next_free_byte += used_char;
-        remaining_memory -= used_char;
-
+        TO_STRING_HELPER_VA_ARGS("Branch %zu:\n", i);
         if (alkane->branches [i] != NULL)
         {
             char temp_string [150];
@@ -188,57 +185,31 @@ Alkane_To_String
         }
         else
         {
-            if (remaining_memory == 0) { goto no_remaining_memory; }
-            used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "NULL");
-            next_free_byte += used_char;
-            remaining_memory -= used_char;
+            TO_STRING_HELPER("NULL");
         }
 
-        if (remaining_memory == 0) { goto no_remaining_memory; }
-        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "\n");
-        next_free_byte += used_char;
-        remaining_memory -= used_char;
+        TO_STRING_HELPER("\n");
     }
 
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "\n(");
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER("\n(");
 
     // Aufbau des Alkans in eine Zeichenkettendarstellung ueberfuehren
     for (uint_fast8_t i = 0; i < alkane->number_of_c_atoms; ++ i)
     {
-        if (remaining_memory == 0) { goto no_remaining_memory; }
-        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "%" PRIuFAST8,
-                alkane->merged_numbercode [i]);
-        next_free_byte += used_char;
-        remaining_memory -= used_char;
+        TO_STRING_HELPER_VA_ARGS("%" PRIuFAST8, alkane->merged_numbercode [i]);
 
         if ((i + 1) < alkane->number_of_c_atoms)
         {
-            if (remaining_memory == 0) { goto no_remaining_memory; }
-            used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, ", ");
-            next_free_byte += used_char;
-            remaining_memory -= used_char;
+            TO_STRING_HELPER(", ");
         }
     }
 
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, ")\n\n");
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER(")\n\n");
 
     // Laengeninformation einfuegen
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Length: %" PRIuFAST8 "\n",
-            alkane->number_of_c_atoms);
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER_VA_ARGS("Length: %" PRIuFAST8 "\n", alkane->number_of_c_atoms);
 
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "State: ");
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER("State: ");
 
     // Status in die Zeichenkettendarstellung einbringen
     if (remaining_memory == 0) { goto no_remaining_memory; }

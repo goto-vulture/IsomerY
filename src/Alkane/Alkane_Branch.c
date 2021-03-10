@@ -10,6 +10,9 @@
 #include <string.h>
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
+#include "Alkane_Info_Constitutional_Isomer.h"
+
+
 
 
 
@@ -100,43 +103,25 @@ Alkane_Branch_To_String
     size_t used_char        = 0;                        // Anzahl an Zeichen, die im aktuellen snprintf-Aufruf in den
                                                         // Speicher geschrieben wurde
 
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "(");
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER("(");
 
     // Astinhalt in die Zeichenkettendarstellung einbinden
     for (uint_fast8_t i = 0; i < branch->length; ++ i)
     {
-        if (remaining_memory == 0) { goto no_remaining_memory; }
-        used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "%" PRIuFAST8, branch->branch [i]);
-        next_free_byte += used_char;
-        remaining_memory -= used_char;
+        TO_STRING_HELPER_VA_ARGS("%" PRIuFAST8, branch->branch [i]);
 
         if ((i + 1) < branch->length)
         {
-            if (remaining_memory == 0) { goto no_remaining_memory; }
-            used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, ", ");
-            next_free_byte += used_char;
-            remaining_memory -= used_char;
+            TO_STRING_HELPER(", ");
         }
     }
 
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, ")\n");
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER(")\n");
 
     // Laenge des Astes in die Zeichenkettendarstellung einbinden
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Length: %" PRIuFAST8 "\n", branch->length);
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER_VA_ARGS("Length: %" PRIuFAST8 "\n", branch->length);
 
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "State: ");
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER("State: ");
 
     // Status in die Zeichenkettendarstellung einbringen
     if (remaining_memory == 0) { goto no_remaining_memory; }

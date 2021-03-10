@@ -10,6 +10,7 @@
 #include <string.h>
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
+#include "Alkane_Info_Constitutional_Isomer.h"
 
 
 
@@ -146,18 +147,10 @@ Alkane_Branch_Container_To_String
                                                         // Speicher geschrieben wurde
 
     // Das size-Attribut in die Zeichenkettendarstellung einbinden
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Size: %" PRIuFAST64 "\n",
-            container->size);
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER_VA_ARGS("Size: %" PRIuFAST64 "\n", container->size);
 
     // Das allocated_size-Attribut in die Zeichenkettendarstellung einbinden
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    used_char = (size_t) snprintf (string_memory + next_free_byte, remaining_memory, "Allocated Size: %" PRIuFAST64
-            "\n", container->allocated_size);
-    next_free_byte += used_char;
-    remaining_memory -= used_char;
+    TO_STRING_HELPER_VA_ARGS("Allocated Size: %" PRIuFAST64 "\n", container->allocated_size);
 
     // Status in die Zeichenkettendarstellung einbringen
     if (remaining_memory == 0) { goto no_remaining_memory; }
