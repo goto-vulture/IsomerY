@@ -120,7 +120,7 @@ Create_Alkane
 extern const char*                          // Adresse der Eingabe-Zeichenkette
 Alkane_To_String
 (
-        const struct Alkane* const branch,  // Alkane der als Zeichenkette dargestellt werden soll
+        const struct Alkane* const alkane,  // Alkane der als Zeichenkette dargestellt werden soll
         char* const string_memory,          // Speicher, der fuer die Zeichenkettenerzeugung verwendet werden soll
                                             // Der Speicher muss vorher vom Aufrufer allokiert werden
         const size_t string_memory_size     // Groesse des Zeichenkettenspeichers
