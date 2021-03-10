@@ -116,3 +116,40 @@ Create_Alkane
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alkane Objekt loeschen.
+ *
+ * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden
+ * lediglich die Zeiger des Objektes auf NULL gesetzt !
+ *
+ * Da es sich bei dem Objekt um dynamischen Speicher handelt, muss sichergestellt werden, dass alle Objekte, die zuvor
+ * erstellt wurden, geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger nicht mehr dereferenziert werden !
+ *
+ * Asserts:
+ *      alkane != NULL
+ */
+void
+Delete_Alkane
+(
+        struct Alkane* alkane   // Alkane, welches geloescht werden soll
+)
+{
+    ASSERT_MSG(alkane != NULL, "alkane is NULL !");
+
+    // Alle Zeiger sicherheitshalber auf NULL setzen, auch wenn ein Zugriff drauf nach dieser Funktion recht
+    // unwahrscheinlich ist
+    for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
+    {
+        alkane->branches [i] = NULL;
+    }
+
+    alkane->state = ALKANE_DELETED;
+
+    // Alkane-Objekt loeschen
+    FREE_AND_SET_TO_NULL(alkane);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
