@@ -4,7 +4,6 @@
 
 CC = gcc
 RM = rm
-ECHO = echo
 CCFLAGS = -std=c11 -O0 -pedantic -Wall -Wextra -Wconversion
 
 # Aktuell wird durch das Makefile nur die Debug-Variante fuer Linux erstellt
@@ -45,11 +44,15 @@ ASSERT_MSG_H = ./src/Error_Handling/Assert_Msg.h
 
 # Komplettes Projekt erstellen
 all: $(TARGET)
+	@echo
+	@echo IsomerY build completed !
 
 $(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o
 	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o
 
 main.o: $(MAIN_C)
+	@echo Build target: $(TARGET).
+	@echo
 	$(CC) $(CCFLAGS) -c $(MAIN_C) $(DYNAMIC_MEMORY_H) $(ALKANE_H)
 
 str2int.o: $(STR2INT_C)
@@ -80,4 +83,6 @@ Alkane_Create_Constitutional_Isomer.o: $(ALKANE_CREATE_CONSTITUTIONAL_ISOMER_C)
 
 # Alles wieder aufraeumen
 clean:
+	@echo Clean IsomerY build.
+	@echo
 	$(RM) $(TARGET) *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch
