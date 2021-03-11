@@ -4,6 +4,9 @@
 
 CC = gcc
 RM = rm
+
+# Flags fuer die Debug-Variante
+# Release Flags koennten in der Zukunft kommen, haben aber aktuell keine Prioritaet !
 CCFLAGS = -std=c11 -O0 -pedantic -Wall -Wextra -Wconversion
 
 # Aktuell wird durch das Makefile nur die Debug-Variante fuer Linux erstellt
