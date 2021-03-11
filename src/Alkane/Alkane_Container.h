@@ -62,10 +62,95 @@ struct Alkane_Container
     enum Alkane_Container_State state;  // Aktueller Status des Objektes
 };
 
+//=====================================================================================================================
 
+/**
+ * Ein neuen leeren Alkane_Container erstellen.
+ *
+ * Asserts:
+ *      N/A
+ */
+extern struct Alkane_Container*
+Create_Alkane_Container
+(
+        void
+);
 
+/**
+ * Ein Alkane-Objekt zu einem existierenden Alkane_Container hinzufuegen.
+ *
+ * Der Container kopiert das Alkane-Objekt NICHT ! Es wird nur die Speicheradresse im Container abgelegt !
+ *
+ * Asserts:
+ *      container != NULL
+ *      new_element != NULL
+ */
+extern void
+Add_Alkane_To_Container
+(
+        struct Alkane_Container* const container,   // Container, welches das neue Objekt entgegennimmt
+        const struct Alkane* const new_element      // Existierendes Alkane_Branch-Objekt, welches hinzugefuegt werden
+                                                    // werden soll
+);
 
+/**
+ * Alkane_Container Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging
+ * hilfreich.
+ *
+ * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
+ *
+ * Size: <Groesse>
+ * Allocated size: <allokierte Groesse>
+ * State: <Status>
+ *
+ * Asserts:
+ *      container != NULL,
+ *      string_memory != NULL,
+ *      string_memory_size > 0
+ */
+extern const char*                                      // Adresse der Eingabe-Zeichenkette
+Alkane_Container_To_String
+(
+        const struct Alkane_Container* const container, // Alkane_Branch, der als Zeichenkette dargestellt werden soll
+        char* const string_memory,                      // Speicher, der fuer die Zeichenkettenerzeugung verwendet
+                                                        // verwendet werden soll
+                                                        // Der Speicher muss vorher vom Aufrufer allokiert werden !
+        const size_t string_memory_size                 // Groesse des Zeichenkettenspeichers
+                                                        // Wenn der Speicher nicht ausreicht, dann wird am vorletzten
+                                                        // Zeichen die Zeichenkette abgeschnitten
+);
 
+/**
+ * Alkane_Container Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird
+ * die Funktion "Alkane_Container_To_String" verwendet.
+ *
+ * Asserts:
+ *      container != NULL
+ */
+extern void
+Print_Alkane_Container
+(
+        const struct Alkane_Container* const container  // Alkane_Container, welcher ausgegeben werden soll
+);
+
+/**
+ * Ein Alkane_Container loeschen.
+ *
+ * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane-Objekte aufgerufen, sodass am Ende sowohl der
+ * Container, als auch der Inhalt geloescht wurde.
+ *
+ * Daher gilt fuer den Container und fuer alle darin enthaltene Elemente:
+ * Es muss sichergestellt werden, dass alle Container geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger
+ * - und die im Container enthaltenen Zeiger - nicht mehr dereferenziert werden !
+ *
+ * Asserts:
+ *      container != NULL
+ */
+extern void
+Delete_Alkane_Container
+(
+        struct Alkane_Container* container  // Alkane_Container-Objekt, welches geloescht werden soll
+);
 
 
 
