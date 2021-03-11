@@ -125,7 +125,7 @@ Alkane_Branch_Container_To_String
 
 /**
  * Alkane_Branch_Container Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird
- * die Funktion "Alkane_Branch_To_String" verwendet.
+ * die Funktion "Alkane_Branch_Container_To_String" verwendet.
  *
  * Asserts:
  *      container != NULL
