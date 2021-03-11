@@ -12,3 +12,4 @@ IsomerY_Release_Win
 
 debug_c_object_*
 release_c_object_*
+*.o
