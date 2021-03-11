@@ -20,6 +20,7 @@
 #include <time.h>
 #include "Error_Handling/Dynamic_Memory.h"
 #include "Alkane/Alkane.h"
+#include "Alkane/Alkane_Create_Constitutional_Isomer.h"
 
 
 
@@ -72,6 +73,9 @@ int main (const int argc, const char* const argv [])
 //    Delete_Alkane_Branch (branch_1);
 //    Delete_Alkane_Branch (branch_2);
 //    Delete_Alkane_Branch (branch_3);
+
+    // Testcode fuer die Funktion, die die Konstitutionsisomere erzeugt
+    Create_Alkane_Constitutional_Isomers (10);
 
     Show_Dynamic_Memory_Status ();
 
