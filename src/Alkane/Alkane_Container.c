@@ -102,3 +102,45 @@ Add_Alkane_To_Container
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Ein Alkane_Container loeschen.
+ *
+ * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane-Objekte aufgerufen, sodass am Ende sowohl der
+ * Container, als auch der Inhalt geloescht wurde.
+ *
+ * Daher gilt fuer den Container und fuer alle darin enthaltene Elemente:
+ * Es muss sichergestellt werden, dass alle Container geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger
+ * - und die im Container enthaltenen Zeiger - nicht mehr dereferenziert werden !
+ *
+ * Asserts:
+ *      container != NULL
+ */
+void
+Delete_Alkane_Container
+(
+        struct Alkane_Container* container  // Alkane_Container-Objekt, welches geloescht werden soll
+)
+{
+    ASSERT_MSG(container != NULL, "container is NULL !");
+
+    // Status auf "Geloescht" setzen
+    container->state = ALKANE_CONTAINER_DELETED;
+
+    // Containerinhalt loeschen -> Also alle Alkane-Objekte
+    for (uint_fast64_t i = 0; i < container->size; ++ i)
+    {
+        Delete_Alkane (container->data [i]);
+        container->data [i] = NULL;
+    }
+
+    // Speicherbereich, wo der Containerinhalt lag, loeschen
+    FREE_AND_SET_TO_NULL(container->data);
+
+    // Container an sich loeschen
+    FREE_AND_SET_TO_NULL(container);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
