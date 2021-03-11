@@ -24,7 +24,7 @@
  * Alkane_Branch Objekt dynamisch erzeugen.
  *
  * Asserts:
- *      lenght > 0 && length <= (MAX_NUMBER_OF_C_ATOMS + 1) / 2, wenn branch != NULL
+ *      lenght > 0 && length <= MAX_NUMBER_OF_C_ATOMS, wenn branch != NULL
  */
 struct Alkane_Branch*                       // Erzeugtes Alkane_Branch Objekt
 Create_Alkane_Branch
@@ -42,7 +42,7 @@ Create_Alkane_Branch
     if (branch != NULL)
     {
         ASSERT_MSG(length > 0,                                  "The length for the branch values is 0 !");
-        ASSERT_MSG(length <= (MAX_NUMBER_OF_C_ATOMS + 1) / 2,   "The length value is too large !");
+        ASSERT_MSG(length <= MAX_NUMBER_OF_C_ATOMS,             "The length value is too large !");
     }
 
     // Neues Objekt anlegen und Allokation ueberpruefen

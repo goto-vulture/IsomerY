@@ -61,9 +61,7 @@ enum Alkane_Branch_State
  */
 struct Alkane_Branch
 {
-    unsigned char branch [(MAX_NUMBER_OF_C_ATOMS + 1) / 2]; // Aufbau des Astes (die "verbunden-mit"-Aussagen)
-                                                            // (MAX_NUMBER_OF_C_ATOMS + 1) / 2 -> Die Haelfte
-                                                            // aufgerundet !
+    unsigned char branch [MAX_NUMBER_OF_C_ATOMS];           // Aufbau des Astes (die "verbunden-mit"-Aussagen)
     uint_fast8_t length;                                    // Laenge des Astes - wie viele der Arrayelemente werden
                                                             // tatsaechlich verwendet ?
     enum Alkane_Branch_State state;                         // Status des Objektes
@@ -75,7 +73,7 @@ struct Alkane_Branch
  * Alkane_Branch Objekt dynamisch erzeugen.
  *
  * Asserts:
- *      lenght > 0 && length <= (MAX_NUMBER_OF_C_ATOMS + 1) / 2, wenn branch != NULL
+ *      lenght > 0 && length <= MAX_NUMBER_OF_C_ATOMS, wenn branch != NULL
  */
 extern struct Alkane_Branch*                // Erzeugtes Alkane_Branch Objekt
 Create_Alkane_Branch
