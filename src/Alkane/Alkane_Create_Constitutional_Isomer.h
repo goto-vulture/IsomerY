@@ -141,4 +141,4 @@ extern void Create_Alkane_Constitutional_Isomers
 }
 #endif /* __cplusplus */
 
-#endif /* ALKANE_ALKANE_CREATE_CONSTITUTIONAL_ISOMER_H */
+#endif /* ALKANE_CREATE_CONSTITUTIONAL_ISOMER_H */
