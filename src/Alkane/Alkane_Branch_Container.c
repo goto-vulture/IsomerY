@@ -73,7 +73,7 @@ Add_Alkane_Branch_To_Container
     ASSERT_MSG(new_element != NULL, "new_element is NULL !");
 
     // Muss der Speicher im Container vergroessert werden ?
-    if (container->size > container->allocated_size)
+    if (container->size >= container->allocated_size)
     {
         // Neuen groesseren Speicherbereich anfordern
         container->data = (struct Alkane_Branch**) REALLOC (container->data, (size_t) (container->allocated_size +
