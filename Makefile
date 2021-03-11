@@ -86,3 +86,5 @@ clean:
 	@echo Clean IsomerY build.
 	@echo
 	$(RM) $(TARGET) *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch
+	@echo
+	@echo IsomerY build cleaned.
