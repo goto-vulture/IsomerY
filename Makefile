@@ -80,4 +80,4 @@ Alkane_Create_Constitutional_Isomer.o: $(ALKANE_CREATE_CONSTITUTIONAL_ISOMER_C)
 
 # Alles wieder aufraeumen
 clean:
-	$(RM) $(TARGET) *.o
+	$(RM) $(TARGET) *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch
