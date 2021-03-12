@@ -76,7 +76,7 @@ Add_Alkane_Branch_To_Container
     if (container->size >= container->allocated_size)
     {
         container->allocated_size       += ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE;
-        const size_t new_size_in_byte   = container->allocated_size * sizeof (struct Alkane_Branch*);
+        const size_t new_size_in_byte   = (size_t) (container->allocated_size * sizeof (struct Alkane_Branch*));
 
         // Neuen groesseren Speicherbereich anfordern
         container->data = (struct Alkane_Branch**) REALLOC (container->data, new_size_in_byte);

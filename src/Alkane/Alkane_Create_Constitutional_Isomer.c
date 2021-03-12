@@ -118,7 +118,7 @@ void Create_Alkane_Constitutional_Isomers
         for (size_t i = 0; i < next_container; ++ i)
         {
             // Die Anzahl an bisher erzeugten Alkane_Branch-Objekte ermitteln
-            count_branches += container_height_x [i]->size;
+            count_branches += (size_t) container_height_x [i]->size;
         }
 
         struct Alkane_Branch** flat_alkane_branch_container = (struct Alkane_Branch**) CALLOC (count_branches,
@@ -140,7 +140,7 @@ void Create_Alkane_Constitutional_Isomers
         ASSERT_MSG(current_element_index == count_branches, "count_branches needs to be equal with current_element_index !");
 
         // Die Aeste des aktuellsten Containers verwenden, damit die Laenge des Astes aus drei C-Atomen besteht
-        for (size_t i2 = container_height_x [next_container - 2]->size; i2 < count_branches; ++ i2) // < !
+        for (size_t i2 = (size_t) container_height_x [next_container - 2]->size; i2 < count_branches; ++ i2) // < !
         {
             for (size_t i3 = 0; i3 <= i2; ++ i3) // <= !
             {

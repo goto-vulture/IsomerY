@@ -73,7 +73,7 @@ Add_Alkane_To_Container
     if (container->size >= container->allocated_size)
     {
         container->allocated_size       += ALKANE_CONTAINER_ALLOCATION_STEP_SIZE;
-        const size_t new_size_in_byte   = container->allocated_size * sizeof (struct Alkane*);
+        const size_t new_size_in_byte   = (size_t) (container->allocated_size * sizeof (struct Alkane*));
 
         // Neuen groesseren Speicherbereich anfordern
         container->data = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
