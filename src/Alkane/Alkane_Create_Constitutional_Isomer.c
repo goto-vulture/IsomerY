@@ -51,6 +51,9 @@ void Create_Alkane_Constitutional_Isomers
             "; Max. valid: %" PRIuFAST8,  number_of_c_atoms, MAX_NUMBER_OF_C_ATOMS);
 
     // ===== ===== ===== ===== ===== BEGINN 1. Teil ===== ===== ===== ===== =====
+    // Die Anzahl an Alkane_Branch_Container ist die aufgerundete Haelfte der Anzahl an C-Atomen
+    const size_t count_alkane_branch_container = (size_t) ((number_of_c_atoms + 1) / 2);
+
     // Alkanastliste mit Objekten, deren maximale Laenge aus EINEM C-Atom besteht, erzeugen
     // const unsigned char empty_branch_numbercode []  = { };   // So wuerde ein leerer Ast aussehen, der nur aus einem
                                                                 // H-Atom besteht. Leider ist die kein gueltiger Code,
@@ -65,6 +68,10 @@ void Create_Alkane_Constitutional_Isomers
     struct Alkane_Branch_Container* Container_Height_1 = Create_Alkane_Branch_Container ();
     Add_Alkane_Branch_To_Container (Container_Height_1, empty_branch);
     Add_Alkane_Branch_To_Container (Container_Height_1, single_c_atom_branch);
+
+    printf ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+            (size_t) 1u, count_alkane_branch_container, Container_Height_1->size);
+    fflush (stdout);
 
 
     // Alkanastliste mit Objekten, deren maximale Laenge aus ZWEI C-Atoms besteht, erzeugen
@@ -90,12 +97,14 @@ void Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_2, three_c_atoms_branch);
     Add_Alkane_Branch_To_Container (Container_Height_2, four_c_atoms_branch);
 
+    printf ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+            (size_t) 2u, count_alkane_branch_container, Container_Height_2->size);
+    fflush (stdout);
+
 
 
     // Jetzt wird es interessant:
     // Aus den hart codierten Alkane_Branch_Container der Hoehe 1 und 2 werden die Container mit einer groesseren Hoehe
-    // Die Anzahl an Alkane_Branch_Container ist die aufgerundete Haelfte der Anzahl an C-Atomen
-    const size_t count_alkane_branch_container = (size_t) ((number_of_c_atoms + 1) / 2);
 
     // Container fuer die Alkane_Branch_Container-Zeiger
     struct Alkane_Branch_Container* container_height_x [(MAX_NUMBER_OF_C_ATOMS + 1) / 2];
