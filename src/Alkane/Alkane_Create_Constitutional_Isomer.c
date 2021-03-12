@@ -175,7 +175,7 @@ void Create_Alkane_Constitutional_Isomers
 
                 for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                 {
-                    static int local_run_counter = 0;
+                    static uint_fast16_t local_run_counter = 0;
                     ++ current_inner_loop_run;
 
                     // printf ("%10" PRIuFAST64 " / %10" PRIuFAST64 "\r", current_inner_loop_run, max_inner_loop_runs);
