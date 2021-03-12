@@ -169,7 +169,7 @@ Alkane_To_String
     // Die Aeste des Alkans in die Zeichenkettendarstellung einbinden
     for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
     {
-        TO_STRING_HELPER_VA_ARGS("Branch %zu:\n", i);
+        TO_STRING_HELPER_VA_ARGS("Branch %zu: (%p)\n", i, (void*) alkane->branches [i]);
         if (alkane->branches [i] != NULL)
         {
             char temp_string [150];
