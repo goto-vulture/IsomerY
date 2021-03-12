@@ -13,3 +13,5 @@ IsomerY_Release_Win
 debug_c_object_*
 release_c_object_*
 *.o
+src/Alkane/*.gch
+src/Error_Handling/*.gch
