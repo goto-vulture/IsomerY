@@ -54,10 +54,14 @@ extern void Show_Dynamic_Memory_Status (void);
 #endif /* CALLOC */
 
 // realloc-Aufrufe mitzaehlen
+// realloc fuehrt im Hintergrund einen malloc-Aufruf aus; allerdings auch automatisch einen free-Aufruf auf den alten
+// Speicherbereich !
+// => Daher muessen zwe Zaehler pro realloc-Aufruf inkrementiert werden.
 #ifndef REALLOC
     #define REALLOC(number_of_elements, element_size)                                                                 \
         realloc (number_of_elements, element_size);                                                                   \
-        ++ GLOBAL_malloc_calls;
+        ++ GLOBAL_malloc_calls;                                                                                       \
+        ++ GLOBAL_free_calls;
 #else
     #error "The macro \"REALLOC\" is already defined !"
 #endif /* REALLOC */
