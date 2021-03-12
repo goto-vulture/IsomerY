@@ -72,12 +72,12 @@ Add_Alkane_To_Container
     // Muss der Speicher im Container vergroessert werden ?
     if (container->size >= container->allocated_size)
     {
+        container->allocated_size       += ALKANE_CONTAINER_ALLOCATION_STEP_SIZE;
+        const size_t new_size_in_byte   = container->allocated_size * sizeof (struct Alkane*);
+
         // Neuen groesseren Speicherbereich anfordern
-        container->data = (struct Alkane**) REALLOC (container->data, (size_t) (container->allocated_size +
-                sizeof (struct Alkane*) * ALKANE_CONTAINER_ALLOCATION_STEP_SIZE));
-        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !",
-                (size_t) (container->allocated_size + sizeof (struct Alkane*) * ALKANE_CONTAINER_ALLOCATION_STEP_SIZE));
-        container->allocated_size += ALKANE_CONTAINER_ALLOCATION_STEP_SIZE;
+        container->data = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
+        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !", new_size_in_byte);
 
         // Die neuen Zeiger auf einen definerten Zustand bringen
         // "i = 1", da der neuste Speicherbereich gleich durch das neue Alkane-Objekt belegt wird

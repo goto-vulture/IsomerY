@@ -75,13 +75,12 @@ Add_Alkane_Branch_To_Container
     // Muss der Speicher im Container vergroessert werden ?
     if (container->size >= container->allocated_size)
     {
+        container->allocated_size       += ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE;
+        const size_t new_size_in_byte   = container->allocated_size * sizeof (struct Alkane_Branch*);
+
         // Neuen groesseren Speicherbereich anfordern
-        container->data = (struct Alkane_Branch**) REALLOC (container->data, (size_t) (container->allocated_size +
-                sizeof (struct Alkane_Branch*) * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE));
-        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Branch_Container failed !",
-                (size_t) (container->allocated_size + sizeof (struct Alkane_Branch*) *
-                        ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE));
-        container->allocated_size += ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE;
+        container->data = (struct Alkane_Branch**) REALLOC (container->data, new_size_in_byte);
+        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Branch_Container failed !", new_size_in_byte);
 
         // Die neuen Zeiger auf einen definerten Zustand bringen
         // "i = 1", da der neuste Speicherbereich gleich durch das neue Alkane_Branch-Objekt belegt wird
