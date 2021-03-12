@@ -148,6 +148,14 @@ void Create_Alkane_Constitutional_Isomers
         }
         ASSERT_MSG(current_element_index == count_branches, "count_branches needs to be equal with current_element_index !");
 
+        // Naeherungsweise die Anzahl an Durchlaeufen der innersten Schleife berechnen, um eine ungefaehre Aussage
+        // treffen zu koennen, wie viele Aeste fuer den aktuellen Container noch erzeugt werden muessen
+        // Die Bestimmung der Durchlaeufe ist nicht trivial moeglich, da die Schleifengrenzen der inneren Schleifen
+        // sich auf den Schleifenzaehler der jeweils aeusseren Schleife beziehen !
+        const uint_fast64_t max_inner_loop_runs = (count_branches - container_height_x [next_container - 2]->size + 1) *
+                ((count_branches + 1) / 2) * ((count_branches + 1) / 2);
+        uint_fast64_t current_inner_loop_run    = 0;
+
         // Die Aeste des aktuellsten Containers verwenden, damit die Laenge des Astes aus drei C-Atomen besteht
         for (size_t i2 = (size_t) container_height_x [next_container - 2]->size; i2 < count_branches; ++ i2) // < !
         {
@@ -159,11 +167,19 @@ void Create_Alkane_Constitutional_Isomers
                 if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length) >
                         number_of_c_atoms)
                 {
+                    // Die inneren Schleifendurchlaeufe beachten, die durch den Schleifenneustart nicht ausgefuehrt
+                    // werden
+                    current_inner_loop_run += i3;
                     continue;
                 }
 
                 for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                 {
+                    static int local_run_counter = 0;
+                    ++ current_inner_loop_run;
+
+                    // printf ("%10" PRIuFAST64 " / %10" PRIuFAST64 "\r", current_inner_loop_run, max_inner_loop_runs);
+
                     // Auch hier das Gleiche: Aeste aussortieren, die zu gross sind
                     // Wenn die Groesse des zu konstruierenden Asts groesser als die uebergebene Anzahl an C-Atomen ist,
                     // dann kann dieser Ast zu keinem gueltigen Ergebnis fuehren !
@@ -171,6 +187,21 @@ void Create_Alkane_Constitutional_Isomers
                             flat_alkane_branch_container [i4]->length) > number_of_c_atoms)
                     {
                         continue;
+                    }
+
+                    ++ local_run_counter;
+
+                    // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
+                    // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
+                    if (local_run_counter == 1000)
+                    {
+                        // Prozentualen Fortschritt bestimmen und ausgeben
+                        const float percent_done =
+                                (float) ((float) current_inner_loop_run / ((float) max_inner_loop_runs / 100.0f));
+                        printf ("Build Alkane_Branch container %zu ... (~ %5.2f %%)\r", next_container + 1,
+                                (percent_done > 100.0f) ? 100.0f : percent_done);
+                        fflush (stdout);
+                        local_run_counter = 0;
                     }
 
                     // Aeste miteinander verbinden, wobei die Aeste an genau ein C-Atom angehaengt wird
