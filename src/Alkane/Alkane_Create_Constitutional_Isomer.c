@@ -50,7 +50,7 @@ void Create_Alkane_Constitutional_Isomers
     ASSERT_FMSG(number_of_c_atoms <= MAX_NUMBER_OF_C_ATOMS, "Number of C atoms is too large ! Got: %" PRIuFAST8
             "; Max. valid: %" PRIuFAST8,  number_of_c_atoms, MAX_NUMBER_OF_C_ATOMS);
 
-    // ===== ===== ===== ===== ===== BEGINN 1. Teil ===== ===== ===== ===== =====
+    // ===== ===== ===== ===== ===== ===== ===== ===== BEGINN 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
     // Die Anzahl an Alkane_Branch_Container ist die aufgerundete Haelfte der Anzahl an C-Atomen
     const size_t count_alkane_branch_container = (size_t) ((number_of_c_atoms + 1) / 2);
 
@@ -238,7 +238,7 @@ void Create_Alkane_Constitutional_Isomers
         fflush (stdout);
     }
     puts ("");
-    // ===== ===== ===== ===== ===== ENDE 1. Teil ===== ===== ===== ===== =====
+    // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
 
 
 
