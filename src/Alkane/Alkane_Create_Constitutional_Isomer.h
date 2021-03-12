@@ -101,7 +101,10 @@ extern "C"
  * werden. Der Pfad muss nicht eindeutig sein ! U.U. gibt es also mmehrere Ketten mit der Maximallaenge k im Molekuel.
  *
  * Wenn k gerade ist, dann kann ein Alkan mit genau zwei Wurzelbaeumen dargestellt werden, indem die Wurzeln mittels einer
- * Kante verbunden werden.
+ * Kante verbunden werden:
+ *
+ * W_1---W_2
+ *
  * Ist dagegen k ungerade, so besteht das Alkanmolekuel aus 4 Wurzelbaeumen, wovon mindestens 2 die Hoehe (k - 1) / 2 haben
  * muessen und die restlichen maximal diese Hoehe besitzen. Deren Wurzeln sind mit einem zusaetzlichen Knoten durch je eine
  * Kante verbunden:
