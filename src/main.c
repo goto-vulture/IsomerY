@@ -75,7 +75,7 @@ int main (const int argc, const char* const argv [])
 //    Delete_Alkane_Branch (branch_3);
 
     // Testcode fuer die Funktion, die die Konstitutionsisomere erzeugt
-    Create_Alkane_Constitutional_Isomers (10);
+    Create_Alkane_Constitutional_Isomers (12);
 
     Show_Dynamic_Memory_Status ();
 
