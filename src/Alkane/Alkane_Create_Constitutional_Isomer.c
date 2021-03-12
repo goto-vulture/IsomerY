@@ -237,6 +237,7 @@ void Create_Alkane_Constitutional_Isomers
                 next_container + 1, count_alkane_branch_container, container_height_x [next_container]->size);
         fflush (stdout);
     }
+    puts ("");
     // ===== ===== ===== ===== ===== ENDE 1. Teil ===== ===== ===== ===== =====
 
 
