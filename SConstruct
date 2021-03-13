@@ -75,6 +75,9 @@ c_file_list = [
     "src/Alkane/Alkane.c",
     "src/Alkane/Alkane_Container.c",
 
+    # Dateien fuer das Testen
+    "src/Tests"Alkane_Tests.c",
+
     # str2int Konverter
     "src/str2int.c"
 ]
