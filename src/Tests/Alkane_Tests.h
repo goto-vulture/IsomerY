@@ -30,7 +30,7 @@ extern "C"
  *
  * Aus Laufzeitgruenden wird nur bis inklusive 12 getestet.
  */
-extern void TEST_Create_Alkane_Constitutional_Isomers ();
+extern void TEST_Create_Alkane_Constitutional_Isomers (void);
 
 
 

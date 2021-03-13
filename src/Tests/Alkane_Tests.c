@@ -25,7 +25,7 @@
  *
  * Aus Laufzeitgruenden wird nur bis inklusive 12 getestet.
  */
-void TEST_Create_Alkane_Constitutional_Isomers ()
+void TEST_Create_Alkane_Constitutional_Isomers (void)
 {
     uint_fast64_t number_of_created_isomers = 0;
 
