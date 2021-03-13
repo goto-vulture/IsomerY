@@ -16,6 +16,18 @@
 #include "Alkane_Branch_Container.h"
 #include "../Print_Tools.h"
 
+/**
+ * Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
+ * durchfuehrt.
+ * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
+ */
+#ifndef PROGRESS_OUTPUT_INTERVAL
+#define PROGRESS_OUTPUT_INTERVAL 65000
+#else
+#error "The macro \"PROGRESS_OUTPUT_INTERVAL\" is already defined !"
+#endif /* PROGRESS_OUTPUT_INTERVAL */
+
+
 
 
 
@@ -338,9 +350,9 @@ void Create_Alkane_Constitutional_Isomers
                     ++ local_run_counter;
                     ++ count_inner_loop_runs;
 
-                    // Aus Effizienzgruenden soll nur jedes 2500. Mal eine Ausgabe stattfinden
+                    // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
                     // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
-                    if (local_run_counter == 2500)
+                    if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
                     {
                         // Prozentualen Fortschritt bestimmen und ausgeben
                         Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
@@ -405,9 +417,9 @@ void Create_Alkane_Constitutional_Isomers
                         ++ local_run_counter;
                         ++ count_inner_loop_runs;
 
-                        // Aus Effizienzgruenden soll nur jedes 2500. Mal eine Ausgabe stattfinden
+                        // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
                         // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
-                        if (local_run_counter == 2500)
+                        if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
                         {
                             // Prozentualen Fortschritt bestimmen und ausgeben
                             Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
@@ -526,3 +538,11 @@ static void Print_Percent_Done (const uint_fast64_t current_run, const uint_fast
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+#ifdef PROGRESS_OUTPUT_INTERVAL
+#undef PROGRESS_OUTPUT_INTERVAL
+#endif /* PROGRESS_OUTPUT_INTERVAL */
