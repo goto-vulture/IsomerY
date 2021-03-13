@@ -318,7 +318,7 @@ void Create_Alkane_Constitutional_Isomers
             size_t loop_start = 0;
             for (size_t i = 0; i < container_height_index; ++ i)
             {
-                loop_start += container_height_x [i]->size;
+                loop_start += (size_t) container_height_x [i]->size;
             }
 
             // Anzahl der moeglichen inneren Schleifendurchlaeufe zaehlen
@@ -371,11 +371,11 @@ void Create_Alkane_Constitutional_Isomers
             size_t loop_end = 0;
             for (size_t i = 0; i < container_height_index - 1; ++ i)
             {
-                loop_start += container_height_x [i]->size;
+                loop_start += (size_t) container_height_x [i]->size;
             }
             for (size_t i = 0; i < container_height_index; ++ i)
             {
-                loop_end += container_height_x [i]->size;
+                loop_end += (size_t) container_height_x [i]->size;
             }
 
             // Anzahl der moeglichen inneren Schleifendurchlaeufe zaehlen
