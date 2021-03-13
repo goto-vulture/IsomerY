@@ -32,8 +32,15 @@
 
 
 
-
-static void Print_Percent_Done (const char* string_prefix, const uint_fast64_t current_run, const uint_fast64_t max_count_run);
+/**
+ * Den aktuellen Fortschritt - mit verbleibener Zeit - prozentual bestimmen und auf stdout ausgeben.
+ */
+static void Print_Percent_Done
+(
+        const char* string_prefix,          // Prefix, der vor der Prozentangabe ausgegeben wird
+        const uint_fast64_t current_run,    // Aktueller Wert -> Pozentwert bezogen auf max_count_run wir ermtttelt
+        const uint_fast64_t max_count_run   // Maximaler Wert -> Stellt 100 % dar
+);
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -541,7 +548,12 @@ void Create_Alkane_Constitutional_Isomers
 /**
  * Den aktuellen Fortschritt - mit verbleibener Zeit - prozentual bestimmen und auf stdout ausgeben.
  */
-static void Print_Percent_Done (const char* string_prefix, const uint_fast64_t current_run, const uint_fast64_t max_count_run)
+static void Print_Percent_Done
+(
+        const char* string_prefix,          // Prefix, der vor der Prozentangabe ausgegeben wird
+        const uint_fast64_t current_run,    // Aktueller Wert -> Pozentwert bezogen auf max_count_run wir ermtttelt
+        const uint_fast64_t max_count_run   // Maximaler Wert -> Stellt 100 % dar
+)
 {
     static clock_t last_call                = 0;
     static uint_fast64_t last_current_run   = 0;
