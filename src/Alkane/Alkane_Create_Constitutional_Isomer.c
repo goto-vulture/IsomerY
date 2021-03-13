@@ -307,7 +307,7 @@ void Create_Alkane_Constitutional_Isomers
             }
         }
 
-        uint_fast64_t max_inner_loop_runs = 0;
+        uint_fast64_t max_inner_loop_runs   = 0;
         uint_fast64_t count_inner_loop_runs = 0;
 
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
@@ -367,8 +367,8 @@ void Create_Alkane_Constitutional_Isomers
         // Zentrales Objekt ist ein C-ATOM
         else
         {
-            size_t loop_start = 0;
-            size_t loop_end = 0;
+            size_t loop_start   = 0;
+            size_t loop_end     = 0;
             for (size_t i = 0; i < container_height_index - 1; ++ i)
             {
                 loop_start += (size_t) container_height_x [i]->size;
