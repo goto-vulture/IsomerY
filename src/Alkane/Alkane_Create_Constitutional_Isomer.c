@@ -7,6 +7,7 @@
 
 #include "Alkane_Create_Constitutional_Isomer.h"
 #include <stdlib.h>
+#include <time.h>
 #include "Alkane_Info_Constitutional_Isomer.h"
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
@@ -22,7 +23,7 @@
  * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
  */
 #ifndef PROGRESS_OUTPUT_INTERVAL
-#define PROGRESS_OUTPUT_INTERVAL 65000
+#define PROGRESS_OUTPUT_INTERVAL 10000000
 #else
 #error "The macro \"PROGRESS_OUTPUT_INTERVAL\" is already defined !"
 #endif /* PROGRESS_OUTPUT_INTERVAL */
@@ -32,7 +33,7 @@
 
 
 
-static void Print_Percent_Done (const uint_fast64_t current_run, const uint_fast64_t max_count_run);
+static void Print_Percent_Done (const char* string_prefix, const uint_fast64_t current_run, const uint_fast64_t max_count_run);
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -333,12 +334,14 @@ void Create_Alkane_Constitutional_Isomers
                 loop_start += (size_t) container_height_x [i]->size;
             }
 
+            PRINTF_NO_VA_ARGS_FFLUSH("Start building. Calculate start information ...");
             // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
             for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 max_inner_loop_runs += (i2 - loop_start + 1);
             }
-            Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+            // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
+            PRINTF_NO_VA_ARGS_FFLUSH("\r                                                                            \r");
 
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
             // ===== BEGINN Berechnungsschleifen =====
@@ -346,7 +349,7 @@ void Create_Alkane_Constitutional_Isomers
             {
                 for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
-                    static uint_fast16_t local_run_counter = 0;
+                    static uint_fast32_t local_run_counter = 0;
                     ++ local_run_counter;
                     ++ count_inner_loop_runs;
 
@@ -355,7 +358,7 @@ void Create_Alkane_Constitutional_Isomers
                     if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
                     {
                         // Prozentualen Fortschritt bestimmen und ausgeben
-                        Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+                        Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
                         local_run_counter = 0;
                     }
 
@@ -391,6 +394,9 @@ void Create_Alkane_Constitutional_Isomers
             // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
             for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
+                static uint_fast32_t local_run_counter = 0;
+                ++ local_run_counter;
+
                 for (size_t i3 = loop_start; i3 <= i2; ++ i3)
                 {
                     for (size_t i4 = 0; i4 <= i3; ++ i4)
@@ -398,8 +404,16 @@ void Create_Alkane_Constitutional_Isomers
                         max_inner_loop_runs += (i4 /* - i5 */ + 1);
                     }
                 }
+
+                if (local_run_counter == 25)
+                {
+                    Print_Percent_Done ("Start building. Calculate start information ...", i2 - loop_start,
+                            loop_end - loop_start);
+                    local_run_counter = 0;
+                }
             }
-            Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+            // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
+            PRINTF_NO_VA_ARGS_FFLUSH("\r                                                                            \r");
 
             // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
             // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
@@ -413,7 +427,7 @@ void Create_Alkane_Constitutional_Isomers
                 {
                     for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                     {
-                        static uint_fast16_t local_run_counter = 0;
+                        static uint_fast32_t local_run_counter = 0;
                         ++ local_run_counter;
                         ++ count_inner_loop_runs;
 
@@ -422,7 +436,7 @@ void Create_Alkane_Constitutional_Isomers
                         if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
                         {
                             // Prozentualen Fortschritt bestimmen und ausgeben
-                            Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+                            Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
                             local_run_counter = 0;
                         }
 
@@ -480,7 +494,7 @@ void Create_Alkane_Constitutional_Isomers
         FREE_AND_SET_TO_NULL(flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
 
-        PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n",
+        PRINTF_FFLUSH("\rAlkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n",
                 (size_t) next_alkane_container + 1, (size_t) number_of_c_atoms,
                 alkane_container_main_chain_length_x [next_alkane_container]->size);
     }
@@ -525,14 +539,29 @@ void Create_Alkane_Constitutional_Isomers
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Den aktuellen Fortschritt prozentual bestimmen und auf stdout ausgeben.
+ * Den aktuellen Fortschritt - mit verbleibener Zeit - prozentual bestimmen und auf stdout ausgeben.
  */
-static void Print_Percent_Done (const uint_fast64_t current_run, const uint_fast64_t max_count_run)
+static void Print_Percent_Done (const char* string_prefix, const uint_fast64_t current_run, const uint_fast64_t max_count_run)
 {
+    static clock_t last_call                = 0;
+    static uint_fast64_t last_current_run   = 0;
+
+    // Differenzen seit dem letzten Aufruf bestimmen
+    const clock_t time_delayed_since_last_call      = clock () - last_call;
+    const uint_fast64_t runs_done_since_last_call   = current_run - last_current_run;
+
+    // Verbleibene Zeit ermitteln
+    const float runs_per_clock = (float) runs_done_since_last_call / (float) time_delayed_since_last_call;
+    const float ETA = ((float) (max_count_run - current_run) / (float) runs_per_clock) / (float) CLOCKS_PER_SEC;
+
     // Prozentualen Fortschritt bestimmen und ausgeben
     const float percent_done = (float) ((float) current_run / ((float) max_count_run / 100.0f));
 
-    PRINTF_FFLUSH("Building ... (~ %5.2f %%)\r", (percent_done > 100.0f) ? 100.0f : percent_done);
+    printf ("\r");
+    PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: %6.2f sec.", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done, ETA);
+
+    last_call           = clock ();
+    last_current_run    = current_run;
 
     return;
 }
