@@ -39,6 +39,9 @@ ALKANE_CREATE_CONSTITUTIONAL_ISOMER_C = ./src/Alkane/Alkane_Create_Constitutiona
 ALKANE_INFO_CONSTITUTIONAL_ISOMER_H = ./src/Alkane/Alkane_Info_Constitutional_Isomer.h
 ALKANE_INFO_CONSTITUTIONAL_ISOMER_C = ./src/Alkane/Alkane_Info_Constitutional_Isomer.c
 
+TINYTEST_H = ./src/Tests/tinytest.h
+TINYTEST_C = ./src/Tests/tinytest.c
+
 ALKANE_TESTS_H = ./src/Tests/Alkane_Tests.h
 ALKANE_TESTS_C = ./src/Tests/Alkane_Tests.c
 
@@ -53,8 +56,8 @@ all: $(TARGET)
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_Tests.o
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_Tests.o
+$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o tinytest.o Alkane_Tests.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o tinytest.o Alkane_Tests.o
 
 main.o: $(MAIN_C)
 	@echo Build target: $(TARGET).
@@ -84,6 +87,9 @@ Alkane_Info_Constitutional_Isomer.o: $(ALKANE_INFO_CONSTITUTIONAL_ISOMER_C)
 
 Alkane_Create_Constitutional_Isomer.o: $(ALKANE_CREATE_CONSTITUTIONAL_ISOMER_C) $(ASSERT_MSG_H) $(ALKANE_BRANCH_H) $(ALKANE_BRANCH_CONTAINER_H)
 	$(CC) $(CCFLAGS) -c $(ALKANE_CREATE_CONSTITUTIONAL_ISOMER_C)
+
+tinytest.o: $(TINYTEST_C)
+	$(CC) $(CCFLAGS) -c $(TINYTEST_C)
 
 Alkane_Tests.o: $(ALKANE_TESTS_C)
 	$(CC) $(CCFLAGS) -c $(ALKANE_TESTS_C)
