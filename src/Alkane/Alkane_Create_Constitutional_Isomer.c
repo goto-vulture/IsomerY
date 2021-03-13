@@ -14,6 +14,7 @@
 #include "Alkane_Container.h"
 #include "Alkane_Branch.h"
 #include "Alkane_Branch_Container.h"
+#include "../Print_Tools.h"
 
 
 
@@ -72,10 +73,8 @@ void Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_1, empty_branch);
     Add_Alkane_Branch_To_Container (Container_Height_1, single_c_atom_branch);
 
-    printf ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
             (size_t) 1u, count_alkane_branch_container, Container_Height_1->size);
-    fflush (stdout);
-
 
     // Alkanastliste mit Objekten, deren maximale Laenge aus ZWEI C-Atoms besteht, erzeugen
     const unsigned char two_c_atoms_numbercode []   = { 1, 1 };         // Zwei C-Atome als Ast
@@ -100,9 +99,8 @@ void Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_2, three_c_atoms_branch);
     Add_Alkane_Branch_To_Container (Container_Height_2, four_c_atoms_branch);
 
-    printf ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
             (size_t) 2u, count_alkane_branch_container, Container_Height_2->size);
-    fflush (stdout);
 
 
 
@@ -207,9 +205,8 @@ void Create_Alkane_Constitutional_Isomers
                         // Prozentualen Fortschritt bestimmen und ausgeben
                         const float percent_done =
                                 (float) ((float) current_inner_loop_run / ((float) max_inner_loop_runs / 100.0f));
-                        printf ("Build Alkane_Branch container %zu ... (~ %5.2f %%)\r", next_container + 1,
+                        PRINTF_FFLUSH("Build Alkane_Branch container %zu ... (~ %5.2f %%)\r", next_container + 1,
                                 (percent_done > 100.0f) ? 100.0f : percent_done);
-                        fflush (stdout);
                         local_run_counter = 0;
                     }
 
@@ -243,9 +240,8 @@ void Create_Alkane_Constitutional_Isomers
         FREE_AND_SET_TO_NULL (flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
 
-        printf ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+        PRINTF_FFLUSH ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
                 next_container + 1, count_alkane_branch_container, container_height_x [next_container]->size);
-        fflush (stdout);
     }
     puts ("");
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
@@ -264,20 +260,18 @@ void Create_Alkane_Constitutional_Isomers
     struct Alkane_Container* alkane_container_main_chain_length_1 = Create_Alkane_Container ();
     Add_Alkane_To_Container (alkane_container_main_chain_length_1, single_c_atom_alkane);
 
-    printf ("Building alkane container %2zu / %2zu\n", (size_t) 1u, (size_t) number_of_c_atoms);
-    printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 1u,
+    PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) 1u, (size_t) number_of_c_atoms);
+    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 1u,
             (size_t) number_of_c_atoms, alkane_container_main_chain_length_1->size);
-    fflush (stdout);
 
     // Alkan-Container, deren laengste Kette aus GENAU ZWEI C-Atom besteht
     struct Alkane* two_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, NULL, NULL);
     struct Alkane_Container* alkane_container_main_chain_length_2 = Create_Alkane_Container ();
     Add_Alkane_To_Container (alkane_container_main_chain_length_2, two_c_atom_alkane);
 
-    printf ("Building alkane container %2zu / %2zu\n", (size_t) 2u, (size_t) number_of_c_atoms);
-    printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 2u,
+    PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) 2u, (size_t) number_of_c_atoms);
+    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 2u,
             (size_t) number_of_c_atoms, alkane_container_main_chain_length_2->size);
-    fflush (stdout);
 
     // Alkan-Container, deren laengste Kette aus GENAU DREI C-Atom besteht
     struct Alkane* three_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, single_c_atom_branch,
@@ -291,11 +285,9 @@ void Create_Alkane_Constitutional_Isomers
     Add_Alkane_To_Container (alkane_container_main_chain_length_3, four_c_atom_alkane);
     Add_Alkane_To_Container (alkane_container_main_chain_length_3, five_c_atom_alkane);
 
-    printf ("Building alkane container %2zu / %2zu\n", (size_t) 3u, (size_t) number_of_c_atoms);
-    printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 3u,
+    PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) 3u, (size_t) number_of_c_atoms);
+    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 3u,
             (size_t) number_of_c_atoms, alkane_container_main_chain_length_3->size);
-    fflush (stdout);
-
 
 
     // Jetzt wird es hier wieder interessant:
@@ -313,7 +305,8 @@ void Create_Alkane_Constitutional_Isomers
 
     for (size_t next_alkane_container = 3; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
     {
-        printf ("Building alkane container %2zu / %2zu\n", (size_t) next_alkane_container + 1, (size_t) number_of_c_atoms);
+        PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) next_alkane_container + 1,
+                (size_t) number_of_c_atoms);
 
         // Neuen Container initialisieren
         alkane_container_main_chain_length_x [next_alkane_container] = Create_Alkane_Container ();
@@ -380,7 +373,7 @@ void Create_Alkane_Constitutional_Isomers
 
                     // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
                     // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
-                    if (local_run_counter == 1000)
+                    if (local_run_counter == 2500)
                     {
                         // Prozentualen Fortschritt bestimmen und ausgeben
                         Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
@@ -449,7 +442,7 @@ void Create_Alkane_Constitutional_Isomers
 
                         // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
                         // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
-                        if (local_run_counter == 1000)
+                        if (local_run_counter == 2500)
                         {
                             // Prozentualen Fortschritt bestimmen und ausgeben
                             Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
@@ -508,10 +501,9 @@ void Create_Alkane_Constitutional_Isomers
         FREE_AND_SET_TO_NULL(flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
 
-        printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n",
+        PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n",
                 (size_t) next_alkane_container + 1, (size_t) number_of_c_atoms,
                 alkane_container_main_chain_length_x [next_alkane_container]->size);
-        fflush (stdout);
     }
     puts ("");
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. + 3. Teil ===== ===== ===== ===== ===== ===== ===== =====
@@ -561,8 +553,7 @@ static void Print_Percent_Done (const uint_fast64_t current_run, const uint_fast
     // Prozentualen Fortschritt bestimmen und ausgeben
     const float percent_done = (float) ((float) current_run / ((float) max_count_run / 100.0f));
 
-    printf ("Building ... (~ %5.2f %%)\r", (percent_done > 100.0f) ? 100.0f : percent_done);
-    fflush (stdout);
+    PRINTF_FFLUSH("Building ... (~ %5.2f %%)\r", (percent_done > 100.0f) ? 100.0f : percent_done);
 
     return;
 }
