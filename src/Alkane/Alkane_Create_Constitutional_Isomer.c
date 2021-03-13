@@ -532,15 +532,21 @@ void Create_Alkane_Constitutional_Isomers
     printf ("\n> RESULTS SUM: %" PRIuFAST64 " ! <\n\n", count_results);
 
     // Aufraeumen
-    for (size_t next_container = 0; next_container < count_alkane_branch_container; ++ next_container)
+    for (size_t next_container = 0; next_container < MAX_NUMBER_OF_C_ATOMS; ++ next_container)
     {
-        Delete_Alkane_Branch_Container (container_height_x [next_container]);
-        container_height_x [next_container] = NULL;
+        if (container_height_x [next_container] != NULL)
+        {
+            Delete_Alkane_Branch_Container (container_height_x [next_container]);
+            container_height_x [next_container] = NULL;
+        }
     }
-    for (size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
+    for (size_t next_alkane_container = 0; next_alkane_container < MAX_NUMBER_OF_C_ATOMS; ++ next_alkane_container)
     {
-        Delete_Alkane_Container (alkane_container_main_chain_length_x [next_alkane_container]);
-        alkane_container_main_chain_length_x [next_alkane_container] = NULL;
+        if (alkane_container_main_chain_length_x [next_alkane_container] != NULL)
+        {
+            Delete_Alkane_Container (alkane_container_main_chain_length_x [next_alkane_container]);
+            alkane_container_main_chain_length_x [next_alkane_container] = NULL;
+        }
     }
 
     // Anzahl an erzeugten Isomeren - per Zeiger - uebergeben
