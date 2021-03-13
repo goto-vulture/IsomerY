@@ -21,6 +21,7 @@
 #include "Error_Handling/Dynamic_Memory.h"
 #include "Alkane/Alkane.h"
 #include "Alkane/Alkane_Create_Constitutional_Isomer.h"
+#include "Tests/Alkane_Tests.h"
 
 
 
@@ -75,7 +76,13 @@ int main (const int argc, const char* const argv [])
 //    Delete_Alkane_Branch (branch_3);
 
     // Testcode fuer die Funktion, die die Konstitutionsisomere erzeugt
-    Create_Alkane_Constitutional_Isomers (10);
+//    uint_fast64_t number_of_created_isomers = 0;
+//    Create_Alkane_Constitutional_Isomers (12, &number_of_created_isomers);
+
+    RUN(TEST_Create_Alkane_Constitutional_Isomers);
+
+    // Ergebnisse aller durchgefuehrten Tests anzeigen
+    TEST_REPORT();
 
     Show_Dynamic_Memory_Status ();
 
