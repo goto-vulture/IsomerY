@@ -32,6 +32,20 @@ extern "C"
 #endif /* PRINTF_FFLUSH */
 
 /**
+ * Ausgabe mittels printf, wobei automatisch stdout geleert wird.
+ * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
+ *
+ * Der Hauptunterschied zwischen diesem Makro und der Verwendung eines Makros mit puts: Es wird hier nicht zwingend ein
+ * Zeilenumbruch geschrieben !
+ */
+#ifndef PRINTF_NO_VA_ARGS_FFLUSH
+    #define PRINTF_NO_VA_ARGS_FFLUSH(format_string)             \
+    printf (format_string); fflush (stdout);
+#else
+    #error "The macro \"PRINTF_NO_VA_ARGS_FFLUSH\" is already defined !"
+#endif /* PRINTF_NO_VA_ARGS_FFLUSH */
+
+/**
  * Ausgabe mittels puts, wobei automatisch stdout geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
  */
