@@ -157,15 +157,21 @@ void Create_Alkane_Constitutional_Isomers
                 ((count_branches + 1) / 2) * ((count_branches + 1) / 2);
         uint_fast64_t current_inner_loop_run    = 0;
 
+        size_t loop_start = 0;
+        for (size_t i = 0; i < next_container - 1; ++ i)
+        {
+            loop_start += (size_t) container_height_x [i]->size;
+        }
+
         // Die Aeste des aktuellsten Containers verwenden, damit die Laenge des Astes aus drei C-Atomen besteht
-        for (size_t i2 = (size_t) container_height_x [next_container - 2]->size; i2 < count_branches; ++ i2) // < !
+        for (size_t i2 = loop_start; i2 < count_branches; ++ i2) // < !
         {
             for (size_t i3 = 0; i3 <= i2; ++ i3) // <= !
             {
                 // Aeste aussortieren, die zu gross sind
-                // Wenn die Groesse des zu konstruierenden Asts groesser als die uebergebene Anzahl an C-Atomen ist,
+                // Wenn die Groesse des zu konstruierenden Asts GROESSER als die uebergebene Anzahl an C-Atomen ist,
                 // dann kann dieser Ast zu keinem gueltigen Ergebnis fuehren !
-                if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length) >
+                if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length + 1) >
                         number_of_c_atoms)
                 {
                     // Die inneren Schleifendurchlaeufe beachten, die durch den Schleifenneustart nicht ausgefuehrt
@@ -182,10 +188,10 @@ void Create_Alkane_Constitutional_Isomers
                     // printf ("%10" PRIuFAST64 " / %10" PRIuFAST64 "\r", current_inner_loop_run, max_inner_loop_runs);
 
                     // Auch hier das Gleiche: Aeste aussortieren, die zu gross sind
-                    // Wenn die Groesse des zu konstruierenden Asts groesser als die uebergebene Anzahl an C-Atomen ist,
+                    // Wenn die Groesse des zu konstruierenden Asts GROESSER als die uebergebene Anzahl an C-Atomen ist,
                     // dann kann dieser Ast zu keinem gueltigen Ergebnis fuehren !
                     if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
-                            flat_alkane_branch_container [i4]->length) > number_of_c_atoms)
+                            flat_alkane_branch_container [i4]->length + 1) > number_of_c_atoms)
                     {
                         continue;
                     }
@@ -222,6 +228,7 @@ void Create_Alkane_Constitutional_Isomers
                     // Der Nummerncode im zweckentfremdeten Alkane-Objekt ist der Zahlencode unseres neuen Alkanasts
                     struct Alkane_Branch* new_branch = Create_Alkane_Branch (temp->merged_numbercode,
                             temp->number_of_c_atoms);
+
                     Add_Alkane_Branch_To_Container (container_height_x [next_container], new_branch);
 
                     // Zweckentfremdetes Objekt wieder loeschen
@@ -243,7 +250,9 @@ void Create_Alkane_Constitutional_Isomers
 
 
 
-    // ===== ===== ===== ===== ===== ===== ===== ===== BEGINN 2. Teil ===== ===== ===== ===== ===== ===== ===== =====
+    // Der 3. Teil wird quasi implizit gemacht, indem nur die Alkane konstruiert werden, die genau die passende Groesse
+    // haben !
+    // ===== ===== ===== ===== ===== ===== ===== ===== BEGINN 2. + 3. Teil ===== ===== ===== ===== ===== ===== ===== =====
     // Nun muessen aus den Aesten die Alkane gebildet werden
     // Dafuer werden Alkan_Container erzeugt, die die Objekte sichern, deren laengste Kette aus genau x C-Atomen
     // besteht
@@ -305,7 +314,7 @@ void Create_Alkane_Constitutional_Isomers
         const size_t container_height_index = (next_alkane_container) / 2;
 
         size_t count_branches = 0;
-        for (size_t i = 0; i <= container_height_index; ++ i)
+        for (size_t i = 0; i <= container_height_index; ++ i) // <= !
         {
             // Die Anzahl an Aesten in den zu verwendenen Containern ermitteln
             count_branches += (size_t) container_height_x [i]->size;
@@ -318,8 +327,7 @@ void Create_Alkane_Constitutional_Isomers
 
         // Flaches Speichermodell erzeugen
         size_t current_element_index = 0;
-
-        for (size_t i = 0; i <= container_height_index; ++ i)
+        for (size_t i = 0; i <= container_height_index; ++ i) // <= !
         {
             for (size_t i2 = 0; i2 < container_height_x [i]->size; ++ i2)
             {
@@ -342,8 +350,15 @@ void Create_Alkane_Constitutional_Isomers
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
             for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
-                for (size_t i3 = loop_start; i3 <= i2; ++ i3)
+                for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
+                    // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
+                    if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length)
+                            != number_of_c_atoms)
+                    {
+                        continue;
+                    }
+
                     struct Alkane* new_alkane = Create_Alkane (flat_alkane_branch_container [i2],
                             flat_alkane_branch_container [i3], NULL, NULL);
                     Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
@@ -353,26 +368,46 @@ void Create_Alkane_Constitutional_Isomers
         // Zentrales Objekt ist ein C-ATOM
         else
         {
-            // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
-            // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
-            // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
-            // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste erzeugt.
+            size_t loop_start = 0;
             size_t loop_end = 0;
+            for (size_t i = 0; i < container_height_index - 1; ++ i)
+            {
+                loop_start += container_height_x [i]->size;
+            }
             for (size_t i = 0; i < container_height_index; ++ i)
             {
                 loop_end += container_height_x [i]->size;
             }
 
+            // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
+            // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
+            // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
+            // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
             // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
-            for (size_t i2 = (size_t) container_height_x [container_height_index - 1]->size - 1;
-                    i2 < loop_end; ++ i2)
+            for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
-                for (size_t i3 = (size_t) container_height_x [container_height_index - 1]->size - 1; i3 <= i2; ++ i3)
+                for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
-                    for (size_t i4 = 0; i4 <= i3; ++ i4)
+                    for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                     {
-                        for (size_t i5 = 0; i5 <= i4; ++ i5)
+                        // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
+                        // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
+                        if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
+                                flat_alkane_branch_container [i4]->length + 1) > number_of_c_atoms)
                         {
+                            continue;
+                        }
+
+                        for (size_t i5 = 0; i5 <= i4; ++ i5) // <= !
+                        {
+                            // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
+                            if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
+                                    flat_alkane_branch_container [i4]->length + flat_alkane_branch_container [i5]->length + 1)
+                                    != number_of_c_atoms)
+                            {
+                                continue;
+                            }
+
                             // Verbinden der vier Aeste miteinander durch ein zentrales C-Atom
                             // Das zentrale C-Atom muss irgendwie in den Zahlencode eines Astes eingebaut werden, damit
                             // es in der Struktur des Alkans erhalten bleibt.
@@ -410,7 +445,7 @@ void Create_Alkane_Constitutional_Isomers
         fflush (stdout);
     }
     puts ("");
-    // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. Teil ===== ===== ===== ===== ===== ===== ===== =====
+    // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. + 3. Teil ===== ===== ===== ===== ===== ===== ===== =====
 
     // Ergebnisse zaehlen
     uint_fast64_t count_results = 0;
@@ -424,18 +459,13 @@ void Create_Alkane_Constitutional_Isomers
             {
                 ++ count_results;
                 ++ count_container_results;
-
-                if (next_alkane_container + 1 == number_of_c_atoms)
-                {
-                    Print_Alkane (alkane_container_main_chain_length_x [next_alkane_container]->data [i]);
-                }
             }
         }
 
-        printf ("RESULTS %zu: %" PRIuFAST64 " !\n", next_alkane_container + 1, count_container_results);
+        printf ("RESULTS %2zu: %5" PRIuFAST64 " !\n", next_alkane_container + 1, count_container_results);
     }
 
-    printf ("RESULTS SUM: %" PRIuFAST64 " !\n", count_results);
+    printf ("\n> RESULTS SUM: %" PRIuFAST64 " ! <\n\n", count_results);
 
     // Aufraeumen
     for (size_t next_container = 0; next_container < count_alkane_branch_container; ++ next_container)
