@@ -29,7 +29,7 @@ void TEST_Create_Alkane_Constitutional_Isomers (void)
 {
     uint_fast64_t number_of_created_isomers = 0;
 
-    for (uint_fast8_t i = 3; i <= 12; ++ i)
+    for (uint_fast8_t i = 1; i <= 12; ++ i)
     {
         Create_Alkane_Constitutional_Isomers (i, &number_of_created_isomers);
 
