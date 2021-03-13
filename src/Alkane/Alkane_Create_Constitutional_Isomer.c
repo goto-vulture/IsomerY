@@ -11,6 +11,7 @@
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "Alkane.h"
+#include "Alkane_Container.h"
 #include "Alkane_Branch.h"
 #include "Alkane_Branch_Container.h"
 
@@ -242,11 +243,210 @@ void Create_Alkane_Constitutional_Isomers
 
 
 
+    // ===== ===== ===== ===== ===== ===== ===== ===== BEGINN 2. Teil ===== ===== ===== ===== ===== ===== ===== =====
+    // Nun muessen aus den Aesten die Alkane gebildet werden
+    // Dafuer werden Alkan_Container erzeugt, die die Objekte sichern, deren laengste Kette aus genau x C-Atomen
+    // besteht
+    // Die ersten drei Container werden wieder direkt im Quelltext angegeben
+    // Alkan-Container, deren laengste Kette aus GENAU EINEM C-Atom besteht
+    struct Alkane* single_c_atom_alkane = Create_Alkane (single_c_atom_branch, NULL, NULL, NULL);
+    struct Alkane_Container* alkane_container_main_chain_length_1 = Create_Alkane_Container ();
+    Add_Alkane_To_Container (alkane_container_main_chain_length_1, single_c_atom_alkane);
+
+    printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 1u,
+            (size_t) number_of_c_atoms, alkane_container_main_chain_length_1->size);
+    fflush (stdout);
+
+    // Alkan-Container, deren laengste Kette aus GENAU ZWEI C-Atom besteht
+    struct Alkane* two_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, NULL, NULL);
+    struct Alkane_Container* alkane_container_main_chain_length_2 = Create_Alkane_Container ();
+    Add_Alkane_To_Container (alkane_container_main_chain_length_2, two_c_atom_alkane);
+
+    printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 2u,
+            (size_t) number_of_c_atoms, alkane_container_main_chain_length_2->size);
+    fflush (stdout);
+
+    // Alkan-Container, deren laengste Kette aus GENAU DREI C-Atom besteht
+    struct Alkane* three_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, single_c_atom_branch,
+            NULL);
+    struct Alkane* four_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, single_c_atom_branch,
+            single_c_atom_branch);
+    struct Alkane* five_c_atom_alkane = Create_Alkane (two_c_atoms_branch, single_c_atom_branch, single_c_atom_branch,
+            single_c_atom_branch);
+    struct Alkane_Container* alkane_container_main_chain_length_3 = Create_Alkane_Container ();
+    Add_Alkane_To_Container (alkane_container_main_chain_length_3, three_c_atom_alkane);
+    Add_Alkane_To_Container (alkane_container_main_chain_length_3, four_c_atom_alkane);
+    Add_Alkane_To_Container (alkane_container_main_chain_length_3, five_c_atom_alkane);
+
+    printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 3u,
+            (size_t) number_of_c_atoms, alkane_container_main_chain_length_3->size);
+    fflush (stdout);
+
+
+
+    // Jetzt wird es hier wieder interessant:
+    // Aus den zuvor gebildeten Alkan_Branch-Objekten werden nun die Alkane gebildet
+
+    // Container fuer die Alkane_Container-Zeiger
+    struct Alkane_Container* alkane_container_main_chain_length_x [MAX_NUMBER_OF_C_ATOMS];
+    for (size_t i = 3; i < MAX_NUMBER_OF_C_ATOMS; ++ i)
+    {
+        alkane_container_main_chain_length_x [i] = NULL;
+    }
+    alkane_container_main_chain_length_x [0] = alkane_container_main_chain_length_1;
+    alkane_container_main_chain_length_x [1] = alkane_container_main_chain_length_2;
+    alkane_container_main_chain_length_x [2] = alkane_container_main_chain_length_3;
+
+    for (size_t next_alkane_container = 3; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
+    {
+        // Neuen Container initialisieren
+        alkane_container_main_chain_length_x [next_alkane_container] = Create_Alkane_Container ();
+
+        const size_t container_height_index = (next_alkane_container) / 2;
+
+        size_t count_branches = 0;
+        for (size_t i = 0; i <= container_height_index; ++ i)
+        {
+            // Die Anzahl an Aesten in den zu verwendenen Containern ermitteln
+            count_branches += (size_t) container_height_x [i]->size;
+        }
+
+        struct Alkane_Branch** flat_alkane_branch_container = (struct Alkane_Branch**) CALLOC (count_branches,
+                sizeof (struct Alkane_Branch*));
+        ASSERT_ALLOC(flat_alkane_branch_container, "Cannot create memory for a flat address model !",
+                count_branches * sizeof (struct Alkane_Branch*));
+
+        // Flaches Speichermodell erzeugen
+        size_t current_element_index = 0;
+
+        for (size_t i = 0; i <= container_height_index; ++ i)
+        {
+            for (size_t i2 = 0; i2 < container_height_x [i]->size; ++ i2)
+            {
+                flat_alkane_branch_container [current_element_index] = container_height_x [i]->data [i2];
+                ++ current_element_index;
+            }
+        }
+
+        // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
+        // next_alkane_container beginnt bei der Zaehlung mit 0 !
+        // Zentrales Objekt ist eine BINDUNG
+        if (((next_alkane_container + 1) % 2) == 0)
+        {
+            size_t loop_start = 0;
+            for (size_t i = 0; i < container_height_index; ++ i)
+            {
+                loop_start += container_height_x [i]->size;
+            }
+
+            // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
+            for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
+            {
+                for (size_t i3 = loop_start; i3 <= i2; ++ i3)
+                {
+                    struct Alkane* new_alkane = Create_Alkane (flat_alkane_branch_container [i2],
+                            flat_alkane_branch_container [i3], NULL, NULL);
+                    Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
+                }
+            }
+        }
+        // Zentrales Objekt ist ein C-ATOM
+        else
+        {
+            // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
+            // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
+            // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
+            // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste erzeugt.
+            size_t loop_end = 0;
+            for (size_t i = 0; i < container_height_index; ++ i)
+            {
+                loop_end += container_height_x [i]->size;
+            }
+
+            // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
+            for (size_t i2 = (size_t) container_height_x [container_height_index - 1]->size - 1;
+                    i2 < loop_end; ++ i2)
+            {
+                for (size_t i3 = (size_t) container_height_x [container_height_index - 1]->size - 1; i3 <= i2; ++ i3)
+                {
+                    for (size_t i4 = 0; i4 <= i3; ++ i4)
+                    {
+                        for (size_t i5 = 0; i5 <= i4; ++ i5)
+                        {
+                            // Verbinden der vier Aeste miteinander durch ein zentrales C-Atom
+                            // Das zentrale C-Atom muss irgendwie in den Zahlencode eines Astes eingebaut werden, damit
+                            // es in der Struktur des Alkans erhalten bleibt.
+                            // Das zentrale C-Atom wird immer dem ersten Alkan_Branch zugeordnet. Dafuer wird ein
+                            // temporaerer Alkanast erzeugt, welches den urspruenglichen Ast mit einem Ast, der nur aus
+                            // einem C-Atom besteht, beinhaltet
+                            struct Alkane* temp_alkane = Create_Alkane (flat_alkane_branch_container [i2],
+                                    single_c_atom_branch, NULL, NULL);
+                            struct Alkane_Branch* temp_alkane_branch = Create_Alkane_Branch (temp_alkane->merged_numbercode,
+                                    temp_alkane->number_of_c_atoms);
+
+                            struct Alkane* new_alkane = Create_Alkane (temp_alkane_branch,
+                                    flat_alkane_branch_container [i3],
+                                    flat_alkane_branch_container [i4],
+                                    flat_alkane_branch_container [i5]);
+
+                            Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
+
+                            Delete_Alkane (temp_alkane);
+                            temp_alkane = NULL;
+                            Delete_Alkane_Branch (temp_alkane_branch);
+                            temp_alkane_branch = NULL;
+                        }
+                    }
+                }
+            }
+        }
+
+        FREE_AND_SET_TO_NULL(flat_alkane_branch_container);
+        flat_alkane_branch_container = NULL;
+
+        printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n",
+                (size_t) next_alkane_container + 1, (size_t) number_of_c_atoms,
+                alkane_container_main_chain_length_x [next_alkane_container]->size);
+        fflush (stdout);
+    }
+    puts ("");
+    // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. Teil ===== ===== ===== ===== ===== ===== ===== =====
+
+    // Ergebnisse zaehlen
+    uint_fast64_t count_results = 0;
+    for (size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
+    {
+        uint_fast64_t count_container_results = 0;
+
+        for (size_t i = 0; i < alkane_container_main_chain_length_x [next_alkane_container]->size; ++ i)
+        {
+            if (alkane_container_main_chain_length_x [next_alkane_container]->data [i]->number_of_c_atoms == number_of_c_atoms)
+            {
+                ++ count_results;
+                ++ count_container_results;
+
+                if (next_alkane_container + 1 == number_of_c_atoms)
+                {
+                    Print_Alkane (alkane_container_main_chain_length_x [next_alkane_container]->data [i]);
+                }
+            }
+        }
+
+        printf ("RESULTS %zu: %" PRIuFAST64 " !\n", next_alkane_container + 1, count_container_results);
+    }
+
+    printf ("RESULTS SUM: %" PRIuFAST64 " !\n", count_results);
+
     // Aufraeumen
     for (size_t next_container = 0; next_container < count_alkane_branch_container; ++ next_container)
     {
         Delete_Alkane_Branch_Container (container_height_x [next_container]);
         container_height_x [next_container] = NULL;
+    }
+    for (size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
+    {
+        Delete_Alkane_Container (alkane_container_main_chain_length_x [next_alkane_container]);
+        alkane_container_main_chain_length_x [next_alkane_container] = NULL;
     }
 
     return;
