@@ -65,14 +65,17 @@ static void Print_Percent_Done
  *
  * Asserts:
  *      number_of_c_atoms < MAX_NUMBER_OF_C_ATOMS
+ *      number_of_created_isomers != NULL
  */
 void Create_Alkane_Constitutional_Isomers
 (
-       const uint_fast8_t number_of_c_atoms
+       const uint_fast8_t number_of_c_atoms,
+       uint_fast64_t* const number_of_created_isomers
 )
 {
     ASSERT_FMSG(number_of_c_atoms <= MAX_NUMBER_OF_C_ATOMS, "Number of C atoms is too large ! Got: %" PRIuFAST8
             "; Max. valid: %" PRIuFAST8,  number_of_c_atoms, MAX_NUMBER_OF_C_ATOMS);
+    ASSERT_MSG(number_of_created_isomers != NULL, "number_of_created_isomers is NULL !");
 
     // ===== ===== ===== ===== ===== ===== ===== ===== BEGINN 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
     // Die Anzahl an Alkane_Branch_Container ist die aufgerundete Haelfte der Anzahl an C-Atomen
@@ -539,6 +542,9 @@ void Create_Alkane_Constitutional_Isomers
         Delete_Alkane_Container (alkane_container_main_chain_length_x [next_alkane_container]);
         alkane_container_main_chain_length_x [next_alkane_container] = NULL;
     }
+
+    // Anzahl an erzeugten Isomeren - per Zeiger - uebergeben
+    *number_of_created_isomers = count_results;
 
     return;
 }
