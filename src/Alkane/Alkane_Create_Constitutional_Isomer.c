@@ -312,7 +312,7 @@ void Create_Alkane_Constitutional_Isomers
 
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
-        // Zentrales Objekt ist eine BINDUNG
+        // ===== ===== ===== BEGINN Zentrales Objekt ist eine BINDUNG ===== ===== =====
         if (((next_alkane_container + 1) % 2) == 0)
         {
             size_t loop_start = 0;
@@ -334,6 +334,7 @@ void Create_Alkane_Constitutional_Isomers
             Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
 
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
+            // ===== BEGINN Berechnungsschleifen =====
             for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
@@ -363,8 +364,10 @@ void Create_Alkane_Constitutional_Isomers
                     Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
                 }
             }
+            // ===== ENDE Berechnungsschleifen =====
         }
-        // Zentrales Objekt ist ein C-ATOM
+        // ===== ===== ===== ENDE Zentrales Objekt ist eine BINDUNG ===== ===== =====
+        // ===== ===== ===== BEGINN Zentrales Objekt ist ein C-ATOM ===== ===== =====
         else
         {
             size_t loop_start   = 0;
@@ -401,6 +404,7 @@ void Create_Alkane_Constitutional_Isomers
             // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
             // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
             // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
+            // ===== BEGINN Berechnungsschleifen =====
             for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
                 for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
@@ -465,7 +469,9 @@ void Create_Alkane_Constitutional_Isomers
                     }
                 }
             }
+            // ===== ENDE Berechnungsschleifen =====
         }
+        // ===== ===== ===== ENDE Zentrales Objekt ist ein C-ATOM ===== ===== =====
 
         // printf ("Count runs: %12" PRIuFAST64 "\nMax. runs:  %12" PRIuFAST64 "\n", count_inner_loop_runs, max_inner_loop_runs);
 
