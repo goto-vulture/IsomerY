@@ -321,15 +321,10 @@ void Create_Alkane_Constitutional_Isomers
                 loop_start += (size_t) container_height_x [i]->size;
             }
 
-            // Anzahl der moeglichen inneren Schleifendurchlaeufe zaehlen
+            // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
             for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 max_inner_loop_runs += (i2 - loop_start + 1);
-//                for (size_t i3 = loop_start; i3 <= i2; ++ i3)
-//                {
-//                    max_inner_loop_runs += (i2 - i3 + 1);
-//                    break;
-//                }
             }
             Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
 
@@ -343,7 +338,7 @@ void Create_Alkane_Constitutional_Isomers
                     ++ local_run_counter;
                     ++ count_inner_loop_runs;
 
-                    // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
+                    // Aus Effizienzgruenden soll nur jedes 2500. Mal eine Ausgabe stattfinden
                     // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
                     if (local_run_counter == 2500)
                     {
@@ -381,7 +376,7 @@ void Create_Alkane_Constitutional_Isomers
                 loop_end += (size_t) container_height_x [i]->size;
             }
 
-            // Anzahl der moeglichen inneren Schleifendurchlaeufe zaehlen
+            // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
             for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
                 for (size_t i3 = loop_start; i3 <= i2; ++ i3)
@@ -389,11 +384,6 @@ void Create_Alkane_Constitutional_Isomers
                     for (size_t i4 = 0; i4 <= i3; ++ i4)
                     {
                         max_inner_loop_runs += (i4 /* - i5 */ + 1);
-//                        for (size_t i5 = 0; i5 <= i4; ++ i5)
-//                        {
-//                            max_inner_loop_runs += (i4 - i5 + 1);
-//                            break;
-//                        }
                     }
                 }
             }
@@ -415,7 +405,7 @@ void Create_Alkane_Constitutional_Isomers
                         ++ local_run_counter;
                         ++ count_inner_loop_runs;
 
-                        // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
+                        // Aus Effizienzgruenden soll nur jedes 2500. Mal eine Ausgabe stattfinden
                         // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
                         if (local_run_counter == 2500)
                         {
