@@ -19,6 +19,8 @@
 
 
 
+static void Print_Percent_Done (const uint_fast64_t current_run, const uint_fast64_t max_count_run);
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -262,6 +264,7 @@ void Create_Alkane_Constitutional_Isomers
     struct Alkane_Container* alkane_container_main_chain_length_1 = Create_Alkane_Container ();
     Add_Alkane_To_Container (alkane_container_main_chain_length_1, single_c_atom_alkane);
 
+    printf ("Building alkane container %2zu / %2zu\n", (size_t) 1u, (size_t) number_of_c_atoms);
     printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 1u,
             (size_t) number_of_c_atoms, alkane_container_main_chain_length_1->size);
     fflush (stdout);
@@ -271,6 +274,7 @@ void Create_Alkane_Constitutional_Isomers
     struct Alkane_Container* alkane_container_main_chain_length_2 = Create_Alkane_Container ();
     Add_Alkane_To_Container (alkane_container_main_chain_length_2, two_c_atom_alkane);
 
+    printf ("Building alkane container %2zu / %2zu\n", (size_t) 2u, (size_t) number_of_c_atoms);
     printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 2u,
             (size_t) number_of_c_atoms, alkane_container_main_chain_length_2->size);
     fflush (stdout);
@@ -287,6 +291,7 @@ void Create_Alkane_Constitutional_Isomers
     Add_Alkane_To_Container (alkane_container_main_chain_length_3, four_c_atom_alkane);
     Add_Alkane_To_Container (alkane_container_main_chain_length_3, five_c_atom_alkane);
 
+    printf ("Building alkane container %2zu / %2zu\n", (size_t) 3u, (size_t) number_of_c_atoms);
     printf ("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 3u,
             (size_t) number_of_c_atoms, alkane_container_main_chain_length_3->size);
     fflush (stdout);
@@ -308,6 +313,8 @@ void Create_Alkane_Constitutional_Isomers
 
     for (size_t next_alkane_container = 3; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
     {
+        printf ("Building alkane container %2zu / %2zu\n", (size_t) next_alkane_container + 1, (size_t) number_of_c_atoms);
+
         // Neuen Container initialisieren
         alkane_container_main_chain_length_x [next_alkane_container] = Create_Alkane_Container ();
 
@@ -336,6 +343,9 @@ void Create_Alkane_Constitutional_Isomers
             }
         }
 
+        uint_fast64_t max_inner_loop_runs = 0;
+        uint_fast64_t count_inner_loop_runs = 0;
+
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
         // Zentrales Objekt ist eine BINDUNG
@@ -347,11 +357,36 @@ void Create_Alkane_Constitutional_Isomers
                 loop_start += container_height_x [i]->size;
             }
 
+            // Anzahl der moeglichen inneren Schleifendurchlaeufe zaehlen
+            for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
+            {
+                max_inner_loop_runs += (i2 - loop_start + 1);
+//                for (size_t i3 = loop_start; i3 <= i2; ++ i3)
+//                {
+//                    max_inner_loop_runs += (i2 - i3 + 1);
+//                    break;
+//                }
+            }
+            Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
             for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
+                    static uint_fast16_t local_run_counter = 0;
+                    ++ local_run_counter;
+                    ++ count_inner_loop_runs;
+
+                    // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
+                    // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
+                    if (local_run_counter == 1000)
+                    {
+                        // Prozentualen Fortschritt bestimmen und ausgeben
+                        Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+                        local_run_counter = 0;
+                    }
+
                     // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
                     if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length)
                             != number_of_c_atoms)
@@ -379,6 +414,24 @@ void Create_Alkane_Constitutional_Isomers
                 loop_end += container_height_x [i]->size;
             }
 
+            // Anzahl der moeglichen inneren Schleifendurchlaeufe zaehlen
+            for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
+            {
+                for (size_t i3 = loop_start; i3 <= i2; ++ i3)
+                {
+                    for (size_t i4 = 0; i4 <= i3; ++ i4)
+                    {
+                        max_inner_loop_runs += (i4 /* - i5 */ + 1);
+//                        for (size_t i5 = 0; i5 <= i4; ++ i5)
+//                        {
+//                            max_inner_loop_runs += (i4 - i5 + 1);
+//                            break;
+//                        }
+                    }
+                }
+            }
+            Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+
             // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
             // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
             // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
@@ -390,11 +443,25 @@ void Create_Alkane_Constitutional_Isomers
                 {
                     for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                     {
+                        static uint_fast16_t local_run_counter = 0;
+                        ++ local_run_counter;
+                        ++ count_inner_loop_runs;
+
+                        // Aus Effizienzgruenden soll nur jedes 1000. Mal eine Ausgabe stattfinden
+                        // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
+                        if (local_run_counter == 1000)
+                        {
+                            // Prozentualen Fortschritt bestimmen und ausgeben
+                            Print_Percent_Done (count_inner_loop_runs, max_inner_loop_runs);
+                            local_run_counter = 0;
+                        }
+
                         // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
                         // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
                         if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
                                 flat_alkane_branch_container [i4]->length + 1) > number_of_c_atoms)
                         {
+                            count_inner_loop_runs += (i4 + 1);
                             continue;
                         }
 
@@ -435,6 +502,8 @@ void Create_Alkane_Constitutional_Isomers
                 }
             }
         }
+
+        // printf ("Count runs: %12" PRIuFAST64 "\nMax. runs:  %12" PRIuFAST64 "\n", count_inner_loop_runs, max_inner_loop_runs);
 
         FREE_AND_SET_TO_NULL(flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
@@ -478,6 +547,22 @@ void Create_Alkane_Constitutional_Isomers
         Delete_Alkane_Container (alkane_container_main_chain_length_x [next_alkane_container]);
         alkane_container_main_chain_length_x [next_alkane_container] = NULL;
     }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Den aktuellen Fortschritt prozentual bestimmen und auf stdout ausgeben.
+ */
+static void Print_Percent_Done (const uint_fast64_t current_run, const uint_fast64_t max_count_run)
+{
+    // Prozentualen Fortschritt bestimmen und ausgeben
+    const float percent_done = (float) ((float) current_run / ((float) max_count_run / 100.0f));
+
+    printf ("Building ... (~ %5.2f %%)\r", (percent_done > 100.0f) ? 100.0f : percent_done);
+    fflush (stdout);
 
     return;
 }
