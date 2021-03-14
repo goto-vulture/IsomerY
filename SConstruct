@@ -74,6 +74,7 @@ c_file_list = [
     "src/Alkane/Alkane_Branch_Container.c",
     "src/Alkane/Alkane.c",
     "src/Alkane/Alkane_Container.c",
+    "src/Alkane/Alkane_To_IUPAC_Name.c",
 
     # Dateien fuer das Testen
     "src/Tests/Alkane_Tests.c",
