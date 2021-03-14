@@ -16,6 +16,7 @@
 #include "Alkane_Branch.h"
 #include "Alkane_Branch_Container.h"
 #include "../Print_Tools.h"
+#include "../Misc.h"
 
 /**
  * Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
@@ -132,7 +133,7 @@ void Create_Alkane_Constitutional_Isomers
 
     // Container fuer die Alkane_Branch_Container-Zeiger
     struct Alkane_Branch_Container* container_height_x [(MAX_NUMBER_OF_C_ATOMS + 1) / 2];
-    for (size_t i = 2; i < ((MAX_NUMBER_OF_C_ATOMS + 1) / 2); ++ i)
+    for (size_t i = 2; i < COUNT_ARRAY_ELEMENTS(container_height_x); ++ i)
     {
         container_height_x [i] = NULL;
     }
@@ -289,7 +290,7 @@ void Create_Alkane_Constitutional_Isomers
 
     // Container fuer die Alkane_Container-Zeiger
     struct Alkane_Container* alkane_container_main_chain_length_x [MAX_NUMBER_OF_C_ATOMS];
-    for (size_t i = 3; i < MAX_NUMBER_OF_C_ATOMS; ++ i)
+    for (size_t i = 3; i < COUNT_ARRAY_ELEMENTS(alkane_container_main_chain_length_x); ++ i)
     {
         alkane_container_main_chain_length_x [i] = NULL;
     }
@@ -532,7 +533,7 @@ void Create_Alkane_Constitutional_Isomers
     printf ("\n> RESULTS SUM: %" PRIuFAST64 " ! <\n\n", count_results);
 
     // Aufraeumen
-    for (size_t next_container = 0; next_container < ((MAX_NUMBER_OF_C_ATOMS + 1) / 2); ++ next_container)
+    for (size_t next_container = 0; next_container < COUNT_ARRAY_ELEMENTS(container_height_x); ++ next_container)
     {
         if (container_height_x [next_container] != NULL)
         {
@@ -540,7 +541,8 @@ void Create_Alkane_Constitutional_Isomers
             container_height_x [next_container] = NULL;
         }
     }
-    for (size_t next_alkane_container = 0; next_alkane_container < MAX_NUMBER_OF_C_ATOMS; ++ next_alkane_container)
+    for (size_t next_alkane_container = 0; next_alkane_container < COUNT_ARRAY_ELEMENTS(alkane_container_main_chain_length_x);
+            ++ next_alkane_container)
     {
         if (alkane_container_main_chain_length_x [next_alkane_container] != NULL)
         {
