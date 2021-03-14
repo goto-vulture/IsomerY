@@ -52,11 +52,14 @@ int main (const int argc, const char* const argv [])
 //    uint_fast64_t number_of_created_isomers = 0;
 //    Create_Alkane_Constitutional_Isomers (12, &number_of_created_isomers);
 
+
     RUN(TEST_Create_Alkane_Constitutional_Isomers);
+    RUN(TEST_Create_Alkane);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     TEST_REPORT();
 
+    puts ("");
     Show_Dynamic_Memory_Status ();
 
     return EXIT_SUCCESS;

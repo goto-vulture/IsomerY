@@ -21,6 +21,13 @@ extern "C"
 
 
 /**
+ * Die Erstellung von Alkanen aus Alkanaesten erstellen.
+ *
+ * Wird der Nummerncode richtig gebildet ?
+ */
+extern void TEST_Create_Alkane (void);
+
+/**
  * Die Erstellung der Alkane testen. Vorerst nur ueber die Anzahl an Ergebnissen.
  * Die Anzahl an Ergebnissen wird mit der Anzahl an moeglichen Konstitutionsisomeren verglichen. Wenn die Werte gleich
  * sind, dann ist ein Fehler in der Berechnung relativ unwahrscheinlich.
