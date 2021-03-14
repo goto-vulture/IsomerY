@@ -532,7 +532,7 @@ void Create_Alkane_Constitutional_Isomers
     printf ("\n> RESULTS SUM: %" PRIuFAST64 " ! <\n\n", count_results);
 
     // Aufraeumen
-    for (size_t next_container = 0; next_container < MAX_NUMBER_OF_C_ATOMS; ++ next_container)
+    for (size_t next_container = 0; next_container < ((MAX_NUMBER_OF_C_ATOMS + 1) / 2); ++ next_container)
     {
         if (container_height_x [next_container] != NULL)
         {
