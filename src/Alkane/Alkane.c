@@ -10,6 +10,7 @@
 #include <string.h>
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Error_Handling/Assert_Msg.h"
+#include "../OS_Specific_Configurations.h"
 #include "Alkane_Info_Constitutional_Isomer.h"
 
 
@@ -169,7 +170,7 @@ Alkane_To_String
     // Die Aeste des Alkans in die Zeichenkettendarstellung einbinden
     for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
     {
-        TO_STRING_HELPER_VA_ARGS("Branch %zu: (%p)\n", i, (void*) alkane->branches [i]);
+        TO_STRING_HELPER_VA_ARGS("Branch %" PRI_SIZET ": (%p)\n", i, (void*) alkane->branches [i]);
         if (alkane->branches [i] != NULL)
         {
             char temp_string [150];
