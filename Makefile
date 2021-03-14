@@ -98,6 +98,6 @@ Alkane_Tests.o: $(ALKANE_TESTS_C)
 clean:
 	@echo Clean IsomerY build.
 	@echo
-	$(RM) $(TARGET) *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch
+	$(RM) $(TARGET) *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch 2>> /dev/null
 	@echo
 	@echo IsomerY build cleaned.
