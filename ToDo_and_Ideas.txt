@@ -1,0 +1,5 @@
+----- ----- ----- ToDo ----- ----- -----
+...
+
+----- ----- ----- Ideas ----- ----- -----
+- Laufzeitvergleich Debug / Release Build
