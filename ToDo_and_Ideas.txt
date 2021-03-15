@@ -3,3 +3,4 @@
 
 ----- ----- ----- Ideas ----- ----- -----
 - Laufzeitvergleich Debug / Release Build
+- Funktion Create_Alkane_Constitutional_Isomers () verkleinern, indem die Funktion in kleinere Unterfunktionen aufgeteilt wird
