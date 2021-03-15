@@ -363,7 +363,7 @@ void Create_Alkane_Constitutional_Isomers
                 max_inner_loop_runs += (i2 - loop_start + 1);
             }
             // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
-            PRINTF_NO_VA_ARGS_FFLUSH("\r                                                                            \r");
+            CLEAN_LINE();
 
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
             // ===== BEGINN Berechnungsschleifen =====
@@ -435,7 +435,7 @@ void Create_Alkane_Constitutional_Isomers
                 }
             }
             // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
-            PRINTF_NO_VA_ARGS_FFLUSH("\r                                                                            \r");
+            CLEAN_LINE();
 
             // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
             // damit eine Hauptkette mit der gesuchten Laenge gebildet wird

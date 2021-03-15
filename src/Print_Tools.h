@@ -56,6 +56,16 @@ extern "C"
     #error "The macro \"PUTS_FFLUSH\" is already defined !"
 #endif /* PUTS_FFLUSH */
 
+/**
+ * Aktuelle Terminalzeile mittels \r leeren.
+ * Annahme, dass 96 Zeichen ausreichen.
+ */
+#ifndef CLEAN_LINE
+    #define CLEAN_LINE()                                                                                        \
+    printf ("\r"); for (unsigned char i = 0; i < 96; ++ i) { printf (" "); } printf ("\r"); fflush (stdout);
+#else
+    #error "The macro \"CLEAN_LINE\" is already defined !"
+#endif /* CLEAN_LINE */
 
 
 // ENDE C++-Kompablitaet herstellen
