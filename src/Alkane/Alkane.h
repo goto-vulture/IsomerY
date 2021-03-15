@@ -68,6 +68,32 @@ struct Alkane
                                                                 // Hiermit wird die genaue Struktur des Alkans bestimmt
     uint_fast8_t number_of_c_atoms;                             // Anzahl an C-Atomen im kompletten Alkan
 
+    /**
+     * Aufbau des Alkans.
+     */
+    struct C_Atom
+    {
+        struct C_Atom* c_atoms [4];                             // Zeiger auf andere C-Atome, die die Bindungen der
+                                                                // C-Atome untereinander darstellen
+        uint_fast8_t next_free_c_atom;                          // Index der naechsten freien Bindung im aktuellen
+                                                                // C-Atom
+    } c_atoms [MAX_NUMBER_OF_C_ATOMS];                          // C-Atome dieses Alkans
+    uint_fast8_t next_free_c_atom;                              // Index des naechsten freien C-Atoms im Alkan
+
+    /**
+     * Ketteninformationen, die fuer die Zeichnung und fuer die Erstellung des IUPAC-Namen benoetigt werden.
+     */
+    struct Chain
+    {
+        uint_fast8_t length;                                    // Laenge der Kette
+        uint_fast8_t position;                                  // Position der Kette bezogen auf die Kette, an dem
+                                                                // sich diese Kette befindet
+        uint_fast8_t nesting_depth;                             // Verschachtelungstiefe (Tiefe 0 steht fuer die
+                                                                // Hauptkette !)
+    } chains [MAX_NUMBER_OF_C_ATOMS];                           // Ketteninformationen des Isomers
+                                                                // ToDo: Arraygroesse verringern falls moeglich
+    uint_fast8_t next_free_chain;                               // Index der naechsten freien Kette
+
     enum Alkane_State state;                                    // Status des Objektes
 };
 
