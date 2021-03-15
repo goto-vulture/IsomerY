@@ -24,10 +24,21 @@
  * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
  */
 #ifndef PROGRESS_OUTPUT_INTERVAL
-#define PROGRESS_OUTPUT_INTERVAL 10000000
+#define PROGRESS_OUTPUT_INTERVAL 47500000
 #else
 #error "The macro \"PROGRESS_OUTPUT_INTERVAL\" is already defined !"
 #endif /* PROGRESS_OUTPUT_INTERVAL */
+
+/**
+ * Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
+ * bei der Berechnung der moeglichen innersten Schleifendurchlaeufe.
+ * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
+ */
+#ifndef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
+#define PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL 22
+#else
+#error "The macro \"PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL\" is already defined !"
+#endif /* PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL */
 
 
 
@@ -416,7 +427,7 @@ void Create_Alkane_Constitutional_Isomers
                     }
                 }
 
-                if (local_run_counter == 25)
+                if (local_run_counter == PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL)
                 {
                     Print_Percent_Done ("Start building. Calculate start information ...", i2 - loop_start,
                             loop_end - loop_start);
@@ -601,3 +612,7 @@ static void Print_Percent_Done
 #ifdef PROGRESS_OUTPUT_INTERVAL
 #undef PROGRESS_OUTPUT_INTERVAL
 #endif /* PROGRESS_OUTPUT_INTERVAL */
+
+#ifdef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
+#undef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
+#endif /* PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL */
