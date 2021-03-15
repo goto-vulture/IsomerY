@@ -5,15 +5,44 @@
 CC = gcc
 RM = rm
 
-# Flags fuer die Debug-Variante
-# Release Flags koennten in der Zukunft kommen, haben aber aktuell keine Prioritaet !
+# Flags, die sowohl im Debug- als auch im Release-Build, verwendet werden
+CCFLAGS = -std=c11 -pedantic -Wall -Wextra -Wconversion -fmessage-length=0
+# Debug Build: Keine Optimierung und das hoechste Debug Level
+DEBUG_FLAGS = -O0 -g3
+# Release Build: Hoechste Optimierung und keine Debug Informationen
+RELEASE_FLAGS = -O3
+
+DEBUG = 0
+RELEASE = 0
+
+ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format
+
+# Der Debug-Build ist die Standardvariante, wenn nichts anderes angegeben wurde
+# Fuer den Release-Build muss die Variable "Release", "RELEASE" oder "release" auf 1 gesetzt werden
+ifeq ($(Release), 1)
+	CCFLAGS += $(RELEASE_FLAGS)
+	RELEASE = 1
+else
+	ifeq ($(RELEASE), 1)
+		CCFLAGS += $(RELEASE_FLAGS)
+		RELEASE = 1
+	else
+		ifeq ($(release), 1)
+			CCFLAGS += $(RELEASE_FLAGS)
+			RELEASE = 1
+		else
+			CCFLAGS += $(DEBUG_FLAGS)
+			DEBUG = 1
+		endif
+	endif
+endif
+
+
 # Unter Windows wird das Flag "-Wno-pedantic-ms-format" benoetigt, da die MinGW Implementierung nicht standardkonforme
 # Formatstrings verwendet. Mit diesem Compilerflag wird die Warnung, dass die MinGW Formatstrings nicht dem Standard
 # entsprechen, entfernt
 ifeq ($(OS), Windows_NT)
-	CCFLAGS = -std=c11 -O0 -pedantic -Wall -Wextra -Wconversion -Wno-pedantic-ms-format
-else
-	CCFLAGS = -std=c11 -O0 -pedantic -Wall -Wextra -Wconversion
+	CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
 endif
 
 # Aktuell wird durch das Makefile nur die Debug-Variante fuer Linux erstellt
@@ -74,6 +103,12 @@ $(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Br
 
 main.o: $(MAIN_C)
 	@echo Build target: $(TARGET).
+	@echo
+ifeq ($(RELEASE), 1)
+	@echo Using RELEASE build.
+else
+	@echo Using DEBUG build.
+endif
 	@echo
 	$(CC) $(CCFLAGS) -c $(MAIN_C) $(DYNAMIC_MEMORY_H) $(ALKANE_H)
 
