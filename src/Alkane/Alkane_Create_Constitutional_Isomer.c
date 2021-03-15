@@ -595,7 +595,7 @@ static void Print_Percent_Done
     const float percent_done = (float) ((float) current_run / ((float) max_count_run / 100.0f));
 
     printf ("\r");
-    PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: %6.2f sec.", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done, ETA);
+    PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: %8.2f sec.", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done, ETA);
 
     last_call           = clock ();
     last_current_run    = current_run;
