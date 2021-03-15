@@ -15,23 +15,35 @@ RELEASE_FLAGS = -O3
 DEBUG = 0
 RELEASE = 0
 
+PROJECT_NAME = IsomerY
+# addsuffix, welches einen String am Ende einer Variable anbringt, kann das Ergebnis NICHT einer Variablen zuweisen, wenn diese
+# Variable im Aufruf von addsuffix vorhanden ist !
+# D.h.: test += $(addsuffix _X_, $(test)) ist NICHT moeglich !
+# Daher der Umweg ueber mehrere Variablen
+TEMP_1 =
+TARGET =
+
 ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format
 
 # Der Debug-Build ist die Standardvariante, wenn nichts anderes angegeben wurde
 # Fuer den Release-Build muss die Variable "Release", "RELEASE" oder "release" auf 1 gesetzt werden
 ifeq ($(Release), 1)
 	CCFLAGS += $(RELEASE_FLAGS)
+	TEMP_1 = $(addsuffix _Release_, $(PROJECT_NAME))
 	RELEASE = 1
 else
 	ifeq ($(RELEASE), 1)
 		CCFLAGS += $(RELEASE_FLAGS)
+		TEMP_1 = $(addsuffix _Release_, $(PROJECT_NAME))
 		RELEASE = 1
 	else
 		ifeq ($(release), 1)
 			CCFLAGS += $(RELEASE_FLAGS)
+			TEMP_1 = $(addsuffix _Release_, $(PROJECT_NAME))
 			RELEASE = 1
 		else
 			CCFLAGS += $(DEBUG_FLAGS)
+			TEMP_1 = $(addsuffix _Debug_, $(PROJECT_NAME))
 			DEBUG = 1
 		endif
 	endif
@@ -43,10 +55,10 @@ endif
 # entsprechen, entfernt
 ifeq ($(OS), Windows_NT)
 	CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
+	TARGET = $(addsuffix Win, $(TEMP_1))
+else
+	TARGET = $(addsuffix Linux, $(TEMP_1))
 endif
-
-# Aktuell wird durch das Makefile nur die Debug-Variante fuer Linux erstellt
-TARGET = IsomerY_Debug_Linux
 
 ##### ##### ##### BEGINN Uebersetzungseinheiten ##### ##### #####
 MAIN_C = ./src/main.c
@@ -149,6 +161,6 @@ Alkane_Tests.o: $(ALKANE_TESTS_C)
 clean:
 	@echo Clean IsomerY build.
 	@echo
-	$(RM) $(TARGET) *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch 2>> /dev/null
+	$(RM) $(PROJECT_NAME)* *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch 2>> /dev/null
 	@echo
 	@echo IsomerY build cleaned.
