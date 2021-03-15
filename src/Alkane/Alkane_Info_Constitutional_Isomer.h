@@ -28,6 +28,34 @@ extern "C"
 #endif /* MAX_NUMBER_OF_C_ATOMS */
 
 /**
+ * Anzahl an Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
+ */
+#ifndef NUMBER_OF_NUMBER_WORDS
+    #define NUMBER_OF_NUMBER_WORDS 10
+#else
+    #error "The macro \"NUMBER_OF_NUMBER_WORDS\" is already defined !"
+#endif /* NUMBER_OF_NUMBER_WORDS */
+
+/**
+ * Anzahl an Alkanwoerter, die im Programm hinterlegt sind.
+ */
+#ifndef NUMBER_OF_ALKAN_WORDS
+    #define NUMBER_OF_ALKAN_WORDS 40
+#else
+    #error "The macro \"NUMBER_OF_ALKAN_WORDS\" is already defined !"
+#endif /* NUMBER_OF_ALKAN_WORDS */
+
+/**
+ * Anzahl an Substituenten, die im Programm hinterlegt sind.
+ * Die Substituenten wurden erzeugt indem die letzten beiden Zeichen der Alkan-Woerter durch "yl" ersetzt werden !
+ */
+#ifndef NUMBER_OF_ALKYL_WORDS
+    #define NUMBER_OF_ALKYL_WORDS 40
+#else
+    #error "The macro \"NUMBER_OF_ALKYL_WORDS\" is already defined !"
+#endif /* NUMBER_OF_ALKYL_WORDS */
+
+/**
  * Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
  * Bei der Konvertierung ist das Procedere immer das gleiche. Nur das Stringliteral unterscheidet sich. Daher bietet
  * sich dafuer ein Makro an.
@@ -72,6 +100,11 @@ extern "C"
 
 // Anzahl der Konsitutionsisomere (Strukturisomere) bei gegebener Anzahl an C-Atomen
 extern const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOMS];
+
+// Begriffe, die fuer die Erstellung des IUPAC-Namens erforderlich sind
+extern const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS];
+extern const char* ALKAN_WORDS [NUMBER_OF_ALKAN_WORDS];
+extern const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS];
 
 
 

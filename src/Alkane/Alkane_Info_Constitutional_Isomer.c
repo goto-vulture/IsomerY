@@ -28,3 +28,55 @@ const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOM
         10660307791,    27711253769,    72214088660,    188626236139,   493782952902,
         1295297588128,  3404490780161,  8964747474595,  23647478933969, 62481801147341
 };
+
+/**
+ * Die Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
+ *
+ * Quelle: https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Zahlenpr%C3%A4fixe_in_chemischen_Namen
+ */
+const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS] =
+{
+        "Mono", "Di",    "Tri",   "Tetra", "Penta",
+        "Hexa", "Hepta", "Ocata", "Nona",  "Deca"
+};
+
+/**
+ * Die Alkanwoerter, die im Programm hinterlegt sind.
+ *
+ * Quellen: https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Lineare_Ketten
+ *          https://de.wikipedia.org/wiki/H%C3%B6here_Alkane
+ */
+const char* ALKAN_WORDS [NUMBER_OF_ALKAN_WORDS] =
+{
+        "Methan",         "Ethan",           "Propan",         "Butan",           "Pentan" ,
+        "Hexan",          "Heptan",          "Octan",          "Nonan",           "Decan",
+
+        "Undecan",        "Dodecan",         "Tridecan",       "Tetradecan",      "Pentadecan",
+        "Hexadecan",      "Heptadecan",      "Octadecan",      "Nonadecan",       "Eicosan",
+
+        "Heneicosan",     "Docosan",         "Tricosan",       "Tetracosan",      "Pentacosan",
+        "Hexacosan",      "Heptacosan",      "Octacosan",      "Nonacosan",       "Triacontan",
+
+        "Hentriacontan",  "Dotriacontan",    "Dotriacontan",   "Tetratriacontan", "Pentatriacontan",
+        "Hexatriacontan", "Heptatriacontan", "Octatriacontan", "Nonatriacontan",  "Tetracontan"
+};
+
+/**
+ * Die Substituenten, die im Programm hinterlegt sind.
+ *
+ * Die Substituenten wurden erzeugt indem die letzten beiden Zeichen der Alkan-Woerter durch "yl" ersetzt werden !
+ */
+const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS] =
+{
+        "Methyl",         "Ethyl",           "Propyl",         "Butyl",           "Pentyl" ,
+        "Hexyl",          "Heptyl",          "Octyl",          "Nonyl",           "Decyl",
+
+        "Undecyl",        "Dodecyl",         "Tridecyl",       "Tetradecyl",      "Pentadecyl",
+        "Hexadecyl",      "Heptadecyl",      "Octadecyl",      "Nonadecyl",       "Eicosyl",
+
+        "Heneicosyl",     "Docosyl",         "Tricosyl",       "Tetracosyl",      "Pentacosyl",
+        "Hexacosyl",      "Heptacosyl",      "Octacosyl",      "Nonacosyl",       "Triacontyl",
+
+        "Hentriacontyl",  "Dotriacontyl",    "Dotriacontyl",   "Tetratriacontyl", "Pentatriacontyl",
+        "Hexatriacontyl", "Heptatriacontyl", "Octatriacontyl", "Nonatriacontyl",  "Tetracontyl"
+};
