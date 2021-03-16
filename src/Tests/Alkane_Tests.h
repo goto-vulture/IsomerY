@@ -21,7 +21,7 @@ extern "C"
 
 
 /**
- * Die Erstellung von Alkanen aus Alkanaesten erstellen.
+ * Die Erstellung von Alkanen aus Alkanaesten testen.
  *
  * Wird der Nummerncode richtig gebildet ?
  */
