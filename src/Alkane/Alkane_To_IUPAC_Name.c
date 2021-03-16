@@ -38,6 +38,7 @@ static void Depth_First_Search_Step
         const uint_fast8_t current_node,                                            // Startknoten
         const uint_fast8_t goal_node,                                               // Endknoten
         unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],    // Kopie der Alkan Adjazenzmatrix
+        unsigned char result_path [MAX_NUMBER_OF_C_ATOMS],                          // Pfad vom Start- zum Zielknoten
         uint_fast8_t* const result_path_length                                      // Laenge des Pfades vom Start- zum
                                                                                     // Zielknoten
 );
@@ -179,10 +180,18 @@ static void Depth_First_Search_Start
     // Adjazenzmatrix des Alkans in die temporaere Adjazenzmatrix kopieren
     memcpy (adj_matrix, alkane->structure, sizeof (alkane->structure));
 
+    unsigned char result_path [MAX_NUMBER_OF_C_ATOMS];
+    memset (result_path, '\0', sizeof (result_path));
+
     uint_fast8_t path_length = 0;
-    Depth_First_Search_Step (start_node, goal_node, adj_matrix, &path_length);
+    Depth_First_Search_Step (start_node, goal_node, adj_matrix, result_path, &path_length);
 
     printf ("Start: %2d; End: %2d; Length: %2d\n", start_node, goal_node, path_length);
+    for (uint_fast8_t i = 0; i < path_length; ++ i)
+    {
+        printf ("%2d, ", result_path [i]);
+    }
+    puts ("");
 
     return;
 }
@@ -198,6 +207,7 @@ static void Depth_First_Search_Step
         const uint_fast8_t current_node,                                            // Startknoten
         const uint_fast8_t goal_node,                                               // Endknoten
         unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],    // Kopie der Alkan Adjazenzmatrix
+        unsigned char result_path [MAX_NUMBER_OF_C_ATOMS],                          // Pfad vom Start- zum Zielknoten
         uint_fast8_t* const result_path_length                                      // Laenge des Pfades vom Start- zum
                                                                                     // Zielknoten
 )
@@ -243,14 +253,20 @@ static void Depth_First_Search_Step
             const unsigned char new_node = stack [next_free_stack_element - 1];
             -- next_free_stack_element;
 
+            // Man geht in die Tiefe: Das aktuelle Objekt koennte ein Teil des Pfades sein
+            result_path [path_length - 1] = new_node + 1;
+
             // Rekursiv in die Tiefe gehen
-            Depth_First_Search_Step (new_node, goal_node, adj_matrix, result_path_length);
+            Depth_First_Search_Step (new_node, goal_node, adj_matrix, result_path, result_path_length);
         }
     }
 
     // Wert nur dekrementieren, wenn der Wert nicht zuvor zurueckgesetzt wurde. Sonst kommt es zu falschen Ergebnissen !
     if (path_length != 0)
     {
+        // Es wird ein Schritt zurueckgegangen: Also kann das akutelle Objekt kein Teil des Pfades sein
+        result_path [path_length - 1] = 0;
+
         path_length --;
     }
 
