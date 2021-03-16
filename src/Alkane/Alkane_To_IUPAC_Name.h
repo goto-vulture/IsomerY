@@ -61,7 +61,7 @@ extern "C"
  * Faellen die Kette als Hauptkette gewaehlt wird, die dafuer sorgt, dass es moeglichst wenig Verschachtelungstiefen
  * bei den uebrigen C-Atomen gibt.
  * (a -> b) bewirkt, dass es eine Tiefe von 2 gibt. Bei (b -> c) oder (b -> d) ist die Tiefe 1. D. h. (b -> c) oder
- * (b -> d) waeren richtig. (a -> b) als Hauptkette waere FALSCH !
+ * (b -> d) waeren richtig. ! (a -> b) als Hauptkette waere FALSCH !
  *
  * Wir muessen also alle Pfade - und die daraus resultierenden Verschachtelungstiefen - betrachten, die genau l C-Atome
  * lang sind. Man kann sich das etwa wie eine Tiefensuche bei einem ungerichteten Graphen vorstellen, wobei die C-Atome
@@ -78,7 +78,53 @@ extern "C"
  * Wie kann man am Besten die Verschachtelungstiefe bestimmen ?
  * Man zaehlt in den Aesten die Anzahl an C-Atomen, die mit mehr als 2 C-Atomen verbunden sind.
  *
+ *
+ * >>> Informationen ueber die Aeste bestimmen <<<
+ * Nach der Festlegung der Hauptkette muessen die uebrigen Aeste betrachtet werden.
  * Wichtig: Die genauen Informationen ueber die uebrigen Aeste sind fuer die Bildung des IUPAC-Namen wichtig !
+ *
+ * Beispiel (gleiche Struktur wie vorheriges Beispiel):
+ *
+ *                c
+ *                C
+ *                |
+ *                f
+ *                C - C d
+ *                |
+ *                C
+ *                |
+ * a C - C - C - eC - C - C - C - C b
+ *
+ * IUPAC-Name: 2-Methyl-4-Propyl-Octan
+ *
+ * Hauptkette:  (b -> d)
+ *              Laenge 8
+ * Ast 1:       (a -> e)
+ *              Laenge 3
+ *              Position (bezogen auf den uebergeordneten Ast) 4
+ *              Verschachtelungstiefe 1
+ * Ast 2:       (c -> f)
+ *              Laenge 1
+ *              Position (bezogen auf den uebergeordneten Ast) 2
+ *              Verschachtelungstiefe 1
+ *
+ * Aus diesen Informationen kann der IUPAC-Name bestimmt werden. Aber auch hier laesst uns die Nomenklatur nicht
+ * komplett in Ruhe ! Bei der Angabe der Positionen gibt es zwei Regeln zu beachten:
+ * 1. Die Richtung anhand der die Positionen bestimmt werden, muss bei allen Aesten gleich sein. Diese Regel ist soweit
+ *    auch klar. Ohne dies koennte man die Struktur des Alkans nicht eindeutig aus dem Namen bilden.
+ * 2. Die Richtung wird so festgelegt, dass die Positionen moeglichst klein sind. In unserem Fall bedeutet das, dass das
+ *    Zaehlen bei d beginnen muss - und NICHT bei b !
+ *    Wenn man bei b beginnen wuerde, dann haette der Ast 1 eine Position von 5 und der Ast 2 eine Position von 7 !
+ *
+ * Die Bestimmung der richtigen Richtung ist programmatisch recht einfach umzusetzen. Es gibt bei der Richtung nur zwei
+ * Moeglichkeiten. Man probiert einfach beide aus und waehlt die Variante bei der die Positionen am kleinsten sind.
+ *
+ * Dann sind alle Information IUPAC-konform bestimmt. :D
+ *
+ *
+ * >>> Aus den Informationen den IUPAC-Namen bestimmen <<<
+ * ...
+ *
  *
  * Siehe:
  *      https://de.wikipedia.org/wiki/Tiefensuche
