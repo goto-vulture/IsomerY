@@ -11,6 +11,7 @@
 #include "../Alkane/Alkane_Branch.h"
 #include "../Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "../Alkane/Alkane_Info_Constitutional_Isomer.h"
+#include "../Alkane/Alkane_To_IUPAC_Name.h"
 #include "../Misc.h"
 
 
@@ -81,6 +82,39 @@ void TEST_Create_Alkane_Constitutional_Isomers (void)
 
         ASSERT_EQUALS(NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [i - 1], number_of_created_isomers);
     }
+
+    return;
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen.
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+void TEST_Convert_Alkane_To_IUPAC_Name (void)
+{
+    const unsigned char branch_1_content [] = { 1, 1, 2 };
+    const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4 };
+    const unsigned char branch_3_content [] = { 1, 1, 2, 2 };
+    const uint_fast8_t main_chain_length    = 8;
+
+    const char* exptected_result            = "2-Methyl-4-Propyl-Octan";
+
+    struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
+    struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
+    struct Alkane_Branch* branch_3 = Create_Alkane_Branch (branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
+
+    struct Alkane* alkane = Create_Alkane (branch_2, branch_1, branch_3, NULL);
+
+    // Konvertierung durchfuehren
+    Convert_Alkane_To_IUPAC_Name (alkane, main_chain_length);
+
+    Delete_Alkane (alkane);
+    Delete_Alkane_Branch (branch_1);
+    Delete_Alkane_Branch (branch_2);
+    Delete_Alkane_Branch (branch_3);
 
     return;
 }
