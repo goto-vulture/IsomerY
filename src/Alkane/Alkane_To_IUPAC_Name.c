@@ -18,10 +18,16 @@
  */
 static void Depth_First_Search_Start
 (
-        const uint_fast8_t start_node,
-        const uint_fast8_t goal_node,
-        const struct Alkane* const alkane,
-        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]
+        const uint_fast8_t start_node,                                          // Startknoten
+        const uint_fast8_t goal_node,                                           // Zielknoten
+        const struct Alkane* const alkane,                                      // Alkanobjket, deren Struktur
+                                                                                // betrachtet wird
+        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Kopie der Alkan Adjazenzmatrix
+                                                                                // In der Adjazenzmatrix werden alle
+                                                                                // Verbindungen entfernt, als waere der
+                                                                                // Pfad, der sich aus dem Start- und
+                                                                                // Zielknoten zusammensetzt, die
+                                                                                // Hauptkette
 );
 
 /**
@@ -29,10 +35,11 @@ static void Depth_First_Search_Start
  */
 static void Depth_First_Search_Step
 (
-        const uint_fast8_t current_node,
-        const uint_fast8_t goal_node,
-        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],
-        uint_fast8_t* const path_length
+        const uint_fast8_t current_node,                                            // Startknoten
+        const uint_fast8_t goal_node,                                               // Endknoten
+        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],    // Kopie der Alkan Adjazenzmatrix
+        uint_fast8_t* const result_path_length                                      // Laenge des Pfades vom Start- zum
+                                                                                    // Zielknoten
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -157,10 +164,16 @@ void Convert_Alkane_To_IUPAC_Name
  */
 static void Depth_First_Search_Start
 (
-        const uint_fast8_t start_node,
-        const uint_fast8_t goal_node,
-        const struct Alkane* const alkane,
-        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]
+        const uint_fast8_t start_node,                                          // Startknoten
+        const uint_fast8_t goal_node,                                           // Zielknoten
+        const struct Alkane* const alkane,                                      // Alkanobjket, deren Struktur
+                                                                                // betrachtet wird
+        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Kopie der Alkan Adjazenzmatrix
+                                                                                // In der Adjazenzmatrix werden alle
+                                                                                // Verbindungen entfernt, als waere der
+                                                                                // Pfad, der sich aus dem Start- und
+                                                                                // Zielknoten zusammensetzt, die
+                                                                                // Hauptkette
 )
 {
     // Adjazenzmatrix des Alkans in die temporaere Adjazenzmatrix kopieren
@@ -182,18 +195,25 @@ static void Depth_First_Search_Start
  */
 static void Depth_First_Search_Step
 (
-        const uint_fast8_t current_node,
-        const uint_fast8_t goal_node,
-        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],
-        uint_fast8_t* const path_length
+        const uint_fast8_t current_node,                                            // Startknoten
+        const uint_fast8_t goal_node,                                               // Endknoten
+        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],    // Kopie der Alkan Adjazenzmatrix
+        uint_fast8_t* const result_path_length                                      // Laenge des Pfades vom Start- zum
+                                                                                    // Zielknoten
 )
 {
-    (*path_length) ++;
+    // Die aktuelle Aufruftiefe, die der Laenge des Pfades entspricht, aufrufuebergreifend sichern
+    static uint_fast8_t path_length = 0;
+    path_length ++;
 
     // Ziel gefunden ?
     if (current_node == goal_node)
     {
-        printf ("Length: %d\n", *path_length);
+        *result_path_length = path_length;
+
+        // Aufrufuebergreifenden Wert zuruecksetzen, damit diese Zaehlmethode auch fuer weitere Aufrufe funktioniert
+        path_length = 0;
+        // printf ("Result path length: %d\n", *result_path_length);
 
         return;
     }
@@ -224,11 +244,15 @@ static void Depth_First_Search_Step
             -- next_free_stack_element;
 
             // Rekursiv in die Tiefe gehen
-            Depth_First_Search_Step (new_node, goal_node, adj_matrix, path_length);
+            Depth_First_Search_Step (new_node, goal_node, adj_matrix, result_path_length);
         }
     }
 
-    (*path_length) --;
+    // Wert nur dekrementieren, wenn der Wert nicht zuvor zurueckgesetzt wurde. Sonst kommt es zu falschen Ergebnissen !
+    if (path_length != 0)
+    {
+        path_length --;
+    }
 
     return;
 }
