@@ -76,6 +76,7 @@ int main (const int argc, const char* const argv [])
 
     RUN(TEST_Create_Alkane_Constitutional_Isomers);
     RUN(TEST_Create_Alkane);
+    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     TEST_REPORT();
