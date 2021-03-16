@@ -39,6 +39,13 @@ extern void TEST_Create_Alkane (void);
  */
 extern void TEST_Create_Alkane_Constitutional_Isomers (void);
 
+/**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen.
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+extern void TEST_Convert_Alkane_To_IUPAC_Name (void);
+
 
 
 // ENDE C++-Kompablitaet herstellen
