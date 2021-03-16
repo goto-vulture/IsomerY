@@ -68,17 +68,9 @@ struct Alkane
                                                                 // Hiermit wird die genaue Struktur des Alkans bestimmt
     uint_fast8_t number_of_c_atoms;                             // Anzahl an C-Atomen im kompletten Alkan
 
-    /**
-     * Aufbau des Alkans.
-     */
-    struct C_Atom
-    {
-        struct C_Atom* c_atoms [4];                             // Zeiger auf andere C-Atome, die die Bindungen der
-                                                                // C-Atome untereinander darstellen
-        uint_fast8_t next_free_c_atom;                          // Index der naechsten freien Bindung im aktuellen
-                                                                // C-Atom
-    } c_atoms [MAX_NUMBER_OF_C_ATOMS];                          // C-Atome dieses Alkans
-    uint_fast8_t next_free_c_atom;                              // Index des naechsten freien C-Atoms im Alkan
+    unsigned char structure [MAX_NUMBER_OF_C_ATOMS]             // Aufbau des Alkans ueber eine Adjazenzmatrix
+                             [MAX_NUMBER_OF_C_ATOMS];           // Da die Bindungen in beide Richtungen existieren, ist
+                                                                // die Adjazenzmatrix symmetrisch zur Diagonalen
 
     /**
      * Ketteninformationen, die fuer die Zeichnung und fuer die Erstellung des IUPAC-Namen benoetigt werden.
