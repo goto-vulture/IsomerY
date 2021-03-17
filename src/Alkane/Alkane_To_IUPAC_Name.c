@@ -220,8 +220,8 @@ static void Depth_First_Search_Step
     // Die aktuelle Aufruftiefe, die der Laenge des Pfades entspricht, aufrufuebergreifend sichern
     if (*path_index != UINT_FAST8_MAX)
     {
-        result_path [*path_index] = current_node + 1;
-        *(path_index) += 1;
+        result_path [*path_index] = (unsigned char) (current_node + 1);
+        *(path_index) = (uint_fast8_t) (*(path_index) + 1);
     }
 
     // Ziel gefunden ?
@@ -275,7 +275,7 @@ static void Depth_First_Search_Step
         // Es wird ein Schritt zurueckgegangen: Also kann das akutelle Objekt kein Teil des Pfades sein
         // result_path [path_length] = 0;
 
-        *(path_index) -= 1;
+        *(path_index) = (uint_fast8_t) (*(path_index) - 1);
     }
 
     return;
