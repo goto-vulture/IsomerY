@@ -39,8 +39,9 @@ static void Depth_First_Search_Step
         const uint_fast8_t goal_node,                                               // Endknoten
         unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],    // Kopie der Alkan Adjazenzmatrix
         unsigned char result_path [MAX_NUMBER_OF_C_ATOMS],                          // Pfad vom Start- zum Zielknoten
-        uint_fast8_t* const result_path_length                                      // Laenge des Pfades vom Start- zum
+        uint_fast8_t* const result_path_length,                                     // Laenge des Pfades vom Start- zum
                                                                                     // Zielknoten
+        uint_fast8_t* const path_index
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -148,6 +149,8 @@ void Convert_Alkane_To_IUPAC_Name
                 current_ch3_element_end < count_ch3_elemets;
                 ++ current_ch3_element_end)
         {
+            // Tiefensuche durchfuehren, um bei der aktuellen Variante des Start- und Zielknotens den Pfad und deren
+            // Laenge zu bestimmen
             Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end], alkane,
                     adj_matrices [next_free_adj_matrix]);
             ++ next_free_adj_matrix;
@@ -184,7 +187,8 @@ static void Depth_First_Search_Start
     memset (result_path, '\0', sizeof (result_path));
 
     uint_fast8_t path_length = 0;
-    Depth_First_Search_Step (start_node, goal_node, adj_matrix, result_path, &path_length);
+    uint_fast8_t path_index = 0;
+    Depth_First_Search_Step (start_node, goal_node, adj_matrix, result_path, &path_length, &path_index);
 
     printf ("Start: %2d; End: %2d; Length: %2d\n", start_node, goal_node, path_length);
     for (uint_fast8_t i = 0; i < path_length; ++ i)
@@ -208,21 +212,25 @@ static void Depth_First_Search_Step
         const uint_fast8_t goal_node,                                               // Endknoten
         unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS],    // Kopie der Alkan Adjazenzmatrix
         unsigned char result_path [MAX_NUMBER_OF_C_ATOMS],                          // Pfad vom Start- zum Zielknoten
-        uint_fast8_t* const result_path_length                                      // Laenge des Pfades vom Start- zum
+        uint_fast8_t* const result_path_length,                                     // Laenge des Pfades vom Start- zum
                                                                                     // Zielknoten
+        uint_fast8_t* const path_index
 )
 {
     // Die aktuelle Aufruftiefe, die der Laenge des Pfades entspricht, aufrufuebergreifend sichern
-    static uint_fast8_t path_length = 0;
-    path_length ++;
+    if (*path_index != UINT_FAST8_MAX)
+    {
+        result_path [*path_index] = current_node + 1;
+        *(path_index) += 1;
+    }
 
     // Ziel gefunden ?
     if (current_node == goal_node)
     {
-        *result_path_length = path_length;
+        *result_path_length = *path_index;
 
         // Aufrufuebergreifenden Wert zuruecksetzen, damit diese Zaehlmethode auch fuer weitere Aufrufe funktioniert
-        path_length = 0;
+        *path_index = UINT_FAST8_MAX;
         // printf ("Result path length: %d\n", *result_path_length);
 
         return;
@@ -254,20 +262,20 @@ static void Depth_First_Search_Step
             -- next_free_stack_element;
 
             // Man geht in die Tiefe: Das aktuelle Objekt koennte ein Teil des Pfades sein
-            result_path [path_length - 1] = new_node + 1;
+            // result_path [path_length - 1] = new_node + 1;
 
             // Rekursiv in die Tiefe gehen
-            Depth_First_Search_Step (new_node, goal_node, adj_matrix, result_path, result_path_length);
+            Depth_First_Search_Step (new_node, goal_node, adj_matrix, result_path, result_path_length, path_index);
         }
     }
 
     // Wert nur dekrementieren, wenn der Wert nicht zuvor zurueckgesetzt wurde. Sonst kommt es zu falschen Ergebnissen !
-    if (path_length != 0)
+    if (*path_index != UINT_FAST8_MAX)
     {
         // Es wird ein Schritt zurueckgegangen: Also kann das akutelle Objekt kein Teil des Pfades sein
-        result_path [path_length - 1] = 0;
+        // result_path [path_length] = 0;
 
-        path_length --;
+        *(path_index) -= 1;
     }
 
     return;
