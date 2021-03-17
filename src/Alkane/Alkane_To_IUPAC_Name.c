@@ -41,7 +41,8 @@ static void Depth_First_Search_Step
         unsigned char result_path [MAX_NUMBER_OF_C_ATOMS],                          // Pfad vom Start- zum Zielknoten
         uint_fast8_t* const result_path_length,                                     // Laenge des Pfades vom Start- zum
                                                                                     // Zielknoten
-        uint_fast8_t* const path_index
+        uint_fast8_t* const path_index                                              // Index des naechsten freien
+                                                                                    // Objektes im Ergebnispfad-Array
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -214,24 +215,26 @@ static void Depth_First_Search_Step
         unsigned char result_path [MAX_NUMBER_OF_C_ATOMS],                          // Pfad vom Start- zum Zielknoten
         uint_fast8_t* const result_path_length,                                     // Laenge des Pfades vom Start- zum
                                                                                     // Zielknoten
-        uint_fast8_t* const path_index
+        uint_fast8_t* const path_index                                              // Index des naechsten freien
+                                                                                    // Objektes im Ergebnispfad-Array
 )
 {
-    // Die aktuelle Aufruftiefe, die der Laenge des Pfades entspricht, aufrufuebergreifend sichern
+    // Wenn das Ziel noch nicht erreicht wurde, dann koennte der aktuelle Knoten Teil des Pfades sein
+    // Und wenn das Ziel noch nicht erreicht wurde, dann wird der Index inkrementiert
     if (*path_index != UINT_FAST8_MAX)
     {
-        result_path [*path_index] = (unsigned char) (current_node + 1);
-        *(path_index) = (uint_fast8_t) (*(path_index) + 1);
+        result_path [*path_index]   = (unsigned char) (current_node + 1);
+        *(path_index)               = (uint_fast8_t) (*(path_index) + 1);
     }
 
-    // Ziel gefunden ?
+    // Ziel gefunden ? (REKURSIONSABBRUCH)
     if (current_node == goal_node)
     {
+        // Ziel wurde erreicht -> Pfadlaenge abspeichern
         *result_path_length = *path_index;
 
-        // Aufrufuebergreifenden Wert zuruecksetzen, damit diese Zaehlmethode auch fuer weitere Aufrufe funktioniert
+        // Ueber einen Wert im Index anzeigen, dass das Ziel gefunden wurde => Index darf nicht mehr verwendet werden
         *path_index = UINT_FAST8_MAX;
-        // printf ("Result path length: %d\n", *result_path_length);
 
         return;
     }
@@ -244,6 +247,7 @@ static void Depth_First_Search_Step
         // Aktuellen Knoten expandieren -> Mit welchen Knoten ist der aktuelle Knoten verbunden ?
         for (uint_fast8_t i = 0; i < MAX_NUMBER_OF_C_ATOMS; ++ i)
         {
+            // Welche Verbindungen hat der aktuelle Knoten ?
             if (adj_matrix [current_node][i] == 1)
             {
                 stack [next_free_stack_element] = i;
@@ -261,20 +265,14 @@ static void Depth_First_Search_Step
             const unsigned char new_node = stack [next_free_stack_element - 1];
             -- next_free_stack_element;
 
-            // Man geht in die Tiefe: Das aktuelle Objekt koennte ein Teil des Pfades sein
-            // result_path [path_length - 1] = new_node + 1;
-
-            // Rekursiv in die Tiefe gehen
+            // Rekursiv in die Tiefe gehen (REKURSIUNSDURCHFUEHRUNG)
             Depth_First_Search_Step (new_node, goal_node, adj_matrix, result_path, result_path_length, path_index);
         }
     }
 
-    // Wert nur dekrementieren, wenn der Wert nicht zuvor zurueckgesetzt wurde. Sonst kommt es zu falschen Ergebnissen !
+    // Index nur dekrementieren, wenn das Ziel noch nicht erreicht wurde
     if (*path_index != UINT_FAST8_MAX)
     {
-        // Es wird ein Schritt zurueckgegangen: Also kann das akutelle Objekt kein Teil des Pfades sein
-        // result_path [path_length] = 0;
-
         *(path_index) = (uint_fast8_t) (*(path_index) - 1);
     }
 
