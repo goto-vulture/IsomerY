@@ -187,11 +187,18 @@ static void Depth_First_Search_Start
     Depth_First_Search_Step (path_data);
 
     printf ("Start: %2d; End: %2d; Length: %2d\n", start_node, goal_node, path_data->result_path_length);
+    printf ("Path: (");
     for (uint_fast8_t i = 0; i < path_data->result_path_length; ++ i)
     {
-        printf ("%2d, ", path_data->result_path [i]);
+        printf ("%2d", path_data->result_path [i]);
+
+        if ((i + 1) < path_data->result_path_length)
+        {
+            printf (", ");
+        }
     }
-    puts ("");
+    puts (")");
+    fflush (stdout);
 
     return;
 }
