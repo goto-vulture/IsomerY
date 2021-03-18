@@ -178,14 +178,17 @@ static void Depth_First_Search_Start
         struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
 )
 {
-    // Adjazenzmatrix des Alkans in die temporaere Adjazenzmatrix kopieren
+    // Adjazenzmatrix des Alkans in das temporaere Path_Data-Objekt kopieren
     memcpy (path_data->adj_matrix, alkane->structure, sizeof (alkane->structure));
     path_data->start_node   = start_node;
     path_data->goal_node    = goal_node;
+    // Zu Beginn den Startknoten betrachten !
     path_data->current_node = start_node;
 
+    // Tiefensuche beginnen
     Depth_First_Search_Step (path_data);
 
+    // Ausgabe der wichtigsten Infos ueber den gefundenen Pfad
     printf ("Start: %2d; End: %2d; Length: %2d\n", start_node, goal_node, path_data->result_path_length);
     printf ("Path: (");
     for (uint_fast8_t i = 0; i < path_data->result_path_length; ++ i)
@@ -229,6 +232,7 @@ static void Depth_First_Search_Step
         path_data->result_path_length = path_data->path_index;
 
         // Ueber einen Wert im Index anzeigen, dass das Ziel gefunden wurde => Index darf nicht mehr verwendet werden
+        // Und der Ergebnis-Pfad wird nicht mehr angefasst
         path_data->path_index = UINT_FAST8_MAX;
 
         return;
@@ -257,11 +261,12 @@ static void Depth_First_Search_Step
         // Bei allen Elementen im Stack die Tiefensuche rekursiv ausfuehren
         while (next_free_stack_element > 0)
         {
+            // Aktuelles Stackobjekt
             const unsigned char new_node = stack [next_free_stack_element - 1];
             -- next_free_stack_element;
             path_data->current_node = new_node;
 
-            // Rekursiv in die Tiefe gehen (REKURSIUNSDURCHFUEHRUNG)
+            // In die Tiefe gehen (REKURSION)
             Depth_First_Search_Step (path_data);
         }
     }
