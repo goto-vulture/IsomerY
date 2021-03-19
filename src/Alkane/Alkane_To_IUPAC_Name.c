@@ -30,6 +30,10 @@ struct Path_Data
                                                                                 // result_path-Array
                                                                                 // Diese Information wird nur fuer die
                                                                                 // Erzeugung des Pfades benoetigt
+    uint_fast8_t max_possible_nesting_depth;                                    // Maximal moegliche Verschachtelungs-
+                                                                                // tiefe der Aeste im Molekuel, wenn
+                                                                                // der Pfad als Hauptkette gewaehlt
+                                                                                // wird
 };
 
 /**
@@ -163,9 +167,9 @@ void Convert_Alkane_To_IUPAC_Name
 
     // Auch wieder hier: fuer besseres Verstaendnis der Schleifenobergrenze
     const uint_fast8_t count_path_data = next_free_path_data;
-    uint_fast8_t max_possible_nesting_depth [MAX_NUMBER_OF_C_ATOMS];
-    memset (max_possible_nesting_depth, '\0', sizeof (max_possible_nesting_depth));
-    uint_fast8_t next_free_max_possible_nesting_depth = 0;
+
+    // Ast mit der geringsten Verschachtelungstiefe
+    uint_fast8_t index_smallest_nesting_depth = 0;
 
     // Maximale Verschachtelungstiefe bei allen Pfaden ermitteln, wenn diese als Hauptkette gewaehlt werden wuerden
     for (uint_fast8_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
@@ -204,23 +208,17 @@ void Convert_Alkane_To_IUPAC_Name
                 }
             }
 
-            max_possible_nesting_depth [next_free_max_possible_nesting_depth] = possible_nesting_depth;
-            ++ next_free_max_possible_nesting_depth;
+            current_path_data->max_possible_nesting_depth = possible_nesting_depth;
+
+            // Ast mit der geringsten Verschachtelungstiefe ermitteln
+            // Hat der aktuelle Ast eine geringere Verschachtelungstiefe ?
+            if (path_data [current_path_data_index].max_possible_nesting_depth <
+                    path_data [index_smallest_nesting_depth].max_possible_nesting_depth)
+            {
+                index_smallest_nesting_depth = current_path_data_index;
+            }
 
             printf ("Max nesting depth %d (index: %d)\n", possible_nesting_depth, current_path_data_index);
-        }
-    }
-
-    // Ast mit der geringsten Verschachtelungstiefe ermitteln
-    uint_fast8_t index_smallest_nesting_depth = 0;
-    for (uint_fast8_t current_possible_nesting_depth = 0;
-            current_possible_nesting_depth < next_free_max_possible_nesting_depth;
-            ++ current_possible_nesting_depth)
-    {
-        if (max_possible_nesting_depth [current_possible_nesting_depth] <
-                max_possible_nesting_depth [index_smallest_nesting_depth])
-        {
-            index_smallest_nesting_depth = current_possible_nesting_depth;
         }
     }
 
