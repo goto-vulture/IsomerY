@@ -117,6 +117,7 @@ void Convert_Alkane_To_IUPAC_Name
     {
         uint_fast8_t connections_found = 0;
 
+        // Bindungen des aktuellen C-Atoms zaehlen
         for (uint_fast8_t current_possible_connection = 0; current_possible_connection < alkane->number_of_c_atoms;
                 ++ current_possible_connection)
         {
@@ -133,9 +134,6 @@ void Convert_Alkane_To_IUPAC_Name
             ++ next_free_ch3_element;
         }
     }
-
-    // Tiefensuche durchfuehren
-    // Das erste CH3-Element ist immer der Start; die restlichen CH3-Elemente werden jeweils als Ziel verwendet
 
     // Speicher fuer die Bestimmungen der Tiefensuche
     struct Path_Data path_data [MAX_NUMBER_OF_C_ATOMS];
@@ -155,11 +153,87 @@ void Convert_Alkane_To_IUPAC_Name
         {
             // Tiefensuche durchfuehren, um bei der aktuellen Variante des Start- und Zielknotens den Pfad und deren
             // Laenge zu bestimmen
-            Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end], alkane,
-                    &(path_data [next_free_path_data]));
+            Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end],
+                    alkane, &(path_data [next_free_path_data]));
             ++ next_free_path_data;
         }
     }
+
+    // Auch wieder hier: fuer besseres Verstaendnis der Schleifenobergrenze
+    const uint_fast8_t count_path_data = next_free_path_data;
+    uint_fast8_t max_possible_nesting_depth [MAX_NUMBER_OF_C_ATOMS];
+    memset (max_possible_nesting_depth, '\0', sizeof (max_possible_nesting_depth));
+    uint_fast8_t next_free_max_possible_nesting_depth = 0;
+
+    // Maximale Verschachtelungstiefe bei allen Pfaden ermitteln, wenn diese als Hauptkette gewaehlt werden wuerden
+    for (uint_fast8_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
+    {
+        struct Path_Data* const current_path_data = &(path_data [current_path_data_index]);
+
+        // Die Pfade, wo die Laenge exakt mit der Laenge der Hauptkette uebereinstimmt, sind die moeglichen Hauptketten
+        if (current_path_data->result_path_length == main_chain_length)
+        {
+            // Originale Adjazenzmatrix wiederherstellen
+            memcpy (current_path_data->adj_matrix, alkane->structure, sizeof (alkane->structure));
+
+            // Alle Bindungen des Pfades entfernen, um die uebrigen Aeste betrachten zu koennen
+            for (uint_fast8_t current_c_atom = 0; current_c_atom < current_path_data->result_path_length - 1;
+                    ++ current_c_atom)
+            {
+                const unsigned char c_atom_1 = current_path_data->result_path [current_c_atom];
+                const unsigned char c_atom_2 = current_path_data->result_path [current_c_atom + 1];
+
+                // Beide Richtungen in der Adjazenzmatrix entfernen
+                current_path_data->adj_matrix [c_atom_1][c_atom_2] = 0;
+                current_path_data->adj_matrix [c_atom_2][c_atom_1] = 0;
+            }
+
+            // Verschachtelungstiefe ermitteln, die bei der Wahl des Pfades als Hauptkette entsteht => Anzahl an
+            // C-Atomen mit mehr als 2 Bindungen zaehlen
+            // Der Pfad, bei denen die Verschachtelungstielfe am geringsten ist, ist die Hauptkette
+            uint_fast8_t possible_nesting_depth = 0;
+
+            for (uint_fast8_t current_c_atom = 0; current_c_atom < alkane->number_of_c_atoms; ++ current_c_atom)
+            {
+                uint_fast8_t connections_found = 0;
+
+                // Bindungen des aktuellen C-Atoms zaehlen
+                for (uint_fast8_t current_possible_connection = 0; current_possible_connection < alkane->number_of_c_atoms;
+                        ++ current_possible_connection)
+                {
+                    if (current_path_data->adj_matrix [current_c_atom][current_possible_connection] == 1)
+                    {
+                        ++ connections_found;
+                    }
+                }
+
+                if (connections_found > 2)
+                {
+                    ++ possible_nesting_depth;
+                }
+            }
+
+            max_possible_nesting_depth [next_free_max_possible_nesting_depth] = possible_nesting_depth;
+            ++ next_free_max_possible_nesting_depth;
+
+            printf ("Max nesting depth %d (index: %d)\n", possible_nesting_depth, current_path_data_index);
+        }
+    }
+
+    // Ast mit der geringsten Verschachtelungstiefe ermitteln
+    uint_fast8_t index_smallest_nesting_depth = 0;
+    for (uint_fast8_t current_possible_nesting_depth = 0;
+            current_possible_nesting_depth < next_free_max_possible_nesting_depth;
+            ++ current_possible_nesting_depth)
+    {
+        if (max_possible_nesting_depth [current_possible_nesting_depth] <
+                max_possible_nesting_depth [index_smallest_nesting_depth])
+        {
+            index_smallest_nesting_depth = current_possible_nesting_depth;
+        }
+    }
+
+    printf ("Index main chain: %d\n", index_smallest_nesting_depth);
     // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
 
     return;
@@ -221,7 +295,7 @@ static void Depth_First_Search_Step
     // Und wenn das Ziel noch nicht erreicht wurde, dann wird der Index inkrementiert
     if (path_data->path_index != UINT_FAST8_MAX)
     {
-        path_data->result_path [path_data->path_index]  = (unsigned char) (path_data->current_node + 1);
+        path_data->result_path [path_data->path_index]  = (unsigned char) path_data->current_node;
         path_data->path_index                           = (uint_fast8_t) (path_data->path_index + 1);
     }
 
