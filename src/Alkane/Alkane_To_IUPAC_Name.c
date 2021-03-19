@@ -118,7 +118,7 @@ void Convert_Alkane_To_IUPAC_Name
     //                     ausdrueckt !
     for (uint_fast8_t current_c_atom = 1; current_c_atom < alkane->number_of_c_atoms; ++ current_c_atom)
     {
-        const unsigned char current_numercode_element   = alkane->merged_numbercode [current_c_atom];
+        const unsigned char current_numercode_element = alkane->merged_numbercode [current_c_atom];
 
         // Adjazenzmatrix ist symmetrisch zur Diagonalen, da die Bindungen zwischen zwei C-Atomen ungerichtet sind
         alkane->structure [current_c_atom][current_numercode_element - 1] = 1;
