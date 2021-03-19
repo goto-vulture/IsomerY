@@ -51,6 +51,20 @@ static void Depth_First_Search_Step
         struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
 );
 
+/**
+ * Anzahl an Bindungen eines C-Atoms zaehlen.
+ */
+static uint_fast8_t                                                             // Anzahl an Bindungen
+Count_Connections
+(
+        const uint_fast8_t c_atom,                                              // C-Atom, deren Bindungen gezaehlt
+                                                                                // werden sollen
+        const uint_fast8_t number_of_c_atoms,                                   // Maximale Anzahl an C-Atomen in der
+                                                                                // Adjazenzmatrix
+        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
+                                                                                // zwischen den C-Atomen dar)
+);
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -115,20 +129,8 @@ void Convert_Alkane_To_IUPAC_Name
 
     for (uint_fast8_t current_c_atom = 0; current_c_atom < alkane->number_of_c_atoms; ++ current_c_atom)
     {
-        uint_fast8_t connections_found = 0;
-
-        // Bindungen des aktuellen C-Atoms zaehlen
-        for (uint_fast8_t current_possible_connection = 0; current_possible_connection < alkane->number_of_c_atoms;
-                ++ current_possible_connection)
-        {
-            if (alkane->structure [current_c_atom][current_possible_connection] == 1)
-            {
-                ++ connections_found;
-            }
-        }
-
-        // Wurde eine CH3-Gruppe gefunden ?
-        if (connections_found == 1)
+        // Hat das aktuelle C-Atom genau eine Bindung bzw. wurde eine CH3-Gruppe gefunden ?
+        if (Count_Connections (current_c_atom, alkane->number_of_c_atoms, alkane->structure) == 1)
         {
             ch3_elements [next_free_ch3_element] = current_c_atom;
             ++ next_free_ch3_element;
@@ -195,19 +197,8 @@ void Convert_Alkane_To_IUPAC_Name
 
             for (uint_fast8_t current_c_atom = 0; current_c_atom < alkane->number_of_c_atoms; ++ current_c_atom)
             {
-                uint_fast8_t connections_found = 0;
-
-                // Bindungen des aktuellen C-Atoms zaehlen
-                for (uint_fast8_t current_possible_connection = 0; current_possible_connection < alkane->number_of_c_atoms;
-                        ++ current_possible_connection)
-                {
-                    if (current_path_data->adj_matrix [current_c_atom][current_possible_connection] == 1)
-                    {
-                        ++ connections_found;
-                    }
-                }
-
-                if (connections_found > 2)
+                // Hat das aktuelle C-Atom mehr als 2 Bindungen ?
+                if (Count_Connections (current_c_atom, alkane->number_of_c_atoms, current_path_data->adj_matrix) > 2)
                 {
                     ++ possible_nesting_depth;
                 }
@@ -352,6 +343,37 @@ static void Depth_First_Search_Step
     }
 
     return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Anzahl an Bindungen eines C-Atoms zaehlen.
+ */
+static uint_fast8_t                                                             // Anzahl an Bindungen
+Count_Connections
+(
+        const uint_fast8_t c_atom,                                              // C-Atom, deren Bindungen gezaehlt
+                                                                                // werden sollen
+        const uint_fast8_t number_of_c_atoms,                                   // Maximale Anzahl an C-Atomen in der
+                                                                                // Adjazenzmatrix
+        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
+                                                                                // zwischen den C-Atomen dar)
+)
+{
+    uint_fast8_t connections_found = 0;
+
+    // Bindungen des aktuellen C-Atoms zaehlen
+    for (uint_fast8_t current_possible_connection = 0; current_possible_connection < number_of_c_atoms;
+            ++ current_possible_connection)
+    {
+        if (adj_matrix [c_atom][current_possible_connection] == 1)
+        {
+            ++ connections_found;
+        }
+    }
+
+    return connections_found;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
