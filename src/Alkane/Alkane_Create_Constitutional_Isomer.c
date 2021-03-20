@@ -358,7 +358,7 @@ void Create_Alkane_Constitutional_Isomers
 
             PRINTF_NO_VA_ARGS_FFLUSH("Start building. Calculate start information ...");
             // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
-            for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
+            for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 max_inner_loop_runs += (i2 - loop_start + 1);
             }
@@ -367,9 +367,9 @@ void Create_Alkane_Constitutional_Isomers
 
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
             // ===== BEGINN Berechnungsschleifen =====
-            for (size_t i2 = loop_start; i2 < count_branches; ++ i2)
+            for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
-                for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
+                for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
                     static uint_fast32_t local_run_counter = 0;
                     ++ local_run_counter;
@@ -414,14 +414,14 @@ void Create_Alkane_Constitutional_Isomers
             }
 
             // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
-            for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
+            for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
                 static uint_fast32_t local_run_counter = 0;
                 ++ local_run_counter;
 
-                for (size_t i3 = loop_start; i3 <= i2; ++ i3)
+                for (register size_t i3 = loop_start; i3 <= i2; ++ i3)
                 {
-                    for (size_t i4 = 0; i4 <= i3; ++ i4)
+                    for (register size_t i4 = 0; i4 <= i3; ++ i4)
                     {
                         max_inner_loop_runs += (i4 /* - i5 */ + 1);
                     }
@@ -443,11 +443,11 @@ void Create_Alkane_Constitutional_Isomers
             // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
             // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
             // ===== BEGINN Berechnungsschleifen =====
-            for (size_t i2 = loop_start; i2 < loop_end; ++ i2)
+            for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
-                for (size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
+                for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
-                    for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
+                    for (register size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                     {
                         static uint_fast32_t local_run_counter = 0;
                         ++ local_run_counter;
@@ -471,7 +471,7 @@ void Create_Alkane_Constitutional_Isomers
                             continue;
                         }
 
-                        for (size_t i5 = 0; i5 <= i4; ++ i5) // <= !
+                        for (register size_t i5 = 0; i5 <= i4; ++ i5) // <= !
                         {
                             // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
                             if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
