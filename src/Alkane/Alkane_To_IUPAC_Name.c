@@ -43,7 +43,6 @@ static void Depth_First_Search_Start
 (
         const uint_fast8_t start_node,      // Startknoten
         const uint_fast8_t goal_node,       // Zielknoten
-        const struct Alkane* const alkane,  // Alkanobjket, deren Struktur fuer die Tiefensuche betrachtet wird
         struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
 );
 
@@ -157,10 +156,13 @@ void Convert_Alkane_To_IUPAC_Name
                 current_ch3_element_end < count_ch3_elemets;
                 ++ current_ch3_element_end)
         {
+            // Adjazenzmatrix des Alkans in das passende Path_Data-Objekt kopieren
+            memcpy (path_data [next_free_path_data].adj_matrix, alkane->structure, sizeof (alkane->structure));
+
             // Tiefensuche durchfuehren, um bei der aktuellen Variante des Start- und Zielknotens den Pfad und deren
             // Laenge zu bestimmen
             Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end],
-                    alkane, &(path_data [next_free_path_data]));
+                    &(path_data [next_free_path_data]));
             ++ next_free_path_data;
         }
     }
@@ -237,12 +239,9 @@ static void Depth_First_Search_Start
 (
         const uint_fast8_t start_node,      // Startknoten
         const uint_fast8_t goal_node,       // Zielknoten
-        const struct Alkane* const alkane,  // Alkanobjket, deren Struktur fuer die Tiefensuche betrachtet wird
         struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
 )
 {
-    // Adjazenzmatrix des Alkans in das temporaere Path_Data-Objekt kopieren
-    memcpy (path_data->adj_matrix, alkane->structure, sizeof (alkane->structure));
     path_data->start_node   = start_node;
     path_data->goal_node    = goal_node;
     // Zu Beginn den Startknoten betrachten !
