@@ -58,6 +58,12 @@ Select_Suitable_Chain
         const size_t count_path_data
 );
 
+static void
+Print_Path_Data
+(
+        const struct Path_Data* const path_data
+);
+
 /**
  * Tiefensuche - und deren benoetigte Strukturen - initialisieren.
  */
@@ -323,6 +329,32 @@ Select_Suitable_Chain
 
 //---------------------------------------------------------------------------------------------------------------------
 
+static void
+Print_Path_Data
+(
+        const struct Path_Data* const path_data
+)
+{
+    printf ("Start: %2" PRIuFAST8 "; End: %2" PRIuFAST8 "; Length: %2" PRIuFAST8 "\n", path_data->start_node,
+            path_data->goal_node, path_data->result_path_length);
+    printf ("Path: (");
+    for (uint_fast8_t i = 0; i < path_data->result_path_length; ++ i)
+    {
+        printf ("%2" PRIuFAST8, path_data->result_path [i]);
+
+        if ((i + 1) < path_data->result_path_length)
+        {
+            printf (", ");
+        }
+    }
+    puts (")");
+    fflush (stdout);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Tiefensuche - und deren benoetigte Strukturen - initialisieren.
  */
@@ -342,19 +374,7 @@ static void Depth_First_Search_Start
     Depth_First_Search_Step (path_data);
 
     // Ausgabe der wichtigsten Infos ueber den gefundenen Pfad
-    printf ("Start: %2d; End: %2d; Length: %2d\n", start_node, goal_node, path_data->result_path_length);
-    printf ("Path: (");
-    for (uint_fast8_t i = 0; i < path_data->result_path_length; ++ i)
-    {
-        printf ("%2d", path_data->result_path [i]);
-
-        if ((i + 1) < path_data->result_path_length)
-        {
-            printf (", ");
-        }
-    }
-    puts (")");
-    fflush (stdout);
+    Print_Path_Data (path_data);
 
     return;
 }
