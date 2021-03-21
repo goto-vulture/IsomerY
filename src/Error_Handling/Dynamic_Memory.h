@@ -17,6 +17,7 @@ extern "C"
 
 
 #include <inttypes.h>
+#include <stdlib.h>
 
 
 
