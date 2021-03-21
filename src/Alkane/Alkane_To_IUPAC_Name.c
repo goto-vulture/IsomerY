@@ -101,17 +101,17 @@ static void Depth_First_Search_Step
 );
 
 /**
- * Anzahl an Bindungen eines C-Atoms zaehlen.
+ * Anzahl an Bindungen eines C-Atoms in einer Adjazenzmatrix zaehlen.
  */
-static uint_fast8_t                                                             // Anzahl an Bindungen
+static uint_fast8_t                                     // Anzahl an Bindungen
 Count_Connections
 (
-        const uint_fast8_t c_atom,                                              // C-Atom, deren Bindungen gezaehlt
-                                                                                // werden sollen
-        const uint_fast8_t number_of_c_atoms,                                   // Maximale Anzahl an C-Atomen in der
-                                                                                // Adjazenzmatrix
-        const unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
-                                                                                // zwischen den C-Atomen dar)
+        const uint_fast8_t c_atom,                      // C-Atom, deren Bindungen gezaehlt werden sollen
+        const uint_fast8_t number_of_c_atoms,           // Anzahl an C-Atomen, die in der Adjazenzmatrix tatsaechlich
+                                                        // hinterlegt sind (Diese Anzahl dient dazu, dass das Zaehlen
+                                                        // schneller funktioniert)
+        const unsigned char adj_matrix                  // Adjazenzmatrix (Stellt die Bindungen zwischen den C-Atomen
+        [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]  // dar)
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -492,17 +492,17 @@ static void Depth_First_Search_Step
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Anzahl an Bindungen eines C-Atoms zaehlen.
+ * Anzahl an Bindungen eines C-Atoms in einer Adjazenzmatrix zaehlen.
  */
-static uint_fast8_t                                                             // Anzahl an Bindungen
+static uint_fast8_t                                     // Anzahl an Bindungen
 Count_Connections
 (
-        const uint_fast8_t c_atom,                                              // C-Atom, deren Bindungen gezaehlt
-                                                                                // werden sollen
-        const uint_fast8_t number_of_c_atoms,                                   // Maximale Anzahl an C-Atomen in der
-                                                                                // Adjazenzmatrix
-        const unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
-                                                                                // zwischen den C-Atomen dar)
+        const uint_fast8_t c_atom,                      // C-Atom, deren Bindungen gezaehlt werden sollen
+        const uint_fast8_t number_of_c_atoms,           // Anzahl an C-Atomen, die in der Adjazenzmatrix tatsaechlich
+                                                        // hinterlegt sind (Diese Anzahl dient dazu, dass das Zaehlen
+                                                        // schneller funktioniert)
+        const unsigned char adj_matrix                  // Adjazenzmatrix (Stellt die Bindungen zwischen den C-Atomen
+        [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]  // dar)
 )
 {
     uint_fast8_t connections_found = 0;
