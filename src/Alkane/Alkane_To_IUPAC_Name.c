@@ -47,11 +47,15 @@ Find_Main_Chain
         const struct Alkane* const alkane   // Alkan, bei dem die Hauptkette bestimmt werden soll
 );
 
-static uint_fast8_t
+/**
+ * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
+ */
+static uint_fast8_t                         // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl an
+                                            // verwendeten Path_Data-Objekten
 Do_DFS
 (
-        const struct Alkane* const alkane,
-        struct Path_Data* const path_data
+        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const path_data   // Zeiger auf die bereits angelegten Path_Data-Objekte
 );
 
 static uint_fast8_t
@@ -204,11 +208,15 @@ Find_Main_Chain
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static uint_fast8_t
+/**
+ * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
+ */
+static uint_fast8_t                         // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl an
+                                            // verwendeten Path_Data-Objekten
 Do_DFS
 (
-        const struct Alkane* const alkane,
-        struct Path_Data* const path_data
+        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const path_data   // Zeiger auf die bereits angelegten Path_Data-Objekte
 )
 {
     // Alle Elemente des Graphens ermitteln, die genau eine Bindung haben. Dies sind die CH3-Gruppen, mit denen die
