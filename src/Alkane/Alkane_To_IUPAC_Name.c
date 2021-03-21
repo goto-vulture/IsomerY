@@ -58,10 +58,13 @@ Select_Suitable_Chain
         const size_t count_path_data
 );
 
+/**
+ * Die wichtigsten Infos ueber ein Path_Data Objekt ausgeben.
+ */
 static void
 Print_Path_Data
 (
-        const struct Path_Data* const path_data
+        const struct Path_Data* const path_data // Path_Data Objekt, deren wichtigsten Infos ausgegeben werden
 );
 
 /**
@@ -329,10 +332,13 @@ Select_Suitable_Chain
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Die wichtigsten Infos ueber ein Path_Data Objekt ausgeben.
+ */
 static void
 Print_Path_Data
 (
-        const struct Path_Data* const path_data
+        const struct Path_Data* const path_data // Path_Data Objekt, deren wichtigsten Infos ausgegeben werden
 )
 {
     printf ("Start: %2" PRIuFAST8 "; End: %2" PRIuFAST8 "; Length: %2" PRIuFAST8 "\n", path_data->start_node,
