@@ -37,10 +37,14 @@ struct Path_Data
                                                                                 // wird
 };
 
-static struct Path_Data*
+/**
+ * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
+ * Objekt am Ende wieder freigeben muss !
+ */
+static struct Path_Data*                    // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
-        const struct Alkane* const alkane
+        const struct Alkane* const alkane   // Alkan, bei dem die Hauptkette bestimmt werden soll
 );
 
 static uint_fast8_t
@@ -165,10 +169,14 @@ void Convert_Alkane_To_IUPAC_Name
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static struct Path_Data*
+/**
+ * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
+ * Objekt am Ende wieder freigeben muss !
+ */
+static struct Path_Data*                    // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
-        const struct Alkane* const alkane
+        const struct Alkane* const alkane   // Alkan, bei dem die Hauptkette bestimmt werden soll
 )
 {
     // Speicher fuer die Bestimmungen der Tiefensuche
