@@ -115,6 +115,24 @@ Count_Connections
         [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]  // dar)
 );
 
+static void
+Chains_Go_Deeper
+(
+        struct Alkane* const alkane,
+        struct Path_Data* const path_data,
+        const uint_fast8_t position,
+        const uint_fast8_t nesting_depth
+);
+
+static void
+Next_C_Atom_Found
+(
+        struct Path_Data* const path_data,
+        struct Alkane* const temp_alkane,
+        const uint_fast8_t next_c_atom_index,
+        const uint_fast8_t number_of_c_atoms
+);
+
 //=====================================================================================================================
 
 /**
@@ -187,6 +205,12 @@ void Convert_Alkane_To_IUPAC_Name
                                                                                 // Platzhalterwert verwenden
     alkane->next_free_chain ++;
     // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
+
+    // ===== ===== ===== ===== ===== BEGINN Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
+    // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
+    // der Benennung beruecksichtigt werden muessen
+    Chains_Go_Deeper (alkane, main_chain, UINT_FAST8_MAX, 1);
+    // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
     FREE_AND_SET_TO_NULL(main_chain);
 
@@ -372,6 +396,26 @@ Select_Suitable_Chain
         }
     }
 
+    // Die Verbindungen der C-Atome, die nicht zur Hauptkette gehoeren, zur Hauptkette gerichtet machen, damit bei
+    // spaeteren Untersuchungen einfacher mit den uebrigen C-Atomen gearbeitet werden kann
+    struct Path_Data* const result_ptr = &(path_data [index_smallest_nesting_depth]);
+
+    for (uint_fast8_t i = 0; i < result_ptr->result_path_length; ++ i)
+    {
+        for (uint_fast8_t i2 = 0; i2 < alkane->number_of_c_atoms; ++ i2)
+        {
+            // Alle moeglichen C-Atome der Hauptkette nach weiteren Verbindungen, die nicht zur Hauptkette gehoeren,
+            // kontrollieren
+            if (result_ptr->adj_matrix [result_ptr->result_path [i]][i2] == 1 &&
+                    result_ptr->adj_matrix [i2][result_ptr->result_path [i]] == 1)
+            {
+                // Verbindung zum C-Atom ausserhalb der Hauptkette in eine Richtung entfernen, damit die Bindung
+                // gerichtet ist
+                result_ptr->adj_matrix [result_ptr->result_path [i]][i2] = 0;
+            }
+        }
+    }
+
     return index_smallest_nesting_depth;
 }
 
@@ -533,6 +577,96 @@ Count_Connections
     }
 
     return connections_found;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void
+Chains_Go_Deeper
+(
+        struct Alkane* const alkane,
+        struct Path_Data* const path_data,
+        const uint_fast8_t position,
+        const uint_fast8_t nesting_depth
+)
+{
+    // Die komplette Adjazenzmatrix durchsuchen
+    for (uint_fast8_t i = 0; i < alkane->number_of_c_atoms; ++ i)
+    {
+        for (uint_fast8_t i2 = 0; i2 < alkane->number_of_c_atoms; ++ i2)
+        {
+            // Nach einem C-Atom suchen, bei dem eine gerichtete Verbindung existiert
+            if (path_data->adj_matrix [i][i2] == 1 && path_data->adj_matrix [i2][i] == 0)
+            {
+                // Ast, an dem sich das C-Atom mit der gerichteten Verbindung befindet, kopieren
+                // Zuerst die gerichtete Verbindung entfernen, damit man bei den weiteren Schritten beim Ast bleibt
+                path_data->adj_matrix [i][i2] = 0;
+
+                // Temp-Alkan
+                struct Alkane* temp_alkane = Create_Alkane (NULL, NULL, NULL, NULL);
+                ASSERT_ALLOC(temp_alkane, "Cannot create a temporary Alkane object !", sizeof (struct Alkane));
+                temp_alkane->number_of_c_atoms ++;
+
+                // Astinhalt in das temporaere Alkan-Objekt kopieren
+                Next_C_Atom_Found (path_data, temp_alkane, i, alkane->number_of_c_atoms);
+
+                // Offset anbringen
+                temp_alkane->number_of_c_atoms = (uint_fast8_t) (temp_alkane->number_of_c_atoms + i);
+
+                // Astinhalt komplett kopiert. Tiefensuche auf diesen Ast durchfuehren
+                struct Path_Data* temp_chain = Find_Main_Chain (temp_alkane);
+
+                // Schauen, ob der Ast weitere Verschachtelungen besitzen kann. Wenn ja, dann muessen diese ebenfalls
+                // untersucht werden
+                if (temp_chain->result_path_length < (temp_alkane->number_of_c_atoms - i))
+                {
+                    Chains_Go_Deeper (alkane, temp_chain, UINT_FAST8_MAX, (uint_fast8_t) (nesting_depth + 1));
+                }
+
+                // Aus den aktuellen Ast die Werte in das Originalalkan eintragen
+                alkane->chains [alkane->next_free_chain].length         = (temp_chain->result_path_length == 0) ? 1 :
+                        temp_chain->result_path_length;
+                alkane->chains [alkane->next_free_chain].nesting_depth  = nesting_depth;
+                alkane->chains [alkane->next_free_chain].position       = i;
+                alkane->next_free_chain ++;
+
+                Delete_Alkane (temp_alkane);
+                FREE_AND_SET_TO_NULL(temp_chain);
+            }
+
+        } // for (uint_fast8_t i2 = 0; i2 < alkane->number_of_c_atoms; ++ i2)
+    } // for (uint_fast8_t i = 0; i < alkane->number_of_c_atoms; ++ i)
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void
+Next_C_Atom_Found
+(
+        struct Path_Data* const path_data,
+        struct Alkane* const temp_alkane,
+        const uint_fast8_t next_c_atom_index,
+        const uint_fast8_t number_of_c_atoms
+)
+{
+    for (uint_fast8_t temp_y = 0; temp_y < number_of_c_atoms; ++ temp_y)
+    {
+        if (path_data->adj_matrix [next_c_atom_index][temp_y] == 1 &&
+                temp_alkane->structure [next_c_atom_index][temp_y] == 0)
+        {
+            path_data->adj_matrix [next_c_atom_index][temp_y]  = 0;
+            path_data->adj_matrix [temp_y][next_c_atom_index]  = 0;
+            temp_alkane->structure [next_c_atom_index][temp_y] = 1;
+            temp_alkane->structure [temp_y][next_c_atom_index] = 1;
+            temp_alkane->number_of_c_atoms ++;
+
+            Next_C_Atom_Found (path_data, temp_alkane, temp_y, number_of_c_atoms);
+        }
+    }
+
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
