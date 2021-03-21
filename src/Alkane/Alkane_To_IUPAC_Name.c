@@ -58,12 +58,19 @@ Do_DFS
         struct Path_Data* const path_data   // Zeiger auf die bereits angelegten Path_Data-Objekte
 );
 
-static uint_fast8_t
+/**
+ * Hauptkette aus den uebergebenen Path_Data-Objekten auswaehlen.
+ *
+ * Die Hauptkette ist der laengste Pfad. Wenn es mehrere Pfade mit der maximalen Laenge gibt (was die Regel ist), dann
+ * wird der Pfad ausgewaehlt, bei denen die uebrigen Aeste die GERINGSTE Verschachtelungstiefe besitzen. Dies dient
+ * dazu, dass der IUPAC-Name moeglichst kurz und einfach wird.
+ */
+static uint_fast8_t                         // Index des Path_Data-Objektes, welches die Hauptkette darstellt
 Select_Suitable_Chain
 (
-        const struct Alkane* const alkane,
-        struct Path_Data* const path_data,
-        const size_t count_path_data
+        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const path_data,  // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden soll
+        const size_t count_path_data        // Anzahl an Path_Data-Objekte
 );
 
 /**
@@ -264,12 +271,19 @@ Do_DFS
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static uint_fast8_t
+/**
+ * Hauptkette aus den uebergebenen Path_Data-Objekten auswaehlen.
+ *
+ * Die Hauptkette ist der laengste Pfad. Wenn es mehrere Pfade mit der maximalen Laenge gibt (was die Regel ist), dann
+ * wird der Pfad ausgewaehlt, bei denen die uebrigen Aeste die GERINGSTE Verschachtelungstiefe besitzen. Dies dient
+ * dazu, dass der IUPAC-Name moeglichst kurz und einfach wird.
+ */
+static uint_fast8_t                         // Index des Path_Data-Objektes, welches die Hauptkette darstellt
 Select_Suitable_Chain
 (
-        const struct Alkane* const alkane,
-        struct Path_Data* const path_data,
-        const size_t count_path_data
+        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const path_data,  // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden soll
+        const size_t count_path_data        // Anzahl an Path_Data-Objekte
 )
 {
     // Die maximale Laenge des laengsten Pfades aus der Menge der moeglichen Pfade auswaehlen
