@@ -19,23 +19,22 @@
  */
 struct Path_Data
 {
-    unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS];    // Kopie der Alkan Adjazenzmatrix
-    uint_fast8_t start_node;                                                    // Startknoten
-    uint_fast8_t goal_node;                                                     // Zielknoten
-    uint_fast8_t current_node;                                                  // Aktueller Knoten
+    unsigned char adj_matrix                            // Kopie der Alkan Adjazenzmatrix
+    [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS];
+    uint_fast8_t start_node;                            // Startknoten
+    uint_fast8_t goal_node;                             // Zielknoten
+    uint_fast8_t current_node;                          // Aktueller Knoten
 
-    unsigned char result_path [MAX_NUMBER_OF_C_ATOMS];                          // Pfad, um vom Start- zum Zielknoten
-                                                                                // zu kommen
-    uint_fast8_t result_path_length;                                            // Laenge des Pfades
-    uint_fast8_t path_index;                                                    // Das naechste zu verwendene Objekt im
-                                                                                // result_path-Array
-                                                                                // Diese Information wird nur fuer die
-                                                                                // Erzeugung des Pfades benoetigt
-    uint_fast8_t max_possible_nesting_depth;                                    // Maximal moegliche Verschachtelungs-
-                                                                                // tiefe der Aeste im Molekuel, wenn
-                                                                                // der Pfad als Hauptkette gewaehlt
-                                                                                // wird
+    unsigned char result_path [MAX_NUMBER_OF_C_ATOMS];  // Pfad, um vom Start- zum Zielknoten zu kommen
+    uint_fast8_t result_path_length;                    // Laenge des Pfades
+    uint_fast8_t path_index;                            // Das naechste zu verwendene Objekt im result_path-Array.
+                                                        // Diese Information wird nur fuer die Erzeugung des Pfades
+                                                        // benoetigt
+    uint_fast8_t max_possible_nesting_depth;            // Maximal moegliche Verschachtelungstiefe der Aeste im
+                                                        // Molekuel, wenn der Pfad als Hauptkette gewaehlt wird
 };
+
+
 
 /**
  * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
@@ -114,7 +113,7 @@ Count_Connections
         [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]  // dar)
 );
 
-//---------------------------------------------------------------------------------------------------------------------
+//=====================================================================================================================
 
 /**
  * IUPAC-Name des uebergebenen Alkans erzeugen.
@@ -178,7 +177,7 @@ void Convert_Alkane_To_IUPAC_Name
     return;
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+//=====================================================================================================================
 
 /**
  * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
