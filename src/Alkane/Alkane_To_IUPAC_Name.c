@@ -145,6 +145,12 @@ void Convert_Alkane_To_IUPAC_Name
     }
     for (uint_fast8_t i = 0; i < alkane->number_of_c_atoms; ++ i)
     {
+        // Die Null (bzw. bei 1-Indexierung die Eins) ist die einzige Zahl, die maximal 5 Mal vorkommen darf !
+        // Dies liegt am Rekursiven Aufbau des Zahlencodes, wobei die Zahlen auf bereits angegebene C-Atome mittels
+        // "verbunden mit"-Aussagen verweisen. Dies funktioniert natuerlich nicht, wenn das 1. C-Atom angegeben wird,
+        // da dann noch keine anderen C-Atome existieren, womit das C-Atom verbunden sein kann. Dafuer existiert die
+        // sogenannte Ausnahmen-Eins, die das 1. C-Atom darstellt. Im Zahlencode ist dies einfach der kleinste gueltige
+        // Index -> Also eine Null (bzw. eine Eins bei einer 1-Indexierung)
         if (i == 0)
         {
             ASSERT_FMSG(count_number_occur [0] <= 5, "Invalid merged numbercode ! The number %" PRIdFAST8 " occurs %"
