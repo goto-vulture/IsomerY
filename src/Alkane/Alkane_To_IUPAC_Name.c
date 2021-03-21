@@ -15,7 +15,8 @@
 
 
 /**
- * Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden.
+ * Daten, die fuer die Bestimmung des Pfades sowie fuer das Abspeichern des Pfades benoetigt werden. Aus diesen Infos
+ * kann die passende Hauptkette bestimmt werden (indem mehrere Path_Data-Objekte miteinander verglichen werden).
  */
 struct Path_Data
 {
@@ -23,7 +24,8 @@ struct Path_Data
     [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS];
     uint_fast8_t start_node;                            // Startknoten
     uint_fast8_t goal_node;                             // Zielknoten
-    uint_fast8_t current_node;                          // Aktueller Knoten
+    uint_fast8_t current_node;                          // Aktueller Knoten (wird nur waehrend der Tiefensuche
+                                                        // benoetigt)
 
     unsigned char result_path [MAX_NUMBER_OF_C_ATOMS];  // Pfad, um vom Start- zum Zielknoten zu kommen
     uint_fast8_t result_path_length;                    // Laenge des Pfades
