@@ -178,6 +178,14 @@ void Convert_Alkane_To_IUPAC_Name
     }
 
     struct Path_Data* main_chain = Find_Main_Chain (alkane);
+
+    // Aus der Hauptkette ergibt sich das erste Chain-Objekt
+    alkane->chains [alkane->next_free_chain].length         = main_chain->result_path_length;
+    alkane->chains [alkane->next_free_chain].nesting_depth  = 0;                // Die Verschachtelungstiefe bei der
+                                                                                // Hauptkette ist 0 !
+    alkane->chains [alkane->next_free_chain].position       = UINT_FAST8_MAX;   // Die Hauptkette hat keine Position
+                                                                                // Platzhalterwert verwenden
+    alkane->next_free_chain ++;
     // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
 
     FREE_AND_SET_TO_NULL(main_chain);
