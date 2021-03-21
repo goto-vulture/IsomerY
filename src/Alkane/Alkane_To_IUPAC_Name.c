@@ -8,6 +8,7 @@
 #include "Alkane_To_IUPAC_Name.h"
 #include <string.h>
 #include "../Error_Handling/Assert_Msg.h"
+#include "../Error_Handling/Dynamic_Memory.h"
 
 
 
@@ -35,6 +36,27 @@ struct Path_Data
                                                                                 // der Pfad als Hauptkette gewaehlt
                                                                                 // wird
 };
+
+static struct Path_Data*
+Find_Main_Chain
+(
+        const struct Alkane* const alkane
+);
+
+static uint_fast8_t
+Do_DFS
+(
+        const struct Alkane* const alkane,
+        struct Path_Data* const path_data
+);
+
+static uint_fast8_t
+Select_Suitable_Chain
+(
+        const struct Alkane* const alkane,
+        struct Path_Data* const path_data,
+        const size_t count_path_data
+);
 
 /**
  * Tiefensuche - und deren benoetigte Strukturen - initialisieren.
@@ -64,7 +86,7 @@ Count_Connections
                                                                                 // werden sollen
         const uint_fast8_t number_of_c_atoms,                                   // Maximale Anzahl an C-Atomen in der
                                                                                 // Adjazenzmatrix
-        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
+        const unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
                                                                                 // zwischen den C-Atomen dar)
 );
 
@@ -124,6 +146,54 @@ void Convert_Alkane_To_IUPAC_Name
         alkane->structure [current_numercode_element - 1][current_c_atom] = 1;
     }
 
+    struct Path_Data* main_chain = Find_Main_Chain (alkane);
+    // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
+
+    FREE_AND_SET_TO_NULL(main_chain);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static struct Path_Data*
+Find_Main_Chain
+(
+        const struct Alkane* const alkane
+)
+{
+    // Speicher fuer die Bestimmungen der Tiefensuche
+    struct Path_Data path_data [MAX_NUMBER_OF_C_ATOMS];
+    memset (path_data, '\0', sizeof (path_data));
+
+    // Tiefensuche fuer alle moeglichen Pfade durchfuehren
+    const uint_fast8_t count_created_paths = Do_DFS (alkane, path_data);
+
+    // Den passenden Pfad aus den gerade erzeugten Pfaden auswaehlen
+    const uint_fast8_t result_path_index = Select_Suitable_Chain (alkane, path_data, count_created_paths);
+
+    // Den Pfad, der als Hauptkette ausgewaehlt wurde, dynamisch erzeugen, damit das Ergebnis zurueckgegeben werden
+    // kann
+    struct Path_Data* result_path_data = (struct Path_Data*) CALLOC (1, sizeof (struct Path_Data));
+    ASSERT_ALLOC(result_path_data, "Cannot allocate memory for the main chain path !", sizeof (struct Path_Data));
+
+    // Ergebnisobjekt kopieren
+    memcpy (result_path_data, &(path_data [result_path_index]), sizeof (struct Path_Data));
+
+    printf ("Result Index: %d\n", result_path_index);
+
+    return result_path_data;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static uint_fast8_t
+Do_DFS
+(
+        const struct Alkane* const alkane,
+        struct Path_Data* const path_data
+)
+{
     // Alle Elemente des Graphens ermitteln, die genau eine Bindung haben. Dies sind die CH3-Gruppen, mit denen die
     // moeglichen Hauptketten starten und enden.
     uint_fast8_t ch3_elements [MAX_NUMBER_OF_C_ATOMS];
@@ -140,9 +210,6 @@ void Convert_Alkane_To_IUPAC_Name
         }
     }
 
-    // Speicher fuer die Bestimmungen der Tiefensuche
-    struct Path_Data path_data [MAX_NUMBER_OF_C_ATOMS];
-    memset (path_data, '\0', sizeof (path_data));
     // Damit die Bennenung der oberen Schleifengrenzen besser ist
     const uint_fast8_t count_ch3_elemets = next_free_ch3_element;
     uint_fast8_t next_free_path_data = 0;
@@ -167,8 +234,30 @@ void Convert_Alkane_To_IUPAC_Name
         }
     }
 
-    // Auch wieder hier: fuer besseres Verstaendnis der Schleifenobergrenze
-    const uint_fast8_t count_path_data = next_free_path_data;
+    return next_free_path_data;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static uint_fast8_t
+Select_Suitable_Chain
+(
+        const struct Alkane* const alkane,
+        struct Path_Data* const path_data,
+        const size_t count_path_data
+)
+{
+    // Die maximale Laenge des laengsten Pfades aus der Menge der moeglichen Pfade auswaehlen
+    // Es ist durchaus moeglich, dass mehrere Pfade die maximale Laenge besitzen
+    uint_fast8_t main_chain_length = 0;
+    for (size_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
+    {
+        if (path_data [current_path_data_index].result_path_length > main_chain_length)
+        {
+            main_chain_length = path_data [current_path_data_index].result_path_length;
+        }
+    }
+
 
     // Ast mit der geringsten Verschachtelungstiefe
     uint_fast8_t index_smallest_nesting_depth = 0;
@@ -203,8 +292,13 @@ void Convert_Alkane_To_IUPAC_Name
 
             for (uint_fast8_t current_c_atom = 0; current_c_atom < alkane->number_of_c_atoms; ++ current_c_atom)
             {
+                // Temporaer ein Zeiger mit beiden const-Qualifier anlegen, damit beim Zahelen der Verbindungen keine
+                // Warnung wegen verschiedenen Qualifiern entsteht:
+                // warning: pointers to arrays with different qualifiers are incompatible in ISO C [-Wpedantic]
+                const struct Path_Data* const temp_const_ptr = current_path_data;
+
                 // Hat das aktuelle C-Atom mehr als 2 Bindungen ?
-                if (Count_Connections (current_c_atom, alkane->number_of_c_atoms, current_path_data->adj_matrix) > 2)
+                if (Count_Connections (current_c_atom, alkane->number_of_c_atoms, temp_const_ptr->adj_matrix) > 2)
                 {
                     ++ possible_nesting_depth;
                 }
@@ -224,10 +318,7 @@ void Convert_Alkane_To_IUPAC_Name
         }
     }
 
-    printf ("Index main chain: %d\n", index_smallest_nesting_depth);
-    // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
-
-    return;
+    return index_smallest_nesting_depth;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -354,7 +445,7 @@ Count_Connections
                                                                                 // werden sollen
         const uint_fast8_t number_of_c_atoms,                                   // Maximale Anzahl an C-Atomen in der
                                                                                 // Adjazenzmatrix
-        unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
+        const unsigned char adj_matrix [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS] // Adjazenzmatrix (Stellt die Bindungen
                                                                                 // zwischen den C-Atomen dar)
 )
 {
