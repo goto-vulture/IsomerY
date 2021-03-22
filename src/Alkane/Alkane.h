@@ -82,6 +82,10 @@ struct Alkane
                                                                 // sich diese Kette befindet
         uint_fast8_t nesting_depth;                             // Verschachtelungstiefe (Tiefe 0 steht fuer die
                                                                 // Hauptkette !)
+        struct Chain* nested_chains [MAX_NUMBER_OF_C_ATOMS];    // Zeiger auf die Chain-Objekte, die mit dem aktuellen
+                                                                // Chain-Objekt verbunden sind (Also eine
+                                                                // Verschachtelung)
+        uint_fast8_t next_free_nested_chains;                   // Index des naechsten freien Chain-Zeigers
     } chains [MAX_NUMBER_OF_C_ATOMS];                           // Ketteninformationen des Isomers
                                                                 // ToDo: Arraygroesse verringern falls moeglich
     uint_fast8_t next_free_chain;                               // Index der naechsten freien Kette
