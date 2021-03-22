@@ -610,10 +610,10 @@ Chains_Go_Deeper
                 ASSERT_ALLOC(temp_alkane, "Cannot create a temporary Alkane object !", sizeof (struct Alkane));
                 temp_alkane->number_of_c_atoms ++;
 
-                // Astinhalt in das temporaere Alkan-Objekt kopieren
+                // Astinhalt des aktuellen Asts rekursiv suchen und in das temporaere Alkan-Objekt kopieren
                 Search_For_Chain_Content (path_data, temp_alkane, i, alkane->number_of_c_atoms);
 
-                // Offset anbringen
+                // Offset anbringen, damit die spaetere Tiefensuche alle relevanten C-Atome beruecksichtigt
                 temp_alkane->number_of_c_atoms = (uint_fast8_t) (temp_alkane->number_of_c_atoms + i);
 
                 // Astinhalt komplett kopiert. Tiefensuche auf diesen Ast durchfuehren
@@ -627,6 +627,8 @@ Chains_Go_Deeper
                 }
 
                 // Aus den aktuellen Ast die Werte in das Originalalkan eintragen
+                // Wenn der aktuelle Ast aus nur einem C-Atom besteht, dann findet die Tiefensuche keine Hauptkette
+                // -> In diesem Fall die Laenge 1 von Hand eintragen
                 alkane->chains [alkane->next_free_chain].length         = (temp_chain->result_path_length == 0) ? 1 :
                         temp_chain->result_path_length;
                 alkane->chains [alkane->next_free_chain].nesting_depth  = nesting_depth;
