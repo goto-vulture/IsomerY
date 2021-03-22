@@ -125,7 +125,7 @@ Chains_Go_Deeper
 );
 
 static void
-Next_C_Atom_Found
+Search_For_Chain_Content
 (
         struct Path_Data* const path_data,
         struct Alkane* const temp_alkane,
@@ -611,7 +611,7 @@ Chains_Go_Deeper
                 temp_alkane->number_of_c_atoms ++;
 
                 // Astinhalt in das temporaere Alkan-Objekt kopieren
-                Next_C_Atom_Found (path_data, temp_alkane, i, alkane->number_of_c_atoms);
+                Search_For_Chain_Content (path_data, temp_alkane, i, alkane->number_of_c_atoms);
 
                 // Offset anbringen
                 temp_alkane->number_of_c_atoms = (uint_fast8_t) (temp_alkane->number_of_c_atoms + i);
@@ -646,7 +646,7 @@ Chains_Go_Deeper
 //---------------------------------------------------------------------------------------------------------------------
 
 static void
-Next_C_Atom_Found
+Search_For_Chain_Content
 (
         struct Path_Data* const path_data,
         struct Alkane* const temp_alkane,
@@ -665,7 +665,7 @@ Next_C_Atom_Found
             temp_alkane->structure [temp_y][next_c_atom_index] = 1;
             temp_alkane->number_of_c_atoms ++;
 
-            Next_C_Atom_Found (path_data, temp_alkane, temp_y, number_of_c_atoms);
+            Search_For_Chain_Content (path_data, temp_alkane, temp_y, number_of_c_atoms);
         }
     }
 
