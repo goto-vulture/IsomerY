@@ -623,7 +623,11 @@ Chains_Go_Deeper
                 // Zuerst die gerichtete Verbindung entfernen, damit man bei den weiteren Schritten beim Ast bleibt
                 path_data->adj_matrix [i][i2] = 0;
 
-                // Temp-Alkan
+                // Temp-Alkan ! Dieses Objekt stellt KEIN richtiges Alkan dar !
+                // Das Objekt dient hauptsaechlich dazu, den Inhalt des aktuellen Astes zu speichern. Es wurde kein
+                // einfaches Array verwendet, da bei der Tiefensuche, die spaeter ausgefuehrt wird, ein Alkan-Objekt
+                // benoetigt wird !
+                // Ansonsten werden die weiteren Attribute eines Alkan-Objektes nicht benoetigt !
                 struct Alkane* temp_alkane = Create_Alkane (NULL, NULL, NULL, NULL);
                 ASSERT_ALLOC(temp_alkane, "Cannot create a temporary Alkane object !", sizeof (struct Alkane));
                 temp_alkane->number_of_c_atoms ++;
@@ -634,10 +638,11 @@ Chains_Go_Deeper
                 // Offset anbringen, damit die spaetere Tiefensuche alle relevanten C-Atome beruecksichtigt
                 temp_alkane->number_of_c_atoms = (uint_fast8_t) (temp_alkane->number_of_c_atoms + i);
 
-                // Tiefensuche auf diesen Ast durchfuehren
+                // Tiefensuche auf diesen Ast durchfuehren, um die laengste Kette im aktuellen Ast zu finden. Dies ist
+                // notwendig, da ein Ast nicht zwangslaeufig eine gerade Kette sein muss
                 struct Path_Data* temp_chain = Find_Main_Chain (temp_alkane);
 
-                // Aus den aktuellen Ast die Werte in das Originalalkan eintragen
+                // Aus den aktuellen Ast die Werte in das Originalalkan - bzw. das richtige Alkan - eintragen
                 // Wenn der aktuelle Ast aus nur einem C-Atom besteht, dann findet die Tiefensuche keine Hauptkette
                 // -> In diesem Fall die Laenge 1 von Hand eintragen
                 alkane->chains [alkane->next_free_chain].length         = (temp_chain->result_path_length == 0) ? 1 :
@@ -665,6 +670,8 @@ Chains_Go_Deeper
                 // untersucht werden
                 if (temp_chain->result_path_length < (temp_alkane->number_of_c_atoms - i))
                 {
+                    // Wenn noch weitere Aeste existieren, dann wird mit dem temporaeren Path_Data-Objekt diese Funktion
+                    // nochmal rekursiv aufgerufen
                     Chains_Go_Deeper (alkane, temp_chain, (uint_fast8_t) (nesting_depth + 1));
                 }
 
@@ -696,17 +703,21 @@ Search_For_Chain_Content
         const uint_fast8_t number_of_c_atoms    // Anzahl an C-Atomen im Alkan
 )
 {
+    // Alle C-Atome durchsuchen
     for (uint_fast8_t temp_y = 0; temp_y < number_of_c_atoms; ++ temp_y)
     {
+        // Existiert eine Verbindung, die noch nicht im temp_alkane-Objekt hinterlegt ist ?
         if (path_data->adj_matrix [next_c_atom_index][temp_y] == 1 &&
                 temp_alkane->structure [next_c_atom_index][temp_y] == 0)
         {
+            // Verbindung aus dem Path_Data-Objekt entfernen, damit eine Verbindung nicht mehrfach betrachtet wird
             path_data->adj_matrix [next_c_atom_index][temp_y]  = 0;
             path_data->adj_matrix [temp_y][next_c_atom_index]  = 0;
             temp_alkane->structure [next_c_atom_index][temp_y] = 1;
             temp_alkane->structure [temp_y][next_c_atom_index] = 1;
             temp_alkane->number_of_c_atoms ++;
 
+            // Bei dem gerade gefundenen C-Atom nach weiteren Bindungen suchen
             Search_For_Chain_Content (path_data, temp_alkane, temp_y, number_of_c_atoms);
         }
     }
