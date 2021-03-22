@@ -86,7 +86,8 @@ Print_Path_Data
 /**
  * Tiefensuche - und deren benoetigte Strukturen - initialisieren.
  */
-static void Depth_First_Search_Start
+static void
+Depth_First_Search_Start
 (
         const uint_fast8_t start_node,      // Startknoten
         const uint_fast8_t goal_node,       // Zielknoten
@@ -96,7 +97,8 @@ static void Depth_First_Search_Start
 /**
  * Tiefensuche im Alkan-Graphen rekursiv durchfuehren.
  */
-static void Depth_First_Search_Step
+static void
+Depth_First_Search_Step
 (
         struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
 );
@@ -144,7 +146,8 @@ Search_For_Chain_Content
  *      alkane != NULL
  *      main_chain_length > 0
  */
-void Convert_Alkane_To_IUPAC_Name
+void
+Convert_Alkane_To_IUPAC_Name
 (
         struct Alkane* const alkane,            // Alkan, von dem der IUPAC-Name gebildet werden soll
         const uint_fast8_t main_chain_length    // Laenge der Hauptkette
@@ -456,7 +459,8 @@ Print_Path_Data
 /**
  * Tiefensuche - und deren benoetigte Strukturen - initialisieren.
  */
-static void Depth_First_Search_Start
+static void
+Depth_First_Search_Start
 (
         const uint_fast8_t start_node,      // Startknoten
         const uint_fast8_t goal_node,       // Zielknoten
@@ -483,7 +487,8 @@ static void Depth_First_Search_Start
 /**
  * Tiefensuche im Alkan-Graphen rekursiv durchfuehren.
  */
-static void Depth_First_Search_Step
+static void
+Depth_First_Search_Step
 (
         struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
 )

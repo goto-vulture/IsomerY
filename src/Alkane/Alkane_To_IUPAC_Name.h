@@ -133,7 +133,8 @@ extern "C"
  *      alkane != NULL
  *      main_chain_length > 0
  */
-extern void Convert_Alkane_To_IUPAC_Name
+extern void
+Convert_Alkane_To_IUPAC_Name
 (
         struct Alkane* const alkane,            // Alkan, von dem der IUPAC-Name gebildet werden soll
         const uint_fast8_t main_chain_length    // Laenge der Hauptkette
