@@ -122,7 +122,6 @@ Chains_Go_Deeper
 (
         struct Alkane* const alkane,
         struct Path_Data* const path_data,
-        const uint_fast8_t position,
         const uint_fast8_t nesting_depth
 );
 
@@ -212,7 +211,7 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== BEGINN Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
     // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
     // der Benennung beruecksichtigt werden muessen
-    Chains_Go_Deeper (alkane, main_chain, UINT_FAST8_MAX, 1);
+    Chains_Go_Deeper (alkane, main_chain, 1);
     // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
@@ -594,7 +593,6 @@ Chains_Go_Deeper
 (
         struct Alkane* const alkane,
         struct Path_Data* const path_data,
-        const uint_fast8_t position,
         const uint_fast8_t nesting_depth
 )
 {
@@ -652,7 +650,7 @@ Chains_Go_Deeper
                 // untersucht werden
                 if (temp_chain->result_path_length < (temp_alkane->number_of_c_atoms - i))
                 {
-                    Chains_Go_Deeper (alkane, temp_chain, UINT_FAST8_MAX, (uint_fast8_t) (nesting_depth + 1));
+                    Chains_Go_Deeper (alkane, temp_chain, (uint_fast8_t) (nesting_depth + 1));
                 }
 
                 Delete_Alkane (temp_alkane);
