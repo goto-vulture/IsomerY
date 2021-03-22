@@ -14,6 +14,27 @@
  * For me, a vulture is more desirable than money.
  */
 
+/**
+ * C-Version ueberpruefen, um Schluesselwoerter u.U. durch leere Makros zu ersetzen
+ *
+ * Das Makro __STDC_VERSION__ ist fuer C90 nicht definiert
+ * ->   Schluesselwoerter inline und restrict durch leere Markos ersetzen, damit eine Uebersetzung auch mit C90
+ *      moeglich ist.
+ */
+#ifndef __STDC_VERSION__
+    #ifndef inline
+        #define inline
+    #else
+        #error "The macro \"inline\" is already defined !"
+    #endif /* inline */
+
+    #ifndef restrict
+        #define restrict
+    #else
+        #error "The macro \"restrict\" is already defined !"
+    #endif /* restrict */
+#endif /* __STDC_VERSION__ */
+
 #include <stdlib.h>
 #include <assert.h>
 #include "OS_Specific_Configurations.h"
