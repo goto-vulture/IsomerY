@@ -616,15 +616,8 @@ Chains_Go_Deeper
                 // Offset anbringen, damit die spaetere Tiefensuche alle relevanten C-Atome beruecksichtigt
                 temp_alkane->number_of_c_atoms = (uint_fast8_t) (temp_alkane->number_of_c_atoms + i);
 
-                // Astinhalt komplett kopiert. Tiefensuche auf diesen Ast durchfuehren
+                // Tiefensuche auf diesen Ast durchfuehren
                 struct Path_Data* temp_chain = Find_Main_Chain (temp_alkane);
-
-                // Schauen, ob der Ast weitere Verschachtelungen besitzen kann. Wenn ja, dann muessen diese ebenfalls
-                // untersucht werden
-                if (temp_chain->result_path_length < (temp_alkane->number_of_c_atoms - i))
-                {
-                    Chains_Go_Deeper (alkane, temp_chain, UINT_FAST8_MAX, (uint_fast8_t) (nesting_depth + 1));
-                }
 
                 // Aus den aktuellen Ast die Werte in das Originalalkan eintragen
                 // Wenn der aktuelle Ast aus nur einem C-Atom besteht, dann findet die Tiefensuche keine Hauptkette
@@ -632,8 +625,30 @@ Chains_Go_Deeper
                 alkane->chains [alkane->next_free_chain].length         = (temp_chain->result_path_length == 0) ? 1 :
                         temp_chain->result_path_length;
                 alkane->chains [alkane->next_free_chain].nesting_depth  = nesting_depth;
-                alkane->chains [alkane->next_free_chain].position       = i;
+
+                // Das Ermitteln der Position aus dem aktuellen Schleifenzaehler (i) ist etwas komplizierter
+                const unsigned char merged_numbercode_at_i = alkane->merged_numbercode [i];
+                // Jetzt ist die Frage: Bei welchem Element von dem uebergebenen Path_Data-Objekt ist der Wert gleich
+                // dem merged Numbercode an der Stelle i ?
+                for (uint_fast8_t current_result_data_element = 0;
+                        current_result_data_element < path_data->result_path_length; ++ current_result_data_element)
+                {
+                    // 0 Indexierung beim Vergleich verwenden !
+                    if (path_data->result_path [current_result_data_element] == merged_numbercode_at_i - 1)
+                    {
+                        // 1 Indexierung bei der Positionsinformation verwenden !
+                        alkane->chains [alkane->next_free_chain].position =
+                                (unsigned char) (current_result_data_element + 1);
+                    }
+                }
                 alkane->next_free_chain ++;
+
+                // Schauen, ob der Ast weitere Verschachtelungen besitzen kann. Wenn ja, dann muessen diese ebenfalls
+                // untersucht werden
+                if (temp_chain->result_path_length < (temp_alkane->number_of_c_atoms - i))
+                {
+                    Chains_Go_Deeper (alkane, temp_chain, UINT_FAST8_MAX, (uint_fast8_t) (nesting_depth + 1));
+                }
 
                 Delete_Alkane (temp_alkane);
                 FREE_AND_SET_TO_NULL(temp_chain);
