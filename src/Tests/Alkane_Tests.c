@@ -122,6 +122,39 @@ void TEST_Convert_Alkane_To_IUPAC_Name (void)
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen.
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
+{
+    const unsigned char branch_1_content [] = { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4, 5 };
+    const unsigned char branch_3_content [] = { 1, 1, 2, 2, 2 };
+    const uint_fast8_t main_chain_length    = 17;
+
+    const char* exptected_result            = "N/A";
+
+    struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
+    struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
+    struct Alkane_Branch* branch_3 = Create_Alkane_Branch (branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
+
+    struct Alkane* alkane = Create_Alkane (branch_2, branch_1, branch_3, NULL);
+
+    // Konvertierung durchfuehren
+    Convert_Alkane_To_IUPAC_Name (alkane, main_chain_length);
+
+    Delete_Alkane (alkane);
+    Delete_Alkane_Branch (branch_1);
+    Delete_Alkane_Branch (branch_2);
+    Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Vergleichen eines Zahlencodes eines Akans mit einem vorgegebenen Ergebnis.
  */
 static _Bool
