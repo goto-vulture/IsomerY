@@ -42,21 +42,21 @@ struct Path_Data
  * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
  * Objekt am Ende wieder freigeben muss !
  */
-static struct Path_Data*                    // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
+static struct Path_Data*                            // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
-        const struct Alkane* const alkane   // Alkan, bei dem die Hauptkette bestimmt werden soll
+        const struct Alkane* const restrict alkane  // Alkan, bei dem die Hauptkette bestimmt werden soll
 );
 
 /**
  * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
  */
-static uint_fast8_t                         // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl an
-                                            // verwendeten Path_Data-Objekten
+static uint_fast8_t                                 // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl
+                                                    // an verwendeten Path_Data-Objekten
 Do_DFS
 (
-        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const path_data   // Zeiger auf die bereits angelegten Path_Data-Objekte
+        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const restrict path_data  // Zeiger auf die bereits angelegten Path_Data-Objekte
 );
 
 /**
@@ -66,12 +66,13 @@ Do_DFS
  * wird der Pfad ausgewaehlt, bei denen die uebrigen Aeste die GERINGSTE Verschachtelungstiefe besitzen. Dies dient
  * dazu, dass der IUPAC-Name moeglichst kurz und einfach wird.
  */
-static uint_fast8_t                         // Index des Path_Data-Objektes, welches die Hauptkette darstellt
+static uint_fast8_t                                 // Index des Path_Data-Objektes, welches die Hauptkette darstellt
 Select_Suitable_Chain
 (
-        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const path_data,  // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden soll
-        const size_t count_path_data        // Anzahl an Path_Data-Objekte
+        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const restrict path_data, // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden
+                                                    // soll
+        const size_t count_path_data                // Anzahl an Path_Data-Objekte
 );
 
 /**
@@ -80,7 +81,8 @@ Select_Suitable_Chain
 static void
 Print_Path_Data
 (
-        const struct Path_Data* const path_data // Path_Data Objekt, deren wichtigsten Infos ausgegeben werden
+        const struct Path_Data* const restrict path_data    // Path_Data Objekt, deren wichtigsten Infos ausgegeben
+                                                            // werden
 );
 
 /**
@@ -89,9 +91,10 @@ Print_Path_Data
 static void
 Depth_First_Search_Start
 (
-        const uint_fast8_t start_node,      // Startknoten
-        const uint_fast8_t goal_node,       // Zielknoten
-        struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
+        const uint_fast8_t start_node,              // Startknoten
+        const uint_fast8_t goal_node,               // Zielknoten
+        struct Path_Data* const restrict path_data  // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt
+                                                    // werden
 );
 
 /**
@@ -100,7 +103,8 @@ Depth_First_Search_Start
 static void
 Depth_First_Search_Step
 (
-        struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
+        struct Path_Data* const restrict path_data  // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt
+                                                    // werden
 );
 
 /**
@@ -124,9 +128,9 @@ Count_Connections
 static void
 Chains_Go_Deeper
 (
-        struct Alkane* const alkane,        // Alkane-Objekt, dessen Aeste durchsucht werden
-        struct Path_Data* const path_data,  // Path_Data-Objekt, des letzten Astes
-        const uint_fast8_t nesting_depth    // Aktuelle Verschachtelungstiefe
+        struct Alkane* const restrict alkane,       // Alkane-Objekt, dessen Aeste durchsucht werden
+        struct Path_Data* const restrict path_data, // Path_Data-Objekt, des letzten Astes
+        const uint_fast8_t nesting_depth            // Aktuelle Verschachtelungstiefe
 );
 
 /**
@@ -138,11 +142,11 @@ Chains_Go_Deeper
 static void
 Search_For_Chain_Content
 (
-        struct Path_Data* const path_data,      // Quellobjekt, welches durchsucht wird
-        struct Alkane* const temp_alkane,       // Temporaeres Alkan-Objekt, welches die gefundenen Verbindungen in
-                                                // einer Adjazenzmatrix speichert
-        const uint_fast8_t next_c_atom_index,   // Index des C-Atoms, welches als naechstes betrachtet wird
-        const uint_fast8_t number_of_c_atoms    // Anzahl an C-Atomen im Alkan
+        struct Path_Data* const restrict path_data, // Quellobjekt, welches durchsucht wird
+        struct Alkane* const restrict temp_alkane,  // Temporaeres Alkan-Objekt, welches die gefundenen Verbindungen in
+                                                    // einer Adjazenzmatrix speichert
+        const uint_fast8_t next_c_atom_index,       // Index des C-Atoms, welches als naechstes betrachtet wird
+        const uint_fast8_t number_of_c_atoms        // Anzahl an C-Atomen im Alkan
 );
 
 //=====================================================================================================================
@@ -239,10 +243,10 @@ Convert_Alkane_To_IUPAC_Name
  * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
  * Objekt am Ende wieder freigeben muss !
  */
-static struct Path_Data*                    // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
+static struct Path_Data*                            // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
-        const struct Alkane* const alkane   // Alkan, bei dem die Hauptkette bestimmt werden soll
+        const struct Alkane* const restrict alkane  // Alkan, bei dem die Hauptkette bestimmt werden soll
 )
 {
     // Speicher fuer die Bestimmungen der Tiefensuche
@@ -273,12 +277,12 @@ Find_Main_Chain
 /**
  * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
  */
-static uint_fast8_t                         // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl an
-                                            // verwendeten Path_Data-Objekten
+static uint_fast8_t                                 // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl
+                                                    // an verwendeten Path_Data-Objekten
 Do_DFS
 (
-        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const path_data   // Zeiger auf die bereits angelegten Path_Data-Objekte
+        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const restrict path_data  // Zeiger auf die bereits angelegten Path_Data-Objekte
 )
 {
     // Alle Elemente des Graphens ermitteln, die genau eine Bindung haben. Dies sind die CH3-Gruppen, mit denen die
@@ -333,12 +337,13 @@ Do_DFS
  * wird der Pfad ausgewaehlt, bei denen die uebrigen Aeste die GERINGSTE Verschachtelungstiefe besitzen. Dies dient
  * dazu, dass der IUPAC-Name moeglichst kurz und einfach wird.
  */
-static uint_fast8_t                         // Index des Path_Data-Objektes, welches die Hauptkette darstellt
+static uint_fast8_t                                 // Index des Path_Data-Objektes, welches die Hauptkette darstellt
 Select_Suitable_Chain
 (
-        const struct Alkane* const alkane,  // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const path_data,  // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden soll
-        const size_t count_path_data        // Anzahl an Path_Data-Objekte
+        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data* const restrict path_data, // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden
+                                                    // soll
+        const size_t count_path_data                // Anzahl an Path_Data-Objekte
 )
 {
     // Die maximale Laenge des laengsten Pfades aus der Menge der moeglichen Pfade auswaehlen
@@ -443,7 +448,8 @@ Select_Suitable_Chain
 static void
 Print_Path_Data
 (
-        const struct Path_Data* const path_data // Path_Data Objekt, deren wichtigsten Infos ausgegeben werden
+        const struct Path_Data* const restrict path_data    // Path_Data Objekt, deren wichtigsten Infos ausgegeben
+                                                            // werden
 )
 {
     printf ("Start: %2" PRIuFAST8 "; End: %2" PRIuFAST8 "; Length: %2" PRIuFAST8 "\n", path_data->start_node,
@@ -472,9 +478,10 @@ Print_Path_Data
 static void
 Depth_First_Search_Start
 (
-        const uint_fast8_t start_node,      // Startknoten
-        const uint_fast8_t goal_node,       // Zielknoten
-        struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
+        const uint_fast8_t start_node,              // Startknoten
+        const uint_fast8_t goal_node,               // Zielknoten
+        struct Path_Data* const restrict path_data  // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt
+                                                    // werden
 )
 {
     path_data->start_node   = start_node;
@@ -500,7 +507,8 @@ Depth_First_Search_Start
 static void
 Depth_First_Search_Step
 (
-        struct Path_Data* const path_data   // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt werden
+        struct Path_Data* const restrict path_data  // Daten, die fuer die Bestimmung des Pfades benoetigt und erzeugt
+                                                    // werden
 )
 {
     // Wenn das Ziel noch nicht erreicht wurde, dann koennte der aktuelle Knoten Teil des Pfades sein
@@ -606,9 +614,9 @@ Count_Connections
 static void
 Chains_Go_Deeper
 (
-        struct Alkane* const alkane,        // Alkane-Objekt, dessen Aeste durchsucht werden
-        struct Path_Data* const path_data,  // Path_Data-Objekt, des letzten Astes
-        const uint_fast8_t nesting_depth    // Aktuelle Verschachtelungstiefe
+        struct Alkane* const restrict alkane,       // Alkane-Objekt, dessen Aeste durchsucht werden
+        struct Path_Data* const restrict path_data, // Path_Data-Objekt, des letzten Astes
+        const uint_fast8_t nesting_depth            // Aktuelle Verschachtelungstiefe
 )
 {
     // Die komplette Adjazenzmatrix durchsuchen
@@ -696,11 +704,11 @@ Chains_Go_Deeper
 static void
 Search_For_Chain_Content
 (
-        struct Path_Data* const path_data,      // Quellobjekt, welches durchsucht wird
-        struct Alkane* const temp_alkane,       // Temporaeres Alkan-Objekt, welches die gefundenen Verbindungen in
-                                                // einer Adjazenzmatrix speichert
-        const uint_fast8_t next_c_atom_index,   // Index des C-Atoms, welches als naechstes betrachtet wird
-        const uint_fast8_t number_of_c_atoms    // Anzahl an C-Atomen im Alkan
+        struct Path_Data* const restrict path_data, // Quellobjekt, welches durchsucht wird
+        struct Alkane* const restrict temp_alkane,  // Temporaeres Alkan-Objekt, welches die gefundenen Verbindungen in
+                                                    // einer Adjazenzmatrix speichert
+        const uint_fast8_t next_c_atom_index,       // Index des C-Atoms, welches als naechstes betrachtet wird
+        const uint_fast8_t number_of_c_atoms        // Anzahl an C-Atomen im Alkan
 )
 {
     // Alle C-Atome durchsuchen
