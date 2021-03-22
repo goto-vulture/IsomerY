@@ -117,21 +117,32 @@ Count_Connections
         [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS]  // dar)
 );
 
+/**
+ * Alle Aeste eines Alkanobjektes ermitteln und mit zusaetzlichen Informationen abspeichern. Diese zusaetzlichen
+ * Informationen werden fuer die Erstellung des IUPAC-Namens benoetigt.
+ */
 static void
 Chains_Go_Deeper
 (
-        struct Alkane* const alkane,
-        struct Path_Data* const path_data,
-        const uint_fast8_t nesting_depth
+        struct Alkane* const alkane,        // Alkane-Objekt, dessen Aeste durchsucht werden
+        struct Path_Data* const path_data,  // Path_Data-Objekt, des letzten Astes
+        const uint_fast8_t nesting_depth    // Aktuelle Verschachtelungstiefe
 );
 
+/**
+ * Suche nach dem Inhalt eines Astes.
+ * Der Inhalt des Astes wird mithilfe einer Adjazenzmatrix im uebergebenen Alkane-Objekt gesichert. Das Path_Data
+ * Objekt dient als Quelle der Informationen. Die gefundenen Verbindungen werden im Path_Data-Objekt geloescht, damit
+ * eine Verbindung nicht mehrfach gezaehlt wird.
+ */
 static void
 Search_For_Chain_Content
 (
-        struct Path_Data* const path_data,
-        struct Alkane* const temp_alkane,
-        const uint_fast8_t next_c_atom_index,
-        const uint_fast8_t number_of_c_atoms
+        struct Path_Data* const path_data,      // Quellobjekt, welches durchsucht wird
+        struct Alkane* const temp_alkane,       // Temporaeres Alkan-Objekt, welches die gefundenen Verbindungen in
+                                                // einer Adjazenzmatrix speichert
+        const uint_fast8_t next_c_atom_index,   // Index des C-Atoms, welches als naechstes betrachtet wird
+        const uint_fast8_t number_of_c_atoms    // Anzahl an C-Atomen im Alkan
 );
 
 //=====================================================================================================================
@@ -588,12 +599,16 @@ Count_Connections
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Alle Aeste eines Alkanobjektes ermitteln und mit zusaetzlichen Informationen abspeichern. Diese zusaetzlichen
+ * Informationen werden fuer die Erstellung des IUPAC-Namens benoetigt.
+ */
 static void
 Chains_Go_Deeper
 (
-        struct Alkane* const alkane,
-        struct Path_Data* const path_data,
-        const uint_fast8_t nesting_depth
+        struct Alkane* const alkane,        // Alkane-Objekt, dessen Aeste durchsucht werden
+        struct Path_Data* const path_data,  // Path_Data-Objekt, des letzten Astes
+        const uint_fast8_t nesting_depth    // Aktuelle Verschachtelungstiefe
 )
 {
     // Die komplette Adjazenzmatrix durchsuchen
@@ -665,13 +680,20 @@ Chains_Go_Deeper
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Suche nach dem Inhalt eines Astes.
+ * Der Inhalt des Astes wird mithilfe einer Adjazenzmatrix im uebergebenen Alkane-Objekt gesichert. Das Path_Data
+ * Objekt dient als Quelle der Informationen. Die gefundenen Verbindungen werden im Path_Data-Objekt geloescht, damit
+ * eine Verbindung nicht mehrfach gezaehlt wird.
+ */
 static void
 Search_For_Chain_Content
 (
-        struct Path_Data* const path_data,
-        struct Alkane* const temp_alkane,
-        const uint_fast8_t next_c_atom_index,
-        const uint_fast8_t number_of_c_atoms
+        struct Path_Data* const path_data,      // Quellobjekt, welches durchsucht wird
+        struct Alkane* const temp_alkane,       // Temporaeres Alkan-Objekt, welches die gefundenen Verbindungen in
+                                                // einer Adjazenzmatrix speichert
+        const uint_fast8_t next_c_atom_index,   // Index des C-Atoms, welches als naechstes betrachtet wird
+        const uint_fast8_t number_of_c_atoms    // Anzahl an C-Atomen im Alkan
 )
 {
     for (uint_fast8_t temp_y = 0; temp_y < number_of_c_atoms; ++ temp_y)
