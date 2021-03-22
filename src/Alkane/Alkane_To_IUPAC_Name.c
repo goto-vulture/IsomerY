@@ -212,6 +212,9 @@ void Convert_Alkane_To_IUPAC_Name
     Chains_Go_Deeper (alkane, main_chain, UINT_FAST8_MAX, 1);
     // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
+    // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
+    // ===== ===== ===== ===== ===== ENDE Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
+
     FREE_AND_SET_TO_NULL(main_chain);
 
     return;
