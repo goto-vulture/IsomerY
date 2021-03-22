@@ -131,7 +131,7 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     const unsigned char branch_1_content [] = { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4, 5 };
     const unsigned char branch_3_content [] = { 1, 1, 2, 2, 2 };
-    const uint_fast8_t main_chain_length    = 17;
+    const uint_fast8_t main_chain_length    = 16;
 
     const char* exptected_result            = "N/A";
 
