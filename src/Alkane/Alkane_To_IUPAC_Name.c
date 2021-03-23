@@ -9,6 +9,8 @@
 #include <string.h>
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
+#include "../Print_Tools.h"
+#include "../Misc.h"
 
 
 
@@ -230,6 +232,14 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
+    // Nun haben wir alle Informationen beisammen, die wir brauchen :D
+    char iupac_name [150];
+    memset (iupac_name, '\0', sizeof (iupac_name));
+    const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
+
+    // ...
+
+    PRINTF_FFLUSH("=> IUPAC name: %s <=\n", iupac_name);
     // ===== ===== ===== ===== ===== ENDE Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
 
     FREE_AND_SET_TO_NULL(main_chain);
