@@ -10,6 +10,8 @@
 #include <limits.h>
 #include <errno.h>
 #include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
 
 
@@ -68,6 +70,31 @@ str2int
     *out = l;
 
     return STR2INT_SUCCESS;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * long int zu C-String konvertieren.
+ *
+ * Asserts:
+ *      N/A
+ */
+void
+int2str
+(
+        char* const output_string,          // Ausgabestring
+        const size_t output_string_size,    // Laenge des Ausgabestrings
+        const long int input                // Integer, der konvertiert werden soll
+)
+{
+    memset (output_string, '\0', output_string_size);
+    snprintf (output_string, output_string_size - 1, "%ld", input);
+
+    // Nullterminierung garantieren
+    output_string [output_string_size - 1] = '\0';
+
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

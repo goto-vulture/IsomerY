@@ -16,6 +16,10 @@ extern "C"
 
 
 
+#include <stddef.h>
+
+
+
 enum str2int_errno
 {
     STR2INT_SUCCESS = 0,
@@ -32,6 +36,14 @@ enum str2int_errno
  *      N/A
  */
 extern enum str2int_errno str2int (long int* out, const char* input_string, const int base);
+
+/**
+ * long int zu C-String konvertieren.
+ *
+ * Asserts:
+ *      N/A
+ */
+extern void int2str (char* const output_string, const size_t output_string_size, const long int input);
 
 
 
