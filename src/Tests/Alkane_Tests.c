@@ -99,7 +99,6 @@ void TEST_Convert_Alkane_To_IUPAC_Name (void)
     const unsigned char branch_1_content [] = { 1, 1, 2 };
     const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4 };
     const unsigned char branch_3_content [] = { 1, 1, 2, 2 };
-    const uint_fast8_t main_chain_length    = 8;
 
     // Dieser Name passt u.a. nicht von den Positionsnummern her, da diese kuerzer dargestellt werden koennen; der
     // richtige Name waere: 2-Methyl-4-Propyl-Octan
@@ -114,7 +113,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name (void)
     struct Alkane* alkane = Create_Alkane (branch_2, branch_1, branch_3, NULL);
 
     // Konvertierung durchfuehren
-    Convert_Alkane_To_IUPAC_Name (alkane, main_chain_length);
+    Convert_Alkane_To_IUPAC_Name (alkane);
 
     ASSERT_STRING_EQUALS(expected_result, alkane->iupac_name);
 
@@ -138,7 +137,6 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
     const unsigned char branch_1_content [] = { 1 };
     const unsigned char branch_2_content [] = { 1, 1, 1 };
     const unsigned char branch_3_content [] = { 1, 1, 1, 1 };
-    const uint_fast8_t main_chain_length    = 5;
 
     struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
     struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
@@ -147,7 +145,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
     struct Alkane* alkane = Create_Alkane (branch_1, branch_2, branch_3, NULL);
 
     // Konvertierung durchfuehren
-    Convert_Alkane_To_IUPAC_Name (alkane, main_chain_length);
+    Convert_Alkane_To_IUPAC_Name (alkane);
 
     Delete_Alkane (alkane);
     Delete_Alkane_Branch (branch_1);
@@ -169,7 +167,6 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     const unsigned char branch_1_content [] = { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4, 5 };
     const unsigned char branch_3_content [] = { 1, 1, 2, 2, 2 };
-    const uint_fast8_t main_chain_length    = 16;
 
     const char* expected_result            = "6-Propyl-(2,2-DiMethyl)-Hexadecan";
 
@@ -180,7 +177,7 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     struct Alkane* alkane = Create_Alkane (branch_2, branch_1, branch_3, NULL);
 
     // Konvertierung durchfuehren
-    Convert_Alkane_To_IUPAC_Name (alkane, main_chain_length);
+    Convert_Alkane_To_IUPAC_Name (alkane);
 
     ASSERT_STRING_EQUALS(expected_result, alkane->iupac_name);
 

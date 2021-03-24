@@ -161,17 +161,14 @@ Search_For_Chain_Content
  *
  * Asserts:
  *      alkane != NULL
- *      main_chain_length > 0
  */
 void
 Convert_Alkane_To_IUPAC_Name
 (
-        struct Alkane* const alkane,            // Alkan, von dem der IUPAC-Name gebildet werden soll
-        const uint_fast8_t main_chain_length    // Laenge der Hauptkette
+        struct Alkane* const alkane     // Alkan, von dem der IUPAC-Name gebildet werden soll
 )
 {
     ASSERT_MSG(alkane != NULL, "alkane is NULL !");
-    ASSERT_MSG(main_chain_length > 0, "main_chain_length is 0 !");
 
     // ===== ===== ===== BEGINN Zusammengesetzten Zahlencode des uebergebenen Alkans ueberpruefen ===== ===== =====
     uint_fast8_t count_number_occur [MAX_NUMBER_OF_C_ATOMS];
