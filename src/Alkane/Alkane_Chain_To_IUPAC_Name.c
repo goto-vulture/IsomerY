@@ -39,12 +39,16 @@ static void Up_In_Nesting (struct State_Information* const restrict state);
 
 //=====================================================================================================================
 
+/**
+ * Diese Funktion konvertiert die zuvor erzeugten Chain-Objekte in den IUPAC-Namen.
+ * Intern arbeitet dieser Prozess mit zustandsbasierten statischen Funktionen.
+ */
 void
 Chain_To_IUPAC
 (
-        char* const restrict iupac_name,
-        const size_t iupac_name_length,
-        struct Alkane* const restrict alkane
+        char* const restrict iupac_name,        // Speicher fuer den IUPAC-Namen
+        const size_t iupac_name_length,         // Groesse des Speichers, welches fuer den IUPAC-Namen reserviert wurde
+        struct Alkane* const restrict alkane    // Alkan-Objekt (enthaelt die Chain-Objekte)
 )
 {
     memset (iupac_name, '\0', iupac_name_length * sizeof (char));
