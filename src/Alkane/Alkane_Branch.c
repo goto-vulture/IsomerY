@@ -26,16 +26,15 @@
  * Asserts:
  *      lenght > 0 && length <= MAX_NUMBER_OF_C_ATOMS, wenn branch != NULL
  */
-struct Alkane_Branch*                       // Erzeugtes Alkane_Branch Objekt
+struct Alkane_Branch*                            // Erzeugtes Alkane_Branch Objekt
 Create_Alkane_Branch
 (
-        const unsigned char* const restrict branch,
-                                            // Astinformationen, mit denen das Alkane_Branch Objekt initialisiert
-                                            // werden kann
-                                            // Oder NULL, falls eine Initialisierung mit Nullbyes durchgefuehrt werden
-                                            // soll
-        const uint_fast8_t length           // Laenge der Astinformationen
-                                            // Wenn branch == NULL ist, dann wird dieser Wert ignoriert
+        const unsigned char* const restrict branch,     // Astinformationen, mit denen das Alkane_Branch Objekt
+                                                        // initialisiert werden kann
+                                                        // Oder NULL, falls eine Initialisierung mit Nullbyes
+                                                        // durchgefuehrt werden soll
+        const uint_fast8_t length                       // Laenge der Astinformationen
+                                                        // Wenn branch == NULL ist, dann wird dieser Wert ignoriert
 )
 {
     // Wenn Astinformationen vorhanden sind, dann muss die Laengenangabe ueberprueft werden

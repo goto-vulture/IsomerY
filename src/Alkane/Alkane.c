@@ -30,13 +30,13 @@
  * Asserts:
  *      N/A
  */
-struct Alkane*                          // Erzeugtes Alkane-Objekt
+struct Alkane*                               // Erzeugtes Alkane-Objekt
 Create_Alkane
 (
-        struct Alkane_Branch* branch_1, // 1. Ast des neuen Alkane-Objektes
-        struct Alkane_Branch* branch_2, // 2. Ast des neuen Alkane-Objektes
-        struct Alkane_Branch* branch_3, // 3. Ast des neuen Alkane-Objektes
-        struct Alkane_Branch* branch_4  // 4. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* restrict branch_1,    // 1. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* restrict branch_2,    // 2. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* restrict branch_3,    // 3. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* restrict branch_4     // 4. Ast des neuen Alkane-Objektes
 )
 {
     // Neues Objekt erzeugen
@@ -147,15 +147,16 @@ Create_Alkane
  *      string_memory != NULL,
  *      string_memory_size > 0
  */
-const char*                                 // Adresse der Eingabe-Zeichenkette
+const char*                                      // Adresse der Eingabe-Zeichenkette
 Alkane_To_String
 (
-        const struct Alkane* const alkane,  // Alkane der als Zeichenkette dargestellt werden soll
-        char* const string_memory,          // Speicher, der fuer die Zeichenkettenerzeugung verwendet werden soll
-                                            // Der Speicher muss vorher vom Aufrufer allokiert werden
-        const size_t string_memory_size     // Groesse des Zeichenkettenspeichers
-                                            // Wenn der Speicher nicht ausreicht, dann wird am vorletzten Zeichen die
-                                            // Zeichenkette abgeschnitten
+        const struct Alkane* const restrict alkane,     // Alkane der als Zeichenkette dargestellt werden soll
+        char* const restrict string_memory,             // Speicher, der fuer die Zeichenkettenerzeugung verwendet
+                                                        // werden soll
+                                                        // Der Speicher muss vorher vom Aufrufer allokiert werden
+        const size_t string_memory_size                 // Groesse des Zeichenkettenspeichers
+                                                        // Wenn der Speicher nicht ausreicht, dann wird am vorletzten
+                                                        // Zeichen die Zeichenkette abgeschnitten
 )
 {
     ASSERT_MSG(alkane != NULL,          "alkane is NULL !");
@@ -259,7 +260,7 @@ Alkane_To_String
 void
 Print_Alkane
 (
-        const struct Alkane* const alkane   // Alkane, welches ausgegeben werden soll
+        const struct Alkane* const restrict alkane  // Alkane, welches ausgegeben werden soll
 )
 {
     ASSERT_MSG(alkane != NULL, "branch is NULL !");
@@ -291,7 +292,7 @@ Print_Alkane
 void
 Delete_Alkane
 (
-        struct Alkane* alkane   // Alkane, welches geloescht werden soll
+        struct Alkane* restrict alkane  // Alkane, welches geloescht werden soll
 )
 {
     ASSERT_MSG(alkane != NULL, "alkane is NULL !");

@@ -25,8 +25,8 @@
 static _Bool
 Compare_Alkane_Numbercodes
 (
-        const struct Alkane* const alkane,  // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
-        const unsigned char numbercode []   // Zahlencode mit denen das Alkan-Objekt verglichen wird
+        const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
+        const unsigned char numbercode []               // Zahlencode mit denen das Alkan-Objekt verglichen wird
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -197,8 +197,8 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
 static _Bool
 Compare_Alkane_Numbercodes
 (
-        const struct Alkane* const alkane,  // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
-        const unsigned char numbercode []   // Zahlencode mit denen das Alkan-Objekt verglichen wird
+        const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
+        const unsigned char numbercode []               // Zahlencode mit denen das Alkan-Objekt verglichen wird
 )
 {
     for (uint_fast8_t current_element = 0; current_element < alkane->number_of_c_atoms; ++ current_element)

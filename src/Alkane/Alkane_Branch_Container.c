@@ -127,7 +127,7 @@ Alkane_Branch_Container_To_String
         const struct Alkane_Branch_Container* restrict const container,
                                                                 // Alkane_Branch, der als Zeichenkette dargestellt
                                                                 // werden soll
-        char* const string_memory,                              // Speicher, der fuer die Zeichenkettenerzeugung
+        char* const restrict string_memory,                     // Speicher, der fuer die Zeichenkettenerzeugung
                                                                 // verwendet werden soll
                                                                 // Der Speicher muss vorher vom Aufrufer allokiert
                                                                 // werden !
@@ -195,8 +195,8 @@ Alkane_Branch_Container_To_String
 void
 Print_Alkane_Branch_Container
 (
-        const struct Alkane_Branch_Container* const container   // Alkane_Branch_Container, welcher ausgegeben werden
-                                                                // soll
+        const struct Alkane_Branch_Container* const restrict container  // Alkane_Branch_Container, welcher ausgegeben
+                                                                        // werden soll
 )
 {
     ASSERT_MSG(container != NULL, "container is NULL !");

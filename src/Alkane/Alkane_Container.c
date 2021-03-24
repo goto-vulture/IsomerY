@@ -61,9 +61,9 @@ Create_Alkane_Container
 void
 Add_Alkane_To_Container
 (
-        struct Alkane_Container* const container,   // Container, welches das neue Objekt entgegennimmt
-        const struct Alkane* const new_element      // Existierendes Alkane_Branch-Objekt, welches hinzugefuegt werden
-                                                    // werden soll
+        struct Alkane_Container* const restrict container,  // Container, welches das neue Objekt entgegennimmt
+        const struct Alkane* const restrict new_element     // Existierendes Alkane_Branch-Objekt, welches hinzugefuegt
+                                                            // werden soll
 )
 {
     ASSERT_MSG(container != NULL, "container is NULL !");
@@ -121,8 +121,9 @@ Add_Alkane_To_Container
 const char*                                             // Adresse der Eingabe-Zeichenkette
 Alkane_Container_To_String
 (
-        const struct Alkane_Container* const container, // Alkane_Branch, der als Zeichenkette dargestellt werden soll
-        char* const string_memory,                      // Speicher, der fuer die Zeichenkettenerzeugung verwendet
+        const struct Alkane_Container* const restrict container,
+                                                        // Alkane_Branch, der als Zeichenkette dargestellt werden soll
+        char* const restrict string_memory,             // Speicher, der fuer die Zeichenkettenerzeugung verwendet
                                                         // verwendet werden soll
                                                         // Der Speicher muss vorher vom Aufrufer allokiert werden !
         const size_t string_memory_size                 // Groesse des Zeichenkettenspeichers
@@ -194,7 +195,7 @@ Alkane_Container_To_String
 void
 Delete_Alkane_Container
 (
-        struct Alkane_Container* container  // Alkane_Container-Objekt, welches geloescht werden soll
+        struct Alkane_Container* restrict container     // Alkane_Container-Objekt, welches geloescht werden soll
 )
 {
     ASSERT_MSG(container != NULL, "container is NULL !");

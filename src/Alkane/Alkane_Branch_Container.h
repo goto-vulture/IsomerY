@@ -89,9 +89,9 @@ Create_Alkane_Branch_Container
 extern void
 Add_Alkane_Branch_To_Container
 (
-        struct Alkane_Branch_Container* const container,    // Container, welches das neue Objekt entgegennimmt
-        const struct Alkane_Branch* const new_element       // Existierendes Alkane_Branch-Objekt, welches hinzugefuegt
-                                                            // werden soll
+        struct Alkane_Branch_Container* restrict const container,   // Container, welches das neue Objekt entgegennimmt
+        const struct Alkane_Branch* restrict const new_element      // Existierendes Alkane_Branch-Objekt, welches
+                                                                    // hinzugefuegt werden soll
 );
 
 /**
@@ -109,12 +109,13 @@ Add_Alkane_Branch_To_Container
  *      string_memory != NULL,
  *      string_memory_size > 0
  */
-extern const char*                                  // Adresse der Eingabe-Zeichenkette
+extern const char*                                                     // Adresse der Eingabe-Zeichenkette
 Alkane_Branch_Container_To_String
 (
-        const struct Alkane_Branch_Container* const container,  // Alkane_Branch, der als Zeichenkette dargestellt
+        const struct Alkane_Branch_Container* restrict const container,
+                                                                // Alkane_Branch, der als Zeichenkette dargestellt
                                                                 // werden soll
-        char* const string_memory,                              // Speicher, der fuer die Zeichenkettenerzeugung
+        char* const restrict string_memory,                     // Speicher, der fuer die Zeichenkettenerzeugung
                                                                 // verwendet werden soll
                                                                 // Der Speicher muss vorher vom Aufrufer allokiert
                                                                 // werden !
@@ -133,8 +134,8 @@ Alkane_Branch_Container_To_String
 extern void
 Print_Alkane_Branch_Container
 (
-        const struct Alkane_Branch_Container* const container   // Alkane_Branch_Container, welcher ausgegeben werden
-                                                                // soll
+        const struct Alkane_Branch_Container* const restrict container  // Alkane_Branch_Container, welcher ausgegeben
+                                                                        // werden soll
 );
 
 /**
@@ -153,7 +154,7 @@ Print_Alkane_Branch_Container
 extern void
 Delete_Alkane_Branch_Container
 (
-        struct Alkane_Branch_Container* container   // Alkane_Branch_Container-Objekt, welches geloescht werden soll
+        struct Alkane_Branch_Container* restrict container  // Alkane_Branch_Container-Objekt, welches geloescht werden soll
 );
 
 

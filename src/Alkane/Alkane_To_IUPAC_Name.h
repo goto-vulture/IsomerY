@@ -135,7 +135,7 @@ extern "C"
 extern void
 Convert_Alkane_To_IUPAC_Name
 (
-        struct Alkane* const alkane     // Alkan, von dem der IUPAC-Name gebildet werden soll
+        struct Alkane* const restrict alkane    // Alkan, von dem der IUPAC-Name gebildet werden soll
 );
 
 

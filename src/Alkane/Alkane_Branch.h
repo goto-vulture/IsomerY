@@ -75,15 +75,15 @@ struct Alkane_Branch
  * Asserts:
  *      lenght > 0 && length <= MAX_NUMBER_OF_C_ATOMS, wenn branch != NULL
  */
-extern struct Alkane_Branch*                // Erzeugtes Alkane_Branch Objekt
+extern struct Alkane_Branch*                            // Erzeugtes Alkane_Branch Objekt
 Create_Alkane_Branch
 (
-        const unsigned char* const branch,  // Astinformationen, mit denen das Alkane_Branch Objekt initialisiert
-                                            // werden kann
-                                            // Oder NULL, falls eine Initialisierung mit Nullbyes durchgefuehrt werden
-                                            // soll
-        const uint_fast8_t length           // Laenge der Astinformationen
-                                            // Wenn branch == NULL ist, dann wird dieser Wert ignoriert
+        const unsigned char* const restrict branch,     // Astinformationen, mit denen das Alkane_Branch Objekt
+                                                        // initialisiert werden kann
+                                                        // Oder NULL, falls eine Initialisierung mit Nullbyes
+                                                        // durchgefuehrt werden soll
+        const uint_fast8_t length                       // Laenge der Astinformationen
+                                                        // Wenn branch == NULL ist, dann wird dieser Wert ignoriert
 );
 
 /**
