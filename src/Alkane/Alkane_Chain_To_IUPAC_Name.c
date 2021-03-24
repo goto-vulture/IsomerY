@@ -64,6 +64,7 @@ Chain_To_IUPAC
             .last_alkyl_word_inserted   = 0
     };
 
+    // Erzeugung des IUPAC-Namen starten
     Next_Chain (&state_information);
 
     // Alkanwort am Ende anbrigen
@@ -84,13 +85,15 @@ static void Next_Chain (struct State_Information* const restrict state)
     {
         return;
     }
-
+    // Beendigung einer Verschachtelungsebene ?
     if ((state->current_index >= state->alkane->next_free_chain && state->current_nesting_depth > 0) ||
             (state->alkane->chains [state->current_index].nesting_depth <
                     state->alkane->chains [state->current_index - 1].nesting_depth))
     {
         Up_In_Nesting (state);
     }
+    // Versuch die aktuellen Chain-Objekte zu kombinieren
+    // Z.B. zwei Methyl-Aeste werden dann als DiMethyl im IUPAC-Namen angegeben
     else
     {
         Try_To_Merge_Chains (state);
@@ -103,16 +106,19 @@ static void Next_Chain (struct State_Information* const restrict state)
 
 static void Try_To_Merge_Chains (struct State_Information* const restrict state)
 {
+    // Koennen die aktuellen Chain-Objekte zusammengefasst werden ?
     if (state->alkane->chains [state->current_index].length == state->alkane->chains [state->current_index + 1].length &&
             state->alkane->chains [state->current_index].nesting_depth == state->alkane->chains [state->current_index + 1].nesting_depth)
     {
         Next_Chain (state);
     }
+    // Beginn eine Verschachtelung ?
     else if ((state->current_index > 1) && (state->alkane->chains [state->current_index].nesting_depth >
                 state->alkane->chains [state->last_alkyl_word_inserted].nesting_depth))
     {
         Down_In_Nesting (state);
     }
+    // Positionsnummern des / der aktuellen Aeste in den Ergebnisnamen einfuegen
     else
     {
         Insert_Numbers (state);
@@ -125,14 +131,17 @@ static void Try_To_Merge_Chains (struct State_Information* const restrict state)
 
 static void Insert_Numbers (struct State_Information* const restrict state)
 {
+    // Positionsnummern in den Ergebnisnamen einfuegen
     for (uint_fast8_t i = (uint_fast8_t) (state->last_alkyl_word_inserted + 1); i <= state->current_index; ++ i)
     {
+        // Aktuelle Positionsnummer als Zeichenkette darstellen
         char temp_string [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
         int2str (temp_string, sizeof (temp_string) - 1, state->alkane->chains [i].position);
 
         strncat (state->iupac_name + strlen (state->iupac_name), temp_string,
                 state->iupac_name_length - strlen (state->iupac_name) - 1);
 
+        // Kommata als Trennung zwischen verschiedenen Positionsnummern einfuegen, falls noch Positionsnummer folgen
         if ((i + 1) <= state->current_index)
         {
             strncat (state->iupac_name + strlen (state->iupac_name), ",",
@@ -152,7 +161,8 @@ static void Insert_Alkylword (struct State_Information* const restrict state)
     strncat (state->iupac_name + strlen (state->iupac_name), "-",
             state->iupac_name_length - strlen (state->iupac_name) - 1);
 
-    // Zusatz anbringen, falls notwendig
+    // Zusatz anbringen, falls notwendig (Z.B.: "Di", wenn ein Ast mehrfach vorkommt und so zusammengefasst werden
+    // kann)
     if (state->current_index - state->last_alkyl_word_inserted > 1)
     {
         strncat (state->iupac_name + strlen (state->iupac_name),
@@ -168,6 +178,7 @@ static void Insert_Alkylword (struct State_Information* const restrict state)
             state->iupac_name_length - strlen (state->iupac_name) - 1);
 
     state->last_alkyl_word_inserted = state->current_index;
+
     Next_Chain (state);
 
     return;
@@ -194,8 +205,12 @@ static void Up_In_Nesting (struct State_Information* const restrict state)
 {
     -- state->current_nesting_depth;
 
+    // Letztes Zeichen im IUPAC-Namen ueberschreiben
+    // Dies wird immer ein "-" sein. Wenn eine Verschachtelung beendet wird, dann muss allerdings erst die schliessende
+    // folgen !
     state->iupac_name [strlen (state->iupac_name) - 1] = '\0';
 
+    // Schliessende Klammer und das gerade ueberschriebene Minuszeichen anbringen
     strncat (state->iupac_name + strlen (state->iupac_name), ")-",
             state->iupac_name_length - strlen (state->iupac_name) - 1);
 
