@@ -20,12 +20,12 @@ extern "C"
 
 
 
-extern void
+void
 Chain_To_IUPAC
 (
-        char* iupac_name,
-        size_t iupac_name_length,
-        struct Alkane* alkane
+        char* const restrict iupac_name,
+        const size_t iupac_name_length,
+        struct Alkane* const restrict alkane
 );
 
 

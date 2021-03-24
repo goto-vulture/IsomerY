@@ -25,21 +25,21 @@ struct State_Information
     uint_fast8_t last_alkyl_word_inserted;
 };
 
-static void Next_Chain (struct State_Information* state);
-static void Try_To_Merge_Chains (struct State_Information* state);
-static void Insert_Numbers (struct State_Information* state);
-static void Insert_Alkylword (struct State_Information* state);
-static void Down_In_Nesting (struct State_Information* state);
-static void Up_In_Nesting (struct State_Information* state);
+static void Next_Chain  (struct State_Information* const restrict state);
+static void Try_To_Merge_Chains (struct State_Information* const restrict state);
+static void Insert_Numbers (struct State_Information* const restrict state);
+static void Insert_Alkylword (struct State_Information* const restrict state);
+static void Down_In_Nesting (struct State_Information* const restrict state);
+static void Up_In_Nesting (struct State_Information* const restrict state);
 
 //=====================================================================================================================
 
 void
 Chain_To_IUPAC
 (
-        char* iupac_name,
-        size_t iupac_name_length,
-        struct Alkane* alkane
+        char* const restrict iupac_name,
+        const size_t iupac_name_length,
+        struct Alkane* const restrict alkane
 )
 {
     memset (iupac_name, '\0', iupac_name_length * sizeof (char));
@@ -66,7 +66,7 @@ Chain_To_IUPAC
 
 //=====================================================================================================================
 
-static void Next_Chain (struct State_Information* state)
+static void Next_Chain (struct State_Information* const restrict state)
 {
     ++ state->current_index;
 
@@ -92,7 +92,7 @@ static void Next_Chain (struct State_Information* state)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Try_To_Merge_Chains (struct State_Information* state)
+static void Try_To_Merge_Chains (struct State_Information* const restrict state)
 {
     if (state->alkane->chains [state->current_index].length == state->alkane->chains [state->current_index + 1].length &&
             state->alkane->chains [state->current_index].nesting_depth == state->alkane->chains [state->current_index + 1].nesting_depth)
@@ -114,7 +114,7 @@ static void Try_To_Merge_Chains (struct State_Information* state)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Insert_Numbers (struct State_Information* state)
+static void Insert_Numbers (struct State_Information* const restrict state)
 {
     for (uint_fast8_t i = (uint_fast8_t) (state->last_alkyl_word_inserted + 1); i <= state->current_index; ++ i)
     {
@@ -140,7 +140,7 @@ static void Insert_Numbers (struct State_Information* state)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Insert_Alkylword (struct State_Information* state)
+static void Insert_Alkylword (struct State_Information* const restrict state)
 {
     strncat (state->iupac_name + strlen (state->iupac_name), "-",
             state->iupac_name_length - strlen (state->iupac_name) - 1);
@@ -168,7 +168,7 @@ static void Insert_Alkylword (struct State_Information* state)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Down_In_Nesting (struct State_Information* state)
+static void Down_In_Nesting (struct State_Information* const restrict state)
 {
     ++ state->current_nesting_depth;
 
@@ -183,7 +183,7 @@ static void Down_In_Nesting (struct State_Information* state)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Up_In_Nesting (struct State_Information* state)
+static void Up_In_Nesting (struct State_Information* const restrict state)
 {
     -- state->current_nesting_depth;
 
