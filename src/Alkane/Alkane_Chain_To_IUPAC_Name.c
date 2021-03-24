@@ -23,7 +23,6 @@ struct State_Information
     uint_fast8_t current_index;
     uint_fast8_t current_nesting_depth;
     uint_fast8_t last_alkyl_word_inserted;
-    uint_fast8_t intresting_index;
 };
 
 static void Next_Chain (struct State_Information* state);
@@ -53,8 +52,7 @@ Chain_To_IUPAC
 
             .current_index = 0,
             .current_nesting_depth = 0,
-            .last_alkyl_word_inserted = 0,
-            .intresting_index = 0
+            .last_alkyl_word_inserted = 0
     };
 
     Next_Chain (&state_information);
