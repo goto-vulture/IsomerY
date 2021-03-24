@@ -127,9 +127,7 @@ static void Insert_Numbers (struct State_Information* const restrict state)
 {
     for (uint_fast8_t i = (uint_fast8_t) (state->last_alkyl_word_inserted + 1); i <= state->current_index; ++ i)
     {
-        char temp_string [10];
-        memset (temp_string, '\0', sizeof (temp_string));
-
+        char temp_string [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
         int2str (temp_string, sizeof (temp_string) - 1, state->alkane->chains [i].position);
 
         strncat (state->iupac_name + strlen (state->iupac_name), temp_string,
