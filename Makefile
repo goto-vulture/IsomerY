@@ -96,6 +96,9 @@ TINYTEST_C = ./src/Tests/tinytest.c
 ALKANE_TESTS_H = ./src/Tests/Alkane_Tests.h
 ALKANE_TESTS_C = ./src/Tests/Alkane_Tests.c
 
+ALKANE_CHAIN_TO_IUPAC_NAME_H = ./src/Alkane/Alkane_Chain_To_IUPAC_Name.h
+ALKANE_CHAIN_TO_IUPAC_NAME_C = ./src/Alkane/Alkane_Chain_To_IUPAC_Name.c
+
 # Hiervon gibt es nur eine Headerdatei !
 ASSERT_MSG_H = ./src/Error_Handling/Assert_Msg.h
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
@@ -107,11 +110,11 @@ all: $(TARGET)
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o tinytest.o Alkane_Tests.o
+$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o tinytest.o Alkane_Tests.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o
 
 main.o: $(MAIN_C)
 	@echo Build target: $(TARGET).
@@ -156,6 +159,9 @@ tinytest.o: $(TINYTEST_C)
 
 Alkane_Tests.o: $(ALKANE_TESTS_C)
 	$(CC) $(CCFLAGS) -c $(ALKANE_TESTS_C)
+
+Alkane_Chain_To_IUPAC_Name.o: $(ALKANE_CHAIN_TO_IUPAC_NAME_C)
+	$(CC) $(CCFLAGS) -c $(ALKANE_CHAIN_TO_IUPAC_NAME_C)
 
 # Alles wieder aufraeumen
 clean:
