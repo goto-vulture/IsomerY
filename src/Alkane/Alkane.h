@@ -86,6 +86,9 @@ struct Alkane
                                                                 // ToDo: Arraygroesse verringern falls moeglich
     uint_fast8_t next_free_chain;                               // Index der naechsten freien Kette
 
+    char iupac_name [150];                                      // Der IUPAC-Name des Alkans (Die Laenge entspricht
+                                                                // eingener Erfahrungen und wird hoffentlich reichen)
+
     enum Alkane_State state;                                    // Status des Objektes
 };
 
