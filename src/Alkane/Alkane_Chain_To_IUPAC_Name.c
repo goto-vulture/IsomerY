@@ -46,13 +46,13 @@ Chain_To_IUPAC
 
     struct State_Information state_information =
     {
-            .iupac_name = iupac_name,
-            .iupac_name_length = iupac_name_length,
-            .alkane = alkane,
+            .iupac_name         = iupac_name,
+            .iupac_name_length  = iupac_name_length,
+            .alkane             = alkane,
 
-            .current_index = 0,
-            .current_nesting_depth = 0,
-            .last_alkyl_word_inserted = 0
+            .current_index              = 0,
+            .current_nesting_depth      = 0,
+            .last_alkyl_word_inserted   = 0
     };
 
     Next_Chain (&state_information);
@@ -89,6 +89,9 @@ static void Next_Chain (struct State_Information* state)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+
 static void Try_To_Merge_Chains (struct State_Information* state)
 {
     if (state->alkane->chains [state->current_index].length == state->alkane->chains [state->current_index + 1].length &&
@@ -108,6 +111,9 @@ static void Try_To_Merge_Chains (struct State_Information* state)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+
 static void Insert_Numbers (struct State_Information* state)
 {
     for (uint_fast8_t i = (uint_fast8_t) (state->last_alkyl_word_inserted + 1); i <= state->current_index; ++ i)
@@ -131,6 +137,9 @@ static void Insert_Numbers (struct State_Information* state)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+
 static void Insert_Alkylword (struct State_Information* state)
 {
     strncat (state->iupac_name + strlen (state->iupac_name), "-",
@@ -156,6 +165,9 @@ static void Insert_Alkylword (struct State_Information* state)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+
 static void Down_In_Nesting (struct State_Information* state)
 {
     ++ state->current_nesting_depth;
@@ -168,6 +180,9 @@ static void Down_In_Nesting (struct State_Information* state)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+
 static void Up_In_Nesting (struct State_Information* state)
 {
     -- state->current_nesting_depth;
@@ -185,3 +200,5 @@ static void Up_In_Nesting (struct State_Information* state)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
