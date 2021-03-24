@@ -14,15 +14,20 @@
 
 
 
+/**
+ * Statusinformationen fuer das Erzeugen des IUPAC-Namen aus den Chain-Objketen. In dieser Struktur sind alle
+ * Informationen, die fuer diesen Prozess benoetigt werden.
+ */
 struct State_Information
 {
-    char* iupac_name;
-    size_t iupac_name_length;
-    struct Alkane* alkane;
+    char* iupac_name;                       // Speicher fuer den IUPAC-String
+    size_t iupac_name_length;               // Maximale Laenge, die der IUPAC-Name annehmen kann (Groesse des
+                                            // reservierten Speichers)
+    struct Alkane* alkane;                  // Alkan-Objekt (enthaelt die Chain-Objekte)
 
-    uint_fast8_t current_index;
-    uint_fast8_t current_nesting_depth;
-    uint_fast8_t last_alkyl_word_inserted;
+    uint_fast8_t current_index;             // Aktueller Chain-Index
+    uint_fast8_t current_nesting_depth;     // Aktuelle Verschachtelungstiefe
+    uint_fast8_t last_alkyl_word_inserted;  // Letzter Chain-Index, bei dem ein Alkyl-Wort angebracht wurde
 };
 
 static void Next_Chain  (struct State_Information* const restrict state);
