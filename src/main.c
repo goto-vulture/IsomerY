@@ -63,6 +63,7 @@ int main (const int argc, const char* const argv [])
     puts ("\n\n");
     fflush (stdout);
 
+    // Tests ausfuehren
     RUN(TEST_Create_Alkane_Constitutional_Isomers);
     RUN(TEST_Create_Alkane);
     RUN(TEST_Convert_Alkane_To_IUPAC_Name);
@@ -72,6 +73,7 @@ int main (const int argc, const char* const argv [])
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     TEST_REPORT();
 
+    // Infos ueber die getaetigten Speicheraufrufe anzeigen
     puts ("");
     Show_Dynamic_Memory_Status ();
 
