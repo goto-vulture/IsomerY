@@ -11,6 +11,7 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Print_Tools.h"
 #include "../Misc.h"
+#include "Alkane_Chain_To_IUPAC_Name.h"
 
 
 
@@ -237,7 +238,7 @@ Convert_Alkane_To_IUPAC_Name
     memset (iupac_name, '\0', sizeof (iupac_name));
     const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
 
-    // ...
+    Chain_To_IUPAC (iupac_name, iupac_name_length, alkane);
 
     PRINTF_FFLUSH("=> IUPAC name: %s <=\n", iupac_name);
     // ===== ===== ===== ===== ===== ENDE Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
