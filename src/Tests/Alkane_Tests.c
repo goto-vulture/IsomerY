@@ -122,6 +122,37 @@ void TEST_Convert_Alkane_To_IUPAC_Name (void)
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen (2).
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
+{
+    const unsigned char branch_1_content [] = { 1 };
+    const unsigned char branch_2_content [] = { 1, 1, 1 };
+    const unsigned char branch_3_content [] = { 1, 1, 1, 1 };
+    const uint_fast8_t main_chain_length    = 5;
+
+    struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
+    struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
+    struct Alkane_Branch* branch_3 = Create_Alkane_Branch (branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
+
+    struct Alkane* alkane = Create_Alkane (branch_1, branch_2, branch_3, NULL);
+
+    // Konvertierung durchfuehren
+    Convert_Alkane_To_IUPAC_Name (alkane, main_chain_length);
+
+    Delete_Alkane (alkane);
+    Delete_Alkane_Branch (branch_1);
+    Delete_Alkane_Branch (branch_2);
+    Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Die Erstellung des IUPAC-Namen aus einem Alkan testen.
  *
  * Wird der IUPAC-Name richtig gebildet ?

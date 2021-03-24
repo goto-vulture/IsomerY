@@ -47,6 +47,13 @@ extern void TEST_Create_Alkane_Constitutional_Isomers (void);
 extern void TEST_Convert_Alkane_To_IUPAC_Name (void);
 
 /**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen (2).
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+extern void TEST_Convert_Alkane_To_IUPAC_Name_2 (void);
+
+/**
  * Die Erstellung des IUPAC-Namen aus einem Alkan mit bis zu zwei Verschachtelungstiefen testen. Das bedeutet, dass an
  * mind. einem Ast ein weiter Ast ist.
  *
