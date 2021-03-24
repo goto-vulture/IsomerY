@@ -40,6 +40,9 @@
 #include "OS_Specific_Configurations.h"
 #include "Error_Handling/Dynamic_Memory.h"
 #include "Alkane/Alkane.h"
+#include "Alkane/Alkane_Container.h"
+#include "Alkane/Alkane_Branch.h"
+#include "Alkane/Alkane_Branch_Container.h"
 #include "Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "Tests/Alkane_Tests.h"
 
@@ -51,6 +54,15 @@ int main (const int argc, const char* const argv [])
 {
     (void) argc;
     (void) argv;
+
+    // Einige Debug-Informationen ausgeben
+    printf ("Sizeof Alkane:                  %6zu byte\n", sizeof (struct Alkane));
+    printf ("Sizeof Alkane_Container:        %6zu byte\n", sizeof (struct Alkane_Container));
+    printf ("Sizeof Alkane_Branch:           %6zu byte\n", sizeof (struct Alkane_Branch));
+    printf ("Sizeof Alkane_Branch_Container: %6zu byte\n", sizeof (struct Alkane_Branch_Container));
+    puts ("\n\n");
+    fflush (stdout);
+
 
     // Alkane + Alkane_Branch Test Code
 //    const unsigned char branch_1_content [] = { 1 };
