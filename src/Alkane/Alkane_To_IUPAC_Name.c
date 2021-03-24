@@ -240,6 +240,9 @@ Convert_Alkane_To_IUPAC_Name
 
     Chain_To_IUPAC (iupac_name, iupac_name_length, alkane);
 
+    // Erzeugten IUPAC-Name im Alkan-Objekt hinterlegen (tiefe Kopie)
+    memcpy (alkane->iupac_name, iupac_name, sizeof (iupac_name));
+
     PRINTF_FFLUSH("=> IUPAC name: %s <=\n", iupac_name);
     // ===== ===== ===== ===== ===== ENDE Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
 
