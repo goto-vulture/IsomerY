@@ -180,6 +180,33 @@ Alkane_Container_To_String
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Alkane_Container Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird
+ * die Funktion "Alkane_Container_To_String" verwendet.
+ *
+ * Asserts:
+ *      container != NULL
+ */
+void
+Print_Alkane_Container
+(
+        const struct Alkane_Container* const restrict container     // Alkane_Container, welcher ausgegeben werden soll
+)
+{
+    ASSERT_MSG(container != NULL, "branch is NULL !");
+
+    char container_to_string [150];
+    memset (container_to_string, '\0', sizeof (container_to_string));
+
+    // Zeichenkettendarstellung auf stdout ausgeben
+    printf ("%s", Alkane_Container_To_String (container, container_to_string, sizeof (container_to_string)));
+    fflush (stdout);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Ein Alkane_Container loeschen.
  *
  * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane-Objekte aufgerufen, sodass am Ende sowohl der
