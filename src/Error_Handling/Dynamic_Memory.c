@@ -10,9 +10,10 @@
 
 
 
-// Globale Variablen fuer das Zaehlen der malloc (), calloc () und free () Aufrufe
+// Globale Variablen fuer das Zaehlen der malloc (), calloc (), realloc () und free () Aufrufe
 uint_fast64_t GLOBAL_malloc_calls   = 0;
 uint_fast64_t GLOBAL_calloc_calls   = 0;
+uint_fast64_t GLOBAL_realloc_calls  = 0;
 uint_fast64_t GLOBAL_free_calls     = 0;
 
 
@@ -29,10 +30,12 @@ void Show_Dynamic_Memory_Status (void)
 
     printf ("malloc () calls:       %10" PRIuFAST64 "\n"
             "calloc () calls:       %10" PRIuFAST64 "\n"
+            "realloc () calls:      %10" PRIuFAST64 "\n"
             "free () calls:         %10" PRIuFAST64 "\n"
             "Missing free () calls: %10" PRIuFAST64 " %s\n",
             GLOBAL_malloc_calls,
             GLOBAL_calloc_calls,
+            GLOBAL_realloc_calls,
             GLOBAL_free_calls,
             missing_free_calls,
             (missing_free_calls == 0) ? ":D" : ":o");

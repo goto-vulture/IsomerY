@@ -21,9 +21,10 @@ extern "C"
 
 
 
-// Globale Variablen fuer das Zaehlen der malloc (), calloc () und free () Aufrufe
+// Globale Variablen fuer das Zaehlen der malloc (), calloc (), realloc () und free () Aufrufe
 extern uint_fast64_t GLOBAL_malloc_calls;
 extern uint_fast64_t GLOBAL_calloc_calls;
+extern uint_fast64_t GLOBAL_realloc_calls;
 extern uint_fast64_t GLOBAL_free_calls;
 
 
@@ -62,6 +63,7 @@ extern void Show_Dynamic_Memory_Status (void);
     #define REALLOC(number_of_elements, element_size)                                                                 \
         realloc (number_of_elements, element_size);                                                                   \
         ++ GLOBAL_malloc_calls;                                                                                       \
+        ++ GLOBAL_realloc_calls;                                                                                      \
         ++ GLOBAL_free_calls;
 #else
     #error "The macro \"REALLOC\" is already defined !"
