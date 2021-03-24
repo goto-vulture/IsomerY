@@ -194,12 +194,8 @@ static void Up_In_Nesting (struct State_Information* const restrict state)
 {
     -- state->current_nesting_depth;
 
-    if (strlen (state->iupac_name) > 0)
-    {
-        state->iupac_name [strlen (state->iupac_name) - 1] = '\0';
-    }
+    state->iupac_name [strlen (state->iupac_name) - 1] = '\0';
 
-    // U.a. schliessende Klammer anbringen
     strncat (state->iupac_name + strlen (state->iupac_name), ")-",
             state->iupac_name_length - strlen (state->iupac_name) - 1);
 
