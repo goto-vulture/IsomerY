@@ -1,19 +1,26 @@
+# Konfigurationsdateien von Eclipse
 .project
 .cproject
 .settings/
 gmon.out
 Debug/
+
+# Konfigurationsdatei vom Buildsystem scons
 .sconsign.dblite
 
+# Kompilierungsergebnisse
 IsomerY_Debug_Linux
 IsomerY_Debug_Win
 IsomerY_Release_Linux
 IsomerY_Release_Win
 *.exe
 
+# Objektdateien
 debug_c_object_*
 release_c_object_*
 *.o
+
+# Vorkompilierte Header Dateien
 src/Alkane/*.gch
 src/Error_Handling/*.gch
 
