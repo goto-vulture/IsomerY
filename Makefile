@@ -7,10 +7,45 @@ RM = rm
 
 # Flags, die sowohl im Debug- als auch im Release-Build, verwendet werden
 CCFLAGS = -std=c11 -pedantic -Wall -Wextra -Wconversion -fmessage-length=0
+
+# Weitere hilfreiche Compilerflags
+# Programmabbruch bei Ueberlauf von vorzeichenbehafteten Integers
+# CCFLAGS += -ftrapv => Funktioniert leider nicht wie erhofft :(
+# Warnung, wenn Gleitkommazahlen auf Gleichheit mittels == getestet werden
+CCFLAGS += -Wfloat-equal
+# Warnung, wenn Variablen ueberdeckt werden
+CCFLAGS += -Wshadow
+# Warnung, wenn irgendwas von der Groesse einer Funktion oder des void-Typs abhaengt
+CCFLAGS += -Wpointer-arith
+# Fest codierte Strings bekommen den Typ const char*
+CCFLAGS += -Wwrite-strings
+# Warnung, wenn ein switch Ausdruck keinen default Pfad besitzt
+CCFLAGS += -Wswitch-default
+# Warnung, wenn bei einem switch Ausdruck ein enum Typ verwendet wird und nicht alle moeglichen Konstanten im switch Ausdruck verwendet werden
+CCFLAGS += -Wswitch-enum
+# Warnung, wenn Code existiert, der nie erreicht werden kann
+CCFLAGS += -Wunreachable-code
+# Warnung, wenn eine Funktion ohne Parameterangabe deklariert oder definiert wird
+CCFLAGS += -Wstrict-prototypes
+# Warnung, wenn Formatstrings dynamisch erzeugt werden und und nicht zur Kompilierungszeit bekannt sind
+CCFLAGS += -Wformat-nonliteral
+# Warnung, wenn ein Wert sich selbst zugewiesen wird
+CCFLAGS += -Winit-self
+# Einige weitere Moeglichkeiten den Code etwas sicherer zu machen
+CCFLAGS += -fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-security
+
+
 # Debug Build: Keine Optimierung und das hoechste Debug Level
-DEBUG_FLAGS = -O0 -g3
+DEBUG_FLAGS = -O0 -g3 -D_FORTIFY_SOURCE=2
+
 # Release Build: Hoechste Optimierung und keine Debug Informationen
 RELEASE_FLAGS = -O3
+# Optimierungen fuer den Linker (Ich wusste vorher gar nicht, dass es so ein Flag auch fuer den Linker gibt ... :o)
+RELEASE_FLAGS += -Wl,-O1
+# Positionsunabhaengigen Code erzeugen
+RELEASE_FLAGS += -fPIE
+
+
 
 DEBUG = 0
 RELEASE = 0
