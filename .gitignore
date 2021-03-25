@@ -15,6 +15,9 @@ IsomerY_Release_Linux
 IsomerY_Release_Win
 *.exe
 
+# Exportiere Binary unter Android (Export mittels C4droid)
+*.apk
+
 # Objektdateien
 debug_c_object_*
 release_c_object_*
