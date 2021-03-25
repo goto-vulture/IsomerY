@@ -32,6 +32,28 @@ Compare_Alkane_Numbercodes
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Alle Alkan-Tests ausfuehren.
+ */
+extern int                          // 0, falls alle Tests erfolgreich waren; -1, falls mindestens ein Test fehlschlug
+Execute_All_Alkane_Tests
+(void)
+{
+    // Alkan-Tests ausfuehren
+    RUN(TEST_Create_Alkane_Constitutional_Isomers);
+    RUN(TEST_Create_Alkane);
+    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
+    RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
+    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+
+    // Ergebnisse aller durchgefuehrten Tests anzeigen
+    const int test_report = TEST_REPORT();
+
+    return test_report;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Die Erstellung von Alkanen aus Alkanaesten erstellen.
  *
  * Wird der Nummerncode richtig gebildet ?

@@ -21,6 +21,13 @@ extern "C"
 
 
 /**
+ * Alle Alkan-Tests ausfuehren.
+ */
+extern int                          // 0, falls alle Tests erfolgreich waren; -1, falls mindestens ein Test fehlschlug
+Execute_All_Alkane_Tests
+(void);
+
+/**
  * Die Erstellung von Alkanen aus Alkanaesten testen.
  *
  * Wird der Nummerncode richtig gebildet ?
