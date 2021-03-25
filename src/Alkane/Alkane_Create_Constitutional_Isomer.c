@@ -583,6 +583,19 @@ static void Print_Percent_Done
     static clock_t last_call                = 0;
     static uint_fast64_t last_current_run   = 0;
 
+    // Prozentualen Fortschritt bestimmen und ausgeben
+    const float percent_done = (float) ((float) current_run / ((float) max_count_run / 100.0f));
+
+    // Check, ob clock () ueberhaupt brauchbare Informationen zurueckliefern kann
+    // Wenn nicht (clock () liefert -1), dann wird ein Platzhalter fuer die verbleibende Zeit ausgegeben
+    if ((clock_t) (-1) == clock ())
+    {
+        printf ("\r");
+        PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: N/A", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done);
+
+        return;
+    }
+
     // Differenzen seit dem letzten Aufruf bestimmen
     const clock_t time_delayed_since_last_call      = clock () - last_call;
     const uint_fast64_t runs_done_since_last_call   = current_run - last_current_run;
@@ -590,9 +603,6 @@ static void Print_Percent_Done
     // Verbleibene Zeit ermitteln
     const float runs_per_clock = (float) runs_done_since_last_call / (float) time_delayed_since_last_call;
     const float ETA = ((float) (max_count_run - current_run) / (float) runs_per_clock) / (float) CLOCKS_PER_SEC;
-
-    // Prozentualen Fortschritt bestimmen und ausgeben
-    const float percent_done = (float) ((float) current_run / ((float) max_count_run / 100.0f));
 
     printf ("\r");
     PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: %8.2f sec.", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done, ETA);
