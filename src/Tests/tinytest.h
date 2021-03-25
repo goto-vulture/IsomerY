@@ -121,7 +121,7 @@ extern int tt_current_line;
 
 
 
-extern void tt_execute (const char *name, void (*test_function) ());
+extern void tt_execute (const char *name, void (*test_function) (void));
 
 extern int tt_assert (const char *file, int line, const char *msg, const char *expression, int pass);
 
