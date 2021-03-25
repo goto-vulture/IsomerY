@@ -30,13 +30,15 @@
  * Asserts:
  *      N/A
  */
-struct Alkane*                               // Erzeugtes Alkane-Objekt
+struct Alkane*                                            // Erzeugtes Alkane-Objekt
 Create_Alkane
 (
-        struct Alkane_Branch* restrict branch_1,    // 1. Ast des neuen Alkane-Objektes
-        struct Alkane_Branch* restrict branch_2,    // 2. Ast des neuen Alkane-Objektes
-        struct Alkane_Branch* restrict branch_3,    // 3. Ast des neuen Alkane-Objektes
-        struct Alkane_Branch* restrict branch_4     // 4. Ast des neuen Alkane-Objektes
+        // Hier darf KEIN restrict verwendet werden, da einige Alkane aus gleichen Alkan_Branch-Objekte gebildet       
+        // werden ! Manche Compiler erkennen das und erzeugen eine [-Wrestrict] Warnung.
+        struct Alkane_Branch* /* restrict */ branch_1,    // 1. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* /* restrict */ branch_2,    // 2. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* /* restrict */ branch_3,    // 3. Ast des neuen Alkane-Objektes
+        struct Alkane_Branch* /* restrict */ branch_4     // 4. Ast des neuen Alkane-Objektes
 )
 {
     // Neues Objekt erzeugen
