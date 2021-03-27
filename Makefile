@@ -202,6 +202,6 @@ Alkane_Chain_To_IUPAC_Name.o: $(ALKANE_CHAIN_TO_IUPAC_NAME_C)
 clean:
 	@echo Clean IsomerY build.
 	@echo
-	$(RM) $(PROJECT_NAME)* *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch 2>> /dev/null
+	$(RM) -f $(PROJECT_NAME)* *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch
 	@echo
 	@echo IsomerY build cleaned.
