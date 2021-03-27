@@ -174,9 +174,9 @@ void Create_Alkane_Constitutional_Isomers
         // Flaches Speichermodell erzeugen
         size_t current_element_index = 0;
 
-        for (size_t i = 0; i < next_container; ++ i)
+        for (register size_t i = 0; i < next_container; ++ i)
         {
-            for (size_t i2 = 0; i2 < container_height_x [i]->size; ++ i2)
+            for (register size_t i2 = 0; i2 < container_height_x [i]->size; ++ i2)
             {
                 flat_alkane_branch_container [current_element_index] = container_height_x [i]->data [i2];
                 ++ current_element_index;
@@ -192,9 +192,9 @@ void Create_Alkane_Constitutional_Isomers
         }
 
         // Die Aeste des aktuellsten Containers verwenden, damit die Laenge des Astes aus drei C-Atomen besteht
-        for (size_t i2 = loop_start; i2 < count_branches; ++ i2) // < !
+        for (register size_t i2 = loop_start; i2 < count_branches; ++ i2) // < !
         {
-            for (size_t i3 = 0; i3 <= i2; ++ i3) // <= !
+            for (register size_t i3 = 0; i3 <= i2; ++ i3) // <= !
             {
                 // Aeste aussortieren, die zu gross sind
                 // Wenn die Groesse des zu konstruierenden Asts GROESSER als die uebergebene Anzahl an C-Atomen ist,
@@ -205,7 +205,7 @@ void Create_Alkane_Constitutional_Isomers
                     continue;
                 }
 
-                for (size_t i4 = 0; i4 <= i3; ++ i4) // <= !
+                for (register size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                 {
                     // Auch hier das Gleiche: Aeste aussortieren, die zu gross sind
                     // Wenn die Groesse des zu konstruierenden Asts GROESSER als die uebergebene Anzahl an C-Atomen ist,
@@ -333,9 +333,9 @@ void Create_Alkane_Constitutional_Isomers
 
         // Flaches Speichermodell erzeugen
         size_t current_element_index = 0;
-        for (size_t i = 0; i <= container_height_index; ++ i) // <= !
+        for (register size_t i = 0; i <= container_height_index; ++ i) // <= !
         {
-            for (size_t i2 = 0; i2 < container_height_x [i]->size; ++ i2)
+            for (register size_t i2 = 0; i2 < container_height_x [i]->size; ++ i2)
             {
                 flat_alkane_branch_container [current_element_index] = container_height_x [i]->data [i2];
                 ++ current_element_index;
@@ -525,11 +525,11 @@ void Create_Alkane_Constitutional_Isomers
 
     // Ergebnisse zaehlen
     uint_fast64_t count_results = 0;
-    for (size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
+    for (register size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
     {
         uint_fast64_t count_container_results = 0;
 
-        for (size_t i = 0; i < alkane_container_main_chain_length_x [next_alkane_container]->size; ++ i)
+        for (register size_t i = 0; i < alkane_container_main_chain_length_x [next_alkane_container]->size; ++ i)
         {
             if (alkane_container_main_chain_length_x [next_alkane_container]->data [i]->number_of_c_atoms == number_of_c_atoms)
             {
