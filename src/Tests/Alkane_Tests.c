@@ -10,6 +10,7 @@
 #include <string.h>
 #include "../Alkane/Alkane.h"
 #include "../Alkane/Alkane_Branch.h"
+#include "../Alkane/Alkane_Container.h"
 #include "../Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "../Alkane/Alkane_Info_Constitutional_Isomer.h"
 #include "../Alkane/Alkane_To_IUPAC_Name.h"
@@ -98,13 +99,14 @@ void TEST_Create_Alkane (void)
  */
 void TEST_Create_Alkane_Constitutional_Isomers (void)
 {
-    uint_fast64_t number_of_created_isomers = 0;
-
     for (uint_fast8_t i = 1; i <= 12; ++ i)
     {
-        Create_Alkane_Constitutional_Isomers (i, &number_of_created_isomers);
+        struct Alkane_Container* result_container = Create_Alkane_Constitutional_Isomers (i);
 
-        ASSERT_EQUALS(NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [i - 1], number_of_created_isomers);
+        ASSERT_EQUALS(NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [i - 1], result_container->size);
+
+        Delete_Alkane_Container (result_container);
+        result_container = NULL;
     }
 
     return;
