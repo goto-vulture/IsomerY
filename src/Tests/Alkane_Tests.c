@@ -8,6 +8,7 @@
 #include "Alkane_Tests.h"
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
 #include "../Alkane/Alkane.h"
 #include "../Alkane/Alkane_Branch.h"
 #include "../Alkane/Alkane_Container.h"
@@ -28,6 +29,13 @@ Compare_Alkane_Numbercodes
 (
         const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
         const unsigned char numbercode []               // Zahlencode mit denen das Alkan-Objekt verglichen wird
+);
+
+static int
+Compare_Strings_Case_Insensitive
+(
+        const char* const restrict string_1,
+        const char* const restrict string_2
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -223,7 +231,8 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
  */
 void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
 {
-    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [6];
+    const uint_fast8_t number_of_c_atoms = 7;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
     // Alle neun Heptane
     // Siehe: https://de.wikipedia.org/wiki/Heptane
@@ -239,6 +248,37 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
             "3-Ethylpentan",
             "2,2,3-Trimethylbutan"
     };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* heptane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (heptane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        _Bool invalid_result = true;
+
+        for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(expected_results); ++ i2)
+        {
+            if (Compare_Strings_Case_Insensitive (heptane_alkanes->data [i]->iupac_name, expected_results [i2]) == 0)
+            {
+                invalid_result = false;
+                break;
+            }
+        }
+
+        if (invalid_result /* == true */)
+        {
+            fprintf (stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    heptane_alkanes->data [i]->iupac_name);
+            fflush (stderr);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !", invalid_result != true);
+    }
 
     return;
 }
@@ -264,6 +304,50 @@ Compare_Alkane_Numbercodes
     }
 
     return true;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static int
+Compare_Strings_Case_Insensitive
+(
+        const char* const restrict string_1,
+        const char* const restrict string_2
+)
+{
+    char string_1_lowercase [255];
+    char string_2_lowercase [255];
+    memset (string_1_lowercase, '\0', sizeof (string_1_lowercase));
+    memset (string_2_lowercase, '\0', sizeof (string_2_lowercase));
+    memcpy (string_1_lowercase, string_1, strlen (string_1));
+    memcpy (string_2_lowercase, string_2, strlen (string_2));
+
+    // Alle alphabetischen Zeichen in Kleinbuchstaben konvertieren, damit spaeter ein Vergleich unabhaengig von der
+    // Gross- und Kleinschreibung stattfinden kann
+    for (size_t string_1_char = 0; string_1_char < strlen (string_1_lowercase); ++ string_1_char)
+    {
+        if (isupper (string_1_lowercase [string_1_char]) /* == true */)
+        {
+            string_1_lowercase [string_1_char] = (char) tolower (string_1_lowercase [string_1_char]);
+        }
+    }
+    for (size_t string_2_char = 0; string_2_char < strlen (string_2_lowercase); ++ string_2_char)
+    {
+        if (isupper (string_2_lowercase [string_2_char]) /* == true */)
+        {
+            string_2_lowercase [string_2_char] = (char) tolower (string_2_lowercase [string_2_char]);
+        }
+    }
+
+    // Nullterminierung nach den Operationen garantieren
+    string_1_lowercase [sizeof (string_1_lowercase) - 1] = '\0';
+    string_2_lowercase [sizeof (string_2_lowercase) - 1] = '\0';
+
+    const size_t char_to_compare = (strlen (string_1_lowercase) < strlen (string_2_lowercase))
+            ? strlen (string_1_lowercase) : strlen (string_2_lowercase);
+
+    // Vergleich mit den angepassten Zeichenketten durchfuehren
+    return strncmp (string_1_lowercase, string_2_lowercase, char_to_compare);
 }
 
 //---------------------------------------------------------------------------------------------------------------------
