@@ -67,6 +67,12 @@ Chain_To_IUPAC
     // Erzeugung des IUPAC-Namen starten
     Next_Chain (&state_information);
 
+    // Abschliessendes "-" Zeichen entfernen, falls notwendig
+    if (strlen (iupac_name) > 0)
+    {
+        iupac_name [strlen (iupac_name) - 1] = '\0';
+    }
+
     // Bei einem gradlinigen Isomer wird "n-" angebracht, um anzudeuten, dass die gradlinige Variante gemeint ist
     // Ein gradliniges Isomer besteht nur aus einem Ast - der Hauptkette
     if (alkane->next_free_chain == 1)
