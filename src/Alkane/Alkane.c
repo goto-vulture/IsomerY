@@ -33,7 +33,7 @@
 struct Alkane*                                            // Erzeugtes Alkane-Objekt
 Create_Alkane
 (
-        // Hier darf KEIN restrict verwendet werden, da einige Alkane aus gleichen Alkan_Branch-Objekte gebildet       
+        // Hier darf KEIN restrict verwendet werden, da einige Alkane aus gleichen Alkan_Branch-Objekte gebildet
         // werden ! Manche Compiler erkennen das und erzeugen eine [-Wrestrict] Warnung.
         struct Alkane_Branch* /* restrict */ branch_1,    // 1. Ast des neuen Alkane-Objektes
         struct Alkane_Branch* /* restrict */ branch_2,    // 2. Ast des neuen Alkane-Objektes
@@ -284,6 +284,11 @@ Print_Alkane
  *
  * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden
  * lediglich die Zeiger des Objektes auf NULL gesetzt !
+ *
+ * Warum werdeb die Alkane_Branch-Objekte nicht geloescht ? Die Alkane_Branch Objekte werden praktisch ueberall in
+ * eigenen Containern gesichert. Es waere aus Sicht dieses Containers sehr ungeschickt, wenn ein anderes Objekt den
+ * dynamischen Containerinhalt loescht. Ein doppeltes Loeschen wuerde dann zwangslaeufig stattfinden; spaetestens dann,
+ * wenn der Alkane_Branch_Container geloescht wird.
  *
  * Da es sich bei dem Objekt um dynamischen Speicher handelt, muss sichergestellt werden, dass alle Objekte, die zuvor
  * erstellt wurden, geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger nicht mehr dereferenziert werden !
