@@ -113,6 +113,9 @@ void Create_Alkane_Constitutional_Isomers
 
     // Alkanastliste mit Objekten, deren maximale Laenge aus ZWEI C-Atoms besteht, erzeugen
     const unsigned char two_c_atoms_numbercode []   = { 1, 1 };         // Zwei C-Atome als Ast
+                                                                        //      2
+                                                                        //      |
+                                                                        //      1
     const unsigned char three_c_atoms_numbercode [] = { 1, 1, 1 };      // Drei C-Atome als Ast
                                                                         //      2 3
                                                                         //      |/
