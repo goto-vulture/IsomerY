@@ -84,6 +84,9 @@ Chain_To_IUPAC
     strncat (iupac_name + strlen (iupac_name), ALKAN_WORDS [alkane->chains [0].length - 1],
             iupac_name_length - strlen (iupac_name) - 1);
 
+    // Nullterminierung garantieren
+    iupac_name [iupac_name_length - 1] = '\0';
+
     return;
 }
 
