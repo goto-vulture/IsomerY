@@ -141,13 +141,13 @@ Add_Full_Alkane_To_Container
         }
     }
 
+    // Das uebergebene Alkane-Objekt 1 zu 1 kopieren
+    struct Alkane* new_alkane = Create_Alkane (NULL, NULL, NULL, NULL);
+    memcpy (new_alkane, new_element, sizeof (*new_element));
+
     // Der Cast ist hier notwendig, damit die beiden const Schluesselwoerter wiederrufen werden. Ohne den Cast entsteht
     // eine Compilerwarnung.
-    container->data [container->size] = Create_Alkane
-            (Create_Alkane_Branch (new_element->branches [0], new_element->branches [0]->length),
-                    Create_Alkane_Branch (new_element->branches [1], new_element->branches [1]->length),
-                    Create_Alkane_Branch (new_element->branches [2], new_element->branches [2]->length),
-                    Create_Alkane_Branch (new_element->branches [3], new_element->branches [3]->length));
+    container->data [container->size] = new_alkane;
     container->size ++;
 
     // Wenn ungueltige Daten zum Container hinzugefuegt werden, dann wird dies auch im Container markiert
