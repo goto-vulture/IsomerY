@@ -104,6 +104,64 @@ Add_Alkane_To_Container
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Ein Alkane-Objekt zu einem existierenden Alkane_Container hinzufuegen.
+ *
+ * Bei dieser Funktion kopiert der Container das uebergebene Alkane-Objekt komplett !
+ *
+ * Asserts:
+ *      container != NULL
+ *      new_element != NULL
+ */
+void
+Add_Full_Alkane_To_Container
+(
+        struct Alkane_Container* const restrict container,  // Container, welches das neue Objekt entgegennimmt
+        const struct Alkane* const restrict new_element     // Existierendes Alkane_Branch-Objekt, welches hinzugefuegt
+                                                            // werden soll
+)
+{
+    ASSERT_MSG(container != NULL, "container is NULL !");
+    ASSERT_MSG(new_element != NULL, "new_element is NULL !");
+
+    // Muss der Speicher im Container vergroessert werden ?
+    if (container->size >= container->allocated_size)
+    {
+        container->allocated_size       += ALKANE_CONTAINER_ALLOCATION_STEP_SIZE;
+        const size_t new_size_in_byte   = (size_t) (container->allocated_size * sizeof (struct Alkane*));
+
+        // Neuen groesseren Speicherbereich anfordern
+        container->data = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
+        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !", new_size_in_byte);
+
+        // Die neuen Zeiger auf einen definerten Zustand bringen
+        // "i = 1", da der neuste Speicherbereich gleich durch das neue Alkane-Objekt belegt wird
+        for (uint_fast64_t i = 1; i < ALKANE_CONTAINER_ALLOCATION_STEP_SIZE; ++ i)
+        {
+            container->data [container->size + i] = NULL;
+        }
+    }
+
+    // Der Cast ist hier notwendig, damit die beiden const Schluesselwoerter wiederrufen werden. Ohne den Cast entsteht
+    // eine Compilerwarnung.
+    container->data [container->size] = Create_Alkane
+            (Create_Alkane_Branch (new_element->branches [0], new_element->branches [0]->length),
+                    Create_Alkane_Branch (new_element->branches [1], new_element->branches [1]->length),
+                    Create_Alkane_Branch (new_element->branches [2], new_element->branches [2]->length),
+                    Create_Alkane_Branch (new_element->branches [3], new_element->branches [3]->length));
+    container->size ++;
+
+    // Wenn ungueltige Daten zum Container hinzugefuegt werden, dann wird dies auch im Container markiert
+    if (new_element->state == ALKANE_INVALID_BRANCH)
+    {
+        container->state = ALKANE_CONTAINER_INVALID_DATA;
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Alkane_Container Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging
  * hilfreich.
  *

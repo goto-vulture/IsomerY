@@ -94,6 +94,23 @@ Add_Alkane_To_Container
 );
 
 /**
+ * Ein Alkane-Objekt zu einem existierenden Alkane_Container hinzufuegen.
+ *
+ * Bei dieser Funktion kopiert der Container das uebergebene Alkane-Objekt komplett !
+ *
+ * Asserts:
+ *      container != NULL
+ *      new_element != NULL
+ */
+extern void
+Add_Full_Alkane_To_Container
+(
+        struct Alkane_Container* const restrict container,  // Container, welches das neue Objekt entgegennimmt
+        const struct Alkane* const restrict new_element     // Existierendes Alkane_Branch-Objekt, welches hinzugefuegt
+                                                            // werden soll
+);
+
+/**
  * Alkane_Container Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging
  * hilfreich.
  *
