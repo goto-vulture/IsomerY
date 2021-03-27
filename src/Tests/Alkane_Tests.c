@@ -44,6 +44,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_Convert_Alkane_To_IUPAC_Name);
     RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
     RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+    RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     const int test_report = TEST_REPORT();
@@ -207,6 +208,35 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     Delete_Alkane_Branch (branch_1);
     Delete_Alkane_Branch (branch_2);
     Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Heptans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
+{
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [6];
+
+    // Alle neun Heptane
+    // Siehe: https://de.wikipedia.org/wiki/Heptane
+    const char* expected_results [] =
+    {
+            "n-Heptan",
+            "2-Methylhexan",
+            "3-Methylhexan",
+            "2,2-Dimethylpentan",
+            "2,3-Dimethylpentan",
+            "2,4-Dimethylpentan",
+            "3,3-Dimethylpentan",
+            "3-Ethylpentan",
+            "2,2,3-Trimethylbutan"
+    };
 
     return;
 }
