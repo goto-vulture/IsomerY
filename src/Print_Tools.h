@@ -32,6 +32,17 @@ extern "C"
 #endif /* PRINTF_FFLUSH */
 
 /**
+ * Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
+ * Dies dient dazu, dass eine Ausgabe direkt durchgefuehrt wird.
+ */
+#ifndef FPRINTF_FFLUSH
+    #define FPRINTF_FFLUSH(file, format_string, ...)             \
+    fprintf (file, format_string, __VA_ARGS__); fflush (file);
+#else
+    #error "The macro \"FPRINTF_FFLUSH\" is already defined !"
+#endif /* FPRINTF_FFLUSH */
+
+/**
  * Ausgabe mittels printf, wobei automatisch stdout geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
  *
@@ -44,6 +55,17 @@ extern "C"
 #else
     #error "The macro \"PRINTF_NO_VA_ARGS_FFLUSH\" is already defined !"
 #endif /* PRINTF_NO_VA_ARGS_FFLUSH */
+
+/**
+ * Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
+ * Dies dient dazu, dass eine Ausgabe direkt durchgefuehrt wird.
+ */
+#ifndef FPRINTF_NO_VA_ARGS_FFLUSH
+    #define FPRINTF_FFLUSH_NO_VA_ARGS(file, format_string)      \
+    fprintf (file, format_string); fflush (file);
+#else
+    #error "The macro \"FPRINTF_NO_VA_ARGS_FFLUSH\" is already defined !"
+#endif /* FPRINTF_NO_VA_ARGS_FFLUSH */
 
 /**
  * Ausgabe mittels puts, wobei automatisch stdout geleert wird.
