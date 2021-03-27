@@ -368,9 +368,20 @@ Select_Suitable_Chain
         }
     }
 
+    PRINTF_FFLUSH("Main chain length: %d\n", main_chain_length);
+
 
     // Ast mit der geringsten Verschachtelungstiefe
     uint_fast8_t index_smallest_nesting_depth = 0;
+    // Wert mit dem ersten Index initialisieren, deren Laenge mit der Laenge der Hauptkette uebereinstimmt
+    for (size_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
+    {
+        if (path_data [current_path_data_index].result_path_length == main_chain_length)
+        {
+            index_smallest_nesting_depth = (uint_fast8_t) current_path_data_index;
+            break;
+        }
+    }
 
     // Maximale Verschachtelungstiefe bei allen Pfaden ermitteln, wenn diese als Hauptkette gewaehlt werden wuerden
     for (uint_fast8_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
