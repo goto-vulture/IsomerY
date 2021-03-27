@@ -11,6 +11,7 @@
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "Alkane_Info_Constitutional_Isomer.h"
+#include "../Misc.h"
 
 
 
@@ -144,6 +145,12 @@ Add_Full_Alkane_To_Container
     // Das uebergebene Alkane-Objekt 1 zu 1 kopieren
     struct Alkane* new_alkane = Create_Alkane (NULL, NULL, NULL, NULL);
     memcpy (new_alkane, new_element, sizeof (*new_element));
+
+    // In der Praxis werden die Alkane_Branch-Objekte nicht benoetigt. Wichtig ist der zusammengesetzte Zahlencode
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(new_alkane->branches); ++ i)
+    {
+        new_alkane->branches [i] = NULL;
+    }
 
     // Der Cast ist hier notwendig, damit die beiden const Schluesselwoerter wiederrufen werden. Ohne den Cast entsteht
     // eine Compilerwarnung.
