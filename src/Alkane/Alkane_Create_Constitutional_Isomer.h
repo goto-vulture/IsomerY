@@ -131,12 +131,11 @@ extern "C"
  *
  * Asserts:
  *      number_of_c_atoms < MAX_NUMBER_OF_C_ATOMS
- *      number_of_created_isomers != NULL
  */
-extern void Create_Alkane_Constitutional_Isomers
+extern struct Alkane_Container*
+Create_Alkane_Constitutional_Isomers
 (
-       const uint_fast8_t number_of_c_atoms,
-       uint_fast64_t* const number_of_created_isomers
+       const uint_fast8_t number_of_c_atoms
 );
 
 

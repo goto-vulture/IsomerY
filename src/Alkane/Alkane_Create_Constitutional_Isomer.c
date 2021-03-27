@@ -77,17 +77,15 @@ static void Print_Percent_Done
  *
  * Asserts:
  *      number_of_c_atoms < MAX_NUMBER_OF_C_ATOMS
- *      number_of_created_isomers != NULL
  */
-void Create_Alkane_Constitutional_Isomers
+struct Alkane_Container*
+Create_Alkane_Constitutional_Isomers
 (
-       const uint_fast8_t number_of_c_atoms,
-       uint_fast64_t* const number_of_created_isomers
+       const uint_fast8_t number_of_c_atoms
 )
 {
     ASSERT_FMSG(number_of_c_atoms <= MAX_NUMBER_OF_C_ATOMS, "Number of C atoms is too large ! Got: %" PRIuFAST8
             "; Max. valid: %" PRIuFAST8,  number_of_c_atoms, MAX_NUMBER_OF_C_ATOMS);
-    ASSERT_MSG(number_of_created_isomers != NULL, "number_of_created_isomers is NULL !");
 
     // ===== ===== ===== ===== ===== ===== ===== ===== BEGINN 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
     // Die Anzahl an Alkane_Branch_Container ist die aufgerundete Haelfte der Anzahl an C-Atomen
@@ -526,6 +524,9 @@ void Create_Alkane_Constitutional_Isomers
     puts ("");
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. + 3. Teil ===== ===== ===== ===== ===== ===== ===== =====
 
+    // Ergebniscontainer anlegen
+    struct Alkane_Container* result_container = Create_Alkane_Container ();
+
     // Ergebnisse zaehlen
     uint_fast64_t count_results = 0;
     for (register size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
@@ -538,6 +539,10 @@ void Create_Alkane_Constitutional_Isomers
             {
                 ++ count_results;
                 ++ count_container_results;
+
+                // Ergebnisobjekte zum Ergebniscontainer hinzufuegen
+                Add_Full_Alkane_To_Container (result_container,
+                        alkane_container_main_chain_length_x [next_alkane_container]->data [i]);
             }
         }
 
@@ -565,10 +570,7 @@ void Create_Alkane_Constitutional_Isomers
         }
     }
 
-    // Anzahl an erzeugten Isomeren - per Zeiger - uebergeben
-    *number_of_created_isomers = count_results;
-
-    return;
+    return result_container;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
