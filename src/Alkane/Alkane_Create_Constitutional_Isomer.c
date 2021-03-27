@@ -506,6 +506,8 @@ Create_Alkane_Constitutional_Isomers
                             new_alkane->branches [1] = NULL;
                             new_alkane->branches [2] = NULL;
                             new_alkane->branches [3] = NULL;
+
+                            // Neues Alkan-Objekt zum passenden Container hinzufuegen
                             Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
 
                             Delete_Alkane (temp_alkane);
