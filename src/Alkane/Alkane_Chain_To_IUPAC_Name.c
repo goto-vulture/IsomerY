@@ -120,8 +120,15 @@ static void Try_To_Merge_Chains (struct State_Information* const restrict state)
         Next_Chain (state);
     }
     // Beginn eine Verschachtelung ?
-    else if ((state->current_index > 1) && (state->alkane->chains [state->current_index].nesting_depth >
-                state->alkane->chains [state->last_alkyl_word_inserted].nesting_depth))
+    else if ((state->current_index > 1) &&              // Ein Vergleich zwischen zwei Aesten macht nur Sinn, wenn man
+                                                        // mind. beim 3. Ast ist. (1. Ast ist der Hauptast; die zwei
+                                                        // naechsten Aeste sind fuer den Vergleich)
+            (state->last_alkyl_word_inserted > 0) &&    // Eine Verschachtelung ist nur moeglich, wenn bereits mind.
+                                                        // ein Alkylwort geschrieben wurde
+            (state->alkane->chains [state->current_index].nesting_depth >               // Ist die Verschachtelungs-
+                state->alkane->chains [state->last_alkyl_word_inserted].nesting_depth)) // tiefe des aktuellen Asts
+                                                                                        // groesser als beim letzten
+                                                                                        // geschriebenen Alkylwort ?
     {
         Down_In_Nesting (state);
     }
