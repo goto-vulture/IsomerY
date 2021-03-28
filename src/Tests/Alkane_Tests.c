@@ -258,8 +258,8 @@ void TEST_All_Possible_Butan_Constitutional_Isomers (void)
     const uint_fast8_t number_of_c_atoms = 4;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
-    // Alle sechs Hexane
-    // Siehe: https://de.wikipedia.org/wiki/Hexane
+    // Alle zwei Butane
+    // Siehe: https://de.wikipedia.org/wiki/Butane
     const char* expected_results [] =
     {
             "n-Butan",
@@ -309,8 +309,8 @@ void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
     const uint_fast8_t number_of_c_atoms = 5;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
-    // Alle sechs Hexane
-    // Siehe: https://de.wikipedia.org/wiki/Hexane
+    // Alle drei Pentane
+    // Siehe: https://de.wikipedia.org/wiki/Pentane
     const char* expected_results [] =
     {
             "n-Pentan",
@@ -361,7 +361,7 @@ void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
     const uint_fast8_t number_of_c_atoms = 6;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
-    // Alle sechs Hexane
+    // Alle fuenf Hexane
     // Siehe: https://de.wikipedia.org/wiki/Hexane
     const char* expected_results [] =
     {
