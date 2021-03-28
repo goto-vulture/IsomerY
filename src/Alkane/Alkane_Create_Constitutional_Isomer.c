@@ -394,6 +394,7 @@ Create_Alkane_Constitutional_Isomers
 
                     struct Alkane* new_alkane = Create_Alkane (flat_alkane_branch_container [i2],
                             flat_alkane_branch_container [i3], NULL, NULL);
+
                     Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
                 }
             }
@@ -488,8 +489,8 @@ Create_Alkane_Constitutional_Isomers
                             // Das zentrale C-Atom wird immer dem ersten Alkan_Branch zugeordnet. Dafuer wird ein
                             // temporaerer Alkanast erzeugt, welches den urspruenglichen Ast mit einem Ast, der nur aus
                             // einem C-Atom besteht, beinhaltet
-                            struct Alkane* temp_alkane = Create_Alkane (flat_alkane_branch_container [i2],
-                                    single_c_atom_branch, NULL, NULL);
+                            struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
+                                    flat_alkane_branch_container [i2], NULL, NULL);
                             struct Alkane_Branch* temp_alkane_branch = Create_Alkane_Branch (temp_alkane->merged_numbercode,
                                     temp_alkane->number_of_c_atoms);
 
