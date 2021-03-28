@@ -499,6 +499,9 @@ Create_Alkane_Constitutional_Isomers
                                     flat_alkane_branch_container [i4],
                                     flat_alkane_branch_container [i5]);
 
+                            // Debug-Output des erstellten Alkane-Objektes
+                            // Print_Alkane (new_alkane);
+
                             // Alkane_Branch Zeiger des gerade erstellten Alkane-Objektes auf NULL setzen
                             // Fuer den weiteren Verlauf sind im Alkan-Objekt die Alkane_Branch-Objekte nicht von
                             // Bedeutung. Sie sind nur wichtig fuer die systematische Erstellung aller Konstitutions-
