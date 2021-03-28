@@ -79,6 +79,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Octan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Nonan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Decan_Constitutional_Isomers);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     const int test_report = TEST_REPORT();
@@ -605,6 +606,97 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
 
     // Erzeugten Alkane_Container wieder loeschen
     Delete_Alkane_Container (nonane_alkanes);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Decans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Decan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 9;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle 75 Decane
+    // Siehe: https://de.wikipedia.org/wiki/Decane
+    const char* expected_results [] =
+    {
+            "n-Decan",                          "2-Methylnonan",                        "3-Methylnonan",
+            "4-Methylnonan",                    "5-Methylnonan",
+
+            "2,2-Dimethyloctan",                "2,3-Dimethyloctan",                    "2,4-Dimethyloctan",
+            "2,5-Dimethyloctan",                "2,6-Dimethyloctan",
+
+            "2,7-Dimethyloctan",                "3,3-Dimethyloctan",                    "3,4-Dimethyloctan",
+            "3,5-Dimethyloctan",                "3,6-Dimethyloctan",
+
+            "4,4-Dimethyloctan",                "4,5-Dimethyloctan",                    "2,2,3-Trimethylheptan",
+            "2,2,4-Trimethylheptan",            "2,2,5-Trimethylheptan",
+
+            "2,2,6-Trimethylheptan",            "2,3,3-Trimethylheptan",                "2,3,4-Trimethylheptan",
+            "2,3,5-Trimethylheptan",            "2,3,6-Trimethylheptan",
+
+            "2,4,4-Trimethylheptan",            "2,4,5-Trimethylheptan",                "2,4,6-Trimethylheptan",
+            "2,5,5-Trimethylheptan",            "3,3,4-Trimethylheptan",
+
+            "3,3,5-Trimethylheptan",            "3,4,4-Trimethylheptan",                "3,4,5-Trimethylheptan",
+            "2,2,3,3-Tetramethylhexan",         "2,2,3,4-Tetramethylhexan",
+
+            "2,2,3,5-Tetramethylhexan",         "2,2,4,4-Tetramethylhexan",             "2,2,4,5-Tetramethylhexan",
+            "2,2,5,5-Tetramethylhexan",         "2,3,3,4-Tetramethylhexan",
+
+            "2,3,3,5-Tetramethylhexan",         "2,3,4,4-Tetramethylhexan",             "2,3,4,5-Tetramethylhexan",
+            "3,3,4,4-Tetramethylhexan",         "2,2,3,3,4-Pentamethylpentan",
+
+            "2,2,3,4,4-Pentamethylpentan",      "3-Ethyloctan",                         "4-Ethyloctan",
+            "3,3-Diethylhexan",                 "3,4-Diethylhexan",
+
+            "3-Ethyl-2-methylheptan",           "3-Ethyl-3-methylheptan",               "3-Ethyl-4-methylheptan",
+            "3-Ethyl-5-methylheptan",           "4-Ethyl-2-methylheptan",
+
+            "4-Ethyl-3-methylheptan",           "4-Ethyl-4-methylheptan",               "5-Ethyl-2-methylheptan",
+            "3-Ethyl-2,2-dimethylhexan",        "3-Ethyl-2,3-dimethylhexan",
+
+            "3-Ethyl-2,4-dimethylhexan",        "3-Ethyl-2,5-dimethylhexan",            "3-Ethyl-3,4-dimethylhexan",
+            "4-Ethyl-2,2-dimethylhexan",        "4-Ethyl-2,3-dimethylhexan",
+
+            "4-Ethyl-2,4-dimethylhexan",        "4-Ethyl-3,3-dimethylhexan",            "3-Ethyl-2,2,3-trimethylpentan",
+            "3-Ethyl-2,2,4-trimethylpentan",    "3-Ethyl-2,3,4-trimethylpentan",
+
+            "3,3-Diethyl-2-methylpentan",       "4-Propylheptan",                       "4-(1-Methylethyl)heptan",
+            "2-Methyl-3-(1-methylethyl)-hexan", "2,4-Dimethyl-3-(1-methylethyl)-pentan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* decane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (decane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (decane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    decane_alkanes->data [i]->iupac_name);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (decane_alkanes);
 
     return;
 }
