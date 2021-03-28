@@ -25,26 +25,36 @@
 /**
  * Vergleichen eines Zahlencodes eines Akans mit einem vorgegebenen Ergebnis.
  */
-static _Bool
+static _Bool                                            // true, falls der komplette Zahlencode uebereinstimmt;
+                                                        // ansonsten false
 Compare_Alkane_Numbercodes
 (
         const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
         const unsigned char numbercode []               // Zahlencode mit denen das Alkan-Objekt verglichen wird
 );
 
-static int
+/**
+ * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
+ */
+static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
 Compare_Strings_Case_Insensitive
 (
-        const char* const restrict string_1,
-        const char* const restrict string_2
+        const char* const restrict string_1,            // 1. C-String
+        const char* const restrict string_2             // 2. C-String
 );
 
-static _Bool
+/**
+ * Ueberpruefung, ob der uebergebene IUPAC-Name in den erwarteten Loesungen vorkommt. Die Zeichenketten werden OHNE
+ * Beachtung der Gross- und Kleinschreibung miteinander verglichen.
+ */
+static _Bool                                            // true, falls der IUPAC-Name in den erwarteten Loesungen
+                                                        // vorkommt, ansonsten false
 Search_IUPAC_Name_In_The_List_Of_Expected_Results
 (
-        const char* const restrict iupac_name,
-        const char* const restrict expected_results [],
-        const uint_fast64_t number_of_expected_results
+        const char* const restrict iupac_name,          // IUPAC-Name, der in den erwarteten Loesungen gesucht werden
+                                                        // soll
+        const char* const restrict expected_results [], // Erwartete Loesungen
+        const uint_fast64_t number_of_expected_results  // Anzahl an erwarteten Loesungen
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -345,7 +355,8 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
 /**
  * Vergleichen eines Zahlencodes eines Akans mit einem vorgegebenen Ergebnis.
  */
-static _Bool
+static _Bool                                            // true, wenn der komplette Zahlencode uebereinstimmt;
+                                                        // ansonsten false
 Compare_Alkane_Numbercodes
 (
         const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
@@ -365,11 +376,14 @@ Compare_Alkane_Numbercodes
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static int
+/**
+ * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
+ */
+static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
 Compare_Strings_Case_Insensitive
 (
-        const char* const restrict string_1,
-        const char* const restrict string_2
+        const char* const restrict string_1,            // 1. C-String
+        const char* const restrict string_2             // 2. C-String
 )
 {
     char string_1_lowercase [255];
@@ -409,12 +423,18 @@ Compare_Strings_Case_Insensitive
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static _Bool
+/**
+ * Ueberpruefung, ob der uebergebene IUPAC-Name in den erwarteten Loesungen vorkommt. Die Zeichenketten werden OHNE
+ * Beachtung der Gross- und Kleinschreibung miteinander verglichen.
+ */
+static _Bool                                            // true, falls der IUPAC-Name in den erwarteten Loesungen
+                                                        // vorkommt, ansonsten false
 Search_IUPAC_Name_In_The_List_Of_Expected_Results
 (
-        const char* const restrict iupac_name,
-        const char* const restrict expected_results [],
-        const uint_fast64_t number_of_expected_results
+        const char* const restrict iupac_name,          // IUPAC-Name, der in den erwarteten Loesungen gesucht werden
+                                                        // soll
+        const char* const restrict expected_results [], // Erwartete Loesungen
+        const uint_fast64_t number_of_expected_results  // Anzahl an erwarteten Loesungen
 )
 {
     _Bool result_found = false;
