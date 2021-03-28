@@ -78,6 +78,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Octan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Nonan_Constitutional_Isomers);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     const int test_report = TEST_REPORT();
@@ -519,6 +520,91 @@ void TEST_All_Possible_Octan_Constitutional_Isomers (void)
 
     // Erzeugten Alkane_Container wieder loeschen
     Delete_Alkane_Container (octane_alkanes);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Nonan mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 9;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle 35 Octane
+    // Siehe: https://de.wikipedia.org/wiki/Nonane
+    const char* expected_results [] =
+    {
+            "n-Nonan",
+            "2-Methyloctan",
+            "3-Methyloctan",
+            "4-Methyloctan",
+            "2,2-Dimethylheptan",
+            "2,3-Dimethylheptan",
+            "2,4-Dimethylheptan",
+            "2,5-Dimethylheptan",
+            "2,6-Dimethylheptan",
+            "3,3-Dimethylheptan",
+
+            "3,4-Dimethylheptan",
+            "3,5-Dimethylheptan",
+            "4,4-Dimethylheptan"
+            "3-Ethylheptan",
+            "4-Ethylheptan",
+            "2,2,3-Trimethylhexan",
+            "2,2,4-Trimethylhexan",
+            "2,2,5-Trimethylhexan",
+            "2,3,3-Trimethylhexan",
+            "2,3,4-Trimethylhexan",
+
+            "2,3,5-Trimethylhexan",
+            "2,4,4-Trimethylhexan",
+            "3,3,4-Trimethylhexan",
+            "3-Ethyl-2-methylhexan",
+            "4-Ethyl-2-methylhexan",
+            "3-Ethyl-3-methylhexan",
+            "4-Ethyl-3-methylhexan",
+            "2,2,3,3-Tetramethylpentan",
+            "2,2,3,4-Tetramethylpentan",
+            "2,2,4,4-Tetramethylpentan",
+
+            "2,3,3,4-Tetramethylpentan",
+            "3-Ethyl-2,2-dimethylpentan",
+            "3-Ethyl-2,3-dimethylpentan",
+            "3-Ethyl-2,4-dimethylpentan",
+            "3,3-Diethylpentan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* nonane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (nonane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (nonane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    nonane_alkanes->data [i]->iupac_name);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (nonane_alkanes);
 
     return;
 }

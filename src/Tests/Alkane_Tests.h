@@ -103,6 +103,13 @@ extern void TEST_All_Possible_Heptan_Constitutional_Isomers (void);
  */
 extern void TEST_All_Possible_Octan_Constitutional_Isomers (void);
 
+/**
+ * Alle moeglichen Konstitutionsisomere des Nonans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+extern void TEST_All_Possible_Nonan_Constitutional_Isomers (void);
+
 
 
 // ENDE C++-Kompablitaet herstellen
