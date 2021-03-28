@@ -72,6 +72,9 @@ Execute_All_Alkane_Tests
     RUN(TEST_Convert_Alkane_To_IUPAC_Name);
     RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
     RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+
+    RUN(TEST_All_Possible_Butan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Pentan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
 
@@ -238,6 +241,109 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     Delete_Alkane_Branch (branch_1);
     Delete_Alkane_Branch (branch_2);
     Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Butan mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Butan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 4;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle sechs Hexane
+    // Siehe: https://de.wikipedia.org/wiki/Hexane
+    const char* expected_results [] =
+    {
+            "n-Butan",
+            "2-Methylpropan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* butane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (butane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (butane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    butane_alkanes->data [i]->iupac_name);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (butane_alkanes);
+
+    puts ("\n");
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Pentan mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 5;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle sechs Hexane
+    // Siehe: https://de.wikipedia.org/wiki/Hexane
+    const char* expected_results [] =
+    {
+            "n-Pentan",
+            "2-Methylbutan",
+            "2,2-Dimethylpropan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* butane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (butane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (butane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    butane_alkanes->data [i]->iupac_name);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (butane_alkanes);
+
+    puts ("\n");
 
     return;
 }
