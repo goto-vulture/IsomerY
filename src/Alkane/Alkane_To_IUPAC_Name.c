@@ -278,7 +278,7 @@ Find_Main_Chain
     // Ergebnisobjekt kopieren
     memcpy (result_path_data, &(path_data [result_path_index]), sizeof (struct Path_Data));
 
-    printf ("Result Index: %d\n", result_path_index);
+    // printf ("Result Index: %d\n", result_path_index);
 
     return result_path_data;
 }
@@ -368,7 +368,7 @@ Select_Suitable_Chain
         }
     }
 
-    PRINTF_FFLUSH("Main chain length: %d\n", main_chain_length);
+    // PRINTF_FFLUSH("Main chain length: %d\n", main_chain_length);
 
 
     // Ast mit der geringsten Verschachtelungstiefe
@@ -435,7 +435,7 @@ Select_Suitable_Chain
                 index_smallest_nesting_depth = current_path_data_index;
             }
 
-            printf ("Max nesting depth %d (index: %d)\n", possible_nesting_depth, current_path_data_index);
+            // printf ("Max nesting depth %d (index: %d)\n", possible_nesting_depth, current_path_data_index);
         }
     }
 
@@ -515,7 +515,7 @@ Depth_First_Search_Start
     Depth_First_Search_Step (path_data);
 
     // Ausgabe der wichtigsten Infos ueber den gefundenen Pfad
-    Print_Path_Data (path_data);
+    // Print_Path_Data (path_data);
 
     return;
 }
