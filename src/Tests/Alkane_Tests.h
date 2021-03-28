@@ -69,6 +69,13 @@ extern void TEST_Convert_Alkane_To_IUPAC_Name_2 (void);
 extern void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void);
 
 /**
+ * Alle moeglichen Konstitutionsisomere des Hexans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+extern void TEST_All_Possible_Hexan_Constitutional_Isomers (void);
+
+/**
  * Alle moeglichen Konstitutionsisomere des Heptans mit IUPAC-Namen erzeugen.
  *
  * Dabei werden die IUPAC-Namen kontrolliert.

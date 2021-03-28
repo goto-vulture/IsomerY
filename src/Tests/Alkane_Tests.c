@@ -53,6 +53,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_Convert_Alkane_To_IUPAC_Name);
     RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
     RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+    RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
@@ -218,6 +219,65 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     Delete_Alkane_Branch (branch_1);
     Delete_Alkane_Branch (branch_2);
     Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Hexans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 6;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle sechs Hexane
+    // Siehe: https://de.wikipedia.org/wiki/Hexane
+    const char* expected_results [] =
+    {
+            "n-Hexan",
+            "2-Methylpentan",
+            "3-Methylpentan",
+            "2,2-Dimethylbutan",
+            "2,3-Dimethylbutan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* hexane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (hexane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        _Bool invalid_result = true;
+
+        for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(expected_results); ++ i2)
+        {
+            if (Compare_Strings_Case_Insensitive (hexane_alkanes->data [i]->iupac_name, expected_results [i2]) == 0)
+            {
+                invalid_result = false;
+                break;
+            }
+        }
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (invalid_result /* == true */)
+        {
+            fprintf (stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    hexane_alkanes->data [i]->iupac_name);
+            fflush (stderr);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !", invalid_result != true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (hexane_alkanes);
 
     return;
 }
