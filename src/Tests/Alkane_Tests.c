@@ -537,7 +537,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
     const uint_fast8_t number_of_c_atoms = 9;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
-    // Alle 35 Octane
+    // Alle 35 Nonane
     // Siehe: https://de.wikipedia.org/wiki/Nonane
     const char* expected_results [] =
     {
