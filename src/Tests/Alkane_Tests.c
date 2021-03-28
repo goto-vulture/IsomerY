@@ -16,6 +16,7 @@
 #include "../Alkane/Alkane_Info_Constitutional_Isomer.h"
 #include "../Alkane/Alkane_To_IUPAC_Name.h"
 #include "../Misc.h"
+#include "../Print_Tools.h"
 
 
 
@@ -36,6 +37,14 @@ Compare_Strings_Case_Insensitive
 (
         const char* const restrict string_1,
         const char* const restrict string_2
+);
+
+static _Bool
+Search_IUPAC_Name_In_The_List_Of_Expected_Results
+(
+        const char* const restrict iupac_name,
+        const char* const restrict expected_results [],
+        const uint_fast64_t number_of_expected_results
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -255,25 +264,18 @@ void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
         Convert_Alkane_To_IUPAC_Name (hexane_alkanes->data [i]);
 
         // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        _Bool invalid_result = true;
-
-        for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(expected_results); ++ i2)
-        {
-            if (Compare_Strings_Case_Insensitive (hexane_alkanes->data [i]->iupac_name, expected_results [i2]) == 0)
-            {
-                invalid_result = false;
-                break;
-            }
-        }
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (hexane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
 
         // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (invalid_result /* == true */)
+        if (! result_found_in_the_expected_results /* == false */)
         {
-            fprintf (stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
                     hexane_alkanes->data [i]->iupac_name);
-            fflush (stderr);
         }
-        ASSERT("Cannot find the current result in the list of expected results !", invalid_result != true);
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
     }
 
     // Erzeugten Alkane_Container wieder loeschen
@@ -318,25 +320,18 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
         Convert_Alkane_To_IUPAC_Name (heptane_alkanes->data [i]);
 
         // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        _Bool invalid_result = true;
-
-        for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(expected_results); ++ i2)
-        {
-            if (Compare_Strings_Case_Insensitive (heptane_alkanes->data [i]->iupac_name, expected_results [i2]) == 0)
-            {
-                invalid_result = false;
-                break;
-            }
-        }
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (heptane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
 
         // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (invalid_result /* == true */)
+        if (! result_found_in_the_expected_results /* == false */)
         {
-            fprintf (stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
                     heptane_alkanes->data [i]->iupac_name);
-            fflush (stderr);
         }
-        ASSERT("Cannot find the current result in the list of expected results !", invalid_result != true);
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
     }
 
     // Erzeugten Alkane_Container wieder loeschen
@@ -410,6 +405,31 @@ Compare_Strings_Case_Insensitive
 
     // Vergleich mit den angepassten Zeichenketten durchfuehren
     return strncmp (string_1_lowercase, string_2_lowercase, char_to_compare);
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static _Bool
+Search_IUPAC_Name_In_The_List_Of_Expected_Results
+(
+        const char* const restrict iupac_name,
+        const char* const restrict expected_results [],
+        const uint_fast64_t number_of_expected_results
+)
+{
+    _Bool result_found = false;
+
+    // Den IUPAC-Namen mit allen erwarteten Ergebnissen vergleichen (Ohne Beachtung der Gross- und Kleinschreibung !)
+    for (uint_fast64_t i = 0; i < number_of_expected_results; ++ i)
+    {
+        if (Compare_Strings_Case_Insensitive (iupac_name, expected_results [i]) == 0)
+        {
+            result_found = true;
+            break;
+        }
+    }
+
+    return result_found;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
