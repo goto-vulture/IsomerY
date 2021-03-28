@@ -279,6 +279,9 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
         ASSERT("Cannot find the current result in the list of expected results !", invalid_result != true);
     }
 
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (heptane_alkanes);
+
     return;
 }
 
