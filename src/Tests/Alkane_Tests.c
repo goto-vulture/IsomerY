@@ -252,8 +252,6 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
     // Alle Alkane erzeugen
     struct Alkane_Container* heptane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
 
-
-
     // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
     for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
     {
@@ -271,6 +269,7 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
             }
         }
 
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
         if (invalid_result /* == true */)
         {
             fprintf (stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
