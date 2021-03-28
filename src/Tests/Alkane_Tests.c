@@ -77,6 +77,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_All_Possible_Pentan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Octan_Constitutional_Isomers);
 
     // Ergebnisse aller durchgefuehrten Tests anzeigen
     const int test_report = TEST_REPORT();
@@ -452,6 +453,72 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
 
     // Erzeugten Alkane_Container wieder loeschen
     Delete_Alkane_Container (heptane_alkanes);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Octan mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Octan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 8;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle 18 Octane
+    // Siehe: https://de.wikipedia.org/wiki/Octane
+    const char* expected_results [] =
+    {
+            "n-Octan",
+            "2-Methylheptan",
+            "3-Methylheptan",
+            "4-Methylheptan",
+            "2,2-Dimethylhexan",
+            "2,3-Dimethylhexan",
+            "2,4-Dimethylhexan",
+            "2,5-Dimethylhexan",
+            "3,3-Dimethylhexan",
+            "3,4-Dimethylhexan",
+
+            "3-Ethylhexan",
+            "2,2,3-Trimethylpentan",
+            "2,2,4-Trimethylpentan",
+            "2,3,3-Trimethylpentan",
+            "2,3,4-Trimethylpentan",
+            "3-Ethyl-2-methylpentan",
+            "3-Ethyl-3-methylpentan",
+            "2,2,3,3-Tetramethylbutan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* octane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (octane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (octane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    octane_alkanes->data [i]->iupac_name);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (octane_alkanes);
 
     return;
 }
