@@ -170,6 +170,10 @@ Convert_Alkane_To_IUPAC_Name
 {
     ASSERT_MSG(alkane != NULL, "alkane is NULL !");
 
+    // Unused Warnung bei dieser statischen Funktion unterbinden. Diese Funktion wird nur fuer Debugzwecke verwendet
+    // und ist daher i.d.R. auskommentiert !
+    (void) Print_Path_Data;
+
     // ===== ===== ===== BEGINN Zusammengesetzten Zahlencode des uebergebenen Alkans ueberpruefen ===== ===== =====
     uint_fast8_t count_number_occur [MAX_NUMBER_OF_C_ATOMS];
     memset (count_number_occur, '\0', sizeof (count_number_occur));
