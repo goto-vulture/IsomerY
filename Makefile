@@ -58,6 +58,7 @@ PROJECT_NAME = IsomerY
 TEMP_1 =
 TARGET =
 
+# Zusaetzliche Flags fuer Windows
 ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format
 
 # Der Debug-Build ist die Standardvariante, wenn nichts anderes angegeben wurde
