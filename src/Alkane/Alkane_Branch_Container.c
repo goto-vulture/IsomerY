@@ -11,6 +11,7 @@
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "Alkane_Info_Constitutional_Isomer.h"
+#include "../Misc.h"
 
 
 
