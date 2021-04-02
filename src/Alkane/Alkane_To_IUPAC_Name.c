@@ -239,6 +239,7 @@ Convert_Alkane_To_IUPAC_Name
     memset (iupac_name, '\0', sizeof (iupac_name));
     const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
 
+    // Gerade erzeugte Ketteninformationen benutzen, um daraus den IUPAC-Namen zu bilden
     Chain_To_IUPAC (iupac_name, iupac_name_length, alkane);
 
     // Erzeugten IUPAC-Name im Alkan-Objekt hinterlegen (tiefe Kopie)
