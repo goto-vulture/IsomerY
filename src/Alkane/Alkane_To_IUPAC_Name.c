@@ -235,7 +235,7 @@ Convert_Alkane_To_IUPAC_Name
 
     // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
     // Nun haben wir alle Informationen beisammen, die wir brauchen :D
-    char iupac_name [150];
+    char iupac_name [IUPAC_NAME_LENGTH];
     memset (iupac_name, '\0', sizeof (iupac_name));
     const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
 

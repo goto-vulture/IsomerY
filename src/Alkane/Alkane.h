@@ -21,6 +21,17 @@ extern "C"
 
 
 /**
+ * Groesse des char-Arrays fuer den IUPAC-Namen.
+ */
+#ifndef IUPAC_NAME_LENGTH
+    #define IUPAC_NAME_LENGTH 150u
+#else
+    #error "The macro \"IUPAC_NAME_LENGTH\" is already defined !"
+#endif /* IUPAC_NAME_LENGTH */
+
+
+
+/**
  * Uebersicht ueber die Zustaende, die ein Alkane-Objekt annehmen kann. Diese Zustaende dienen hauptsaechlich dazu,
  * dass - ohne Analyse des eigentlichen Objektes - z.B. festgestellt werden kann, ob das Objekt wichtige Daten
  * enthaelt oder ob das Objekt initialisert werden muss.
@@ -86,7 +97,7 @@ struct Alkane
                                                                 // ToDo: Arraygroesse verringern falls moeglich
     uint_fast8_t next_free_chain;                               // Index der naechsten freien Kette
 
-    char iupac_name [150];                                      // Der IUPAC-Name des Alkans (Die Laenge entspricht
+    char iupac_name [IUPAC_NAME_LENGTH];                        // Der IUPAC-Name des Alkans (Die Laenge entspricht
                                                                 // eingener Erfahrungen und wird hoffentlich reichen)
 
     enum Alkane_State state;                                    // Status des Objektes
