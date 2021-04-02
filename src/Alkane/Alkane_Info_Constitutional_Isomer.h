@@ -61,7 +61,8 @@ extern "C"
  * sich dafuer ein Makro an.
  * Natuerlich wird dadurch vorausgesetzt, dass die Variablen sowie das Goto-Label vorher korrekt erzeugt wurden. Dieses
  * Makro nimmt nur eine Zeichenkette entgegen - KEINEN Formatstring mit weiteren Parametern.
- * => Fuer die Verwendung eines Formatstrings: Siehe das Makro "TO_STRING_HELPER"
+ *
+ * => Fuer die Verwendung eines Formatstrings: Siehe das Makro "TO_STRING_HELPER_VA_ARGS"
  */
 #ifndef TO_STRING_HELPER
 #define TO_STRING_HELPER(new_string)                                                                    \
