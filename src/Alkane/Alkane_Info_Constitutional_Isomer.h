@@ -22,7 +22,7 @@ extern "C"
  * einfacher wird.
  */
 #ifndef MAX_NUMBER_OF_C_ATOMS
-    #define MAX_NUMBER_OF_C_ATOMS 40
+    #define MAX_NUMBER_OF_C_ATOMS 40u
 #else
     #error "The macro \"MAX_NUMBER_OF_C_ATOMS\" is already defined !"
 #endif /* MAX_NUMBER_OF_C_ATOMS */
@@ -31,7 +31,7 @@ extern "C"
  * Anzahl an Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
  */
 #ifndef NUMBER_OF_NUMBER_WORDS
-    #define NUMBER_OF_NUMBER_WORDS 10
+    #define NUMBER_OF_NUMBER_WORDS 10u
 #else
     #error "The macro \"NUMBER_OF_NUMBER_WORDS\" is already defined !"
 #endif /* NUMBER_OF_NUMBER_WORDS */
@@ -40,7 +40,7 @@ extern "C"
  * Anzahl an Alkanwoerter, die im Programm hinterlegt sind.
  */
 #ifndef NUMBER_OF_ALKAN_WORDS
-    #define NUMBER_OF_ALKAN_WORDS 40
+    #define NUMBER_OF_ALKAN_WORDS 40u
 #else
     #error "The macro \"NUMBER_OF_ALKAN_WORDS\" is already defined !"
 #endif /* NUMBER_OF_ALKAN_WORDS */
@@ -50,7 +50,7 @@ extern "C"
  * Die Substituenten wurden erzeugt indem die letzten beiden Zeichen der Alkan-Woerter durch "yl" ersetzt werden !
  */
 #ifndef NUMBER_OF_ALKYL_WORDS
-    #define NUMBER_OF_ALKYL_WORDS 40
+    #define NUMBER_OF_ALKYL_WORDS 40u
 #else
     #error "The macro \"NUMBER_OF_ALKYL_WORDS\" is already defined !"
 #endif /* NUMBER_OF_ALKYL_WORDS */
