@@ -50,6 +50,11 @@
 
 //=====================================================================================================================
 
+/**
+ * main-Funktion des Programms.
+ *
+ * Aktuell werden die CLI-Parameter (noch) nicht verwendet.
+ */
 int main (const int argc, const char* const argv [])
 {
     (void) argc;
