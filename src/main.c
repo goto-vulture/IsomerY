@@ -69,6 +69,9 @@ int main (const int argc, const char* const argv [])
     // Infos ueber die getaetigten Speicheraufrufe anzeigen
     puts ("");
     Show_Dynamic_Memory_Status ();
+    
+    // Alle I/O Puffer vor Beendigung des Programms leeren
+    fflush (NULL);
 
     return EXIT_SUCCESS;
 }
