@@ -619,7 +619,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
  */
 void TEST_All_Possible_Decan_Constitutional_Isomers (void)
 {
-    const uint_fast8_t number_of_c_atoms = 9;
+    const uint_fast8_t number_of_c_atoms = 10;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
     // Alle 75 Decane
