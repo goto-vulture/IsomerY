@@ -117,6 +117,13 @@ extern void TEST_All_Possible_Nonan_Constitutional_Isomers (void);
  */
 extern void TEST_All_Possible_Decan_Constitutional_Isomers (void);
 
+/**
+ * Alle moeglichen Konstitutionsisomere des Undecans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+extern void TEST_All_Possible_Undecan_Constitutional_Isomers (void);
+
 
 // ENDE C++-Kompablitaet herstellen
 #ifdef __cplusplus
