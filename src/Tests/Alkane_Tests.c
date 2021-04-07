@@ -708,7 +708,7 @@ void TEST_All_Possible_Decan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-extern void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
+void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 11;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -819,6 +819,185 @@ extern void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
 
     // Erzeugten Alkane_Container wieder loeschen
     Delete_Alkane_Container (undecane_alkanes);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Dodecans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Dodecan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 12;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle 355 Dodecane
+    // Siehe: https://de.wikipedia.org/wiki/Dodecane
+    const char* expected_results [] =
+    {
+        "n-Dodecan",
+
+        "2-Methylundecan", "3-Methylundecan", "4-Methylundecan", "5-Methylundecan", "6-Methylundecan",
+
+        "2,2-Dimethyldecan", "2,3-Dimethyldecan", "2,4-Dimethyldecan", "2,5-Dimethyldecan", "2,6-Dimethyldecan",
+        "2,7-Dimethyldecan", "2,8-Dimethyldecan", "2,9-Dimethyldecan", "3,3-Dimethyldecan", "3,4-Dimethyldecan",
+        "3,5-Dimethyldecan", "3,6-Dimethyldecan", "3,7-Dimethyldecan", "3,8-Dimethyldecan", "4,4-Dimethyldecan",
+        "4,5-Dimethyldecan", "4,6-Dimethyldecan", "4,7-Dimethyldecan", "5,5-Dimethyldecan", "5,6-Dimethyldecan",
+
+        "2,2,3-Trimethylnonan", "2,2,4-Trimethylnonan", "2,2,5-Trimethylnonan", "2,2,6-Trimethylnonan",
+        "2,2,7-Trimethylnonan", "2,2,8-Trimethylnonan", "2,3,3-Trimethylnonan", "2,3,4-Trimethylnonan",
+        "2,3,5-Trimethylnonan", "2,3,6-Trimethylnonan", "2,3,7-Trimethylnonan", "2,3,8-Trimethylnonan",
+        "2,4,4-Trimethylnonan", "2,4,5-Trimethylnonan", "2,4,6-Trimethylnonan", "2,4,7-Trimethylnonan",
+        "2,4,8-Trimethylnonan", "2,5,5-Trimethylnonan", "2,5,6-Trimethylnonan", "2,5,7-Trimethylnonan",
+        "2,5,8-Trimethylnonan", "2,6,6-Trimethylnonan", "2,6,7-Trimethylnonan", "2,7,7-Trimethylnonan",
+        "3,3,4-Trimethylnonan", "3,3,5-Trimethylnonan", "3,3,6-Trimethylnonan", "3,3,7-Trimethylnonan",
+        "3,4,4-Trimethylnonan", "3,4,5-Trimethylnonan", "3,4,6-Trimethylnonan", "3,4,7-Trimethylnonan",
+        "3,5,5-Trimethylnonan", "3,5,6-Trimethylnonan", "3,5,7-Trimethylnonan", "3,6,6-Trimethylnonan",
+        "4,4,5-Trimethylnonan", "4,4,6-Trimethylnonan", "4,5,5-Trimethylnonan", "4,5,6-Trimethylnonan",
+
+        "2,2,3,3-Tetramethyloctan", "2,2,3,4-Tetramethyloctan", "2,2,3,5-Tetramethyloctan", "2,2,3,6-Tetramethyloctan",
+        "2,2,3,7-Tetramethyloctan", "2,2,4,4-Tetramethyloctan", "2,2,4,5-Tetramethyloctan", "2,2,4,6-Tetramethyloctan",
+        "2,2,4,7-Tetramethyloctan", "2,2,5,5-Tetramethyloctan", "2,2,5,6-Tetramethyloctan", "2,2,5,7-Tetramethyloctan",
+        "2,2,6,6-Tetramethyloctan", "2,2,6,7-Tetramethyloctan", "2,2,7,7-Tetramethyloctan", "2,3,3,4-Tetramethyloctan",
+        "2,3,3,5-Tetramethyloctan", "2,3,3,6-Tetramethyloctan", "2,3,3,7-Tetramethyloctan", "2,3,4,4-Tetramethyloctan",
+        "2,3,4,5-Tetramethyloctan", "2,3,4,6-Tetramethyloctan", "2,3,4,7-Tetramethyloctan", "2,3,5,5-Tetramethyloctan",
+        "2,3,5,6-Tetramethyloctan", "2,3,5,7-Tetramethyloctan", "2,3,6,6-Tetramethyloctan", "2,3,6,7-Tetramethyloctan",
+        "2,4,4,5-Tetramethyloctan", "2,4,4,6-Tetramethyloctan", "2,4,4,7-Tetramethyloctan", "2,4,5,5-Tetramethyloctan",
+        "2,4,5,6-Tetramethyloctan", "2,4,5,7-Tetramethyloctan", "2,4,6,6-Tetramethyloctan", "2,5,5,6-Tetramethyloctan",
+        "2,5,6,6-Tetramethyloctan", "3,3,4,4-Tetramethyloctan", "3,3,4,5-Tetramethyloctan", "3,3,4,6-Tetramethyloctan",
+        "3,3,5,5-Tetramethyloctan", "3,3,5,6-Tetramethyloctan", "3,3,6,6-Tetramethyloctan", "3,4,4,5-Tetramethyloctan",
+        "3,4,4,6-Tetramethyloctan", "3,4,5,5-Tetramethyloctan", "3,4,5,6-Tetramethyloctan", "4,4,5,5-Tetramethyloctan",
+
+        "2,2,3,3,4-Pentamethylheptan", "2,2,3,3,5-Pentamethylheptan", "2,2,3,3,6-Pentamethylheptan",
+        "2,2,3,4,4-Pentamethylheptan", "2,2,3,4,5-Pentamethylheptan", "2,2,3,4,6-Pentamethylheptan",
+        "2,2,3,5,5-Pentamethylheptan", "2,2,3,5,6-Pentamethylheptan", "2,2,3,6,6-Pentamethylheptan",
+        "2,2,4,4,5-Pentamethylheptan", "2,2,4,4,6-Pentamethylheptan", "2,2,4,5,5-Pentamethylheptan",
+        "2,2,4,5,6-Pentamethylheptan", "2,2,4,6,6-Pentamethylheptan", "2,2,5,5,6-Pentamethylheptan",
+        "2,3,3,4,4-Pentamethylheptan", "2,3,3,4,5-Pentamethylheptan", "2,3,3,4,6-Pentamethylheptan",
+        "2,3,3,5,5-Pentamethylheptan", "2,3,3,5,6-Pentamethylheptan", "2,3,4,4,5-Pentamethylheptan",
+        "2,3,4,4,6-Pentamethylheptan", "2,3,4,5,5-Pentamethylheptan", "2,3,4,5,6-Pentamethylheptan",
+        "2,4,4,5,5-Pentamethylheptan", "3,3,4,4,5-Pentamethylheptan", "3,3,4,5,5-Pentamethylheptan",
+
+        "2,2,3,3,4,4-Hexamethylhexan", "2,2,3,3,4,5-Hexamethylhexan", "2,2,3,3,5,5-Hexamethylhexan",
+        "2,2,3,4,4,5-Hexamethylhexan", "2,2,3,4,5,5-Hexamethylhexan", "2,3,3,4,4,5-Hexamethylhexan",
+
+        "3-Ethyldecan", "4-Ethyldecan", "5-Ethyldecan",
+
+        "3,3-Diethyloctan", "3,4-Diethyloctan", "3,5-Diethyloctan", "3,6-Diethyloctan", "4,4-Diethyloctan",
+        "4,5-Diethyloctan",
+
+        "3,3,4-Triethylhexan",
+
+        "3-Ethyl-2-methylnonan", "3-Ethyl-3-methylnonan", "3-Ethyl-4-methylnonan", "3-Ethyl-5-methylnonan",
+        "3-Ethyl-6-methylnonan", "3-Ethyl-7-methylnonan", "4-Ethyl-2-methylnonan", "4-Ethyl-3-methylnonan",
+        "4-Ethyl-4-methylnonan", "4-Ethyl-5-methylnonan", "4-Ethyl-6-methylnonan", "5-Ethyl-2-methylnonan",
+        "5-Ethyl-3-methylnonan", "5-Ethyl-4-methylnonan", "5-Ethyl-5-methylnonan", "6-Ethyl-2-methylnonan",
+        "6-Ethyl-3-methylnonan", "7-Ethyl-2-methylnonan",
+
+        "3-Ethyl-2,2-dimethyloctan", "3-Ethyl-2,3-dimethyloctan", "3-Ethyl-2,4-dimethyloctan",
+        "3-Ethyl-2,5-dimethyloctan", "3-Ethyl-2,6-dimethyloctan", "3-Ethyl-2,7-dimethyloctan",
+        "3-Ethyl-3,4-dimethyloctan", "3-Ethyl-3,5-dimethyloctan", "3-Ethyl-3,6-dimethyloctan",
+        "3-Ethyl-4,4-dimethyloctan", "3-Ethyl-4,5-dimethyloctan", "3-Ethyl-4,6-dimethyloctan",
+        "3-Ethyl-5,5-dimethyloctan", "4-Ethyl-2,2-dimethyloctan", "4-Ethyl-2,3-dimethyloctan",
+        "4-Ethyl-2,4-dimethyloctan", "4-Ethyl-2,5-dimethyloctan", "4-Ethyl-2,6-dimethyloctan",
+        "4-Ethyl-2,7-dimethyloctan", "4-Ethyl-3,3-dimethyloctan", "4-Ethyl-3,4-dimethyloctan",
+        "4-Ethyl-3,5-dimethyloctan", "4-Ethyl-3,6-dimethyloctan", "4-Ethyl-4,5-dimethyloctan",
+        "5-Ethyl-2,2-dimethyloctan", "5-Ethyl-2,3-dimethyloctan", "5-Ethyl-2,4-dimethyloctan",
+        "5-Ethyl-2,5-dimethyloctan", "5-Ethyl-2,6-dimethyloctan", "5-Ethyl-3,3-dimethyloctan",
+        "5-Ethyl-3,4-dimethyloctan", "5-Ethyl-3,5-dimethyloctan", "5-Ethyl-4,4-dimethyloctan",
+        "6-Ethyl-2,2-dimethyloctan", "6-Ethyl-2,3-dimethyloctan", "6-Ethyl-2,4-dimethyloctan",
+        "6-Ethyl-2,5-dimethyloctan", "6-Ethyl-2,6-dimethyloctan", "6-Ethyl-3,3-dimethyloctan",
+        "6-Ethyl-3,4-dimethyloctan",
+
+        "3-Ethyl-2,2,3-trimethylheptan", "3-Ethyl-2,2,4-trimethylheptan", "3-Ethyl-2,2,5-trimethylheptan",
+        "3-Ethyl-2,2,6-trimethylheptan", "3-Ethyl-2,3,4-trimethylheptan", "3-Ethyl-2,3,5-trimethylheptan",
+        "3-Ethyl-2,3,6-trimethylheptan", "3-Ethyl-2,4,4-trimethylheptan", "3-Ethyl-2,4,5-trimethylheptan",
+        "3-Ethyl-2,4,6-trimethylheptan", "3-Ethyl-2,5,5-trimethylheptan", "3-Ethyl-2,5,6-trimethylheptan",
+        "3-Ethyl-3,4,4-trimethylheptan", "3-Ethyl-3,4,5-trimethylheptan", "3-Ethyl-3,5,5-trimethylheptan",
+        "3-Ethyl-4,4,5-trimethylheptan", "4-Ethyl-2,2,3-trimethylheptan", "4-Ethyl-2,2,4-trimethylheptan",
+        "4-Ethyl-2,2,5-trimethylheptan", "4-Ethyl-2,2,6-trimethylheptan", "4-Ethyl-2,3,3-trimethylheptan",
+        "4-Ethyl-2,3,4-trimethylheptan", "4-Ethyl-2,3,5-trimethylheptan", "4-Ethyl-2,3,6-trimethylheptan",
+        "4-Ethyl-2,4,5-trimethylheptan", "4-Ethyl-2,4,6-trimethylheptan", "4-Ethyl-2,5,5-trimethylheptan",
+        "4-Ethyl-3,3,4-trimethylheptan", "4-Ethyl-3,3,5-trimethylheptan", "4-Ethyl-3,4,5-trimethylheptan",
+        "5-Ethyl-2,2,3-trimethylheptan", "5-Ethyl-2,2,4-trimethylheptan", "5-Ethyl-2,2,5-trimethylheptan",
+        "5-Ethyl-2,2,6-trimethylheptan", "5-Ethyl-2,3,3-trimethylheptan", "5-Ethyl-2,3,4-trimethylheptan",
+        "5-Ethyl-2,3,5-trimethylheptan", "5-Ethyl-2,4,4-trimethylheptan", "5-Ethyl-2,4,5-trimethylheptan",
+        "5-Ethyl-3,3,4-trimethylheptan",
+
+        "3-Ethyl-2,2,3,4-tetramethylhexan", "3-Ethyl-2,2,3,5-tetramethylhexan", "3-Ethyl-2,2,4,4-tetramethylhexan",
+        "3-Ethyl-2,2,4,5-tetramethylhexan", "3-Ethyl-2,2,5,5-tetramethylhexan", "3-Ethyl-2,3,4,4-tetramethylhexan",
+        "3-Ethyl-2,3,4,5-tetramethylhexan", "4-Ethyl-2,2,3,3-tetramethylhexan", "4-Ethyl-2,2,3,4-tetramethylhexan",
+        "4-Ethyl-2,2,3,5-tetramethylhexan", "4-Ethyl-2,2,4,5-tetramethylhexan", "4-Ethyl-2,3,3,4-tetramethylhexan",
+        "4-Ethyl-2,3,3,5-tetramethylhexan", "3,3-Diethyl-2,2-dimethylhexan", "3,3-Diethyl-2,4-dimethylhexan",
+        "3,3-Diethyl-2,5-dimethylhexan", "3,3-Diethyl-4,4-dimethylhexan", "3,4-Diethyl-2,2-dimethylhexan",
+        "3,4-Diethyl-2,3-dimethylhexan", "3,4-Diethyl-2,4-dimethylhexan", "3,4-Diethyl-2,5-dimethylhexan",
+        "3,4-Diethyl-3,4-dimethylhexan", "4,4-Diethyl-2,2-dimethylhexan", "4,4-Diethyl-2,3-dimethylhexan",
+
+        "3-Ethyl-2,2,3,4,4-pentamethylpentan", "3,3-Diethyl-2,2,4-trimethylpentan",
+
+        "4-Propylnonan", "5-Propylnonan",
+
+        "4-(1-Methylethyl)nonan", "5-(1-Methylethyl)nonan",
+
+        "2-Methyl-4-propyloctan", "3-Methyl-4-propyloctan", "4-Methyl-4-propyloctan", "4-Methyl-5-propyloctan",
+        "2-Methyl-5-propyloctan", "3-Methyl-5-propyloctan",
+
+        "2-Methyl-3-(1-methylethyl)octan", "2-Methyl-4-(1-methylethyl)octan", "3-Methyl-4-(1-methylethyl)octan",
+        "4-Methyl-4-(1-methylethyl)octan", "4-Methyl-5-(1-methylethyl)octan", "2-Methyl-5-(1-methylethyl)octan",
+        "3-Methyl-5-(1-methylethyl)octan",
+
+        "2,2,3-Trimethyl-3-(1-methylethyl)hexan", "2,2,4-Trimethyl-3-(1-methylethyl)hexan",
+        "2,2,5-Trimethyl-3-(1-methylethyl)hexan", "2,3,4-Trimethyl-3-(1-methylethyl)hexan",
+        "2,3,5-Trimethyl-3-(1-methylethyl)hexan", "2,4,4-Trimethyl-3-(1-methylethyl)hexan",
+        "2,3,5-Trimethyl-4-(1-methylethyl)hexan", "2,2,5-Trimethyl-4-(1-methylethyl)hexan",
+
+        "2,2,3,4-Tetramethyl-3-(1-methylethyl)pentan", "2,2,4,4-Tetramethyl-3-(1-methylethyl)pentan",
+
+        "3-Ethyl-4-propylheptan", "4-Ethyl-4-propylheptan",
+
+        "3-Ethyl-4-(1-methylethyl)heptan", "4-Ethyl-4-(1-methylethyl)heptan",
+
+        "3-Ethyl-2-methyl-3-(1-methylethyl)hexan", "4-Ethyl-2-methyl-3-(1-methylethyl)hexan",
+
+        "3-Ethyl-2,4-dimethyl-3-(1-methylethyl)pentan",
+
+        "4-(1,1-Dimethylethyl)octan",
+
+        "4-(1,1-Dimethylethyl)-2-methylheptan", "4-(1,1-Dimethylethyl)-3-methylheptan",
+        "4-(1,1-Dimethylethyl)-4-methylheptan",
+
+        "3-(1,1-Dimethylethyl)-2,2-dimethylhexan"
+    };
+
+    // Alle Alkane erzeugen
+    struct Alkane_Container* dodecane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (dodecane_alkanes->data [i]);
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (dodecane_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    dodecane_alkanes->data [i]->iupac_name);
+        }
+        ASSERT("Cannot find the current result in the list of expected results !",
+                result_found_in_the_expected_results == true);
+    }
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (dodecane_alkanes);
 
     return;
 }
