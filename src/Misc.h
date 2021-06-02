@@ -66,6 +66,44 @@ extern "C"
 #error "The macro \"TO_STRING_HELPER_VA_ARGS\" is already defined !"
 #endif /* TO_STRING_HELPER_VA_ARGS */
 
+/**
+ * Minimales Vergleichsmakro um aus zwei Werten den kleineren auszuwaehlen.
+ *
+ * ! Bei dem Makroansatz ist es wichtig, dass das Makro OHNE Seiteneffekte aufgerufen wird !
+ *
+ * Ein Aufruf wie
+ * MIN (x ++, y ++)
+ * darf nicht verwendet werden, da durch die einfache Textersetzung des Makros die Inkrementiertung des kleineren
+ * Wertes ZWEIMAL stattfinden wuerde !
+ *
+ * Es empfiehlt sich daher, dass das Makro nur mit den "reinen" Werten (also OHNE Ausdruecke wie "x + 2" aufgerufen
+ * wird), um dieses Problem im vorn­he­r­ein sicher zu vermeiden. :)
+ */
+#ifndef MIN
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#else
+#error "The macro \"MIN\" is already defined !"
+#endif /* MIN */
+
+/**
+ * Minimales Vergleichsmakro um aus zwei Werten den groesseren auszuwaehlen.
+ *
+ * ! Bei dem Makroansatz ist es wichtig, dass das Makro OHNE Seiteneffekte aufgerufen wird !
+ *
+ * Ein Aufruf wie
+ * MAX (x ++, y ++)
+ * darf nicht verwendet werden, da durch die einfache Textersetzung des Makros die Inkrementiertung des groesseren
+ * Wertes ZWEIMAL stattfinden wuerde !
+ *
+ * Es empfiehlt sich daher, dass das Makro nur mit den "reinen" Werten (also OHNE Ausdruecke wie "x + 2" aufgerufen
+ * wird), um dieses Problem im vorn­he­r­ein sicher zu vermeiden. :)
+ */
+#ifndef MAX
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#else
+#error "The macro \"MAX\" is already defined !"
+#endif /* MAX */
+
 
 
 // ENDE C++-Kompablitaet herstellen
