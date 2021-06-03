@@ -798,8 +798,8 @@ Search_For_Chain_Content
  */
 static inline int Cmp_Length_Information (const void* a, const void* b)
 {
-    struct Chain* chain_a = (struct Chain*) a;
-    struct Chain* chain_b = (struct Chain*) b;
+    const struct Chain* const chain_a = (const struct Chain* const) a;
+    const struct Chain* const chain_b = (const struct Chain* const) b;
 
     return (((int) chain_a->length) - ((int) chain_b->length));
 }
