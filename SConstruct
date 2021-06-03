@@ -155,8 +155,8 @@ print ""
 
 
 ##### ##### ##### BEGINN C Dateien uebersetzen ##### ##### #####
-c_object_list_debug = []
-c_object_list_release = []
+c_object_list_debug     = []
+c_object_list_release   = []
 
 if (debug_int == 1):
     for i in range(len(c_file_list)):
@@ -176,7 +176,7 @@ if (release_int == 1):
 
 
 ##### ##### ##### BEGINN Cpp Dateien uebersetzen ##### ##### #####
-cpp_object_list_debug = []
+cpp_object_list_debug   = []
 cpp_object_list_release = []
 
 if (debug_int == 1):
