@@ -552,7 +552,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
 
             "3,4-Dimethylheptan",
             "3,5-Dimethylheptan",
-            "4,4-Dimethylheptan"
+            "4,4-Dimethylheptan",
             "3-Ethylheptan",
             "4-Ethylheptan",
             "2,2,3-Trimethylhexan",
