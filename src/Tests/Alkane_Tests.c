@@ -536,7 +536,7 @@ void TEST_All_Possible_Octan_Constitutional_Isomers (void)
     {
         if (count_expected_results [i] != 1)
         {
-            FPRINTF_FFLUSH(stderr, "Expected results: %50s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
+            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
                     count_expected_results [i]);
         }
     }
@@ -644,7 +644,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
     {
         if (count_expected_results [i] != 1)
         {
-            FPRINTF_FFLUSH(stderr, "Expected results: %50s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
+            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
                     count_expected_results [i]);
         }
     }
@@ -758,7 +758,7 @@ void TEST_All_Possible_Decan_Constitutional_Isomers (void)
     {
         if (count_expected_results [i] != 1)
         {
-            FPRINTF_FFLUSH(stderr, "Expected results: %50s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
+            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
                     count_expected_results [i]);
         }
     }
