@@ -152,6 +152,32 @@ Search_For_Chain_Content
         const uint_fast8_t number_of_c_atoms        // Anzahl an C-Atomen im Alkan
 );
 
+/**
+ * Vergleichsfunktion fuer die qsort-Funktion.
+ * Einfache nummerisch aufsteigende Sortierung anhand der Laenge eines Chain-Objektes.
+ */
+static inline int Cmp_Length_Information (const void* a, const void* b);
+
+/**
+ * Aeste, die auf gleicher Verschachtelungstiefe liegen, anhand der Laenge der Aeste aufsteigend sortieren.
+ * Dies vereinfacht die spaetere Erzeugung des IUPAC-Namen bei der Zusammenfassung gleicher Aeste, da der Algorithmus
+ * davon ausgehen darf, dass gleiche Aeste - falls vorhanden - immer zusammen im Alkane-Objekt hinterlegt sind.
+ *
+ * Kleines Beispiel:
+ * Drei Aeste auf gleicher Verschachtelungstiefe. 2x Methyl, 1x Ethyl.
+ * Bei der Anordnung 'Methyl, Ethyl, Methyl' muessen bei der Zusammenfassung immer alle Aeste der gleichen
+ * Verschachtelungstiefe betrachtet werden, da sonst die Zusammenfassung der beiden Methyl-Aeste nicht stattfindet.
+ * Wenn die Aeste umgeordnet werden ('Methyl, Methyl, Ethyl'), dann muss bei der Zusammenfassung nur das folgende
+ * Objekt betrachtet werden. Ist dies gleich, dann wird zusammengefasst; wenn nicht, dann koennen keine weiteren Aeste
+ * existieren, die zusammengefasst werden muessen.
+ */
+static void
+Reorder_Chains
+(
+        struct Alkane* const restrict alkane    // Alkane-Objekt, bei denen die Chain-Objekte neu sortiert werden,
+                                                // falls notwendig
+);
+
 //=====================================================================================================================
 
 /**
@@ -231,6 +257,10 @@ Convert_Alkane_To_IUPAC_Name
     // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
     // der Benennung beruecksichtigt werden muessen
     Chains_Go_Deeper (alkane, main_chain, 1);
+
+    // Aeste, die auf einer Verschachtelungsebene liegen, anhand der Laenge der Aeste aufsteigend sortieren
+    // Dies ist fuer eine einfachere Erzeugung des IUPAC-Namen notwendig
+    Reorder_Chains (alkane);
     // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
@@ -754,6 +784,67 @@ Search_For_Chain_Content
 
             // Bei dem gerade gefundenen C-Atom nach weiteren Bindungen suchen
             Search_For_Chain_Content (path_data, temp_alkane, temp_y, number_of_c_atoms);
+        }
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Vergleichsfunktion fuer die qsort-Funktion.
+ * Einfache nummerisch aufsteigende Sortierung anhand der Laenge eines Chain-Objektes.
+ */
+static inline int Cmp_Length_Information (const void* a, const void* b)
+{
+    struct Chain* chain_a = (struct Chain*) a;
+    struct Chain* chain_b = (struct Chain*) b;
+
+    return (((int) chain_a->length) - ((int) chain_b->length));
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Aeste, die auf gleicher Verschachtelungstiefe liegen, anhand der Laenge der Aeste aufsteigend sortieren.
+ * Dies vereinfacht die spaetere Erzeugung des IUPAC-Namen bei der Zusammenfassung gleicher Aeste, da der Algorithmus
+ * davon ausgehen darf, dass gleiche Aeste - falls vorhanden - immer zusammen im Alkane-Objekt hinterlegt sind.
+ *
+ * Kleines Beispiel:
+ * Drei Aeste auf gleicher Verschachtelungstiefe. 2x Methyl, 1x Ethyl.
+ * Bei der Anordnung 'Methyl, Ethyl, Methyl' muessen bei der Zusammenfassung immer alle Aeste der gleichen
+ * Verschachtelungstiefe betrachtet werden, da sonst die Zusammenfassung der beiden Methyl-Aeste nicht stattfindet.
+ * Wenn die Aeste umgeordnet werden ('Methyl, Methyl, Ethyl'), dann muss bei der Zusammenfassung nur das folgende
+ * Objekt betrachtet werden. Ist dies gleich, dann wird zusammengefasst; wenn nicht, dann koennen keine weiteren Aeste
+ * existieren, die zusammengefasst werden muessen.
+ */
+static void
+Reorder_Chains
+(
+        struct Alkane* const restrict alkane    // Alkane-Objekt, bei denen die Chain-Objekte neu sortiert werden,
+                                                // falls notwendig
+)
+{
+    uint_fast8_t last_start_index = 1;
+
+    // Linear im Array nach Aesten auf gleicher Verschachtelungstiefe suchen
+    // Beginn bei 1, da das Objekt mit dem Index 0 immer die Hauptkette ist !
+    for (uint_fast8_t i = 1; i < alkane->next_free_chain; ++ i)
+    {
+        // Entweder die Anzahl der Verschachtelungstiefe aendert sich, oder man ist am Ende des Arrays angekommen
+        if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth ||
+                (i + 1) >= alkane->next_free_chain)
+        {
+            // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
+            if ((i - last_start_index + 1) > 1)
+            {
+                qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
+                        Cmp_Length_Information);
+            }
+
+            // last_start_index aktuallisieren
+            last_start_index = i;
         }
     }
 
