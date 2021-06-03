@@ -62,6 +62,7 @@ release_cpp = Environment(
 ##### ##### ##### BEGINN Liste der Quellcodedateien ##### ##### #####
 ##### Liste der vorhandenen C-Dateien #####
 c_file_list = [
+    # Main-Datei des Programms
     "src/main.c",
 
     # Dateien fuer das Error Handling
@@ -74,6 +75,8 @@ c_file_list = [
     "src/Alkane/Alkane_Branch_Container.c",
     "src/Alkane/Alkane.c",
     "src/Alkane/Alkane_Container.c",
+
+    # Dateien fuer die Erstellung des IUPAC-Namen fuer die erzeugten Alkane
     "src/Alkane/Alkane_To_IUPAC_Name.c",
     "src/Alkane/Alkane_Chain_To_IUPAC_Name.c",
 
@@ -86,6 +89,7 @@ c_file_list = [
 ]
 
 ##### Liste der vorhandenen Cpp-Dateien #####
+# Aktuell werden keine C++ Uebersetzungseinheiten verwendet
 cpp_file_list = [
 ]
 ##### ##### ##### ENDE Liste der Quellcodedateien ##### ##### #####
