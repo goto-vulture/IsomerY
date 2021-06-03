@@ -16,6 +16,8 @@ extern "C"
 
 
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Dieses Makro zaehlt die Elemente in einem Array.
  * ! Dies funktioniert nur dann, wenn die Groesse des Arrays bereits zur Uebersetzungszeit bekannt ist !
@@ -27,6 +29,8 @@ extern "C"
 #else
 #error "The macro \"COUNT_ARRAY_ELEMENTS\" is already defined !"
 #endif /* COUNT_ARRAY_ELEMENTS */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 /**
  * Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
@@ -47,6 +51,8 @@ extern "C"
 #error "The macro \"TO_STRING_HELPER\" is already defined !"
 #endif /* TO_STRING_HELPER */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
  * Diesmal mit einem Formatstring.
@@ -65,6 +71,8 @@ extern "C"
 #else
 #error "The macro \"TO_STRING_HELPER_VA_ARGS\" is already defined !"
 #endif /* TO_STRING_HELPER_VA_ARGS */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 /**
  * Minimales Vergleichsmakro um aus zwei Werten den kleineren auszuwaehlen.
@@ -85,6 +93,8 @@ extern "C"
 #error "The macro \"MIN\" is already defined !"
 #endif /* MIN */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Minimales Vergleichsmakro um aus zwei Werten den groesseren auszuwaehlen.
  *
@@ -103,6 +113,8 @@ extern "C"
 #else
 #error "The macro \"MAX\" is already defined !"
 #endif /* MAX */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 
 
