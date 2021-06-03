@@ -152,6 +152,7 @@ $(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Br
 	@echo
 	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o
 
+##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
 	@echo Build target: $(TARGET).
 	@echo
@@ -198,6 +199,7 @@ Alkane_Tests.o: $(ALKANE_TESTS_C)
 
 Alkane_Chain_To_IUPAC_Name.o: $(ALKANE_CHAIN_TO_IUPAC_NAME_C)
 	$(CC) $(CCFLAGS) -c $(ALKANE_CHAIN_TO_IUPAC_NAME_C)
+##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen
 clean:
