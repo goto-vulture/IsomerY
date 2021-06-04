@@ -858,6 +858,7 @@ Reorder_Chains
         if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth)
         {
             // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
+            // Hier KEIN + 1, da das aktuelle Objekt NICHT betrachtet werden soll !
             if ((i - last_start_index) > 1)
             {
                 qsort (&(alkane->chains [last_start_index + 1]), (size_t) (i - last_start_index), sizeof (struct Chain),
@@ -871,6 +872,7 @@ Reorder_Chains
         else if ((i + 1) >= alkane->next_free_chain)
         {
             // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
+            // Hier + 1, da das aktuelle Objekt mit betrachtet werden soll !
             if ((i - last_start_index + 1) > 1)
             {
                 qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
