@@ -41,14 +41,14 @@ struct Path_Data
 
 
 
-/**
- * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
- * Objekt am Ende wieder freigeben muss !
- */
 static struct Path_Data*                            // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
-        const struct Alkane* const restrict alkane  // Alkan, bei dem die Hauptkette bestimmt werden soll
+        const struct Alkane* const restrict alkane, // Alkan, bei dem die Hauptkette bestimmt werden soll
+        const uint_fast8_t start_c_atom             // OPTIONAL: Angabe eines Start C-Atoms, von dem die laengste
+                                                    // Kette aus gebildet wird. Dies ist bei der Bestimmung einiger
+                                                    // Verschachtelungen notwendig
+                                                    // Bei Nichtverwendung: UINT_FAST8_MAX
 );
 
 /**
@@ -59,7 +59,11 @@ static uint_fast8_t                                 // Anzahl an durchgefuehrten
 Do_DFS
 (
         const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const restrict path_data  // Zeiger auf die bereits angelegten Path_Data-Objekte
+        struct Path_Data* const restrict path_data, // Zeiger auf die bereits angelegten Path_Data-Objekte
+        const uint_fast8_t start_c_atom             // OPTIONAL: Angabe eines Start C-Atoms, von dem die laengste
+                                                    // Kette aus gebildet wird. Dies ist bei der Bestimmung einiger
+                                                    // Verschachtelungen notwendig
+                                                    // Bei Nichtverwendung: UINT_FAST8_MAX
 );
 
 /**
@@ -242,7 +246,7 @@ Convert_Alkane_To_IUPAC_Name
         alkane->structure [current_numercode_element - 1][current_c_atom] = 1;
     }
 
-    struct Path_Data* main_chain = Find_Main_Chain (alkane);
+    struct Path_Data* main_chain = Find_Main_Chain (alkane, UINT_FAST8_MAX);
 
     // Aus der Hauptkette ergibt sich das erste Chain-Objekt
     alkane->chains [alkane->next_free_chain].length         = main_chain->result_path_length;
@@ -292,7 +296,11 @@ Convert_Alkane_To_IUPAC_Name
 static struct Path_Data*                            // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
-        const struct Alkane* const restrict alkane  // Alkan, bei dem die Hauptkette bestimmt werden soll
+        const struct Alkane* const restrict alkane, // Alkan, bei dem die Hauptkette bestimmt werden soll
+        const uint_fast8_t start_c_atom             // OPTIONAL: Angabe eines Start C-Atoms, von dem die laengste
+                                                    // Kette aus gebildet wird. Dies ist bei der Bestimmung einiger
+                                                    // Verschachtelungen notwendig
+                                                    // Bei Nichtverwendung: UINT_FAST8_MAX
 )
 {
     // Speicher fuer die Bestimmungen der Tiefensuche
@@ -300,7 +308,7 @@ Find_Main_Chain
     memset (path_data, '\0', sizeof (path_data));
 
     // Tiefensuche fuer alle moeglichen Pfade durchfuehren
-    const uint_fast8_t count_created_paths = Do_DFS (alkane, path_data);
+    const uint_fast8_t count_created_paths = Do_DFS (alkane, path_data, start_c_atom);
 
     // Den passenden Pfad aus den gerade erzeugten Pfaden auswaehlen
     const uint_fast8_t result_path_index = Select_Suitable_Chain (alkane, path_data, count_created_paths);
@@ -328,7 +336,11 @@ static uint_fast8_t                                 // Anzahl an durchgefuehrten
 Do_DFS
 (
         const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const restrict path_data  // Zeiger auf die bereits angelegten Path_Data-Objekte
+        struct Path_Data* const restrict path_data, // Zeiger auf die bereits angelegten Path_Data-Objekte
+        const uint_fast8_t start_c_atom             // OPTIONAL: Angabe eines Start C-Atoms, von dem die laengste
+                                                    // Kette aus gebildet wird. Dies ist bei der Bestimmung einiger
+                                                    // Verschachtelungen notwendig
+                                                    // Bei Nichtverwendung: UINT_FAST8_MAX
 )
 {
     // Alle Elemente des Graphens ermitteln, die genau eine Bindung haben. Dies sind die CH3-Gruppen, mit denen die
@@ -365,8 +377,17 @@ Do_DFS
 
             // Tiefensuche durchfuehren, um bei der aktuellen Variante des Start- und Zielknotens den Pfad und deren
             // Laenge zu bestimmen
-            Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end],
-                    &(path_data [next_free_path_data]));
+            // Verwendung eines manuellen Startknoten ?
+            if (start_c_atom != UINT_FAST8_MAX)
+            {
+                Depth_First_Search_Start (start_c_atom, ch3_elements [current_ch3_element_end],
+                                    &(path_data [next_free_path_data]));
+            }
+            else
+            {
+                Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end],
+                        &(path_data [next_free_path_data]));
+            }
             ++ next_free_path_data;
         }
     }
@@ -705,7 +726,8 @@ Chains_Go_Deeper
 
                 // Tiefensuche auf diesen Ast durchfuehren, um die laengste Kette im aktuellen Ast zu finden. Dies ist
                 // notwendig, da ein Ast nicht zwangslaeufig eine gerade Kette sein muss
-                struct Path_Data* temp_chain = Find_Main_Chain (temp_alkane);
+                // Als manueller Startknoten wird das aktuelle C-Atom verwendet
+                struct Path_Data* temp_chain = Find_Main_Chain (temp_alkane, i);
 
                 // Aus den aktuellen Ast die Werte in das Originalalkan - bzw. das richtige Alkan - eintragen
                 // Wenn der aktuelle Ast aus nur einem C-Atom besteht, dann findet die Tiefensuche keine Hauptkette
@@ -733,7 +755,7 @@ Chains_Go_Deeper
 
                 // Schauen, ob der Ast weitere Verschachtelungen besitzen kann. Wenn ja, dann muessen diese ebenfalls
                 // untersucht werden
-                if (temp_chain->result_path_length < (temp_alkane->number_of_c_atoms - i))
+                if (temp_chain->result_path_length <= (temp_alkane->number_of_c_atoms - i))
                 {
                     // Wenn noch weitere Aeste existieren, dann wird mit dem temporaeren Path_Data-Objekt diese Funktion
                     // nochmal rekursiv aufgerufen
