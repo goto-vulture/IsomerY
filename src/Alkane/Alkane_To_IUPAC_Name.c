@@ -854,27 +854,30 @@ Reorder_Chains
     // Beginn bei 1, da das Objekt mit dem Index 0 immer die Hauptkette ist !
     for (uint_fast8_t i = 1; i < alkane->next_free_chain; ++ i)
     {
-        // Entweder die Anzahl der Verschachtelungstiefe aendert sich, oder man ist am Ende des Arrays angekommen
-        if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth ||
-                (i + 1) >= alkane->next_free_chain)
+        // Hat sich die Verschachtelungstiefe geaendert ?
+        if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth)
+        {
+            // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
+            if ((i - last_start_index) > 1)
+            {
+                qsort (&(alkane->chains [last_start_index + 1]), (size_t) (i - last_start_index), sizeof (struct Chain),
+                        Cmp_Length_Information);
+            }
+
+            // last_start_index aktualisieren
+            last_start_index = i;
+        }
+        // Ist dies das letzte Chain-Objekt im Alkan ?
+        else if ((i + 1) >= alkane->next_free_chain)
         {
             // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
             if ((i - last_start_index + 1) > 1)
             {
-                uint_fast8_t start_sorting_index = last_start_index;
-
-                // Wenn die Verschachtelungstiefe sich geaendert hat, dann sollen nur die Objekte mit der geaenderten
-                // Verschachtelungstiefe sortiert werden => Index + 1
-                if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth)
-                {
-                    start_sorting_index ++;
-                }
-
-                qsort (&(alkane->chains [start_sorting_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
+                qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
                         Cmp_Length_Information);
             }
 
-            // last_start_index aktuallisieren
+            // last_start_index aktualisieren
             last_start_index = i;
         }
     }
