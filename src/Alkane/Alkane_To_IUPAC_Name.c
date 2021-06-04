@@ -839,7 +839,16 @@ Reorder_Chains
             // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
             if ((i - last_start_index + 1) > 1)
             {
-                qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
+                uint_fast8_t start_sorting_index = last_start_index;
+
+                // Wenn die Verschachtelungstiefe sich geaendert hat, dann sollen nur die Objekte mit der geaenderten
+                // Verschachtelungstiefe sortiert werden => Index + 1
+                if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth)
+                {
+                    start_sorting_index ++;
+                }
+
+                qsort (&(alkane->chains [start_sorting_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
                         Cmp_Length_Information);
             }
 
