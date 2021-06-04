@@ -1,5 +1,6 @@
 ----- ----- ----- ToDo ----- ----- -----
-...
+- Ueberpruefung bei der IUPAC-Namen Erzeugung, ob das Ergebnis in den erwarteten Ergebnissen vorhanden ist, in eine eigene Unterfunktion verschieben
+- Tipp 7 bei den erwarteten Ergebnissen anwenden (https://www.techbeamers.com/top-c-programming-tips-and-tricks-for-you/)
 
 ----- ----- ----- Ideas ----- ----- -----
 - Laufzeitvergleich Debug / Release Build
