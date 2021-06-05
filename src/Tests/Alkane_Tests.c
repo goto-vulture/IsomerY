@@ -591,7 +591,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
             "3-Ethyl-2-methylhexan",
             "4-Ethyl-2-methylhexan",
             "3-Ethyl-3-methylhexan",
-            "4-Ethyl-3-methylhexan",
+            "3-Ethyl-4-methylhexan",
             "2,2,3,3-Tetramethylpentan",
             "2,2,3,4-Tetramethylpentan",
             "2,2,4,4-Tetramethylpentan",
@@ -710,10 +710,10 @@ void TEST_All_Possible_Decan_Constitutional_Isomers (void)
             "3-Ethyl-2,4-dimethylhexan",        "3-Ethyl-2,5-dimethylhexan",            "3-Ethyl-3,4-dimethylhexan",
             "4-Ethyl-2,2-dimethylhexan",        "4-Ethyl-2,3-dimethylhexan",
 
-            "4-Ethyl-2,4-dimethylhexan",        "4-Ethyl-3,3-dimethylhexan",            "3-Ethyl-2,2,3-trimethylpentan",
+            "4-Ethyl-2,4-dimethylhexan",        "3-Ethyl-4,4-dimethylhexan",            "3-Ethyl-2,2,3-trimethylpentan",
             "3-Ethyl-2,2,4-trimethylpentan",    "3-Ethyl-2,3,4-trimethylpentan",
 
-            "3,3-Diethyl-2-methylpentan",       "4-Propylheptan",                       "4-(1-Methylethyl)heptan",
+            "3,3-Diethyl-2-methylpentan",       "4-Propylheptan",                       "4-(1-Methylethyl)-heptan",
             "2-Methyl-3-(1-methylethyl)-hexan", "2,4-Dimethyl-3-(1-methylethyl)-pentan"
     };
 
