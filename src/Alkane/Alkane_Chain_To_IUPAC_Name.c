@@ -26,6 +26,8 @@ struct State_Information
     char* iupac_name;                       // Speicher fuer den IUPAC-String
     size_t iupac_name_length;               // Maximale Laenge, die der IUPAC-Name annehmen kann (Groesse des
                                             // reservierten Speichers)
+    size_t iupac_name_space_left;           // Anzahl an Zeichen, die im Speicherbereich fuer den IUPAC-Namen noch
+                                            // frei sind
     struct Alkane* alkane;                  // Alkan-Objekt (enthaelt die Chain-Objekte)
 
     uint_fast8_t current_chain;             // Aktuelles Chain-Objekt, welches betrachtet wird
@@ -78,10 +80,11 @@ Chain_To_IUPAC
     struct State_Information state_information;
     memset (&state_information, '\0', sizeof (struct State_Information));
 
-    state_information.iupac_name        = iupac_name;
-    state_information.iupac_name_length = iupac_name_length;
-    state_information.alkane            = alkane;
-    state_information.cmp_chain         = NULL;
+    state_information.iupac_name            = iupac_name;
+    state_information.iupac_name_length     = iupac_name_length;
+    state_information.iupac_name_space_left = iupac_name_length - 1;
+    state_information.alkane                = alkane;
+    state_information.cmp_chain             = NULL;
 
     // => Generierung des Namen starten <=
     Next_Chain (&state_information);
@@ -210,15 +213,18 @@ static void Down (struct State_Information* const restrict state)
 {
     if (strlen (state->iupac_name) > 0)
     {
-        strncat (state->iupac_name, "-", strlen ("-"));
+        strncat (state->iupac_name, "-", state->iupac_name_space_left);
+        state->iupac_name_space_left -= strlen ("-");
     }
 
     // Position des letzten Objektes ermitteln und anbringen
     char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
     int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1, state->alkane->chains [state->current_chain - 1].position);
 
-    strncat (state->iupac_name, int_to_str, strlen (int_to_str));
-    strncat (state->iupac_name, "-(", strlen ("-("));
+    strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen (int_to_str);
+    strncat (state->iupac_name, "-(", state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen ("-(");
 
     // Partialinformation aufnehmen
     state->partly_completed_chains [state->next_free_partly_completed_chains] = (uint_fast8_t) (state->current_chain - 1);
@@ -239,8 +245,12 @@ static void Up (struct State_Information* const restrict state)
 {
     strncat (state->iupac_name,
             ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1],
-            strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1]));
-    strncat (state->iupac_name, ")-", strlen (")-"));
+            state->iupac_name_space_left);
+    state->iupac_name_space_left -=
+            strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1]);
+
+    strncat (state->iupac_name, ")-", state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen (")-");
 
     state->partly_completed_chains [state->next_free_partly_completed_chains - 1] = 0;
     state->next_free_partly_completed_chains --;
@@ -260,8 +270,12 @@ static void Last_Chain_Found (struct State_Information* const restrict state)
         {
             strncat (state->iupac_name,
                     ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1],
-                    strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1]));
-            strncat (state->iupac_name, ")-", strlen (")-"));
+                    state->iupac_name_space_left);
+            state->iupac_name_space_left -=
+                    strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1]);
+
+            strncat (state->iupac_name, ")-", state->iupac_name_space_left);
+            state->iupac_name_space_left -= strlen (")-");
         }
     }
 
@@ -276,11 +290,12 @@ static void Complete_Name (struct State_Information* const restrict state)
 {
     if (strlen (state->iupac_name) == 0)
     {
-        strncat (state->iupac_name, "n-", strlen ("n-"));
+        strncat (state->iupac_name, "n-", state->iupac_name_space_left);
+        state->iupac_name_space_left -= strlen ("n-");
     }
 
-    strncat (state->iupac_name, ALKAN_WORDS [state->alkane->chains [0].length - 1],
-            strlen (ALKAN_WORDS [state->alkane->chains [0].length - 1]));
+    strncat (state->iupac_name, ALKAN_WORDS [state->alkane->chains [0].length - 1], state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen (ALKAN_WORDS [state->alkane->chains [0].length - 1]);
 
     return;
 }
@@ -292,7 +307,8 @@ static void Write_Alkyl_Data_Into_IUPAC_Name (struct State_Information* const re
 {
     if (strlen (state->iupac_name) > 0 && state->iupac_name [strlen (state->iupac_name) - 1] != '(')
     {
-        strncat (state->iupac_name, "-", strlen ("-"));
+        strncat (state->iupac_name, "-", state->iupac_name_space_left);
+        state->iupac_name_space_left -= strlen ("-");
     }
 
     for (int i = state->completed_chain + 1; i < state->current_chain; ++ i)
@@ -300,25 +316,30 @@ static void Write_Alkyl_Data_Into_IUPAC_Name (struct State_Information* const re
         char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
         int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1, state->alkane->chains [i].position);
 
-        strncat (state->iupac_name, int_to_str, strlen (int_to_str));
+        strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
+        state->iupac_name_space_left -= strlen (int_to_str);
 
         if ((i + 1) < state->current_chain)
         {
-            strncat (state->iupac_name, ",", strlen (","));
+            strncat (state->iupac_name, ",", state->iupac_name_space_left);
+            state->iupac_name_space_left -= strlen (",");
         }
     }
-    strncat (state->iupac_name, "-", strlen ("-"));
+    strncat (state->iupac_name, "-", state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen ("-");
 
     const int chains_wrote = state->current_chain - (state->completed_chain + 1);
 
     if (chains_wrote > 1)
     {
-        strncat (state->iupac_name, NUMBER_WORDS [chains_wrote - 1], strlen (NUMBER_WORDS [chains_wrote - 1]));
+        strncat (state->iupac_name, NUMBER_WORDS [chains_wrote - 1], state->iupac_name_space_left);
+        state->iupac_name_space_left -= strlen (NUMBER_WORDS [chains_wrote - 1]);
     }
 
     // Wort fuer Kettentyp anbringen
     strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1],
-            strlen (ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1]));
+            state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen (ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1]);
 
     return;
 }
