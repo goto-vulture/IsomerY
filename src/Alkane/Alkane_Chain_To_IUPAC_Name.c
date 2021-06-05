@@ -7,34 +7,19 @@
 
 #include "Alkane_Chain_To_IUPAC_Name.h"
 #include <string.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include <stdbool.h>
 #include "Alkane_Info_Constitutional_Isomer.h"
 #include "../str2int.h"
 #include "../Print_Tools.h"
 #include "../Misc.h"
+#include "../Error_Handling/Assert_Msg.h"
 
 
 
 
 
 /**
- * Vergleichsfunktion fuer die qsort-Funktion.
- * Alphabetisch aufsteigende Sortierung der Namensfragmente OHNE Beachtung ggf. vorhandener Zahlenpraefixe !
- */
-static int Cmp_Name_Fragments (const void* a, const void* b);
-
-/**
- * Vergleichsfunktion fuer die qsort-Funktion.
- * Einfache nummerisch aufsteigende Sortierung.
- */
-static inline int Cmp_Position_Information (const void* a, const void* b);
-
-/**
- * Statusinformationen fuer das Erzeugen des IUPAC-Namen aus den Chain-Objketen. In dieser Struktur sind alle
- * Informationen, die fuer diesen Prozess benoetigt werden.
+ * Statusinformationen, die bei der Konvertierung der Chain-Objekte zu dem IUPAC-Namen verwendet werden.
  */
 struct State_Information
 {
@@ -43,18 +28,36 @@ struct State_Information
                                             // reservierten Speichers)
     struct Alkane* alkane;                  // Alkan-Objekt (enthaelt die Chain-Objekte)
 
-    uint_fast8_t current_index;             // Aktueller Chain-Index
-    uint_fast8_t current_nesting_depth;     // Aktuelle Verschachtelungstiefe
-    uint_fast8_t last_alkyl_word_inserted;  // Letzter Chain-Index, bei dem ein Alkyl-Wort angebracht wurde
+    uint_fast8_t current_chain;             // Aktuelles Chain-Objekt, welches betrachtet wird
+    uint_fast8_t completed_chain;           // Das letzte Chain-Objekt, welches KOMPLETT verarbeitet wurde
+
+    struct Chain* cmp_chain;                // Vergleichs Chain-Objekt; Dies dient dazu, um gleiche Alkylreste
+                                            // zusammenfassen zu koennen
+
+    // Liste an Chain-Objekte, die teilweise verarbeitet wurden
+    // Dies ist dann der Fall, wenn es Verschachtelungen gibt
+    uint_fast8_t partly_completed_chains [MAX_NUMBER_OF_C_ATOMS];
+    uint_fast8_t next_free_partly_completed_chains;
 };
 
-// Zustandsfunktionen fuer die Erzeugung des IUPAC-Namen
+// ===== ===== ===== Zustaende fuer die Chain-Objekt-Konvertierung ===== ===== =====
 static void Next_Chain (struct State_Information* const restrict state);
-static void Try_To_Merge_Chains (struct State_Information* const restrict state);
-static void Insert_Numbers (struct State_Information* const restrict state);
-static void Insert_Alkylword (struct State_Information* const restrict state);
-static void Down_In_Nesting (struct State_Information* const restrict state);
-static void Up_In_Nesting (struct State_Information* const restrict state);
+static void New_Compare_Chain (struct State_Information* const restrict state);
+static void Chains_Mergeable (struct State_Information* const restrict state);
+
+static void Different_Type (struct State_Information* const restrict state);
+static void Different_Length (struct State_Information* const restrict state);
+static void Down (struct State_Information* const restrict state);
+static void Up (struct State_Information* const restrict state);
+
+static void Last_Chain_Found (struct State_Information* const restrict state);
+static void Complete_Name (struct State_Information* const restrict state);
+// ===== ===== ===== Zustaende fuer die Chain-Objekt-Konvertierung ===== ===== =====
+
+// KEIN Zustand, sondern eine einfache statische Funktion, die bei der Konvertierung verwendet wird !
+static void Write_Alkyl_Data_Into_IUPAC_Name (struct State_Information* const restrict state);
+
+
 
 //=====================================================================================================================
 
@@ -72,116 +75,16 @@ Chain_To_IUPAC
 {
     memset (iupac_name, '\0', iupac_name_length * sizeof (char));
 
-    struct State_Information state_information =
-    {
-            .iupac_name         = iupac_name,
-            .iupac_name_length  = iupac_name_length,
-            .alkane             = alkane,
+    struct State_Information state_information;
+    memset (&state_information, '\0', sizeof (struct State_Information));
 
-            .current_index              = 0,
-            .current_nesting_depth      = 0,
-            .last_alkyl_word_inserted   = 0
-    };
+    state_information.iupac_name        = iupac_name;
+    state_information.iupac_name_length = iupac_name_length;
+    state_information.alkane            = alkane;
+    state_information.cmp_chain         = NULL;
 
-
-    // Nur wenn es mehr als einen Ast gibt, gibt es Aeste, die nicht zur Hauptkette gehoeren
-    // Der erste Ast ist immer die Hauptkette !
-    if (alkane->next_free_chain > 1)
-    {
-        // Erzeugung des IUPAC-Namen fuer die Aeste - die nicht zur Hauptkette gehoeren - starten
-        Next_Chain (&state_information);
-
-        char temp_fragments [20] [iupac_name_length];
-        memset (temp_fragments, '\0', sizeof (temp_fragments));
-
-        uint_fast8_t next_fragment  = 0;
-        size_t last_used_char       = 0;
-        uint_fast8_t nested_depth   = 0;
-
-        // Namensfragmente aufspalten
-        for (size_t i = 0; i < strlen (iupac_name) - 1; ++ i)
-        {
-            if (iupac_name [i] == '(')
-            {
-                ++ nested_depth;
-            }
-            else if (iupac_name [i] == ')')
-            {
-                -- nested_depth;
-            }
-
-            // Nach dem Ende eines Namensfragments suchen
-            if (islower (iupac_name [i]) && iupac_name [i + 1] == '-')
-            {
-                iupac_name [i + 1] = '\0';
-                // PRINTF_FFLUSH ("(1) %s\n", iupac_name + last_used_char);
-
-                strncpy (temp_fragments [next_fragment], iupac_name + last_used_char, strlen (iupac_name + last_used_char));
-
-                ++ next_fragment;
-                iupac_name [i + 1] = '-';
-
-                last_used_char += (i - last_used_char + 2);
-            }
-            else if (islower (iupac_name [i]) && iupac_name [i + 1] == ')' && nested_depth > 1)
-            {
-                iupac_name [i + 1] = '\0';
-                // PRINTF_FFLUSH ("(2) %s\n", iupac_name + last_used_char);
-
-                strncpy (temp_fragments [next_fragment], iupac_name + last_used_char, strlen (iupac_name + last_used_char));
-
-                ++ next_fragment;
-                iupac_name [i + 1] = ')';
-
-                last_used_char += (i - last_used_char + 1);
-
-                ++ next_fragment;
-            }
-        }
-
-        // Namensfragmente sortieren, falls notwendig (alphabetisch bzgl. des Verzweigungstyps)
-        // Aeste des Alkans alphabetisch sortieren, damit beim IUPAC-Namen z.B. Ethyl-Abzweigungen vor Methyl-Abzweigungen
-        // stehen
-        if (next_fragment > 1)
-        {
-            // Sortierung der Namensfragmente durchfuehren
-            qsort (temp_fragments, next_fragment, iupac_name_length * sizeof (char), Cmp_Name_Fragments);
-
-            size_t next_free_char = 0;
-            memset (iupac_name, '\0', iupac_name_length * sizeof (char));
-
-            // Sortierte Namensfragmente wieder zusammensetzen
-            for (uint_fast8_t current_fragment = 0; current_fragment < next_fragment; ++ current_fragment)
-            {
-                strncpy (iupac_name + next_free_char, temp_fragments [current_fragment],
-                        strlen (temp_fragments [current_fragment]));
-                next_free_char += strlen (temp_fragments [current_fragment]);
-
-                if ((current_fragment + 1) < next_fragment)
-                {
-                    iupac_name [next_free_char] = '-';
-                    ++ next_free_char;
-                }
-            }
-        }
-
-        // Abschliessendes "-" Zeichen entfernen, falls notwendig
-        if (iupac_name [strlen (iupac_name) - 1] == '-')
-        {
-            iupac_name [strlen (iupac_name) - 1] = '\0';
-        }
-    }
-
-    // Bei einem gradlinigen Isomer wird "n-" angebracht, um anzudeuten, dass die gradlinige Variante gemeint ist
-    // Ein gradliniges Isomer besteht nur aus einem Ast - der Hauptkette
-    if (alkane->next_free_chain == 1)
-    {
-        strncat (iupac_name + strlen (iupac_name), "n-", iupac_name_length - strlen (iupac_name) - 1);
-    }
-
-    // Alkanwort am Ende anbrigen
-    strncat (iupac_name + strlen (iupac_name), ALKAN_WORDS [alkane->chains [0].length - 1],
-            iupac_name_length - strlen (iupac_name) - 1);
+    // => Generierung des Namen starten <=
+    Next_Chain (&state_information);
 
     // Nullterminierung garantieren
     iupac_name [iupac_name_length - 1] = '\0';
@@ -191,88 +94,27 @@ Chain_To_IUPAC
 
 //=====================================================================================================================
 
-/**
- * Vergleichsfunktion fuer die qsort-Funktion.
- * Alphabetisch aufsteigende Sortierung der Namensfragmente OHNE Beachtung ggf. vorhandener Zahlenpraefixe !
- */
-static int Cmp_Name_Fragments (const void* a, const void* b)
-{
-    const char* const casted_strings [2] = { (const char* const) a, (const char* const) b };
-
-    char first_base_char [2] = { '\0', '\0' };
-
-    for (size_t current_string = 0; current_string < COUNT_ARRAY_ELEMENTS(casted_strings); ++ current_string)
-    {
-        for (size_t current_char = 0; current_char < strlen (casted_strings [current_string]); ++ current_char)
-        {
-            if (! isalpha (casted_strings [current_string][current_char]) /* == false */) { continue; }
-
-            // Wenn es ein Buchstabe ist: Ist es Teil von einem Zahlenpraefix ?
-            _Bool prefix_found  = false;
-            size_t prefix_id    = 0;
-            for (size_t i = 0; i < NUMBER_OF_NUMBER_WORDS; ++ i)
-            {
-                // Prefix vorhanden ?
-                if (strncmp (&(casted_strings [current_string][current_char]),
-                        NUMBER_WORDS [i], strlen (NUMBER_WORDS [i])) == 0)
-                {
-                    prefix_id       = i;
-                    prefix_found    = true;
-                    break;
-                }
-            }
-
-            // Falls ein Zahlenpraefix vorhanden ist, dann wird dieser uebersprungen
-            if (prefix_found /* == true */)
-            {
-                first_base_char [current_string] =
-                        casted_strings [current_string][current_char + strlen (NUMBER_WORDS [prefix_id])];
-            }
-            else
-            {
-                first_base_char [current_string] = casted_strings [current_string][current_char];
-            }
-            break;
-        }
-    }
-
-    return (first_base_char [0] - first_base_char [1]);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Vergleichsfunktion fuer die qsort-Funktion.
- * Einfache nummerisch aufsteigende Sortierung.
- */
-static inline int Cmp_Position_Information (const void* a, const void* b)
-{
-    return (*(int*) a - *(int*) b);
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
 static void Next_Chain (struct State_Information* const restrict state)
 {
-    ++ state->current_index;
+    state->current_chain ++;
 
-    // Wurde alles abgearbeitet ?
-    if (state->current_index >= state->alkane->next_free_chain && state->current_nesting_depth == 0)
+    if (state->current_chain >= state->alkane->next_free_chain - 1 &&
+            state->completed_chain >= state->alkane->next_free_chain - 1)
     {
-        return;
+        Last_Chain_Found (state);
     }
-    // Beendigung einer Verschachtelungsebene ?
-    if ((state->current_index >= state->alkane->next_free_chain && state->current_nesting_depth > 0) ||
-            (state->alkane->chains [state->current_index].nesting_depth <
-                    state->alkane->chains [state->current_index - 1].nesting_depth))
+    else if (state->cmp_chain == NULL)
     {
-        Up_In_Nesting (state);
+        New_Compare_Chain (state);
     }
-    // Versuch die aktuellen Chain-Objekte zu kombinieren
-    // Z.B. zwei Methyl-Aeste werden dann als DiMethyl im IUPAC-Namen angegeben
+    else if (state->cmp_chain->length == state->alkane->chains [state->current_chain].length &&
+            state->cmp_chain->nesting_depth == state->alkane->chains [state->current_chain].nesting_depth)
+    {
+        Chains_Mergeable (state);
+    }
     else
     {
-        Try_To_Merge_Chains (state);
+        Different_Type (state);
     }
 
     return;
@@ -280,141 +122,203 @@ static void Next_Chain (struct State_Information* const restrict state)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Try_To_Merge_Chains (struct State_Information* const restrict state)
+static void New_Compare_Chain (struct State_Information* const restrict state)
 {
-    // Koennen die aktuellen Chain-Objekte zusammengefasst werden ?
-    if (state->alkane->chains [state->current_index].length == state->alkane->chains [state->current_index + 1].length &&
-            state->alkane->chains [state->current_index].nesting_depth == state->alkane->chains [state->current_index + 1].nesting_depth)
-    {
-        Next_Chain (state);
-    }
-    // Beginn eine Verschachtelung ?
-    else if ((state->current_index > 1) &&              // Ein Vergleich zwischen zwei Aesten macht nur Sinn, wenn man
-                                                        // mind. beim 3. Ast ist. (1. Ast ist der Hauptast; die zwei
-                                                        // naechsten Aeste sind fuer den Vergleich)
-            (state->last_alkyl_word_inserted > 0) &&    // Eine Verschachtelung ist nur moeglich, wenn bereits mind.
-                                                        // ein Alkylwort geschrieben wurde
-            (state->alkane->chains [state->current_index].nesting_depth >               // Ist die Verschachtelungs-
-                state->alkane->chains [state->last_alkyl_word_inserted].nesting_depth)) // tiefe des aktuellen Asts
-                                                                                        // groesser als beim letzten
-                                                                                        // geschriebenen Alkylwort ?
-    {
-        Down_In_Nesting (state);
-    }
-    // Positionsnummern des / der aktuellen Aeste in den Ergebnisnamen einfuegen
-    else
-    {
-        Insert_Numbers (state);
-    }
+    state->cmp_chain = &(state->alkane->chains [state->current_chain]);
+
+    Next_Chain (state);
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Insert_Numbers (struct State_Information* const restrict state)
+static void Chains_Mergeable (struct State_Information* const restrict state)
 {
-    // Aktuelle Positionsinformationen
-    int position_information [NUMBER_OF_NUMBER_WORDS]; // ! int !
-    uint_fast8_t next_free_position_information = 0;
-    memset (position_information, '\0', sizeof (position_information));
-    for (uint_fast8_t i = (uint_fast8_t) (state->last_alkyl_word_inserted + 1); i <= state->current_index; ++ i)
+    Next_Chain (state);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Different_Type (struct State_Information* const restrict state)
+{
+    if ((state->alkane->chains [state->current_chain].nesting_depth >
+            state->alkane->chains [state->current_chain - 1].nesting_depth) &&
+            state->current_chain < state->alkane->next_free_chain)
     {
-        position_information [next_free_position_information] = state->alkane->chains [i].position;
-        ++ next_free_position_information;
-    }
-
-    // Positionsinformationen aufsteigend sortieren - falls notwendig - damit diese auch im IUPAC-Namen aufsteigend
-    // eingetragen werden
-    if (next_free_position_information > 1)
-    {
-        qsort (position_information, next_free_position_information, sizeof (int), Cmp_Position_Information);
-    }
-
-    // Positionsnummern in den Ergebnisnamen einfuegen
-    for (uint_fast8_t i = (uint_fast8_t) (state->last_alkyl_word_inserted + 1); i <= state->current_index; ++ i)
-    {
-        // Aktuelle Positionsnummer als Zeichenkette darstellen
-        char temp_string [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
-        int2str (temp_string, sizeof (temp_string) - 1, position_information [i - (state->last_alkyl_word_inserted + 1)]);
-
-        strncat (state->iupac_name + strlen (state->iupac_name), temp_string,
-                state->iupac_name_length - strlen (state->iupac_name) - 1);
-
-        // Kommata als Trennung zwischen verschiedenen Positionsnummern einfuegen, falls noch Positionsnummer folgen
-        if ((i + 1) <= state->current_index)
+        // Dies ist ein Sonderfall !
+        // Wenn es Objekte gibt, die zusammengefasst werden koennen, dann wird dies nicht durchgefuehrt, wenn direkt
+        // darauf eine tiefere Verschachtelung gefunden wurde
+        if ((state->current_chain - (state->completed_chain + 1)) > 1)
         {
-            strncat (state->iupac_name + strlen (state->iupac_name), ",",
-                    state->iupac_name_length - strlen (state->iupac_name) - 1);
+            // Fuer die Erstellung des Alkylfragments muss das aktuelle Chain-Objekt ignoriert werden, da dies erst
+            // beim Eintritt in eine tiefere Verschachtelungstiefe betrachtet werden darf !
+            state->current_chain --;
+            Write_Alkyl_Data_Into_IUPAC_Name (state);
+            state->current_chain ++;
+        }
+
+        Down (state);
+    }
+    else if ((state->alkane->chains [state->current_chain].nesting_depth <
+            state->alkane->chains [state->current_chain - 1].nesting_depth) &&
+            state->current_chain < state->alkane->next_free_chain)
+    {
+        if ((state->current_chain - (state->completed_chain + 1)) > 1)
+        {
+            Write_Alkyl_Data_Into_IUPAC_Name (state);
+        }
+
+        Up (state);
+    }
+    else if (state->alkane->chains [state->current_chain].length !=
+            state->alkane->chains [state->current_chain - 1].length)
+    {
+        Different_Length (state);
+    }
+    // Dieser Part darf nicht aufgerufen werden ! Wenn dies der Fall ist, dann ist dies auf jeden Fall ein Fehler !
+    else
+    {
+        ASSERT_MSG (false, "This else part may not executed !");
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Different_Length (struct State_Information* const restrict state)
+{
+    Write_Alkyl_Data_Into_IUPAC_Name (state);
+
+    // current_chain um 1 zuruecksetzen, da mit den gerade durchgefuehrten Operationen die Chain-Objekte bis vor dem
+    // current_chain abgearbeitet wurden
+    state->current_chain --;
+    state->completed_chain  = state->current_chain;
+    state->cmp_chain        = NULL;
+
+    Next_Chain (state);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Down (struct State_Information* const restrict state)
+{
+    if (strlen (state->iupac_name) > 0)
+    {
+        strncat (state->iupac_name, "-", strlen ("-"));
+    }
+
+    // Position des letzten Objektes ermitteln und anbringen
+    char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+    int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1, state->alkane->chains [state->current_chain - 1].position);
+
+    strncat (state->iupac_name, int_to_str, strlen (int_to_str));
+    strncat (state->iupac_name, "-(", strlen ("-("));
+
+    // Partialinformation aufnehmen
+    state->partly_completed_chains [state->next_free_partly_completed_chains] = (uint_fast8_t) (state->current_chain - 1);
+    state->next_free_partly_completed_chains ++;
+
+    state->current_chain --;
+    state->completed_chain  = state->current_chain;
+    state->cmp_chain        = NULL;
+
+    Next_Chain (state);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Up (struct State_Information* const restrict state)
+{
+    strncat (state->iupac_name,
+            ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1],
+            strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1]));
+    strncat (state->iupac_name, ")-", strlen (")-"));
+
+    state->partly_completed_chains [state->next_free_partly_completed_chains - 1] = 0;
+    state->next_free_partly_completed_chains --;
+
+    Next_Chain (state);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Last_Chain_Found (struct State_Information* const restrict state)
+{
+    if (state->next_free_partly_completed_chains > 0)
+    {
+        for (int i = state->next_free_partly_completed_chains - 1; i >= 0; -- i)
+        {
+            strncat (state->iupac_name,
+                    ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1],
+                    strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1]));
+            strncat (state->iupac_name, ")-", strlen (")-"));
         }
     }
 
-    Insert_Alkylword (state);
+    Complete_Name (state);
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Insert_Alkylword (struct State_Information* const restrict state)
+static void Complete_Name (struct State_Information* const restrict state)
 {
-    strncat (state->iupac_name + strlen (state->iupac_name), "-",
-            state->iupac_name_length - strlen (state->iupac_name) - 1);
-
-    // Zusatz anbringen, falls notwendig (Z.B.: "Di", wenn ein Ast mehrfach vorkommt und so zusammengefasst werden
-    // kann)
-    if (state->current_index - state->last_alkyl_word_inserted > 1)
+    if (strlen (state->iupac_name) == 0)
     {
-        strncat (state->iupac_name + strlen (state->iupac_name),
-                NUMBER_WORDS [state->current_index - state->last_alkyl_word_inserted - 1],
-                state->iupac_name_length - strlen (state->iupac_name) - 1);
+        strncat (state->iupac_name, "n-", strlen ("n-"));
     }
 
-    // Alkylword anbringen
-    strncat (state->iupac_name + strlen (state->iupac_name), ALKYL_WORDS [state->alkane->chains [state->current_index].length - 1],
-            state->iupac_name_length - strlen (state->iupac_name) - 1);
-
-    strncat (state->iupac_name + strlen (state->iupac_name), "-",
-            state->iupac_name_length - strlen (state->iupac_name) - 1);
-
-    state->last_alkyl_word_inserted = state->current_index;
-
-    Next_Chain (state);
+    strncat (state->iupac_name, ALKAN_WORDS [state->alkane->chains [0].length - 1],
+            strlen (ALKAN_WORDS [state->alkane->chains [0].length - 1]));
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Down_In_Nesting (struct State_Information* const restrict state)
+// KEIN Zustand, sondern eine einfache statische Funktion, die bei der Konvertierung verwendet wird !
+static void Write_Alkyl_Data_Into_IUPAC_Name (struct State_Information* const restrict state)
 {
-    ++ state->current_nesting_depth;
+    if (strlen (state->iupac_name) > 0 && state->iupac_name [strlen (state->iupac_name) - 1] != '(')
+    {
+        strncat (state->iupac_name, "-", strlen ("-"));
+    }
 
-    // Oeffnende Klammer anbringen
-    strncat (state->iupac_name + strlen (state->iupac_name), "(",
-            state->iupac_name_length - strlen (state->iupac_name) - 1);
+    for (int i = state->completed_chain + 1; i < state->current_chain; ++ i)
+    {
+        char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+        int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1, state->alkane->chains [i].position);
 
-    Insert_Numbers (state);
+        strncat (state->iupac_name, int_to_str, strlen (int_to_str));
 
-    return;
-}
+        if ((i + 1) < state->current_chain)
+        {
+            strncat (state->iupac_name, ",", strlen (","));
+        }
+    }
+    strncat (state->iupac_name, "-", strlen ("-"));
 
-//---------------------------------------------------------------------------------------------------------------------
+    const int chains_wrote = state->current_chain - (state->completed_chain + 1);
 
-static void Up_In_Nesting (struct State_Information* const restrict state)
-{
-    -- state->current_nesting_depth;
+    if (chains_wrote > 1)
+    {
+        strncat (state->iupac_name, NUMBER_WORDS [chains_wrote - 1], strlen (NUMBER_WORDS [chains_wrote - 1]));
+    }
 
-    // Letztes Zeichen im IUPAC-Namen ueberschreiben
-    // Dies wird immer ein "-" sein. Wenn eine Verschachtelung beendet wird, dann muss allerdings erst die schliessende
-    // folgen !
-    state->iupac_name [strlen (state->iupac_name) - 1] = '\0';
-
-    // Schliessende Klammer und das gerade ueberschriebene Minuszeichen anbringen
-    strncat (state->iupac_name + strlen (state->iupac_name), ")-",
-            state->iupac_name_length - strlen (state->iupac_name) - 1);
-
-    Next_Chain (state);
+    // Wort fuer Kettentyp anbringen
+    strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1],
+            strlen (ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1]));
 
     return;
 }
