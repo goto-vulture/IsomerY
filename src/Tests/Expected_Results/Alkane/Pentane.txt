@@ -1,0 +1,6 @@
+// Alle drei Pentane
+// Siehe: https://de.wikipedia.org/wiki/Pentane (C5 H12)
+
+"n-Pentan",
+"2-Methylbutan",
+"2,2-Dimethylpropan"

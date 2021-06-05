@@ -314,9 +314,7 @@ void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
     // Siehe: https://de.wikipedia.org/wiki/Pentane
     const char* expected_results [] =
     {
-            "n-Pentan",
-            "2-Methylbutan",
-            "2,2-Dimethylpropan"
+            #include "./Expected_Results/Alkane/Pentane.txt"
     };
 
     // Alle Alkane erzeugen
