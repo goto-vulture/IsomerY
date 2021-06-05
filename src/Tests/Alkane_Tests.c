@@ -412,15 +412,7 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
     // Siehe: https://de.wikipedia.org/wiki/Heptane
     const char* expected_results [] =
     {
-            "n-Heptan",
-            "2-Methylhexan",
-            "3-Methylhexan",
-            "2,2-Dimethylpentan",
-            "2,3-Dimethylpentan",
-            "2,4-Dimethylpentan",
-            "3,3-Dimethylpentan",
-            "3-Ethylpentan",
-            "2,2,3-Trimethylbutan"
+            #include "./Expected_Results/Alkane/Heptane.txt"
     };
 
     // Alle Alkane erzeugen

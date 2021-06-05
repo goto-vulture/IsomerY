@@ -1,0 +1,12 @@
+// Alle neun Heptane (C7 H16)
+// Siehe: https://de.wikipedia.org/wiki/Heptane
+
+"n-Heptan",
+"2-Methylhexan",
+"3-Methylhexan",
+"2,2-Dimethylpentan",
+"2,3-Dimethylpentan",
+"2,4-Dimethylpentan",
+"3,3-Dimethylpentan",
+"3-Ethylpentan",
+"2,2,3-Trimethylbutan"
