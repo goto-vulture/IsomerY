@@ -460,25 +460,7 @@ void TEST_All_Possible_Octan_Constitutional_Isomers (void)
     // Siehe: https://de.wikipedia.org/wiki/Octane
     const char* expected_results [] =
     {
-            "n-Octan",
-            "2-Methylheptan",
-            "3-Methylheptan",
-            "4-Methylheptan",
-            "2,2-Dimethylhexan",
-            "2,3-Dimethylhexan",
-            "2,4-Dimethylhexan",
-            "2,5-Dimethylhexan",
-            "3,3-Dimethylhexan",
-            "3,4-Dimethylhexan",
-
-            "3-Ethylhexan",
-            "2,2,3-Trimethylpentan",
-            "2,2,4-Trimethylpentan",
-            "2,3,3-Trimethylpentan",
-            "2,3,4-Trimethylpentan",
-            "3-Ethyl-2-methylpentan",
-            "3-Ethyl-3-methylpentan",
-            "2,2,3,3-Tetramethylbutan"
+            #include "./Expected_Results/Alkane/Octane.txt"
     };
 
     // Alle Alkane erzeugen
