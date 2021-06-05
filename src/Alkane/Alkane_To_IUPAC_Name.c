@@ -160,7 +160,7 @@ Search_For_Chain_Content
  * Vergleichsfunktion fuer die qsort-Funktion.
  * Einfache nummerisch aufsteigende Sortierung anhand der Laenge eines Chain-Objektes.
  */
-static inline int Cmp_Length_Information (const void* a, const void* b);
+static inline int Compare_Chain_Information (const void* a, const void* b);
 
 /**
  * Aeste, die auf gleicher Verschachtelungstiefe liegen, anhand der Laenge der Aeste aufsteigend sortieren.
@@ -818,12 +818,20 @@ Search_For_Chain_Content
  * Vergleichsfunktion fuer die qsort-Funktion.
  * Einfache nummerisch aufsteigende Sortierung anhand der Laenge eines Chain-Objektes.
  */
-static inline int Cmp_Length_Information (const void* a, const void* b)
+static inline int Compare_Chain_Information (const void* a, const void* b)
 {
     const struct Chain* const chain_a = (const struct Chain* const) a;
     const struct Chain* const chain_b = (const struct Chain* const) b;
 
-    return (((int) chain_a->length) - ((int) chain_b->length));
+    const size_t chain_a_alkyl_word_length = strlen (ALKYL_WORDS [chain_a->length - 1]);
+    const size_t chain_b_alkyl_word_length = strlen (ALKYL_WORDS [chain_b->length - 1]);
+
+    // Namensvergleich der Alkylreste
+    const int name_compare = strncmp (ALKYL_WORDS [chain_a->length - 1], ALKYL_WORDS [chain_b->length - 1],
+            (chain_a_alkyl_word_length < chain_b_alkyl_word_length) ? chain_a_alkyl_word_length : chain_b_alkyl_word_length);
+
+    // ...
+    return (name_compare == 0) ? (((int) chain_a->position) - ((int) chain_b->position)) : name_compare;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -848,40 +856,28 @@ Reorder_Chains
                                                 // falls notwendig
 )
 {
-    uint_fast8_t last_start_index = 1;
+    uint_fast8_t last_start_index               = 1;
+    const uint_fast8_t first_last_start_index   = last_start_index;
 
     // Linear im Array nach Aesten auf gleicher Verschachtelungstiefe suchen
     // Beginn bei 1, da das Objekt mit dem Index 0 immer die Hauptkette ist !
     for (uint_fast8_t i = 1; i < alkane->next_free_chain; ++ i)
     {
-        // Hat sich die Verschachtelungstiefe geaendert ?
         if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth)
         {
-            // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
-            // Hier KEIN + 1, da das aktuelle Objekt NICHT betrachtet werden soll !
-            if ((i - last_start_index) > 1)
-            {
-                qsort (&(alkane->chains [last_start_index + 1]), (size_t) (i - last_start_index), sizeof (struct Chain),
-                        Cmp_Length_Information);
-            }
+//            qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index), sizeof (struct Chain),
+//                    Compare_Chain_Information);
 
-            // last_start_index aktualisieren
             last_start_index = i;
         }
-        // Ist dies das letzte Chain-Objekt im Alkan ?
-        else if ((i + 1) >= alkane->next_free_chain)
-        {
-            // Gibt es im aktuellen Bereich mehr als ein Element ? -> Sortierung notwendig
-            // Hier + 1, da das aktuelle Objekt mit betrachtet werden soll !
-            if ((i - last_start_index + 1) > 1)
-            {
-                qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index + 1), sizeof (struct Chain),
-                        Cmp_Length_Information);
-            }
+    }
 
-            // last_start_index aktualisieren
-            last_start_index = i;
-        }
+    // Wenn gar keine Sortierung durchgefuhert wurde, dann besitzen alle Chain-Objekte die gleiche Verschachtelungs-
+    // tiefe => Sortierung manuell starten
+    if (last_start_index == first_last_start_index)
+    {
+        qsort (&(alkane->chains [last_start_index]), (size_t) (alkane->next_free_chain - last_start_index), sizeof (struct Chain),
+                Compare_Chain_Information);
     }
 
     return;
