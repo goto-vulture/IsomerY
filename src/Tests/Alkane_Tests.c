@@ -68,17 +68,17 @@ Execute_All_Alkane_Tests
 (void)
 {
     // Alkan-Tests ausfuehren
-//    RUN(TEST_Create_Alkane_Constitutional_Isomers);
-//    RUN(TEST_Create_Alkane);
-//    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
-//    RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
-//    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
-//
-//    RUN(TEST_All_Possible_Butan_Constitutional_Isomers);
-//    RUN(TEST_All_Possible_Pentan_Constitutional_Isomers);
-//    RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
-//    RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
-//    RUN(TEST_All_Possible_Octan_Constitutional_Isomers);
+    RUN(TEST_Create_Alkane_Constitutional_Isomers);
+    RUN(TEST_Create_Alkane);
+    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
+    RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
+    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+
+    RUN(TEST_All_Possible_Butan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Pentan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Octan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Nonan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Decan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Undecan_Constitutional_Isomers);
