@@ -1,0 +1,47 @@
+// Alle 75 Decane (C10 H22)
+// Siehe: https://de.wikipedia.org/wiki/Decane
+
+"n-Decan",                          "2-Methylnonan",                        "3-Methylnonan",
+"4-Methylnonan",                    "5-Methylnonan",
+
+"2,2-Dimethyloctan",                "2,3-Dimethyloctan",                    "2,4-Dimethyloctan",
+"2,5-Dimethyloctan",                "2,6-Dimethyloctan",
+
+"2,7-Dimethyloctan",                "3,3-Dimethyloctan",                    "3,4-Dimethyloctan",
+"3,5-Dimethyloctan",                "3,6-Dimethyloctan",
+
+"4,4-Dimethyloctan",                "4,5-Dimethyloctan",                    "2,2,3-Trimethylheptan",
+"2,2,4-Trimethylheptan",            "2,2,5-Trimethylheptan",
+
+"2,2,6-Trimethylheptan",            "2,3,3-Trimethylheptan",                "2,3,4-Trimethylheptan",
+"2,3,5-Trimethylheptan",            "2,3,6-Trimethylheptan",
+
+"2,4,4-Trimethylheptan",            "2,4,5-Trimethylheptan",                "2,4,6-Trimethylheptan",
+"2,5,5-Trimethylheptan",            "3,3,4-Trimethylheptan",
+
+"3,3,5-Trimethylheptan",            "3,4,4-Trimethylheptan",                "3,4,5-Trimethylheptan",
+"2,2,3,3-Tetramethylhexan",         "2,2,3,4-Tetramethylhexan",
+
+"2,2,3,5-Tetramethylhexan",         "2,2,4,4-Tetramethylhexan",             "2,2,4,5-Tetramethylhexan",
+"2,2,5,5-Tetramethylhexan",         "2,3,3,4-Tetramethylhexan",
+
+"2,3,3,5-Tetramethylhexan",         "2,3,4,4-Tetramethylhexan",             "2,3,4,5-Tetramethylhexan",
+"3,3,4,4-Tetramethylhexan",         "2,2,3,3,4-Pentamethylpentan",
+
+"2,2,3,4,4-Pentamethylpentan",      "3-Ethyloctan",                         "4-Ethyloctan",
+"3,3-Diethylhexan",                 "3,4-Diethylhexan",
+
+"3-Ethyl-2-methylheptan",           "3-Ethyl-3-methylheptan",               "3-Ethyl-4-methylheptan",
+"3-Ethyl-5-methylheptan",           "4-Ethyl-2-methylheptan",
+
+"4-Ethyl-3-methylheptan",           "4-Ethyl-4-methylheptan",               "5-Ethyl-2-methylheptan",
+"3-Ethyl-2,2-dimethylhexan",        "3-Ethyl-2,3-dimethylhexan",
+
+"3-Ethyl-2,4-dimethylhexan",        "3-Ethyl-2,5-dimethylhexan",            "3-Ethyl-3,4-dimethylhexan",
+"4-Ethyl-2,2-dimethylhexan",        "4-Ethyl-2,3-dimethylhexan",
+
+"4-Ethyl-2,4-dimethylhexan",        "3-Ethyl-4,4-dimethylhexan",            "3-Ethyl-2,2,3-trimethylpentan",
+"3-Ethyl-2,2,4-trimethylpentan",    "3-Ethyl-2,3,4-trimethylpentan",
+
+"3,3-Diethyl-2-methylpentan",       "4-Propylheptan",                       "4-(1-Methylethyl)-heptan",
+"2-Methyl-3-(1-methylethyl)-hexan", "2,4-Dimethyl-3-(1-methylethyl)-pentan"
