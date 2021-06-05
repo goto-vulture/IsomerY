@@ -531,44 +531,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
     // Siehe: https://de.wikipedia.org/wiki/Nonane
     const char* expected_results [] =
     {
-            "n-Nonan",
-            "2-Methyloctan",
-            "3-Methyloctan",
-            "4-Methyloctan",
-            "2,2-Dimethylheptan",
-            "2,3-Dimethylheptan",
-            "2,4-Dimethylheptan",
-            "2,5-Dimethylheptan",
-            "2,6-Dimethylheptan",
-            "3,3-Dimethylheptan",
-
-            "3,4-Dimethylheptan",
-            "3,5-Dimethylheptan",
-            "4,4-Dimethylheptan",
-            "3-Ethylheptan",
-            "4-Ethylheptan",
-            "2,2,3-Trimethylhexan",
-            "2,2,4-Trimethylhexan",
-            "2,2,5-Trimethylhexan",
-            "2,3,3-Trimethylhexan",
-            "2,3,4-Trimethylhexan",
-
-            "2,3,5-Trimethylhexan",
-            "2,4,4-Trimethylhexan",
-            "3,3,4-Trimethylhexan",
-            "3-Ethyl-2-methylhexan",
-            "4-Ethyl-2-methylhexan",
-            "3-Ethyl-3-methylhexan",
-            "3-Ethyl-4-methylhexan",
-            "2,2,3,3-Tetramethylpentan",
-            "2,2,3,4-Tetramethylpentan",
-            "2,2,4,4-Tetramethylpentan",
-
-            "2,3,3,4-Tetramethylpentan",
-            "3-Ethyl-2,2-dimethylpentan",
-            "3-Ethyl-2,3-dimethylpentan",
-            "3-Ethyl-2,4-dimethylpentan",
-            "3,3-Diethylpentan"
+            #include "./Expected_Results/Alkane/Nonane.txt"
     };
 
     // Alle Alkane erzeugen
