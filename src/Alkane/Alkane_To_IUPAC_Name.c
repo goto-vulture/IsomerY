@@ -158,7 +158,11 @@ Search_For_Chain_Content
 
 /**
  * Vergleichsfunktion fuer die qsort-Funktion.
- * Einfache nummerisch aufsteigende Sortierung anhand der Laenge eines Chain-Objektes.
+ *
+ * Bei der Sortierung von Chain-Objekten gibt es zwei Kriterien: die alphabetische Sortierung des Alkylnamen und die
+ * Position des Alkylrests.
+ * Die alphabetische Sortierung hat immer eine hoehere Prioritaet ! Nur wenn die Alkylnamen gleich sind, wird nach der
+ * Position aufsteigend sortiert.
  */
 static inline int Compare_Chain_Information (const void* a, const void* b);
 
@@ -816,7 +820,11 @@ Search_For_Chain_Content
 
 /**
  * Vergleichsfunktion fuer die qsort-Funktion.
- * Einfache nummerisch aufsteigende Sortierung anhand der Laenge eines Chain-Objektes.
+ *
+ * Bei der Sortierung von Chain-Objekten gibt es zwei Kriterien: die alphabetische Sortierung des Alkylnamen und die
+ * Position des Alkylrests.
+ * Die alphabetische Sortierung hat immer eine hoehere Prioritaet ! Nur wenn die Alkylnamen gleich sind, wird nach der
+ * Position aufsteigend sortiert.
  */
 static inline int Compare_Chain_Information (const void* a, const void* b)
 {
@@ -830,7 +838,8 @@ static inline int Compare_Chain_Information (const void* a, const void* b)
     const int name_compare = strncmp (ALKYL_WORDS [chain_a->length - 1], ALKYL_WORDS [chain_b->length - 1],
             (chain_a_alkyl_word_length < chain_b_alkyl_word_length) ? chain_a_alkyl_word_length : chain_b_alkyl_word_length);
 
-    // ...
+    // Wenn die Alkylnamen gleich sind, dann wird aufsteigend nach der Position sortiert. Ansonsten ist die
+    // alphabetische Sortierung des Alkylnamens entscheidend !
     return (name_compare == 0) ? (((int) chain_a->position) - ((int) chain_b->position)) : name_compare;
 }
 
