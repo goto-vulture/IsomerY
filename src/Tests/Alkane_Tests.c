@@ -364,11 +364,7 @@ void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
     // Siehe: https://de.wikipedia.org/wiki/Hexane
     const char* expected_results [] =
     {
-            "n-Hexan",
-            "2-Methylpentan",
-            "3-Methylpentan",
-            "2,2-Dimethylbutan",
-            "2,3-Dimethylbutan"
+            #include "./Expected_Results/Alkane/Hexane.txt"
     };
 
     // Alle Alkane erzeugen

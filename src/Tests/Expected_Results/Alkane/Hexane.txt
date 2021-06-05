@@ -1,0 +1,8 @@
+// Alle fuenf Hexane (C6 H14)
+// Siehe: https://de.wikipedia.org/wiki/Hexane
+
+"n-Hexan",
+"2-Methylpentan",
+"3-Methylpentan",
+"2,2-Dimethylbutan",
+"2,3-Dimethylbutan"
