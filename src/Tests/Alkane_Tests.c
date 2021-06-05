@@ -129,11 +129,11 @@ void TEST_Create_Alkane (void)
  * Die Liste an moeglichen Konstitutionsisomeren bis 40 sind in der Datei "Alkane_Info_Constitutional_Isomer.h" zu
  * finden.
  *
- * Aus Laufzeitgruenden wird nur bis inklusive 12 getestet.
+ * Aus Laufzeitgruenden wird nur bis inklusive 11 getestet.
  */
 void TEST_Create_Alkane_Constitutional_Isomers (void)
 {
-    for (uint_fast8_t i = 1; i <= 12; ++ i)
+    for (uint_fast8_t i = 1; i <= 11; ++ i)
     {
         struct Alkane_Container* result_container = Create_Alkane_Constitutional_Isomers (i);
 
