@@ -1,0 +1,5 @@
+// Alle zwei Butane (C4 H10)
+// Siehe: https://de.wikipedia.org/wiki/Butane
+
+"n-Butan",
+"2-Methylpropan"

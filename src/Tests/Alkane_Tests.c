@@ -264,8 +264,7 @@ void TEST_All_Possible_Butan_Constitutional_Isomers (void)
     // Siehe: https://de.wikipedia.org/wiki/Butane
     const char* expected_results [] =
     {
-            "n-Butan",
-            "2-Methylpropan"
+            #include "./Expected_Results/Alkane/Butane.txt"
     };
 
     // Alle Alkane erzeugen
