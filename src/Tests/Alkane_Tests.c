@@ -617,6 +617,7 @@ Execute_Creation_Test_With_Expected_Results
 
     // Anzahl an erzeugten Konstitutionsisomeren ueberpruefen
     ASSERT_EQUALS(number_of_constitutional_isomers, all_alkanes->size);
+    ASSERT_EQUALS(number_of_constitutional_isomers, number_of_expected_results);
 
     // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
     // erkennen zu koennen
