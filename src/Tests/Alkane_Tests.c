@@ -620,8 +620,8 @@ Execute_Creation_Test_With_Expected_Results
     // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
     // erkennen zu koennen
     // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
-    uint_fast8_t* count_expected_results = (uint_fast8_t*) CALLOC (number_of_expected_results, sizeof (uint_fast8_t));
-    ASSERT_ALLOC(count_expected_results, "Cannot allocate memory for the count_expected_results array !",
+    uint_fast8_t* count_expected_results_usage = (uint_fast8_t*) CALLOC (number_of_expected_results, sizeof (uint_fast8_t));
+    ASSERT_ALLOC(count_expected_results_usage, "Cannot allocate memory for the count_expected_results array !",
             number_of_expected_results * sizeof (uint_fast8_t));
 
     // ===== ===== ===== BEGINN Testbereich ===== ===== =====
@@ -647,7 +647,7 @@ Execute_Creation_Test_With_Expected_Results
         }
         else
         {
-            count_expected_results [index_in_the_expected_results] ++;
+            count_expected_results_usage [index_in_the_expected_results] ++;
         }
     }
 
@@ -657,10 +657,10 @@ Execute_Creation_Test_With_Expected_Results
     // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
     for (size_t i = 0; i < number_of_expected_results; ++ i)
     {
-        if (count_expected_results [i] != 1)
+        if (count_expected_results_usage [i] != 1)
         {
             FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
-                    count_expected_results [i]);
+                    count_expected_results_usage [i]);
             ++ count_unused_expected_results;
         }
     }
@@ -672,7 +672,7 @@ Execute_Creation_Test_With_Expected_Results
     }
     // ===== ===== ===== ENDE Testbereich ===== ===== =====
 
-    FREE_AND_SET_TO_NULL(count_expected_results);
+    FREE_AND_SET_TO_NULL(count_expected_results_usage);
     Delete_Alkane_Container (all_alkanes);
 
     ASSERT_EQUALS(0, count_unused_expected_results);
