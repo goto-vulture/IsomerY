@@ -26,6 +26,7 @@
  * Das Makro __STDC_VERSION__ ist fuer C90 nicht definiert
  * ->   Schluesselwoerter inline und restrict durch leere Markos ersetzen, damit eine Uebersetzung auch mit C90
  *      moeglich ist.
+ *
  */
 #ifndef __STDC_VERSION__
     #ifndef inline
@@ -39,6 +40,27 @@
     #else
         #error "The macro \"restrict\" is already defined !"
     #endif /* restrict */
+
+
+    // Die Problematik mit Wahrheitswerten vor C99 loesen, indem "_Bool", "true" und "false" als Makros bei der C90
+    // interpretiert werden
+    #ifndef _Bool
+        #define _Bool int
+    #else
+        #error "The macro \"_Bool\" is already defined !"
+    #endif /* _Bool */
+
+    #ifndef true
+        #define true 1
+    #else
+        #error "The macro \"true\" is already defined !"
+    #endif /* true */
+
+    #ifndef false
+        #define false 0
+    #else
+        #error "The macro \"false\" is already defined !"
+    #endif /* false */
 #endif /* __STDC_VERSION__ */
 
 #include <stdlib.h>
