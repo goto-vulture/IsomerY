@@ -37,6 +37,8 @@ extern void Show_Dynamic_Memory_Status (void);
 
 
 
+//---------------------------------------------------------------------------------------------------------------------
+
 // Malloc-Aufrufe mitzaehlen
 #ifndef MALLOC
     #define MALLOC(memory_size)                                                                                         \
@@ -46,6 +48,8 @@ extern void Show_Dynamic_Memory_Status (void);
     #error "The macro \"MALLOC\" is already defined !"
 #endif /* MALLOC */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 // Calloc-Aufrufe mitzaehlen
 #ifndef CALLOC
     #define CALLOC(number_of_elements, element_size)                                                                    \
@@ -54,6 +58,8 @@ extern void Show_Dynamic_Memory_Status (void);
 #else
     #error "The macro \"CALLOC\" is already defined !"
 #endif /* CALLOC */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 // realloc-Aufrufe mitzaehlen
 // realloc fuehrt im Hintergrund einen malloc-Aufruf aus; allerdings auch automatisch einen free-Aufruf auf den alten
@@ -69,6 +75,8 @@ extern void Show_Dynamic_Memory_Status (void);
     #error "The macro \"REALLOC\" is already defined !"
 #endif /* REALLOC */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 // Das uebergebene Objekt wird geloescht und auf nullptr gesetzt
 // Eine Abfrage auf nullptr, vor dem Loeschen, ist NICHT erforderlich, da dies die free-Funktion bzw. dies sowieso vor
 // dem eigentlichen Loeschprozess machen ! Falls der Zeiger wirklich ein Nullzeiger sein sollte, dann wird von diesen
@@ -82,6 +90,8 @@ extern void Show_Dynamic_Memory_Status (void);
 #else
     #error "The macro \"FREE_AND_SET_TO_NULL\" is already defined !"
 #endif /* FREE_AND_SET_TO_NULL */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 
 
