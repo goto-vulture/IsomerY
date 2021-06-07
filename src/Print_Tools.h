@@ -20,6 +20,8 @@ extern "C"
 
 
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Ausgabe mittels printf, wobei automatisch stdout geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
@@ -31,6 +33,8 @@ extern "C"
     #error "The macro \"PRINTF_FFLUSH\" is already defined !"
 #endif /* PRINTF_FFLUSH */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt durchgefuehrt wird.
@@ -41,6 +45,8 @@ extern "C"
 #else
     #error "The macro \"FPRINTF_FFLUSH\" is already defined !"
 #endif /* FPRINTF_FFLUSH */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 /**
  * Ausgabe mittels printf, wobei automatisch stdout geleert wird.
@@ -56,6 +62,8 @@ extern "C"
     #error "The macro \"PRINTF_NO_VA_ARGS_FFLUSH\" is already defined !"
 #endif /* PRINTF_NO_VA_ARGS_FFLUSH */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt durchgefuehrt wird.
@@ -66,6 +74,8 @@ extern "C"
 #else
     #error "The macro \"FPRINTF_NO_VA_ARGS_FFLUSH\" is already defined !"
 #endif /* FPRINTF_NO_VA_ARGS_FFLUSH */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 /**
  * Ausgabe mittels puts, wobei automatisch stdout geleert wird.
@@ -78,6 +88,8 @@ extern "C"
     #error "The macro \"PUTS_FFLUSH\" is already defined !"
 #endif /* PUTS_FFLUSH */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Aktuelle Terminalzeile mittels \r leeren.
  * Annahme, dass 96 Zeichen ausreichen.
@@ -88,6 +100,9 @@ extern "C"
 #else
     #error "The macro \"CLEAN_LINE\" is already defined !"
 #endif /* CLEAN_LINE */
+
+//---------------------------------------------------------------------------------------------------------------------
+
 
 
 // ENDE C++-Kompablitaet herstellen

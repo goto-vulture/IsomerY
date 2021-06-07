@@ -22,6 +22,8 @@ extern "C"
 
 
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Ein Assert mit benutzerdefinierter Fehlermeldung.
  */
@@ -30,6 +32,8 @@ extern "C"
 #else
     #error "The macro \"ASSERT_MSG\" is already defined !"
 #endif /* ASSERT_MSG */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 /**
  * Ein Assert mit benutzerdefinierter Fehlermeldung in Form eines Format-Strings.
@@ -50,6 +54,8 @@ extern "C"
     #error "The macro \"ASSERT_FMSG\" is already defined !"
 #endif /* ASSERT_FMSG */
 
+//---------------------------------------------------------------------------------------------------------------------
+
 /**
  * Ein Assert fuer Fehlerfaelle bei der Allokation von Speicher.
  * Vor der eigentlichen Assert-Meldung wird die Groesse des Speichers angegeben, der allokiert werden sollte.
@@ -65,6 +71,8 @@ extern "C"
 #else
     #error "The macro \"ASSERT_ALLOC\" is already defined !"
 #endif /* ASSERT_ALLOC */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 
 
