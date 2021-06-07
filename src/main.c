@@ -12,6 +12,12 @@
  * jgs  `|/))))
  *
  * For me, a vulture is more desirable than money.
+ *
+ *
+ * ===== Programmbeschreibung =====
+ * Dieses Programm besimmt die Konstitutionsisomre (mit deren IUPAC-Namen) von Alkanen bei gegebener Anzahl an C-Atomen.
+ *
+ * ...
  */
 
 /**
@@ -74,7 +80,7 @@ int main (const int argc, const char* const argv [])
     // Infos ueber die getaetigten Speicheraufrufe anzeigen
     puts ("");
     Show_Dynamic_Memory_Status ();
-    
+
     // Alle I/O Puffer vor Beendigung des Programms leeren
     fflush (NULL);
 
