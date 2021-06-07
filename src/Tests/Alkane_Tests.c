@@ -649,9 +649,10 @@ Execute_Creation_Test_With_Expected_Results
         {
             count_expected_results [index_in_the_expected_results] ++;
         }
-//        ASSERT("Cannot find the current result in the list of expected results !",
-//                result_found_in_the_expected_results == true);
     }
+
+    puts ("");
+    size_t count_unused_expected_results = 0;
 
     // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
     for (size_t i = 0; i < number_of_expected_results; ++ i)
@@ -660,14 +661,21 @@ Execute_Creation_Test_With_Expected_Results
         {
             FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
                     count_expected_results [i]);
+            ++ count_unused_expected_results;
         }
+    }
+
+    // Wurden alle erwarteten Ergebnisse verwendet ?
+    if (count_unused_expected_results != 0)
+    {
+        FPRINTF_FFLUSH(stderr, "\n==>> Unused expected results: %zu ! <<==\n", count_unused_expected_results);
     }
     // ===== ===== ===== ENDE Testbereich ===== ===== =====
 
     FREE_AND_SET_TO_NULL(count_expected_results);
-
-    // Erzeugten Alkane_Container wieder loeschen
     Delete_Alkane_Container (all_alkanes);
+
+    ASSERT_EQUALS(0, count_unused_expected_results);
 
     return;
 }
