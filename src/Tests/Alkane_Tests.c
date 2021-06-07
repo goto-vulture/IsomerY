@@ -17,6 +17,8 @@
 #include "../Alkane/Alkane_To_IUPAC_Name.h"
 #include "../Misc.h"
 #include "../Print_Tools.h"
+#include "../Error_Handling/Dynamic_Memory.h"
+#include "../Error_Handling/Assert_Msg.h"
 
 
 
@@ -56,6 +58,15 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
         const char* const restrict expected_results [], // Erwartete Loesungen
         const uint_fast64_t number_of_expected_results, // Anzahl an erwarteten Loesungen
         uint_fast64_t* const restrict result_index      // Index des gefundenen IUPAC-Namen in den erwarteten Loesungen
+);
+
+static void
+Execute_Creation_Test_With_Expected_Results
+(
+        const uint_fast8_t number_of_c_atoms,                   // Anzahl an C-Atomen
+        const uint_fast64_t number_of_constitutional_isomers,   // Anzahl an Konstitutionsisomeren
+        const char* const restrict expected_results [],         // Liste der erwarteten Loesungen
+        const size_t number_of_expected_results                 // Anzahl an erwarteten Loesungen
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -267,33 +278,9 @@ void TEST_All_Possible_Butan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Butane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* butane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (butane_alkanes->data [i]);
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (butane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, NULL);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    butane_alkanes->data [i]->iupac_name);
-        }
-        ASSERT("Cannot find the current result in the list of expected results !",
-                result_found_in_the_expected_results == true);
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (butane_alkanes);
-
-    puts ("\n");
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -317,33 +304,9 @@ void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Pentane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* butane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (butane_alkanes->data [i]);
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (butane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, NULL);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    butane_alkanes->data [i]->iupac_name);
-        }
-        ASSERT("Cannot find the current result in the list of expected results !",
-                result_found_in_the_expected_results == true);
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (butane_alkanes);
-
-    puts ("\n");
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -367,31 +330,9 @@ void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Hexane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* hexane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (hexane_alkanes->data [i]);
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (hexane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, NULL);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    hexane_alkanes->data [i]->iupac_name);
-        }
-        ASSERT("Cannot find the current result in the list of expected results !",
-                result_found_in_the_expected_results == true);
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (hexane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -415,31 +356,9 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Heptane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* heptane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (heptane_alkanes->data [i]);
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (heptane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, NULL);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    heptane_alkanes->data [i]->iupac_name);
-        }
-        ASSERT("Cannot find the current result in the list of expected results !",
-                result_found_in_the_expected_results == true);
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (heptane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -463,54 +382,9 @@ void TEST_All_Possible_Octan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Octane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* octane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
-    // erkennen zu koennen
-    // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
-    uint_fast8_t count_expected_results [COUNT_ARRAY_ELEMENTS(expected_results)];
-    memset (count_expected_results, '\0', sizeof (count_expected_results));
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (octane_alkanes->data [i]);
-
-        // Welches erwartete Ergebnis genau wurde verwendet ?
-        uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (octane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, &index_in_the_expected_results);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    octane_alkanes->data [i]->iupac_name);
-        }
-        else
-        {
-            count_expected_results [index_in_the_expected_results] ++;
-        }
-        ASSERT("Cannot find the current result in the list of expected results !",
-                result_found_in_the_expected_results == true);
-    }
-
-    // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_results); ++ i)
-    {
-        if (count_expected_results [i] != 1)
-        {
-            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
-                    count_expected_results [i]);
-        }
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (octane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -534,54 +408,9 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Nonane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* nonane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
-    // erkennen zu koennen
-    // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
-    uint_fast8_t count_expected_results [COUNT_ARRAY_ELEMENTS(expected_results)];
-    memset (count_expected_results, '\0', sizeof (count_expected_results));
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (nonane_alkanes->data [i]);
-
-        // Welches erwartete Ergebnis genau wurde verwendet ?
-        uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (nonane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, &index_in_the_expected_results);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    nonane_alkanes->data [i]->iupac_name);
-        }
-        else
-        {
-            count_expected_results [index_in_the_expected_results] ++;
-        }
-//        ASSERT("Cannot find the current result in the list of expected results !",
-//                result_found_in_the_expected_results == true);
-    }
-
-    // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_results); ++ i)
-    {
-        if (count_expected_results [i] != 1)
-        {
-            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
-                    count_expected_results [i]);
-        }
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (nonane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -605,54 +434,9 @@ void TEST_All_Possible_Decan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Decane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* decane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
-    // erkennen zu koennen
-    // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
-    uint_fast8_t count_expected_results [COUNT_ARRAY_ELEMENTS(expected_results)];
-    memset (count_expected_results, '\0', sizeof (count_expected_results));
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (decane_alkanes->data [i]);
-
-        // Welches erwartete Ergebnis genau wurde verwendet ?
-        uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (decane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, &index_in_the_expected_results);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    decane_alkanes->data [i]->iupac_name);
-        }
-        else
-        {
-            count_expected_results [index_in_the_expected_results] ++;
-        }
-//        ASSERT("Cannot find the current result in the list of expected results !",
-//                result_found_in_the_expected_results == true);
-    }
-
-    // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_results); ++ i)
-    {
-        if (count_expected_results [i] != 1)
-        {
-            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
-                    count_expected_results [i]);
-        }
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (decane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -676,54 +460,9 @@ void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Undecane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* undecane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
-    // erkennen zu koennen
-    // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
-    uint_fast8_t count_expected_results [COUNT_ARRAY_ELEMENTS(expected_results)];
-    memset (count_expected_results, '\0', sizeof (count_expected_results));
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (undecane_alkanes->data [i]);
-
-        // Welches erwartete Ergebnis genau wurde verwendet ?
-        uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (undecane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, &index_in_the_expected_results);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    undecane_alkanes->data [i]->iupac_name);
-        }
-        else
-        {
-            count_expected_results [index_in_the_expected_results] ++;
-        }
-//        ASSERT("Cannot find the current result in the list of expected results !",
-//                result_found_in_the_expected_results == true);
-    }
-
-    // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_results); ++ i)
-    {
-        if (count_expected_results [i] != 1)
-        {
-            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
-                    count_expected_results [i]);
-        }
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (undecane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -747,54 +486,9 @@ void TEST_All_Possible_Dodecan_Constitutional_Isomers (void)
             #include "./Expected_Results/Alkane/Dodecane.txt"
     };
 
-    // Alle Alkane erzeugen
-    struct Alkane_Container* dodecane_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
-
-    // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
-    // erkennen zu koennen
-    // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
-    uint_fast8_t count_expected_results [COUNT_ARRAY_ELEMENTS(expected_results)];
-    memset (count_expected_results, '\0', sizeof (count_expected_results));
-
-    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
-    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
-    {
-        Convert_Alkane_To_IUPAC_Name (dodecane_alkanes->data [i]);
-
-        // Welches erwartete Ergebnis genau wurde verwendet ?
-        uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
-
-        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
-                Search_IUPAC_Name_In_The_List_Of_Expected_Results (dodecane_alkanes->data [i]->iupac_name, expected_results,
-                        number_of_constitutional_isomers, &index_in_the_expected_results);
-
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
-        if (! result_found_in_the_expected_results /* == false */)
-        {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    dodecane_alkanes->data [i]->iupac_name);
-        }
-        else
-        {
-            count_expected_results [index_in_the_expected_results] ++;
-        }
-        ASSERT("Cannot find the current result in the list of expected results !",
-                result_found_in_the_expected_results == true);
-    }
-
-    // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_results); ++ i)
-    {
-        if (count_expected_results [i] != 1)
-        {
-            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
-                    count_expected_results [i]);
-        }
-    }
-
-    // Erzeugten Alkane_Container wieder loeschen
-    Delete_Alkane_Container (dodecane_alkanes);
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
 
     return;
 }
@@ -904,6 +598,78 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
     }
 
     return result_found;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void
+Execute_Creation_Test_With_Expected_Results
+(
+        const uint_fast8_t number_of_c_atoms,                   // Anzahl an C-Atomen
+        const uint_fast64_t number_of_constitutional_isomers,   // Anzahl an Konstitutionsisomeren
+        const char* const restrict expected_results [],         // Liste der erwarteten Loesungen
+        const size_t number_of_expected_results                 // Anzahl an erwarteten Loesungen
+)
+{
+    // Alle Alkane erzeugen
+    struct Alkane_Container* all_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
+
+    // Anzahl an erzeugten Konstitutionsisomeren ueberpruefen
+    ASSERT_EQUALS(number_of_constitutional_isomers, all_alkanes->size);
+
+    // Die Verwendung der erwarteten Ergebnisse zaehlen, um moegliche Mehrfachverwendungen oder fehlende Verwendungen
+    // erkennen zu koennen
+    // Wenn alles richtig laeuft, dann muss jedes erwartete Ergebnis GENAU einmal verwendet werden
+    uint_fast8_t* count_expected_results = (uint_fast8_t*) CALLOC (number_of_expected_results, sizeof (uint_fast8_t));
+    ASSERT_ALLOC(count_expected_results, "Cannot allocate memory for the count_expected_results array !",
+            number_of_expected_results * sizeof (uint_fast8_t));
+
+    // ===== ===== ===== BEGINN Testbereich ===== ===== =====
+    // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
+    for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
+    {
+        Convert_Alkane_To_IUPAC_Name (all_alkanes->data [i]);
+
+        // Falls ein erwartetes Ergebnis verwendet wurde, dann wird in dieser Variable der Index des erwarteten
+        // Ergebnisses hinterlegt
+        uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
+
+        // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
+        const _Bool result_found_in_the_expected_results =
+                Search_IUPAC_Name_In_The_List_Of_Expected_Results (all_alkanes->data [i]->iupac_name, expected_results,
+                        number_of_constitutional_isomers, &index_in_the_expected_results);
+
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    all_alkanes->data [i]->iupac_name);
+        }
+        else
+        {
+            count_expected_results [index_in_the_expected_results] ++;
+        }
+//        ASSERT("Cannot find the current result in the list of expected results !",
+//                result_found_in_the_expected_results == true);
+    }
+
+    // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
+    for (size_t i = 0; i < number_of_expected_results; ++ i)
+    {
+        if (count_expected_results [i] != 1)
+        {
+            FPRINTF_FFLUSH(stderr, "Expected results: %40s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
+                    count_expected_results [i]);
+        }
+    }
+    // ===== ===== ===== ENDE Testbereich ===== ===== =====
+
+    FREE_AND_SET_TO_NULL(count_expected_results);
+
+    // Erzeugten Alkane_Container wieder loeschen
+    Delete_Alkane_Container (all_alkanes);
+
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
