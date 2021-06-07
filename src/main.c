@@ -21,7 +21,7 @@
  */
 
 /**
- * C-Version ueberpruefen, um Schluesselwoerter u.U. durch leere Makros zu ersetzen
+ * C-Version ueberpruefen, um Schluesselwoerter u.U. durch leere Makros bzw. Alternativwerte zu ersetzen
  *
  * Das Makro __STDC_VERSION__ ist fuer C90 nicht definiert
  * ->   Schluesselwoerter inline und restrict durch leere Markos ersetzen, damit eine Uebersetzung auch mit C90
