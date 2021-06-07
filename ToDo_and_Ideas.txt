@@ -1,5 +1,6 @@
 ----- ----- ----- ToDo ----- ----- -----
-- ...
+- Konvertierung von den Chain-Objekten zu den IUPAC-Namen funktioniert noch nicht einwandfrei
+- Tridecan und Tetradecan Test hinzufuegen (Listen der Isomere sind auf Wikipedia verfuegbar)
 
 ----- ----- ----- Ideas ----- ----- -----
 - Laufzeitvergleich Debug / Release Build
