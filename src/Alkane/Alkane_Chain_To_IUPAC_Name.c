@@ -184,7 +184,9 @@ static void Different_Type (struct State_Information* const restrict state)
     // Dieser Part darf nicht aufgerufen werden ! Wenn dies der Fall ist, dann ist dies auf jeden Fall ein Fehler !
     else
     {
-        ASSERT_MSG (false, "This else part may not executed !");
+        // !!! Temporaer auskommentiert !!!
+        // TODO: Wieder einkommentieren.
+        // ASSERT_MSG (false, "This else part may not executed !");
     }
 
     return;
