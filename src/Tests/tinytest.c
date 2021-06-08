@@ -22,6 +22,8 @@ int tt_current_line                 = 0;
 
 void tt_execute (const char *name, void (*test_function) (void))
 {
+    printf ("\n\n===== ===== ===== START RUN (%s) ===== ===== =====\n", name);
+
     tt_current_test_failed = 0;
     test_function ();
     if (tt_current_test_failed)
@@ -34,6 +36,11 @@ void tt_execute (const char *name, void (*test_function) (void))
     {
         tt_passes ++;
     }
+
+    printf ("===== ===== ===== END RUN (%s) ===== ===== =====\n\n", name);
+    fflush (stdout);
+
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
