@@ -94,6 +94,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_All_Possible_Decan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Undecan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Dodecan_Constitutional_Isomers);
+    RUN(TEST_All_Possible_Tridecan_Constitutional_Isomers);
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
@@ -485,6 +486,32 @@ void TEST_All_Possible_Dodecan_Constitutional_Isomers (void)
     const char* expected_results [] =
     {
             #include "./Expected_Results/Alkane/Dodecane.txt"
+    };
+
+    // Test durchfuehren
+    Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
+            COUNT_ARRAY_ELEMENTS(expected_results));
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Alle moeglichen Konstitutionsisomere des Tridecans mit IUPAC-Namen erzeugen.
+ *
+ * Dabei werden die IUPAC-Namen kontrolliert.
+ */
+void TEST_All_Possible_Tridecan_Constitutional_Isomers (void)
+{
+    const uint_fast8_t number_of_c_atoms = 13;
+    const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
+
+    // Alle 802 Dodecane
+    // Siehe: https://de.wikipedia.org/wiki/Tridecane
+    const char* expected_results [] =
+    {
+            #include "./Expected_Results/Alkane/Tridecane.txt"
     };
 
     // Test durchfuehren
