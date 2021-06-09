@@ -30,36 +30,20 @@ struct State_Information
                                             // frei sind
     struct Alkane* alkane;                  // Alkan-Objekt (enthaelt die Chain-Objekte)
 
-    uint_fast8_t current_chain;             // Aktuelles Chain-Objekt, welches betrachtet wird
-    uint_fast8_t completed_chain;           // Das letzte Chain-Objekt, welches KOMPLETT verarbeitet wurde
-
-    struct Chain* cmp_chain;                // Vergleichs Chain-Objekt; Dies dient dazu, um gleiche Alkylreste
-                                            // zusammenfassen zu koennen
-
-    // Liste an Chain-Objekte, die teilweise verarbeitet wurden
-    // Dies ist dann der Fall, wenn es Verschachtelungen gibt
-    uint_fast8_t partly_completed_chains [MAX_NUMBER_OF_C_ATOMS];
-    uint_fast8_t next_free_partly_completed_chains;
+    uint_fast8_t current_diff_chain;        // Aktuelles Chain-Objekt, welches betrachtet wird
 };
 
-// ===== ===== ===== Zustaende fuer die Chain-Objekt-Konvertierung ===== ===== =====
-static void Next_Chain (struct State_Information* const restrict state);
-static void New_Compare_Chain (struct State_Information* const restrict state);
-static void Chains_Mergeable (struct State_Information* const restrict state);
-
-static void Different_Type (struct State_Information* const restrict state);
-static void Different_Length (struct State_Information* const restrict state);
-static void Down (struct State_Information* const restrict state);
-static void Up (struct State_Information* const restrict state);
-
-static void Last_Chain_Found (struct State_Information* const restrict state);
-static void Complete_Name (struct State_Information* const restrict state);
-// ===== ===== ===== Zustaende fuer die Chain-Objekt-Konvertierung ===== ===== =====
-
-// KEIN Zustand, sondern eine einfache statische Funktion, die bei der Konvertierung verwendet wird !
-static void Write_Alkyl_Data_Into_IUPAC_Name (struct State_Information* const restrict state);
+struct Chain_Diff
+{
+    int_fast8_t length;
+    int_fast8_t position;
+    int_fast8_t nesting_depth;
+};
 
 
+static struct Chain_Diff Parse_Chain_Diff (struct State_Information* const restrict state, struct Chain_Diff diffs []);
+static void Parse_Chain_Diff_Combined (struct State_Information* const restrict state, struct Chain_Diff diffs []);
+static void Parse_Chain_List (struct State_Information* const restrict state);
 
 //=====================================================================================================================
 
@@ -84,10 +68,10 @@ Chain_To_IUPAC
     state_information.iupac_name_length     = iupac_name_length;
     state_information.iupac_name_space_left = iupac_name_length - 1;
     state_information.alkane                = alkane;
-    state_information.cmp_chain             = NULL;
 
     // => Generierung des Namen starten <=
-    Next_Chain (&state_information);
+    // Next_Chain (&state_information);
+    Parse_Chain_List (&state_information);
 
     // Nullterminierung garantieren
     iupac_name [iupac_name_length - 1] = '\0';
@@ -97,251 +81,150 @@ Chain_To_IUPAC
 
 //=====================================================================================================================
 
-static void Next_Chain (struct State_Information* const restrict state)
+static void Parse_Chain_List (struct State_Information* const restrict state)
 {
-    state->current_chain ++;
+    struct Chain_Diff diffs [MAX_NUMBER_OF_C_ATOMS];
+    memset (diffs, INT_FAST8_MIN, sizeof (diffs));
 
-    if (state->current_chain >= state->alkane->next_free_chain - 1 &&
-            state->completed_chain >= state->alkane->next_free_chain - 1)
+    for (uint_fast8_t i = 1; (i + 1) < state->alkane->next_free_chain; ++ i)
     {
-        Last_Chain_Found (state);
-    }
-    else if (state->cmp_chain == NULL)
-    {
-        New_Compare_Chain (state);
-    }
-    else if (state->cmp_chain->length == state->alkane->chains [state->current_chain].length &&
-            state->cmp_chain->nesting_depth == state->alkane->chains [state->current_chain].nesting_depth)
-    {
-        Chains_Mergeable (state);
-    }
-    else
-    {
-        Different_Type (state);
+        diffs [i - 1].length        =
+                (int_fast8_t) (state->alkane->chains [i + 1].length - state->alkane->chains [i].length);
+        diffs [i - 1].position      =
+                (int_fast8_t) (state->alkane->chains [i + 1].position - state->alkane->chains [i].position);
+        diffs [i - 1].nesting_depth =
+                (int_fast8_t) (state->alkane->chains [i + 1].nesting_depth - state->alkane->chains [i].nesting_depth);
     }
 
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void New_Compare_Chain (struct State_Information* const restrict state)
-{
-    state->cmp_chain = &(state->alkane->chains [state->current_chain]);
-
-    Next_Chain (state);
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Chains_Mergeable (struct State_Information* const restrict state)
-{
-    Next_Chain (state);
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Different_Type (struct State_Information* const restrict state)
-{
-    if ((state->alkane->chains [state->current_chain].nesting_depth >
-            state->alkane->chains [state->current_chain - 1].nesting_depth) &&
-            state->current_chain < state->alkane->next_free_chain)
+    while (state->current_diff_chain < (state->alkane->next_free_chain - 1))
     {
-        // Dies ist ein Sonderfall !
-        // Wenn es Objekte gibt, die zusammengefasst werden koennen, dann wird dies nicht durchgefuehrt, wenn direkt
-        // darauf eine tiefere Verschachtelung gefunden wurde
-        if ((state->current_chain - (state->completed_chain + 1)) > 1)
+        Parse_Chain_Diff_Combined(state, diffs);
+
+        if ((state->current_diff_chain) < (state->alkane->next_free_chain - 1))
         {
-            // Fuer die Erstellung des Alkylfragments muss das aktuelle Chain-Objekt ignoriert werden, da dies erst
-            // beim Eintritt in eine tiefere Verschachtelungstiefe betrachtet werden darf !
-            state->current_chain --;
-            Write_Alkyl_Data_Into_IUPAC_Name (state);
-            state->current_chain ++;
-        }
-
-        Down (state);
-    }
-    else if ((state->alkane->chains [state->current_chain].nesting_depth <
-            state->alkane->chains [state->current_chain - 1].nesting_depth) &&
-            state->current_chain < state->alkane->next_free_chain)
-    {
-        if ((state->current_chain - (state->completed_chain + 1)) > 1)
-        {
-            Write_Alkyl_Data_Into_IUPAC_Name (state);
-        }
-
-        Up (state);
-    }
-    else if (state->alkane->chains [state->current_chain].length !=
-            state->alkane->chains [state->current_chain - 1].length)
-    {
-        Different_Length (state);
-    }
-    // Dieser Part darf nicht aufgerufen werden ! Wenn dies der Fall ist, dann ist dies auf jeden Fall ein Fehler !
-    else
-    {
-        // !!! Temporaer auskommentiert !!!
-        // TODO: Wieder einkommentieren.
-        // ASSERT_MSG (false, "This else part may not executed !");
-    }
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Different_Length (struct State_Information* const restrict state)
-{
-    Write_Alkyl_Data_Into_IUPAC_Name (state);
-
-    // current_chain um 1 zuruecksetzen, da mit den gerade durchgefuehrten Operationen die Chain-Objekte bis vor dem
-    // current_chain abgearbeitet wurden
-    state->current_chain --;
-    state->completed_chain  = state->current_chain;
-    state->cmp_chain        = NULL;
-
-    Next_Chain (state);
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Down (struct State_Information* const restrict state)
-{
-    if (strlen (state->iupac_name) > 0)
-    {
-        strncat (state->iupac_name, "-", state->iupac_name_space_left);
-        state->iupac_name_space_left -= strlen ("-");
-    }
-
-    // Position des letzten Objektes ermitteln und anbringen
-    char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
-    int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1, state->alkane->chains [state->current_chain - 1].position);
-
-    strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
-    state->iupac_name_space_left -= strlen (int_to_str);
-    strncat (state->iupac_name, "-(", state->iupac_name_space_left);
-    state->iupac_name_space_left -= strlen ("-(");
-
-    // Partialinformation aufnehmen
-    state->partly_completed_chains [state->next_free_partly_completed_chains] = (uint_fast8_t) (state->current_chain - 1);
-    state->next_free_partly_completed_chains ++;
-
-    state->current_chain --;
-    state->completed_chain  = state->current_chain;
-    state->cmp_chain        = NULL;
-
-    Next_Chain (state);
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Up (struct State_Information* const restrict state)
-{
-    strncat (state->iupac_name,
-            ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1],
-            state->iupac_name_space_left);
-    state->iupac_name_space_left -=
-            strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [state->next_free_partly_completed_chains - 1]].length - 1]);
-
-    strncat (state->iupac_name, ")-", state->iupac_name_space_left);
-    state->iupac_name_space_left -= strlen (")-");
-
-    state->partly_completed_chains [state->next_free_partly_completed_chains - 1] = 0;
-    state->next_free_partly_completed_chains --;
-
-    Next_Chain (state);
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Last_Chain_Found (struct State_Information* const restrict state)
-{
-    if (state->next_free_partly_completed_chains > 0)
-    {
-        for (int i = state->next_free_partly_completed_chains - 1; i >= 0; -- i)
-        {
-            strncat (state->iupac_name,
-                    ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1],
-                    state->iupac_name_space_left);
-            state->iupac_name_space_left -=
-                    strlen (ALKYL_WORDS [state->alkane->chains [state->partly_completed_chains [i]].length - 1]);
-
-            strncat (state->iupac_name, ")-", state->iupac_name_space_left);
-            state->iupac_name_space_left -= strlen (")-");
+            strncat (state->iupac_name, "-", state->iupac_name_space_left);
+            state->iupac_name_space_left -= strlen ("-");
+            //FPRINTF_FFLUSH_NO_VA_ARGS (stdout, "-");
         }
     }
 
-    Complete_Name (state);
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-static void Complete_Name (struct State_Information* const restrict state)
-{
-    if (strlen (state->iupac_name) == 0)
+    if (state->alkane->next_free_chain == 1)
     {
         strncat (state->iupac_name, "n-", state->iupac_name_space_left);
         state->iupac_name_space_left -= strlen ("n-");
+        // FPRINTF_FFLUSH_NO_VA_ARGS (stdout, "n-");
     }
 
     strncat (state->iupac_name, ALKAN_WORDS [state->alkane->chains [0].length - 1], state->iupac_name_space_left);
     state->iupac_name_space_left -= strlen (ALKAN_WORDS [state->alkane->chains [0].length - 1]);
+    // FPRINTF_FFLUSH (stdout, "%s\n", ALKAN_WORDS [state->alkane->chains [0].length - 1]);
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-// KEIN Zustand, sondern eine einfache statische Funktion, die bei der Konvertierung verwendet wird !
-static void Write_Alkyl_Data_Into_IUPAC_Name (struct State_Information* const restrict state)
+static struct Chain_Diff Parse_Chain_Diff (struct State_Information* const restrict state, struct Chain_Diff diffs [])
 {
-    if (strlen (state->iupac_name) > 0 && state->iupac_name [strlen (state->iupac_name) - 1] != '(')
+    struct Chain_Diff ret_value = { .length = 0, .position = 0, .nesting_depth = 0 };
+
+    if (state->current_diff_chain < (state->alkane->next_free_chain - 1))
     {
-        strncat (state->iupac_name, "-", state->iupac_name_space_left);
-        state->iupac_name_space_left -= strlen ("-");
+//        if (diffs [state->current_diff_chain].nesting_depth != 0 &&
+//            diffs [state->current_diff_chain].nesting_depth != INT_FAST8_MIN)
+//        {
+            if (diffs [state->current_diff_chain].nesting_depth > 0)
+            {
+                state->current_diff_chain ++;
+                uint_fast8_t current_diff_chain_backup = state->current_diff_chain;
+
+                char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+                int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1,
+                        state->alkane->chains [state->current_diff_chain].position);
+
+                strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
+                state->iupac_name_space_left -= strlen (int_to_str);
+                strncat (state->iupac_name, "-(", state->iupac_name_space_left);
+                state->iupac_name_space_left -= strlen ("-(");
+                // FPRINTF_FFLUSH(stdout, "%d-(", state->alkane->chains [state->current_diff_chain].position);
+                Parse_Chain_Diff_Combined(state, diffs);
+
+                strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [current_diff_chain_backup].length - 1],
+                        state->iupac_name_space_left);
+                state->iupac_name_space_left -= strlen (ALKYL_WORDS [state->alkane->chains [current_diff_chain_backup].length - 1]);
+                strncat (state->iupac_name, ")", state->iupac_name_space_left);
+                state->iupac_name_space_left -= strlen (")");
+
+//                if ((state->current_diff_chain + 1) < (state->alkane->next_free_chain - 1))
+//                {
+//                    strncat (state->iupac_name, ")", state->iupac_name_space_left);
+//                    state->iupac_name_space_left -= strlen (")");
+//                }
+                // FPRINTF_FFLUSH(stdout, "%s", ALKYL_WORDS [state->alkane->chains [current_diff_chain_backup].length - 1]);
+            }
+//        }
+
+        ret_value = diffs [state->current_diff_chain];
+        state->current_diff_chain ++;
+    }
+    else
+    {
+        FPRINTF_FFLUSH_NO_VA_ARGS(stderr, "Parse Chain Error !\n");
     }
 
-    for (int i = state->completed_chain + 1; i < state->current_chain; ++ i)
-    {
-        char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
-        int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1, state->alkane->chains [i].position);
+    return ret_value;
+}
 
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Parse_Chain_Diff_Combined (struct State_Information* const restrict state, struct Chain_Diff diffs [])
+{
+    char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+
+    struct Chain_Diff current_diff = Parse_Chain_Diff (state, diffs);
+    static uint_fast8_t count = 0;
+
+    if (state->alkane->chains [state->current_diff_chain].position == 0)
+    {
+        return;
+    }
+
+    memset (int_to_str, '\0', sizeof (int_to_str));
+    int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1,
+            state->alkane->chains [state->current_diff_chain].position);
+
+    strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen (int_to_str);
+
+    // FPRINTF_FFLUSH (stdout, "%d", state->alkane->chains [state->current_diff_chain].position);
+    count ++;
+
+    while (current_diff.length == 0 && current_diff.nesting_depth == 0)
+    {
+        memset (int_to_str, '\0', sizeof (int_to_str));
+        int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1,
+                state->alkane->chains [state->current_diff_chain + 1].position);
+
+        strncat (state->iupac_name, ",", state->iupac_name_space_left);
+        state->iupac_name_space_left -= strlen (",");
         strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
         state->iupac_name_space_left -= strlen (int_to_str);
 
-        if ((i + 1) < state->current_chain)
-        {
-            strncat (state->iupac_name, ",", state->iupac_name_space_left);
-            state->iupac_name_space_left -= strlen (",");
-        }
+        // FPRINTF_FFLUSH (stdout, ",%d", state->alkane->chains [state->current_diff_chain + 1].position);
+        count ++;
+        current_diff = Parse_Chain_Diff (state, diffs);
     }
+
     strncat (state->iupac_name, "-", state->iupac_name_space_left);
     state->iupac_name_space_left -= strlen ("-");
-
-    const int chains_wrote = state->current_chain - (state->completed_chain + 1);
-
-    if (chains_wrote > 1)
-    {
-        strncat (state->iupac_name, NUMBER_WORDS [chains_wrote - 1], state->iupac_name_space_left);
-        state->iupac_name_space_left -= strlen (NUMBER_WORDS [chains_wrote - 1]);
-    }
-
-    // Wort fuer Kettentyp anbringen
-    strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1],
+    strncat (state->iupac_name, ((count - 1) > 0) ? NUMBER_WORDS [count - 1] : "", state->iupac_name_space_left);
+    state->iupac_name_space_left -= strlen (((count - 1) > 0) ? NUMBER_WORDS [count - 1] : "");
+    strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1],
             state->iupac_name_space_left);
-    state->iupac_name_space_left -= strlen (ALKYL_WORDS [state->alkane->chains [state->current_chain - 1].length - 1]);
+    state->iupac_name_space_left -= strlen (ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1]);
+//    FPRINTF_FFLUSH (stdout, "-%s%s", ((count - 1) > 0) ? NUMBER_WORDS [count - 1] : "",
+//            ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1]);
+    count = 0;
 
     return;
 }
