@@ -166,6 +166,8 @@ Search_For_Chain_Content
  */
 static inline int Compare_Chain_Information (const void* a, const void* b);
 
+static int Compare_Chains (struct Chain chain_a, struct Chain chain_b);
+
 /**
  * Aeste, die auf gleicher Verschachtelungstiefe liegen, anhand der Laenge der Aeste aufsteigend sortieren.
  * Dies vereinfacht die spaetere Erzeugung des IUPAC-Namen bei der Zusammenfassung gleicher Aeste, da der Algorithmus
@@ -831,16 +833,40 @@ static inline int Compare_Chain_Information (const void* a, const void* b)
     const struct Chain* const chain_a = (const struct Chain* const) a;
     const struct Chain* const chain_b = (const struct Chain* const) b;
 
-    const size_t chain_a_alkyl_word_length = strlen (ALKYL_WORDS [chain_a->length - 1]);
-    const size_t chain_b_alkyl_word_length = strlen (ALKYL_WORDS [chain_b->length - 1]);
+    if (chain_a->nesting_depth == chain_b->nesting_depth)
+    {
+        const size_t chain_a_alkyl_word_length = strlen (ALKYL_WORDS [chain_a->length - 1]);
+        const size_t chain_b_alkyl_word_length = strlen (ALKYL_WORDS [chain_b->length - 1]);
 
-    // Namensvergleich der Alkylreste
-    const int name_compare = strncmp (ALKYL_WORDS [chain_a->length - 1], ALKYL_WORDS [chain_b->length - 1],
-            (chain_a_alkyl_word_length < chain_b_alkyl_word_length) ? chain_a_alkyl_word_length : chain_b_alkyl_word_length);
+        // Namensvergleich der Alkylreste
+        const int name_compare = strncmp (ALKYL_WORDS [chain_a->length - 1], ALKYL_WORDS [chain_b->length - 1],
+                (chain_a_alkyl_word_length < chain_b_alkyl_word_length) ? chain_a_alkyl_word_length : chain_b_alkyl_word_length);
 
-    // Wenn die Alkylnamen gleich sind, dann wird aufsteigend nach der Position sortiert. Ansonsten ist die
-    // alphabetische Sortierung des Alkylnamens entscheidend !
-    return (name_compare == 0) ? (((int) chain_a->position) - ((int) chain_b->position)) : name_compare;
+        // Wenn die Alkylnamen gleich sind, dann wird aufsteigend nach der Position sortiert. Ansonsten ist die
+        // alphabetische Sortierung des Alkylnamens entscheidend !
+        return (name_compare == 0) ? (((int) chain_a->position) - ((int) chain_b->position)) : name_compare;
+    }
+    else
+    {
+        FPRINTF_FFLUSH(stderr, "Else path in the compare function %s executed !\n", __func__);
+
+        return 0;
+    }
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static int Compare_Chains (struct Chain chain_a, struct Chain chain_b)
+{
+    if (chain_a.length == chain_b.length && chain_a.nesting_depth == chain_b.nesting_depth &&
+            chain_a.position == chain_b.position)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -865,28 +891,74 @@ Reorder_Chains
                                                 // falls notwendig
 )
 {
-    uint_fast8_t last_start_index               = 1;
-    const uint_fast8_t first_last_start_index   = last_start_index;
-
-    // Linear im Array nach Aesten auf gleicher Verschachtelungstiefe suchen
-    // Beginn bei 1, da das Objekt mit dem Index 0 immer die Hauptkette ist !
-    for (uint_fast8_t i = 1; i < alkane->next_free_chain; ++ i)
+    if (alkane->next_free_chain == 1)
     {
-        if (alkane->chains [last_start_index].nesting_depth != alkane->chains [i].nesting_depth)
-        {
-//            qsort (&(alkane->chains [last_start_index]), (size_t) (i - last_start_index), sizeof (struct Chain),
-//                    Compare_Chain_Information);
+        return;
+    }
 
-            last_start_index = i;
+    struct Reorder_Data
+    {
+        struct Chain sub_main_chain;
+        struct Chain data [MAX_NUMBER_OF_C_ATOMS];
+        uint_fast8_t next_free_data;
+    } reorder_data [MAX_NUMBER_OF_NESTING_DEPTH];
+
+    memset (reorder_data, '\0', sizeof (reorder_data));
+
+    for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
+    {
+        for (size_t i2 = 1; i2 < alkane->next_free_chain; ++ i2)
+        {
+            if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == (i + 1))
+            {
+                reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
+                reorder_data [i].next_free_data ++;
+            }
+            else if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == 0)
+            {
+                reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
+                reorder_data [i].next_free_data ++;
+            }
+            else if (alkane->chains [i2].nesting_depth == (i + 1) &&
+                    Compare_Chains (alkane->chains [i2 - 1], reorder_data [i].sub_main_chain) == 0)
+            {
+                reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
+                reorder_data [i].next_free_data ++;
+            }
+            else if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == (i + 2)) // + 2 !
+            {
+                // Sub main chain gefunden
+                reorder_data [i + 1].sub_main_chain = alkane->chains [i2];
+            }
         }
     }
 
-    // Wenn gar keine Sortierung durchgefuhert wurde, dann besitzen alle Chain-Objekte die gleiche Verschachtelungs-
-    // tiefe => Sortierung manuell starten
-    if (last_start_index == first_last_start_index)
+    // Sortierungen durchfuehren
+    for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
     {
-        qsort (&(alkane->chains [last_start_index]), (size_t) (alkane->next_free_chain - last_start_index), sizeof (struct Chain),
-                Compare_Chain_Information);
+        if (reorder_data [i].next_free_data > 0)
+        {
+            qsort (reorder_data [i].data, (size_t) (reorder_data [i].next_free_data), sizeof (struct Chain),
+                    Compare_Chain_Information);
+        }
+    }
+
+    size_t next_free_chain = 1;
+    for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
+    {
+        if (reorder_data [i].next_free_data > 0)
+        {
+            if (reorder_data [i].sub_main_chain.length != 0 && reorder_data [i].sub_main_chain.position != 0 &&
+                    reorder_data [i].sub_main_chain.nesting_depth != 0)
+            {
+                alkane->chains [next_free_chain] = reorder_data [i].sub_main_chain;
+                next_free_chain ++;
+            }
+
+            memcpy (&(alkane->chains [next_free_chain]), reorder_data [i].data, reorder_data [i].next_free_data *
+                    sizeof (struct Chain));
+            next_free_chain += reorder_data [i].next_free_data;
+        }
     }
 
     return;
