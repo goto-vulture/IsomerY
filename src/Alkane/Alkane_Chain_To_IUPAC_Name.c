@@ -16,6 +16,17 @@
 
 
 
+/**
+ * Makro, welches bewirkt, dass die Parsing Ergebnisse zusaetzlich ausgegeben werden. Dies erleichtert die Fehlersuche
+ * enorm !
+ */
+#ifndef PRINT_PARSING_RESULTS
+#define PRINT_PARSING_RESULTS
+#else
+#error "The macro \"PRINT_PARSING_RESULTS\" is already defined !"
+#endif /* PRINT_PARSING_RESULTS */
+
+
 
 
 /**
@@ -104,7 +115,10 @@ static void Parse_Chain_List (struct State_Information* const restrict state)
         {
             strncat (state->iupac_name, "-", state->iupac_name_space_left);
             state->iupac_name_space_left -= strlen ("-");
-            //FPRINTF_FFLUSH_NO_VA_ARGS (stdout, "-");
+
+#ifdef PRINT_PARSING_RESULTS
+            FPRINTF_FFLUSH_NO_VA_ARGS (stdout, "-");
+#endif /* PRINT_PARSING_RESULTS */
         }
     }
 
@@ -112,12 +126,18 @@ static void Parse_Chain_List (struct State_Information* const restrict state)
     {
         strncat (state->iupac_name, "n-", state->iupac_name_space_left);
         state->iupac_name_space_left -= strlen ("n-");
-        // FPRINTF_FFLUSH_NO_VA_ARGS (stdout, "n-");
+
+#ifdef PRINT_PARSING_RESULTS
+        FPRINTF_FFLUSH_NO_VA_ARGS (stdout, "n-");
+#endif /* PRINT_PARSING_RESULTS */
     }
 
     strncat (state->iupac_name, ALKAN_WORDS [state->alkane->chains [0].length - 1], state->iupac_name_space_left);
     state->iupac_name_space_left -= strlen (ALKAN_WORDS [state->alkane->chains [0].length - 1]);
-    // FPRINTF_FFLUSH (stdout, "%s\n", ALKAN_WORDS [state->alkane->chains [0].length - 1]);
+
+#ifdef PRINT_PARSING_RESULTS
+    FPRINTF_FFLUSH (stdout, "%s\n", ALKAN_WORDS [state->alkane->chains [0].length - 1]);
+#endif /* PRINT_PARSING_RESULTS */
 
     return;
 }
@@ -146,7 +166,11 @@ static struct Chain_Diff Parse_Chain_Diff (struct State_Information* const restr
                 state->iupac_name_space_left -= strlen (int_to_str);
                 strncat (state->iupac_name, "-(", state->iupac_name_space_left);
                 state->iupac_name_space_left -= strlen ("-(");
-                // FPRINTF_FFLUSH(stdout, "%d-(", state->alkane->chains [state->current_diff_chain].position);
+
+#ifdef PRINT_PARSING_RESULTS
+                FPRINTF_FFLUSH(stdout, "%d-(", state->alkane->chains [state->current_diff_chain].position);
+#endif /* PRINT_PARSING_RESULTS */
+
                 Parse_Chain_Diff_Combined(state, diffs);
 
                 strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [current_diff_chain_backup].length - 1],
@@ -160,7 +184,9 @@ static struct Chain_Diff Parse_Chain_Diff (struct State_Information* const restr
 //                    strncat (state->iupac_name, ")", state->iupac_name_space_left);
 //                    state->iupac_name_space_left -= strlen (")");
 //                }
-                // FPRINTF_FFLUSH(stdout, "%s", ALKYL_WORDS [state->alkane->chains [current_diff_chain_backup].length - 1]);
+#ifdef PRINT_PARSING_RESULTS
+                FPRINTF_FFLUSH(stdout, "%s)", ALKYL_WORDS [state->alkane->chains [current_diff_chain_backup].length - 1]);
+#endif /* PRINT_PARSING_RESULTS */
             }
 //        }
 
@@ -196,7 +222,10 @@ static void Parse_Chain_Diff_Combined (struct State_Information* const restrict 
     strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
     state->iupac_name_space_left -= strlen (int_to_str);
 
-    // FPRINTF_FFLUSH (stdout, "%d", state->alkane->chains [state->current_diff_chain].position);
+#ifdef PRINT_PARSING_RESULTS
+    FPRINTF_FFLUSH (stdout, "%d", state->alkane->chains [state->current_diff_chain].position);
+#endif /* PRINT_PARSING_RESULTS */
+
     count ++;
 
     while (current_diff.length == 0 && current_diff.nesting_depth == 0)
@@ -210,7 +239,10 @@ static void Parse_Chain_Diff_Combined (struct State_Information* const restrict 
         strncat (state->iupac_name, int_to_str, state->iupac_name_space_left);
         state->iupac_name_space_left -= strlen (int_to_str);
 
-        // FPRINTF_FFLUSH (stdout, ",%d", state->alkane->chains [state->current_diff_chain + 1].position);
+#ifdef PRINT_PARSING_RESULTS
+        FPRINTF_FFLUSH (stdout, ",%d", state->alkane->chains [state->current_diff_chain + 1].position);
+#endif /* PRINT_PARSING_RESULTS */
+
         count ++;
         current_diff = Parse_Chain_Diff (state, diffs);
     }
@@ -222,11 +254,25 @@ static void Parse_Chain_Diff_Combined (struct State_Information* const restrict 
     strncat (state->iupac_name, ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1],
             state->iupac_name_space_left);
     state->iupac_name_space_left -= strlen (ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1]);
-//    FPRINTF_FFLUSH (stdout, "-%s%s", ((count - 1) > 0) ? NUMBER_WORDS [count - 1] : "",
-//            ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1]);
+
+#ifdef PRINT_PARSING_RESULTS
+    FPRINTF_FFLUSH (stdout, "-%s%s", ((count - 1) > 0) ? NUMBER_WORDS [count - 1] : "",
+            ALKYL_WORDS [state->alkane->chains [state->current_diff_chain].length - 1]);
+#endif /* PRINT_PARSING_RESULTS */
+
     count = 0;
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+
+
+/**
+ * Makro am Ende dieser Uebersetzungseinheit wieder entfernen, damit es nur Wirkung in genau dieser Uebersetzungseinheit
+ * hat.
+ */
+#ifdef PRINT_PARSING_RESULTS
+#undef PRINT_PARSING_RESULTS
+#endif /* PRINT_PARSING_RESULTS */
