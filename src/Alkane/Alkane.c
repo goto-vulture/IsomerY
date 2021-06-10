@@ -286,7 +286,7 @@ Print_Alkane
  * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden
  * lediglich die Zeiger des Objektes auf NULL gesetzt !
  *
- * Warum werdeb die Alkane_Branch-Objekte nicht geloescht ? Die Alkane_Branch Objekte werden praktisch ueberall in
+ * Warum werden die Alkane_Branch-Objekte nicht geloescht ? Die Alkane_Branch Objekte werden praktisch ueberall in
  * eigenen Containern gesichert. Es waere aus Sicht dieses Containers sehr ungeschickt, wenn ein anderes Objekt den
  * dynamischen Containerinhalt loescht. Ein doppeltes Loeschen wuerde dann zwangslaeufig stattfinden; spaetestens dann,
  * wenn der Alkane_Branch_Container geloescht wird.
