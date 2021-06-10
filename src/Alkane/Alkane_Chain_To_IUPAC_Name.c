@@ -49,6 +49,7 @@ struct Chain_Diff
     int_fast8_t length;
     int_fast8_t position;
     int_fast8_t nesting_depth;
+    _Bool combindable;
 };
 
 
@@ -96,6 +97,10 @@ static void Parse_Chain_List (struct State_Information* const restrict state)
 {
     struct Chain_Diff diffs [MAX_NUMBER_OF_C_ATOMS];
     memset (diffs, INT_FAST8_MIN, sizeof (diffs));
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(diffs); ++ i)
+    {
+        diffs [i].combindable = false;
+    }
 
     for (uint_fast8_t i = 1; (i + 1) < state->alkane->next_free_chain; ++ i)
     {
@@ -105,6 +110,15 @@ static void Parse_Chain_List (struct State_Information* const restrict state)
                 (int_fast8_t) (state->alkane->chains [i + 1].position - state->alkane->chains [i].position);
         diffs [i - 1].nesting_depth =
                 (int_fast8_t) (state->alkane->chains [i + 1].nesting_depth - state->alkane->chains [i].nesting_depth);
+
+        if ((i + 2) >= state->alkane->next_free_chain)
+        {
+            diffs [i - 1].combindable = true;
+        }
+        else if ((state->alkane->chains [i + 2].nesting_depth - state->alkane->chains [i + 1].nesting_depth) == 0)
+        {
+            diffs [i - 1].combindable = true;
+        }
     }
 
     while (state->current_diff_chain < (state->alkane->next_free_chain - 1))
@@ -228,7 +242,7 @@ static void Parse_Chain_Diff_Combined (struct State_Information* const restrict 
 
     count ++;
 
-    while (current_diff.length == 0 && current_diff.nesting_depth == 0)
+    while (current_diff.length == 0 && current_diff.nesting_depth == 0 && current_diff.combindable /* == true */)
     {
         memset (int_to_str, '\0', sizeof (int_to_str));
         int2str (int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str) - 1,
