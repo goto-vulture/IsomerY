@@ -240,7 +240,7 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4, 5 };
     const unsigned char branch_3_content [] = { 1, 1, 2, 2, 2 };
 
-    const char* expected_result            = "6-(2,2-DiMethylPropyl)-Hexadecan";
+    const char* expected_result            = "6-(2,2-DiMethylPropyl)Hexadecan";
 
     struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
     struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
