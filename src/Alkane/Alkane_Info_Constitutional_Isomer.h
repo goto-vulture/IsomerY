@@ -37,6 +37,17 @@ extern "C"
 #endif /* NUMBER_OF_NUMBER_WORDS */
 
 /**
+ * Maximal moegliche Verschachtelungstiefe, die das Programm unterstuetzt.
+ * Auch hier - wie bei MAX_NUMBER_OF_C_ATOMS -: Die Algorithmen besitzen an sich kein Limit. Es wurde aber eine obere
+ * Grenze gewaehlt, damit die Speicherverwaltung einfacher wird.
+ */
+#ifndef MAX_NUMBER_OF_NESTING_DEPTH
+    #define MAX_NUMBER_OF_NESTING_DEPTH 10u
+#else
+    #error "The macro \"MAX_NUMBER_OF_NESTING_DEPTH\" is already defined !"
+#endif /* MAX_NUMBER_OF_NESTING_DEPTH */
+
+/**
  * Anzahl an Alkanwoerter, die im Programm hinterlegt sind.
  */
 #ifndef NUMBER_OF_ALKAN_WORDS
