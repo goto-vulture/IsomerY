@@ -240,6 +240,9 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ENDE Zusammengesetzten Zahlencode des uebergebenen Alkans ueberpruefen ===== ===== =====
 
     // ===== ===== ===== ===== ===== ===== ===== BEGINN Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
+    static volatile size_t result_number = 0;
+    ++ result_number;
+
     // Graphen erstellen -> Adjazenzmatrix mit Werten fuellen
     // current_c_atom = 1: Das erste Element ueberspringen, da dies die Ausnahmen-1 ist und keine verbunden-mit-Aussage
     //                     ausdrueckt !
@@ -264,6 +267,11 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
+    if (result_number == 42)
+    {
+        (void) result_number;
+    }
+
     // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
     // der Benennung beruecksichtigt werden muessen
     Chains_Go_Deeper (alkane, main_chain, 1);
@@ -285,7 +293,7 @@ Convert_Alkane_To_IUPAC_Name
     // Erzeugten IUPAC-Name im Alkan-Objekt hinterlegen (tiefe Kopie)
     memcpy (alkane->iupac_name, iupac_name, sizeof (iupac_name));
 
-    PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu)\n", iupac_name, strlen (iupac_name));
+    PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu | %6zu)\n", iupac_name, strlen (iupac_name), result_number);
     // ===== ===== ===== ===== ===== ENDE Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
 
     FREE_AND_SET_TO_NULL(main_chain);
