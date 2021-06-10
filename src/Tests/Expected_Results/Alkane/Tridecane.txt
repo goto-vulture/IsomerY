@@ -345,10 +345,10 @@
 "3-Methyl-6-(1-methylethyl)nonane",
 
 "5-Butylnonane",
-"5-(1-Methylpropyl)nonane (or 5-<i>sec</i>-Butylnonane)",
-"5-(2-Methylpropyl)nonane (or 5-Isobutylnonane)",
-"4-(1,1-Dimethylethyl)nonane (or 4-<i>tert</i>-Butylnonane)",
-"5-(1,1-Dimethylethyl)nonane (or 5-<i>tert</i>-Butylnonane)",
+"5-(1-Methylpropyl)nonane", /* (or 5-sec-Butylnonane) */
+"5-(2-Methylpropyl)nonane", /* (or 5-Isobutylnonane) */
+"4-(1,1-Dimethylethyl)nonane", /* (or 4-tert-Butylnonane) */
+"5-(1,1-Dimethylethyl)nonane", /* (or 5-tert-Butylnonane) */
 
 
 
