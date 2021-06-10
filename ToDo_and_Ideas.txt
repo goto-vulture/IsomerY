@@ -1,6 +1,5 @@
 ----- ----- ----- ToDo ----- ----- -----
 - Konvertierung von den Chain-Objekten zu den IUPAC-Namen funktioniert noch nicht einwandfrei
-- Tetradecan Test hinzufuegen (Liste ist auf Wikipedia verfuegbar)
 
 ----- ----- ----- Ideas ----- ----- -----
 - Laufzeitvergleich Debug / Release Build
