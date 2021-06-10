@@ -508,7 +508,7 @@ void TEST_All_Possible_Tridecan_Constitutional_Isomers (void)
     const uint_fast8_t number_of_c_atoms = 13;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
 
-    // Alle 802 Dodecane
+    // Alle 802 Tridecane
     // Siehe: https://de.wikipedia.org/wiki/Tridecane
     const char* expected_results [] =
     {
