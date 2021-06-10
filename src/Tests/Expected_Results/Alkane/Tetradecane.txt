@@ -6,7 +6,7 @@
 
 
 
-// Tridecan-Grundgerüst
+// Tridecan-Grundgeruest
 "2-Methyltridecan",
 "3-Methyltridecan",
 "4-Methyltridecan",
@@ -16,7 +16,7 @@
 
 
 
-// Dodecan-Grundgerüst
+// Dodecan-Grundgeruest
 "2,2-Dimethyldodecan",
 "2,3-Dimethyldodecan",
 "2,4-Dimethyldodecan",
@@ -57,7 +57,7 @@
 
 
 
-// Undecan-Grundgerüst
+// Undecan-Grundgeruest
 "2,2,3-Trimethylundecan",
 "2,2,4-Trimethylundecan",
 "2,2,5-Trimethylundecan",
@@ -185,7 +185,7 @@
 
 
 
-// Decan-Grundgerüst
+// Decan-Grundgeruest
 "2,2,3,3-Tetramethyldecan",
 "2,2,3,4-Tetramethyldecan",
 "2,2,3,5-Tetramethyldecan",
@@ -492,7 +492,7 @@
 
 
 
-// Nonan-Grundgerüst
+// Nonan-Grundgeruest
 "2,2,3,3,4-Pentamethylnonan",
 "2,2,3,3,5-Pentamethylnonan",
 "2,2,3,3,6-Pentamethylnonan",
@@ -1019,7 +1019,7 @@
 
 
 
-// Octan-Grundgerüst
+// Octan-Grundgeruest
 "2,2,3,3,4,4-Hexamethyloctan",
 "2,2,3,3,4,5-Hexamethyloctan",
 "2,2,3,3,4,6-Hexamethyloctan",
@@ -1580,7 +1580,7 @@
 
 
 
-// Heptan-Grundgerüst
+// Heptan-Grundgeruest
 "2,2,3,3,4,4,5-Heptamethylheptan",
 "2,2,3,3,4,4,6-Heptamethylheptan",
 "2,2,3,3,4,5,5-Heptamethylheptan",
@@ -1920,7 +1920,7 @@
 "4-(1,1-Dimethylethyl)-4-(1-methylethyl)heptan",
 
 
-// Hexan-Grundgerüst
+// Hexan-Grundgeruest
 "2,2,3,3,4,4,5,5-Octamethylhexan",
 
 "3-Ethyl-2,2,3,4,4,5-Hexamethylhexan",
@@ -1993,7 +1993,7 @@
 
 
 
-// Pentan-Grundgerüst
+// Pentan-Grundgeruest
 "3-Ethyl-2,2,4,4-tetramethyl-3-(1-methylethyl)pentan",
 "2,2,4-Trimethyl-3,3-bis(1-methylethyl)pentan",
 "3-(1,1-Dimethylethyl)-2,2,3,4,4-pentamethylpentan"
