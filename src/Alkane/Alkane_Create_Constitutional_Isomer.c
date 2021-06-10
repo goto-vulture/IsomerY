@@ -8,6 +8,7 @@
 #include "Alkane_Create_Constitutional_Isomer.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "Alkane_Info_Constitutional_Isomer.h"
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
@@ -349,7 +350,7 @@ Create_Alkane_Constitutional_Isomers
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
         // ===== ===== ===== BEGINN Zentrales Objekt ist eine BINDUNG ===== ===== =====
-        if (((next_alkane_container + 1) % 2) == 0)
+        if ((((next_alkane_container + 1) % 2) == 0) && next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
             size_t loop_start = 0;
             for (size_t i = 0; i < container_height_index; ++ i)
@@ -402,7 +403,7 @@ Create_Alkane_Constitutional_Isomers
         }
         // ===== ===== ===== ENDE Zentrales Objekt ist eine BINDUNG ===== ===== =====
         // ===== ===== ===== BEGINN Zentrales Objekt ist ein C-ATOM ===== ===== =====
-        else
+        else if (next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
             size_t loop_start   = 0;
             size_t loop_end     = 0;
@@ -525,6 +526,36 @@ Create_Alkane_Constitutional_Isomers
             // ===== ENDE Berechnungsschleifen =====
         }
         // ===== ===== ===== ENDE Zentrales Objekt ist ein C-ATOM ===== ===== =====
+        // ===== ===== ===== BEGINN Maximale Anzahl an C-Atomen ===== ===== =====
+        //
+        // Wenn die Alkane mit der Hauptkettenlaenge gleich der Anzahl an C-Atomen erzeugt werden sollen, dann gibt es
+        // nur genau eine Moeglichkeit: Und zwar eine gerade Kette !
+        // Der Algorithmus braucht diese Unterscheidung nicht zwingend. Denn bei den Konstruieren wird (irgendwann)
+        // auch eine gerade Kette gebildet. Dies kann aber dauern; Und da das Ergebnis bekannt ist, ist dies
+        // Zeitverschwendung.
+        // Daher wird fuer diesen Container das einzige Ergebnis - die gerade Kette - manuell gebildet.
+        else
+        {
+            unsigned char straight_chain [MAX_NUMBER_OF_C_ATOMS];
+            memset (straight_chain, '\0', sizeof (straight_chain));
+
+            straight_chain [0] = 1;
+            for (uint_fast8_t current_c_atom = 1; current_c_atom < number_of_c_atoms; ++ current_c_atom)
+            {
+                straight_chain [current_c_atom] = current_c_atom;
+            }
+
+            struct Alkane_Branch* straight_chain_branch = Create_Alkane_Branch (straight_chain, number_of_c_atoms);
+            struct Alkane* straight_chain_alkane = Create_Alkane (straight_chain_branch, NULL, NULL, NULL);
+
+            Add_Full_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], straight_chain_alkane);
+
+            Delete_Alkane (straight_chain_alkane);
+            straight_chain_alkane = NULL;
+            Delete_Alkane_Branch (straight_chain_branch);
+            straight_chain_branch = NULL;
+        }
+        // ===== ===== ===== ENDE Maximale Anzahl an C-Atomen ===== ===== =====
 
         // printf ("Count runs: %12" PRIuFAST64 "\nMax. runs:  %12" PRIuFAST64 "\n", count_inner_loop_runs, max_inner_loop_runs);
 
