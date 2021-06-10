@@ -136,7 +136,7 @@ extern void TEST_All_Possible_Dodecan_Constitutional_Isomers (void);
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Tridecan_Constitutional_Isomers (void);
+extern void TEST_All_Possible_Tridecan_Constitutional_Isomers (void);
 
 /**
  * Alle moeglichen Konstitutionsisomere des Tetradecan mit IUPAC-Namen erzeugen.
