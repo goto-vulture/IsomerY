@@ -1,5 +1,5 @@
-// Alle 802 Dodecane (C13 H28)
-// Siehe: https://de.wikipedia.org/wiki/Dodecane
+// Alle 802 Tridecane (C13 H28)
+// Siehe: https://de.wikipedia.org/wiki/Tridecane
 
 // Straight chain
 "n-Tridecan",
