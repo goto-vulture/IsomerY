@@ -424,10 +424,25 @@ Create_Alkane_Constitutional_Isomers
 
                 for (register size_t i3 = loop_start; i3 <= i2; ++ i3)
                 {
-                    for (register size_t i4 = 0; i4 <= i3; ++ i4)
-                    {
-                        max_inner_loop_runs += (i4 /* - i5 */ + 1);
-                    }
+                    // for (register size_t i4 = 0; i4 <= i3; ++ i4)
+                    // {
+                    //     max_inner_loop_runs += (i4 /* - i5 */ + 1);
+                    // }
+                    //
+                    // Mithilfe der Gaussschen Summenformel berechnen
+                    // https://de.wikipedia.org/wiki/Gausssche_Summenformel
+                    //
+                    //                                 n
+                    //                               _____
+                    //                               \          n * (n + 1)     n * n + n
+                    // 0 + 1 + 2 + 3 + 4 + ... + n = -     k = ------------- = -----------
+                    //                               /____           2              2
+                    //                               k = 0
+                    //
+                    const uint_fast64_t formula_result = ((i3 * i3) + i3) / 2;
+
+                    // "+ i3", da der Schleifenzaehler immer noch mit 1 addiert wird
+                    max_inner_loop_runs += formula_result + i3;
                 }
 
                 if (local_run_counter == PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL)
