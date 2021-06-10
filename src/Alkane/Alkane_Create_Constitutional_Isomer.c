@@ -471,6 +471,12 @@ Create_Alkane_Constitutional_Isomers
                         ++ local_run_counter;
                         ++ count_inner_loop_runs;
 
+                        // Addition der Containerlaengen zwischenspeichern, um diese bei den kommenden Vergleichen
+                        // nicht immer berechnen zu muessen
+                        static uint_fast8_t container_i2_i3_length_added = 0;
+                        container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container [i2]->length +
+                                flat_alkane_branch_container [i3]->length);
+
                         // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
                         // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
                         if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
@@ -482,8 +488,8 @@ Create_Alkane_Constitutional_Isomers
 
                         // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
                         // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
-                        if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
-                                flat_alkane_branch_container [i4]->length + 1) > number_of_c_atoms)
+                        if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length + 1)
+                                > number_of_c_atoms)
                         {
                             count_inner_loop_runs += (i4 + 1);
                             continue;
@@ -492,9 +498,8 @@ Create_Alkane_Constitutional_Isomers
                         for (register size_t i5 = 0; i5 <= i4; ++ i5) // <= !
                         {
                             // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
-                            if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length +
-                                    flat_alkane_branch_container [i4]->length + flat_alkane_branch_container [i5]->length + 1)
-                                    != number_of_c_atoms)
+                            if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length +
+                                    flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
                             {
                                 continue;
                             }
