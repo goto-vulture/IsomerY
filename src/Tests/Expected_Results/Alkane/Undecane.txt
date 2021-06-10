@@ -75,4 +75,4 @@
 
 "2-Methyl-4-propylheptan", "3-Methyl-4-propylheptan", "4-Methyl-4-propylheptan",
 
-"4-Butylheptan"
+"4-(1,1-DiMethylEthyl)Heptan" /* 4-tert-Butylheptane */
