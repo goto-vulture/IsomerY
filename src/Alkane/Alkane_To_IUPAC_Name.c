@@ -322,6 +322,38 @@ Find_Main_Chain
     memset (path_data, '\0', sizeof (path_data));
 
     // Tiefensuche fuer alle moeglichen Pfade durchfuehren
+    // ToDo: Ab 14 C-Atomen wird durch diese Funktion der Stack kaputtgemacht, sodass das Programm am Ende der
+    // Funktion "Find_Main_Chain" abgebrochen wird.
+    // Die fehlerhaften Schreibvorgaenge auf dem Stack lassen sich durch den Debugger bereits am Ende der Funktion
+    // "Do_DFS" erkennen. Die Stackframes unter dem Frame fuer "Find_Main_Chain" werden komplett mit 0x00
+    // ueberschrieben !
+    // Ausgabe bei der Ausfuehrung:
+    /*
+        RESULTS  1:     0 !
+        RESULTS  2:     0 !
+        RESULTS  3:     0 !
+        RESULTS  4:     0 !
+        RESULTS  5:     3 !
+        RESULTS  6:    55 !
+        RESULTS  7:   313 !
+        RESULTS  8:   532 !
+        RESULTS  9:   503 !
+        RESULTS 10:   293 !
+        RESULTS 11:   118 !
+        RESULTS 12:    34 !
+        RESULTS 13:     6 !
+        RESULTS 14:     1 !
+
+        > RESULTS SUM: 1858 ! <
+
+        2,2,4-TriMethyl-3-(1,1,1-TriMethylEthyl)Pentan
+        => IUPAC name:               2,2,4-TriMethyl-3-(1,1,1-TriMethylEthyl)Pentan <= (length: 46 |      1)
+        Cannot find the current result "2,2,4-TriMethyl-3-(1,1,1-TriMethylEthyl)Pentan" in the list of expected results !
+        3-Ethyl-2,2,4,4-TetraMethyl-3-(1-MethylEthyl)Pentan
+        => IUPAC name:          3-Ethyl-2,2,4,4-TetraMethyl-3-(1-MethylEthyl)Pentan <= (length: 51 |      2)
+        *** stack smashing detected ***: <unknown> terminated
+        Abgebrochen (Speicherabzug geschrieben)
+     */
     const uint_fast8_t count_created_paths = Do_DFS (alkane, path_data, start_c_atom);
 
     // Den passenden Pfad aus den gerade erzeugten Pfaden auswaehlen
