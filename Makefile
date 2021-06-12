@@ -138,6 +138,9 @@ ALKANE_CHAIN_TO_IUPAC_NAME_C = ./src/Alkane/Alkane_Chain_To_IUPAC_Name.c
 PATH_DATA_H = ./src/Alkane/Path_Data.h
 PATH_DATA_C = ./src/Alkane/Path_Data.c
 
+PATH_DATA_CONTAINER_H = ./src/Alkane/Path_Data_Container.h
+PATH_DATA_CONTAINER_C = ./src/Alkane/Path_Data_Container.c
+
 # Hiervon gibt es nur eine Headerdatei !
 ASSERT_MSG_H = ./src/Error_Handling/Assert_Msg.h
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
@@ -149,11 +152,11 @@ all: $(TARGET)
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o
+$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -205,6 +208,9 @@ Alkane_Chain_To_IUPAC_Name.o: $(ALKANE_CHAIN_TO_IUPAC_NAME_C)
 
 Path_Data.o: $(PATH_DATA_C)
 	$(CC) $(CCFLAGS) -c $(PATH_DATA_C)
+
+Path_Data_Container.o: $(PATH_DATA_CONAINER_C)
+	$(CC) $(CCFLAGS) -c $(PATH_DATA_CONTAINER_C)
 ##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen
