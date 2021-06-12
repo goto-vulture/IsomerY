@@ -12,32 +12,9 @@
 #include "../Print_Tools.h"
 #include "../Misc.h"
 #include "Alkane_Chain_To_IUPAC_Name.h"
+#include "Path_Data_Container.h"
 
 
-
-
-
-/**
- * Daten, die fuer die Bestimmung des Pfades sowie fuer das Abspeichern des Pfades benoetigt werden. Aus diesen Infos
- * kann die passende Hauptkette bestimmt werden (indem mehrere Path_Data-Objekte miteinander verglichen werden).
- */
-struct Path_Data
-{
-    unsigned char adj_matrix                            // Kopie der Alkan Adjazenzmatrix
-    [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS];
-    uint_fast8_t start_node;                            // Startknoten
-    uint_fast8_t goal_node;                             // Zielknoten
-    uint_fast8_t current_node;                          // Aktueller Knoten (wird nur waehrend der Tiefensuche
-                                                        // benoetigt)
-
-    unsigned char result_path [MAX_NUMBER_OF_C_ATOMS];  // Pfad, um vom Start- zum Zielknoten zu kommen
-    uint_fast8_t result_path_length;                    // Laenge des Pfades
-    uint_fast8_t path_index;                            // Das naechste zu verwendene Objekt im result_path-Array.
-                                                        // Diese Information wird nur fuer die Erzeugung des Pfades
-                                                        // benoetigt
-    uint_fast8_t max_possible_nesting_depth;            // Maximal moegliche Verschachtelungstiefe der Aeste im
-                                                        // Molekuel, wenn der Pfad als Hauptkette gewaehlt wird
-};
 
 
 
@@ -54,16 +31,17 @@ Find_Main_Chain
 /**
  * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
  */
-static uint_fast8_t                                 // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl
-                                                    // an verwendeten Path_Data-Objekten
+static void
 Do_DFS
 (
-        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const restrict path_data, // Zeiger auf die bereits angelegten Path_Data-Objekte
-        const uint_fast8_t start_c_atom             // OPTIONAL: Angabe eines Start C-Atoms, von dem die laengste
-                                                    // Kette aus gebildet wird. Dies ist bei der Bestimmung einiger
-                                                    // Verschachtelungen notwendig
-                                                    // Bei Nichtverwendung: UINT_FAST8_MAX
+        const struct Alkane* const restrict alkane,                     // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data_Container* const restrict path_data_container, // Zeiger auf ein bereits angelegtes
+                                                                        // Path_Data_Container-Objekt
+        const uint_fast8_t start_c_atom                                 // OPTIONAL: Angabe eines Start C-Atoms, von
+                                                                        // dem die laengste Kette aus gebildet wird.
+                                                                        // Dies ist bei der Bestimmung einiger
+                                                                        // Verschachtelungen notwendig
+                                                                        // Bei Nichtverwendung: UINT_FAST8_MAX
 );
 
 /**
@@ -73,23 +51,13 @@ Do_DFS
  * wird der Pfad ausgewaehlt, bei denen die uebrigen Aeste die GERINGSTE Verschachtelungstiefe besitzen. Dies dient
  * dazu, dass der IUPAC-Name moeglichst kurz und einfach wird.
  */
-static uint_fast8_t                                 // Index des Path_Data-Objektes, welches die Hauptkette darstellt
+static uint_fast8_t                                                     // Index des Path_Data-Objektes, welches die
+                                                                        // Hauptkette darstellt
 Select_Suitable_Chain
 (
-        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const restrict path_data, // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden
-                                                    // soll
-        const size_t count_path_data                // Anzahl an Path_Data-Objekte
-);
-
-/**
- * Die wichtigsten Infos ueber ein Path_Data Objekt ausgeben.
- */
-static void
-Print_Path_Data
-(
-        const struct Path_Data* const restrict path_data    // Path_Data Objekt, deren wichtigsten Infos ausgegeben
-                                                            // werden
+        const struct Alkane* const restrict alkane,                     // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data_Container* const restrict path_data_container  // Path_Data_Container, aus denen die
+                                                                        // Hauptkette ausgewaehlt werden
 );
 
 /**
@@ -206,10 +174,6 @@ Convert_Alkane_To_IUPAC_Name
 {
     ASSERT_MSG(alkane != NULL, "alkane is NULL !");
 
-    // Unused Warnung bei dieser statischen Funktion unterbinden. Diese Funktion wird nur fuer Debugzwecke verwendet
-    // und ist daher i.d.R. auskommentiert !
-    (void) Print_Path_Data;
-
     // ===== ===== ===== BEGINN Zusammengesetzten Zahlencode des uebergebenen Alkans ueberpruefen ===== ===== =====
     uint_fast8_t count_number_occur [MAX_NUMBER_OF_C_ATOMS];
     memset (count_number_occur, '\0', sizeof (count_number_occur));
@@ -317,49 +281,15 @@ Find_Main_Chain
                                                     // Bei Nichtverwendung: UINT_FAST8_MAX
 )
 {
-    // Speicher fuer die Bestimmungen der Tiefensuche
-    // Dieses Array ist ab 14 C-Atomen zu klein und dies fuehrt zu den Stack smashing ! Siehe Kommentar ein paar Zeilen
-    // weiter unten !
-    struct Path_Data path_data [MAX_NUMBER_OF_C_ATOMS];
-    memset (path_data, '\0', sizeof (path_data));
+    // Container fuer die Bestimmungen der Tiefensuche
+    struct Path_Data_Container* path_data_container = Create_Path_Data_Container ();
+
 
     // Tiefensuche fuer alle moeglichen Pfade durchfuehren
-    // ToDo: Ab 14 C-Atomen wird durch diese Funktion der Stack kaputtgemacht, sodass das Programm am Ende der
-    // Funktion "Find_Main_Chain" abgebrochen wird.
-    // Die fehlerhaften Schreibvorgaenge auf dem Stack lassen sich durch den Debugger bereits am Ende der Funktion
-    // "Do_DFS" erkennen. Die Stackframes unter dem Frame fuer "Find_Main_Chain" werden komplett mit 0x00
-    // ueberschrieben !
-    // Ausgabe bei der Ausfuehrung:
-    /*
-        RESULTS  1:     0 !
-        RESULTS  2:     0 !
-        RESULTS  3:     0 !
-        RESULTS  4:     0 !
-        RESULTS  5:     3 !
-        RESULTS  6:    55 !
-        RESULTS  7:   313 !
-        RESULTS  8:   532 !
-        RESULTS  9:   503 !
-        RESULTS 10:   293 !
-        RESULTS 11:   118 !
-        RESULTS 12:    34 !
-        RESULTS 13:     6 !
-        RESULTS 14:     1 !
-
-        > RESULTS SUM: 1858 ! <
-
-        2,2,4-TriMethyl-3-(1,1,1-TriMethylEthyl)Pentan
-        => IUPAC name:               2,2,4-TriMethyl-3-(1,1,1-TriMethylEthyl)Pentan <= (length: 46 |      1)
-        Cannot find the current result "2,2,4-TriMethyl-3-(1,1,1-TriMethylEthyl)Pentan" in the list of expected results !
-        3-Ethyl-2,2,4,4-TetraMethyl-3-(1-MethylEthyl)Pentan
-        => IUPAC name:          3-Ethyl-2,2,4,4-TetraMethyl-3-(1-MethylEthyl)Pentan <= (length: 51 |      2)
-        *** stack smashing detected ***: <unknown> terminated
-        Abgebrochen (Speicherabzug geschrieben)
-     */
-    const uint_fast8_t count_created_paths = Do_DFS (alkane, path_data, start_c_atom);
+    Do_DFS (alkane, path_data_container, start_c_atom);
 
     // Den passenden Pfad aus den gerade erzeugten Pfaden auswaehlen
-    const uint_fast8_t result_path_index = Select_Suitable_Chain (alkane, path_data, count_created_paths);
+    const uint_fast8_t result_path_index = Select_Suitable_Chain (alkane, path_data_container);
 
     // Den Pfad, der als Hauptkette ausgewaehlt wurde, dynamisch erzeugen, damit das Ergebnis zurueckgegeben werden
     // kann
@@ -367,9 +297,14 @@ Find_Main_Chain
     ASSERT_ALLOC(result_path_data, "Cannot allocate memory for the main chain path !", sizeof (struct Path_Data));
 
     // Ergebnisobjekt kopieren
-    memcpy (result_path_data, &(path_data [result_path_index]), sizeof (struct Path_Data));
+    if (path_data_container->data [result_path_index] != NULL)
+    {
+        memcpy (result_path_data, path_data_container->data [result_path_index], sizeof (struct Path_Data));
+    }
 
     // printf ("Result Index: %d\n", result_path_index);
+
+    Delete_Path_Data_Container (path_data_container);
 
     return result_path_data;
 }
@@ -379,16 +314,17 @@ Find_Main_Chain
 /**
  * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
  */
-static uint_fast8_t                                 // Anzahl an durchgefuehrten Tiefensuchen und dadurch auch Anzahl
-                                                    // an verwendeten Path_Data-Objekten
+void
 Do_DFS
 (
-        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const restrict path_data, // Zeiger auf die bereits angelegten Path_Data-Objekte
-        const uint_fast8_t start_c_atom             // OPTIONAL: Angabe eines Start C-Atoms, von dem die laengste
-                                                    // Kette aus gebildet wird. Dies ist bei der Bestimmung einiger
-                                                    // Verschachtelungen notwendig
-                                                    // Bei Nichtverwendung: UINT_FAST8_MAX
+        const struct Alkane* const restrict alkane,                     // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data_Container* const restrict path_data_container, // Zeiger auf ein bereits angelegtes
+                                                                        // Path_Data_Container-Objekt
+        const uint_fast8_t start_c_atom                                 // OPTIONAL: Angabe eines Start C-Atoms, von
+                                                                        // dem die laengste Kette aus gebildet wird.
+                                                                        // Dies ist bei der Bestimmung einiger
+                                                                        // Verschachtelungen notwendig
+                                                                        // Bei Nichtverwendung: UINT_FAST8_MAX
 )
 {
     // Alle Elemente des Graphens ermitteln, die genau eine Bindung haben. Dies sind die CH3-Gruppen, mit denen die
@@ -409,7 +345,6 @@ Do_DFS
 
     // Damit die Bennenung der oberen Schleifengrenzen besser ist
     const uint_fast8_t count_ch3_elemets = next_free_ch3_element;
-    uint_fast8_t next_free_path_data = 0;
 
     // Alle Kombinationen an CH3-Elementen ausprobieren, wobei die Reihenfolge der CH3-Elemente KEINE Rolle spielt !
     // Gleichzeitig muessen die Faelle, wo Start und Ziel gleich sind, nicht betrachtet werden
@@ -420,27 +355,28 @@ Do_DFS
                 current_ch3_element_end < count_ch3_elemets;
                 ++ current_ch3_element_end)
         {
+            struct Path_Data* current_path_data = Create_Path_Data ();
+            Add_Path_Data_To_Container (path_data_container, current_path_data);
+
             // Adjazenzmatrix des Alkans in das passende Path_Data-Objekt kopieren
-            memcpy (path_data [next_free_path_data].adj_matrix, alkane->structure, sizeof (alkane->structure));
+            memcpy (current_path_data->adj_matrix, alkane->structure, sizeof (alkane->structure));
 
             // Tiefensuche durchfuehren, um bei der aktuellen Variante des Start- und Zielknotens den Pfad und deren
             // Laenge zu bestimmen
             // Verwendung eines manuellen Startknoten ?
             if (start_c_atom != UINT_FAST8_MAX)
             {
-                Depth_First_Search_Start (start_c_atom, ch3_elements [current_ch3_element_end],
-                                    &(path_data [next_free_path_data]));
+                Depth_First_Search_Start (start_c_atom, ch3_elements [current_ch3_element_end], current_path_data);
             }
             else
             {
                 Depth_First_Search_Start (ch3_elements [current_ch3_element_start], ch3_elements [current_ch3_element_end],
-                        &(path_data [next_free_path_data]));
+                        current_path_data);
             }
-            ++ next_free_path_data;
         }
     }
 
-    return next_free_path_data;
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -452,23 +388,24 @@ Do_DFS
  * wird der Pfad ausgewaehlt, bei denen die uebrigen Aeste die GERINGSTE Verschachtelungstiefe besitzen. Dies dient
  * dazu, dass der IUPAC-Name moeglichst kurz und einfach wird.
  */
-static uint_fast8_t                                 // Index des Path_Data-Objektes, welches die Hauptkette darstellt
+static uint_fast8_t                                                     // Index des Path_Data-Objektes, welches die
+                                                                        // Hauptkette darstellt
 Select_Suitable_Chain
 (
-        const struct Alkane* const restrict alkane, // Alkan-Objekt, welches betrachtet werden soll
-        struct Path_Data* const restrict path_data, // Path_Data-Objekte, aus denen die Hauptkette ausgewaehlt werden
-                                                    // soll
-        const size_t count_path_data                // Anzahl an Path_Data-Objekte
+        const struct Alkane* const restrict alkane,                     // Alkan-Objekt, welches betrachtet werden soll
+        struct Path_Data_Container* const restrict path_data_container  // Path_Data_Container, aus denen die
+                                                                        // Hauptkette ausgewaehlt werden
 )
 {
     // Die maximale Laenge des laengsten Pfades aus der Menge der moeglichen Pfade auswaehlen
     // Es ist durchaus moeglich, dass mehrere Pfade die maximale Laenge besitzen
     uint_fast8_t main_chain_length = 0;
-    for (size_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
+    for (size_t current_path_data_index = 0; current_path_data_index < path_data_container->size;
+            ++ current_path_data_index)
     {
-        if (path_data [current_path_data_index].result_path_length > main_chain_length)
+        if (path_data_container->data [current_path_data_index]->result_path_length > main_chain_length)
         {
-            main_chain_length = path_data [current_path_data_index].result_path_length;
+            main_chain_length = path_data_container->data [current_path_data_index]->result_path_length;
         }
     }
 
@@ -478,9 +415,10 @@ Select_Suitable_Chain
     // Ast mit der geringsten Verschachtelungstiefe
     uint_fast8_t index_smallest_nesting_depth = 0;
     // Wert mit dem ersten Index initialisieren, deren Laenge mit der Laenge der Hauptkette uebereinstimmt
-    for (size_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
+    for (size_t current_path_data_index = 0; current_path_data_index < path_data_container->size;
+            ++ current_path_data_index)
     {
-        if (path_data [current_path_data_index].result_path_length == main_chain_length)
+        if (path_data_container->data [current_path_data_index]->result_path_length == main_chain_length)
         {
             index_smallest_nesting_depth = (uint_fast8_t) current_path_data_index;
             break;
@@ -488,9 +426,15 @@ Select_Suitable_Chain
     }
 
     // Maximale Verschachtelungstiefe bei allen Pfaden ermitteln, wenn diese als Hauptkette gewaehlt werden wuerden
-    for (uint_fast8_t current_path_data_index = 0; current_path_data_index < count_path_data; ++ current_path_data_index)
+    for (uint_fast8_t current_path_data_index = 0; current_path_data_index < path_data_container->size;
+            ++ current_path_data_index)
     {
-        struct Path_Data* const current_path_data = &(path_data [current_path_data_index]);
+        struct Path_Data* const current_path_data = path_data_container->data [current_path_data_index];
+
+        if (current_path_data == NULL)
+        {
+            continue;
+        }
 
         // Die Pfade, wo die Laenge exakt mit der Laenge der Hauptkette uebereinstimmt, sind die moeglichen Hauptketten
         if (current_path_data->result_path_length == main_chain_length)
@@ -533,8 +477,8 @@ Select_Suitable_Chain
 
             // Ast mit der geringsten Verschachtelungstiefe ermitteln
             // Hat der aktuelle Ast eine geringere Verschachtelungstiefe ?
-            if (path_data [current_path_data_index].max_possible_nesting_depth <
-                    path_data [index_smallest_nesting_depth].max_possible_nesting_depth)
+            if (path_data_container->data [current_path_data_index]->max_possible_nesting_depth <
+                    path_data_container->data [index_smallest_nesting_depth]->max_possible_nesting_depth)
             {
                 index_smallest_nesting_depth = current_path_data_index;
             }
@@ -545,55 +489,28 @@ Select_Suitable_Chain
 
     // Die Verbindungen der C-Atome, die nicht zur Hauptkette gehoeren, zur Hauptkette gerichtet machen, damit bei
     // spaeteren Untersuchungen einfacher mit den uebrigen C-Atomen gearbeitet werden kann
-    struct Path_Data* const result_ptr = &(path_data [index_smallest_nesting_depth]);
+    struct Path_Data* const result_ptr = path_data_container->data [index_smallest_nesting_depth];
 
-    for (uint_fast8_t i = 0; i < result_ptr->result_path_length; ++ i)
+    if (result_ptr != NULL)
     {
-        for (uint_fast8_t i2 = 0; i2 < alkane->number_of_c_atoms; ++ i2)
+        for (uint_fast8_t i = 0; i < result_ptr->result_path_length; ++ i)
         {
-            // Alle moeglichen C-Atome der Hauptkette nach weiteren Verbindungen, die nicht zur Hauptkette gehoeren,
-            // kontrollieren
-            if (result_ptr->adj_matrix [result_ptr->result_path [i]][i2] == 1 &&
-                    result_ptr->adj_matrix [i2][result_ptr->result_path [i]] == 1)
+            for (uint_fast8_t i2 = 0; i2 < alkane->number_of_c_atoms; ++ i2)
             {
-                // Verbindung zum C-Atom ausserhalb der Hauptkette in eine Richtung entfernen, damit die Bindung
-                // gerichtet ist
-                result_ptr->adj_matrix [result_ptr->result_path [i]][i2] = 0;
+                // Alle moeglichen C-Atome der Hauptkette nach weiteren Verbindungen, die nicht zur Hauptkette gehoeren,
+                // kontrollieren
+                if (result_ptr->adj_matrix [result_ptr->result_path [i]][i2] == 1 &&
+                        result_ptr->adj_matrix [i2][result_ptr->result_path [i]] == 1)
+                {
+                    // Verbindung zum C-Atom ausserhalb der Hauptkette in eine Richtung entfernen, damit die Bindung
+                    // gerichtet ist
+                    result_ptr->adj_matrix [result_ptr->result_path [i]][i2] = 0;
+                }
             }
         }
     }
 
     return index_smallest_nesting_depth;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Die wichtigsten Infos ueber ein Path_Data Objekt ausgeben.
- */
-static void
-Print_Path_Data
-(
-        const struct Path_Data* const restrict path_data    // Path_Data Objekt, deren wichtigsten Infos ausgegeben
-                                                            // werden
-)
-{
-    printf ("Start: %2" PRIuFAST8 "; End: %2" PRIuFAST8 "; Length: %2" PRIuFAST8 "\n", path_data->start_node,
-            path_data->goal_node, path_data->result_path_length);
-    printf ("Path: (");
-    for (uint_fast8_t i = 0; i < path_data->result_path_length; ++ i)
-    {
-        printf ("%2" PRIuFAST8, path_data->result_path [i]);
-
-        if ((i + 1) < path_data->result_path_length)
-        {
-            printf (", ");
-        }
-    }
-    puts (")");
-    fflush (stdout);
-
-    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
