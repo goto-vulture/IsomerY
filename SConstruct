@@ -75,6 +75,7 @@ c_file_list = [
     "src/Alkane/Alkane_Branch_Container.c",
     "src/Alkane/Alkane.c",
     "src/Alkane/Alkane_Container.c",
+    "src/Alkane/Path_Data.c",
 
     # Dateien fuer die Erstellung des IUPAC-Namen fuer die erzeugten Alkane
     "src/Alkane/Alkane_To_IUPAC_Name.c",
