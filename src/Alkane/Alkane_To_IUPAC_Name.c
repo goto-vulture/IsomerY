@@ -318,6 +318,8 @@ Find_Main_Chain
 )
 {
     // Speicher fuer die Bestimmungen der Tiefensuche
+    // Dieses Array ist ab 14 C-Atomen zu klein und dies fuehrt zu den Stack smashing ! Siehe Kommentar ein paar Zeilen
+    // weiter unten !
     struct Path_Data path_data [MAX_NUMBER_OF_C_ATOMS];
     memset (path_data, '\0', sizeof (path_data));
 
