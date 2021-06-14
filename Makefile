@@ -1,4 +1,4 @@
-##### ##### ##### ##### ###### Makefile Skript fuer IsomerY ##### ##### ##### ##### #####
+##### ##### ##### ##### ##### Makefile Skript fuer IsomerY ##### ##### ##### ##### #####
 # Das Programm kann sowohl ueber das Buildsystem "make" als auch ueber das Buildsystem "scons" erstellt werden
 # Das "Makefile" fuer scons ist: SConstruct
 
