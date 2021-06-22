@@ -684,6 +684,33 @@ Execute_Creation_Test_With_Expected_Results
     // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
     for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
     {
+        // Fuer die Benennungsroutinen ist es wichtig, dass es keine verschachtelten Verschachtelungen gibt !
+        // U.a. weil bei einer IUPAC konformen Benennung solche Konstrukte nicht auftreten koennen.
+        // => Alle Chain-Objekte kontrollieren, falls welche vorhanden sind
+        // Hinweis: Nur das Isomer, welches aus einer geraden Kette besteht, besitzt keine Chain-Objekte.
+        //
+        // Gueltige Verschachtelungstiefen:
+        // 0: Die Hauptkette (darf nur einmal vorkommen !)
+        // 1: Abzweigungen, die sich direkt an der Hauptkette befinden
+        // 2: Abzweigungen, die sich an einer anderen Abzweigung befinden und nicht direkt mit der Hauptkette verbunden
+        // sind
+        if (all_alkanes->data [i]->next_free_chain > 0)
+        {
+            uint_fast8_t count_chains_with_nesting_depth_0 = 0;
+            for (uint_fast8_t i2 = 0; i2 < all_alkanes->data [i]->next_free_chain; i2 ++)
+            {
+                ASSERT_FMSG(all_alkanes->data [i]->chains [i2].nesting_depth <= 2,
+                        "Invalid nesting depth ! Max. valid: 2; Got %" PRIuFAST8 " !",
+                        all_alkanes->data [i]->chains [i2].nesting_depth);
+
+                if (all_alkanes->data [i]->chains [i2].nesting_depth == 0)
+                {
+                    count_chains_with_nesting_depth_0 ++;
+                }
+            }
+            ASSERT_EQUALS(1, count_chains_with_nesting_depth_0);
+        }
+
         Convert_Alkane_To_IUPAC_Name (all_alkanes->data [i]);
 
         // Falls ein erwartetes Ergebnis verwendet wurde, dann wird in dieser Variable der Index des erwarteten
