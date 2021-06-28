@@ -264,7 +264,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
     memset (iupac_name, '\0', sizeof(iupac_name));
     const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
 
-    const char* expected_result = "...";
+    const char* expected_result = "6,7,8-TriMethyl-7-(1-(1-Methylethyl)-2-(1-Methylethyl)pentyl)Tridecan";
 
     struct Alkane alkane;
     memset (&alkane, '\0', sizeof(struct Alkane));
