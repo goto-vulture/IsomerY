@@ -61,6 +61,14 @@ extern void TEST_Convert_Alkane_To_IUPAC_Name (void);
 extern void TEST_Convert_Alkane_To_IUPAC_Name_2 (void);
 
 /**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen, bei dem die Chain-Objekte von Hand erzeugt wurden. Hierbei
+ * geht es in erster Linie darum den Konvertierungsprozess von den Chain-Objekten hin zu dem IUPAC-Namen zu testen.
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+extern void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void);
+
+/**
  * Die Erstellung des IUPAC-Namen aus einem Alkan mit bis zu zwei Verschachtelungstiefen testen. Das bedeutet, dass an
  * mind. einem Ast ein weiter Ast ist.
  *

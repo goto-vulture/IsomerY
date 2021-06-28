@@ -15,6 +15,7 @@
 #include "../Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "../Alkane/Alkane_Info_Constitutional_Isomer.h"
 #include "../Alkane/Alkane_To_IUPAC_Name.h"
+#include "../Alkane/Alkane_Chain_To_IUPAC_Name.h"
 #include "../Misc.h"
 #include "../Print_Tools.h"
 #include "../Error_Handling/Dynamic_Memory.h"
@@ -83,6 +84,7 @@ Execute_All_Alkane_Tests
     RUN(TEST_Create_Alkane);
     RUN(TEST_Convert_Alkane_To_IUPAC_Name);
     RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
+    RUN(TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects);
     RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
 
     RUN(TEST_All_Possible_Butan_Constitutional_Isomers);
@@ -244,6 +246,78 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
     Delete_Alkane_Branch (branch_1);
     Delete_Alkane_Branch (branch_2);
     Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Die Erstellung des IUPAC-Namen aus einem Alkan testen, bei dem die Chain-Objekte von Hand erzeugt wurden. Hierbei
+ * geht es in erster Linie darum den Konvertierungsprozess von den Chain-Objekten hin zu dem IUPAC-Namen zu testen.
+ *
+ * Wird der IUPAC-Name richtig gebildet ?
+ */
+void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
+{
+    char iupac_name [IUPAC_NAME_LENGTH];
+    memset (iupac_name, '\0', sizeof(iupac_name));
+    const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
+
+    const char* expected_result = "...";
+
+    struct Alkane alkane;
+    memset (&alkane, '\0', sizeof(struct Alkane));
+
+    /**
+     * 27 C-Atome
+     * Bis zu dreifache Verschachtelungstiefe.
+     *
+     *                     C   C   C
+     *                     |   |   |
+     * C - C - C - C - C - C - C - C - C - C - C - C - C
+     *                         |
+     *                     C   C - C - C
+     *                     |   |   |
+     *                 C - C - C   C
+     *                         |
+     *                         C
+     *                         |
+     *                         C
+     *                         |
+     *                         C
+     */
+    // Von Hand Chain-Objekte erzeugen ...
+// @formatter:off
+    const struct Chain chain_data [] =
+    {
+            // Hauptkette
+            { .length = 13,  .position = 255,   .nesting_depth = 0 },
+
+            { .length = 1,  .position = 6,      .nesting_depth = 1 },
+            { .length = 1,  .position = 7,      .nesting_depth = 1 },
+            { .length = 5,  .position = 7,      .nesting_depth = 1 },
+            { .length = 2,  .position = 1,      .nesting_depth = 2 },
+            { .length = 1,  .position = 1,      .nesting_depth = 3 },
+            { .length = 2,  .position = 2,      .nesting_depth = 2 },
+            { .length = 1,  .position = 1,      .nesting_depth = 3 },
+            { .length = 1,  .position = 8,      .nesting_depth = 1 }
+    };
+
+    // ... und einfuegen
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(chain_data); ++ i)
+    {
+        alkane.chains [alkane.next_free_chain].length           = chain_data [i].length;
+        alkane.chains [alkane.next_free_chain].position         = chain_data [i].position;
+        alkane.chains [alkane.next_free_chain].nesting_depth    = chain_data [i].nesting_depth;
+        alkane.next_free_chain ++;
+    }
+// @formatter:on
+
+    // Konvertierung durchfuehren
+    Chain_To_IUPAC (iupac_name, iupac_name_length, &alkane);
+
+    ASSERT_STRING_EQUALS(expected_result, iupac_name);
 
     return;
 }
