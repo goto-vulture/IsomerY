@@ -59,7 +59,12 @@ TEMP_1 =
 TARGET =
 
 # Zusaetzliche Flags fuer Windows
-ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format
+# Unter Windows gibt es bei Format-Strings einige Probleme !
+# -Wno-pedantic-ms-format:    Bestimmte Warnungen, die die Format-Strings betreffen, abschalten
+# -D__USE_MINGW_ANSI_STDIO=1: Standardmaessig ist der Formatstring "%z" fuer size_t Variablen abgeschaltet (warum auch immer) ...
+#                             Dieses Flag schaltet das Element ein, sodass size_t Variablen richtig ausgegeben werden koennen
+#                             Siehe: https://lists.gnu.org/archive/html/bug-gnulib/2014-09/msg00056.html
+ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format -D__USE_MINGW_ANSI_STDIO=1
 
 # Der Debug-Build ist die Standardvariante, wenn nichts anderes angegeben wurde
 # Fuer den Release-Build muss die Variable "Release", "RELEASE" oder "release" auf 1 gesetzt werden
