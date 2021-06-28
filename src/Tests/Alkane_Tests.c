@@ -110,6 +110,22 @@ Execute_All_Alkane_Tests
  */
 void TEST_Create_Alkane (void)
 {
+    /**
+     * 24 C-Atome
+     * Bis zu dreifache Verschachtelungstiefe.
+     *
+     * C - C - C - C - C - C - C - C - C - C - C - C - C
+     *                         |
+     *                     C   C - C - C
+     *                     |   |   |
+     *                 C - C - C   C
+     *                         |
+     *                         C
+     *                         |
+     *                         C
+     *                         |
+     *                         C
+     */
     const unsigned char branch_1_content [] =
     { 1, 1, 2, 3, 4, 5 };
     const unsigned char branch_2_content [] =
