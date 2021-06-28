@@ -110,25 +110,29 @@ Execute_All_Alkane_Tests
  */
 void TEST_Create_Alkane (void)
 {
-    const unsigned char branch_1_content [] = { 1 };
-    const unsigned char branch_2_content [] = { 1, 1, 1 };
-    const unsigned char branch_3_content [] = { 1, 1, 1, 1 };
+    const unsigned char branch_1_content [] =
+    { 1, 1, 2, 3, 4, 5 };
+    const unsigned char branch_2_content [] =
+    { 1, 1, 2, 3, 4, 5, 6 };
+    const unsigned char branch_3_content [] =
+    { 1, 1, 2, 3, 4, 1, 6, 6, 2, 9, 9 };
 
-    const unsigned char expected_result [] = { 1, 1, 2, 2, 1, 5, 5, 5 };
+    const unsigned char expected_result [] =
+    { 1, 1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 1, 14, 15, 16, 17, 14, 19, 19, 15, 22, 22 };
 
-    struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
-    struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
-    struct Alkane_Branch* branch_3 = Create_Alkane_Branch (branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
+    struct Alkane_Branch* branch_1 = Create_Alkane_Branch(branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
+    struct Alkane_Branch* branch_2 = Create_Alkane_Branch(branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
+    struct Alkane_Branch* branch_3 = Create_Alkane_Branch(branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
 
-    struct Alkane* alkane = Create_Alkane (branch_1, branch_2, branch_3, NULL);
+    struct Alkane* alkane = Create_Alkane(branch_1, branch_2, branch_3, NULL);
     // Print_Alkane (alkane);
 
     ASSERT_EQUALS(true, Compare_Alkane_Numbercodes (alkane, expected_result));
 
-    Delete_Alkane (alkane);
-    Delete_Alkane_Branch (branch_1);
-    Delete_Alkane_Branch (branch_2);
-    Delete_Alkane_Branch (branch_3);
+    Delete_Alkane(alkane);
+    Delete_Alkane_Branch(branch_1);
+    Delete_Alkane_Branch(branch_2);
+    Delete_Alkane_Branch(branch_3);
 
     return;
 }
