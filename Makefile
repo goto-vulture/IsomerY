@@ -31,8 +31,9 @@ CCFLAGS += -Wstrict-prototypes
 CCFLAGS += -Wformat-nonliteral
 # Warnung, wenn ein Wert sich selbst zugewiesen wird
 CCFLAGS += -Winit-self
-# Einige weitere Moeglichkeiten den Code etwas sicherer zu machen
-CCFLAGS += -fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-security
+# Einige weitere Moeglichkeiten den Code etwas sicherer zu machen => Diese Flags werden als systemspezifische Flags verwendet, da Windows mit der Standardauswahl nicht 
+# arbeiten kann ...
+# CCFLAGS += -fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-security
 
 
 # Debug Build: Keine Optimierung und das hoechste Debug Level
@@ -58,13 +59,16 @@ PROJECT_NAME = IsomerY
 TEMP_1 =
 TARGET =
 
+# Zusaetzliche Flags fuer Linux
+ADDITIONAL_LINUX_FLAGS += -fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-security
+
 # Zusaetzliche Flags fuer Windows
 # Unter Windows gibt es bei Format-Strings einige Probleme !
 # -Wno-pedantic-ms-format:    Bestimmte Warnungen, die die Format-Strings betreffen, abschalten
 # -D__USE_MINGW_ANSI_STDIO=1: Standardmaessig ist der Formatstring "%z" fuer size_t Variablen abgeschaltet (warum auch immer) ...
 #                             Dieses Flag schaltet das Element ein, sodass size_t Variablen richtig ausgegeben werden koennen
 #                             Siehe: https://lists.gnu.org/archive/html/bug-gnulib/2014-09/msg00056.html
-ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format -D__USE_MINGW_ANSI_STDIO=1
+ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format -D__USE_MINGW_ANSI_STDIO=1 -fstack-protector -Wformat-security
 
 # Der Debug-Build ist die Standardvariante, wenn nichts anderes angegeben wurde
 # Fuer den Release-Build muss die Variable "Release", "RELEASE" oder "release" auf 1 gesetzt werden
@@ -98,6 +102,7 @@ ifeq ($(OS), Windows_NT)
 	CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
 	TARGET = $(addsuffix Win, $(TEMP_1))
 else
+	CCFLAGS += $(ADDITIONAL_LINUX_FLAGS)
 	TARGET = $(addsuffix Linux, $(TEMP_1))
 endif
 
