@@ -31,8 +31,8 @@ CCFLAGS += -Wstrict-prototypes
 CCFLAGS += -Wformat-nonliteral
 # Warnung, wenn ein Wert sich selbst zugewiesen wird
 CCFLAGS += -Winit-self
-# Einige weitere Moeglichkeiten den Code etwas sicherer zu machen => Diese Flags werden als systemspezifische Flags verwendet, da Windows mit der Standardauswahl nicht 
-# arbeiten kann ...
+# Einige weitere Moeglichkeiten den Code etwas sicherer zu machen => Diese Flags werden als systemspezifische Flags verwendet,
+# da Windows mit der Standardauswahl nicht arbeiten kann ...
 # CCFLAGS += -fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-security
 
 
@@ -95,9 +95,12 @@ else
 endif
 
 
-# Unter Windows wird das Flag "-Wno-pedantic-ms-format" benoetigt, da die MinGW Implementierung nicht standardkonforme
+
+# Unter Windows wird u.a. das Flag "-Wno-pedantic-ms-format" benoetigt, da die MinGW Implementierung nicht standardkonforme
 # Formatstrings verwendet. Mit diesem Compilerflag wird die Warnung, dass die MinGW Formatstrings nicht dem Standard
 # entsprechen, entfernt
+#
+# Unter Linux werden einige Flags verwendet, die unter Windows nicht verwendet werden koennen
 ifeq ($(OS), Windows_NT)
 	CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
 	TARGET = $(addsuffix Win, $(TEMP_1))
