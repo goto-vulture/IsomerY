@@ -4,6 +4,7 @@
 .settings/
 gmon.out
 Debug/
+Release/
 
 # Konfigurationsdatei vom Buildsystem scons
 .sconsign.dblite
