@@ -180,6 +180,7 @@ Alkane_Branch_Container_To_String
         }
     }
 
+    // Dieses Label ist fuer das Makro TO_STRING_HELPER_VA_ARGS erforderlich !
     no_remaining_memory:
     string_memory [string_memory_size - 1] = '\0';  // Nullterminierung garantieren
 
