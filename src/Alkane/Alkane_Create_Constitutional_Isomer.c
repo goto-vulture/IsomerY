@@ -107,7 +107,7 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_1, empty_branch);
     Add_Alkane_Branch_To_Container (Container_Height_1, single_c_atom_branch);
 
-    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branches were build)\n",
             (size_t) 1u, count_alkane_branch_container, Container_Height_1->size);
 
     // Alkanastliste mit Objekten, deren maximale Laenge aus ZWEI C-Atoms besteht, erzeugen
@@ -136,7 +136,7 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_2, three_c_atoms_branch);
     Add_Alkane_Branch_To_Container (Container_Height_2, four_c_atoms_branch);
 
-    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branches were build)\n",
             (size_t) 2u, count_alkane_branch_container, Container_Height_2->size);
 
 
@@ -248,7 +248,7 @@ Create_Alkane_Constitutional_Isomers
         FREE_AND_SET_TO_NULL (flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
 
-        PRINTF_FFLUSH ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " braches were build)\n",
+        PRINTF_FFLUSH ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branches were build)\n",
                 next_container + 1, count_alkane_branch_container, container_height_x [next_container]->size);
     }
     puts ("");
