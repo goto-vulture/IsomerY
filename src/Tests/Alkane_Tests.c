@@ -819,6 +819,13 @@ Execute_Creation_Test_With_Expected_Results
                     count_chains_with_nesting_depth_0 ++;
                 }
             }
+
+            // Doppelte Ueberpruefung per Hand und mit Makro, damit der Speicher richtig freigegeben wird, falls der
+            // Assert fehlschlaegt
+            if (count_chains_with_nesting_depth_0 != 1)
+            {
+                FREE_AND_SET_TO_NULL(count_expected_results_usage)
+            }
             ASSERT_EQUALS(1, count_chains_with_nesting_depth_0);
         }
 
