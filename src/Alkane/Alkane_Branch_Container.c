@@ -153,29 +153,31 @@ Alkane_Branch_Container_To_String
     TO_STRING_HELPER_VA_ARGS("Allocated Size: %" PRIuFAST64 "\n", container->allocated_size);
 
     // Status in die Zeichenkettendarstellung einbringen
-    if (remaining_memory == 0) { goto no_remaining_memory; }
-    switch (container->state)
+    if (remaining_memory > 0)
     {
-    case ALKANE_BRANCH_CONTAINER_CREATED:
-        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_CREATED\n");
-        break;
-    case ALKANE_BRANCH_CONTAINER_DELETED:
-        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_DELETED\n");
-        break;
-    case ALKANE_BRANCH_CONTAINER_INITIALIZED_WITH_ZERO_BYTES:
-        snprintf (string_memory + next_free_byte, remaining_memory,
-                "ALKANE_BRANCH_CONTAINER_INITIALIZED_WITH_ZERO_BYTES\n");
-        break;
-    case ALKANE_BRANCH_CONTAINER_INVALID_DATA:
-        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_INVALID_DATA\n");
-        break;
-    case ALKANE_BRANCH_CONTAINER_UNKNOWN_STATE:
-        snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_UNKNOWN_STATE\n");
-        break;
+        switch (container->state)
+        {
+        case ALKANE_BRANCH_CONTAINER_CREATED:
+            snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_CREATED\n");
+            break;
+        case ALKANE_BRANCH_CONTAINER_DELETED:
+            snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_DELETED\n");
+            break;
+        case ALKANE_BRANCH_CONTAINER_INITIALIZED_WITH_ZERO_BYTES:
+            snprintf (string_memory + next_free_byte, remaining_memory,
+                    "ALKANE_BRANCH_CONTAINER_INITIALIZED_WITH_ZERO_BYTES\n");
+            break;
+        case ALKANE_BRANCH_CONTAINER_INVALID_DATA:
+            snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_INVALID_DATA\n");
+            break;
+        case ALKANE_BRANCH_CONTAINER_UNKNOWN_STATE:
+            snprintf (string_memory + next_free_byte, remaining_memory, "ALKANE_BRANCH_CONTAINER_UNKNOWN_STATE\n");
+            break;
 
-        // Der default-Pfad soll nie ausgefuehrt werden ! Wenn dies dennoch der Fall ist, dann ist dies ein Fehler !
-    default:
-        ASSERT_MSG(false, "default path of a switch case statement executed !");
+            // Der default-Pfad soll nie ausgefuehrt werden ! Wenn dies dennoch der Fall ist, dann ist dies ein Fehler !
+        default:
+            ASSERT_MSG(false, "default path of a switch case statement executed !");
+        }
     }
 
     no_remaining_memory:
