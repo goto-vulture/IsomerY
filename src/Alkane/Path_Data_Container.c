@@ -29,6 +29,9 @@ Create_Path_Data_Container
         void
 )
 {
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) Print_Path_Data_Container;
+
     // Container erzeugen
     struct Path_Data_Container* new_container = (struct Path_Data_Container*) CALLOC (1,
             sizeof (struct Path_Data_Container));

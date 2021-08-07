@@ -29,6 +29,9 @@ Create_Path_Data
         void
 )
 {
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) Print_Path_Data;
+
     // Neues Objekt erzeugen
     struct Path_Data* new_path_data = (struct Path_Data*) CALLOC (1, sizeof (struct Path_Data));
     ASSERT_ALLOC(new_path_data, "Cannot allocate an Path_Data object !", sizeof (struct Path_Data));

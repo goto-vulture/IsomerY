@@ -31,6 +31,9 @@ Create_Alkane_Container
         void
 )
 {
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) Print_Alkane_Container;
+
     // Container erzeugen
     struct Alkane_Container* new_container = (struct Alkane_Container*) CALLOC (1, sizeof (struct Alkane_Container));
     ASSERT_ALLOC(new_container, "Cannot allocate an Alkane_Container object !", sizeof (struct Alkane_Container));

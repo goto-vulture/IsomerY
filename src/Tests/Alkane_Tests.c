@@ -99,6 +99,13 @@ Execute_All_Alkane_Tests
     RUN(TEST_All_Possible_Tridecan_Constitutional_Isomers);
     RUN(TEST_All_Possible_Tetradecan_Constitutional_Isomers);
 
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) TEST_All_Possible_Decan_Constitutional_Isomers;
+    (void) TEST_All_Possible_Undecan_Constitutional_Isomers;
+    (void) TEST_All_Possible_Dodecan_Constitutional_Isomers;
+    (void) TEST_All_Possible_Tridecan_Constitutional_Isomers;
+    (void) TEST_All_Possible_Tetradecan_Constitutional_Isomers;
+
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
 }

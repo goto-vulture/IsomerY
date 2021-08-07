@@ -73,6 +73,7 @@
 #include "Alkane/Alkane_Branch_Container.h"
 #include "Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "Tests/Alkane_Tests.h"
+#include "str2int.h"
 
 
 
@@ -87,6 +88,9 @@ int main (const int argc, const char* const argv [])
 {
     (void) argc;
     (void) argv;
+
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) str2int;
 
     // Einige Debug-Informationen ausgeben
     printf ("Sizeof Alkane:                  %6zu byte\n", sizeof (struct Alkane));

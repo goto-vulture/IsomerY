@@ -38,6 +38,9 @@ Create_Alkane_Branch
                                                         // Wenn branch == NULL ist, dann wird dieser Wert ignoriert
 )
 {
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) Print_Alkane_Branch;
+
     // Wenn Astinformationen vorhanden sind, dann muss die Laengenangabe ueberprueft werden
     if (branch != NULL)
     {

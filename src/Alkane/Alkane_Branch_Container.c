@@ -31,6 +31,9 @@ Create_Alkane_Branch_Container
         void
 )
 {
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) Print_Alkane_Branch_Container;
+
     // Container erzeugen
     struct Alkane_Branch_Container* new_container = (struct Alkane_Branch_Container*) CALLOC (1,
             sizeof (struct Alkane_Branch_Container));

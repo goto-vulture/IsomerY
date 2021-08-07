@@ -42,6 +42,9 @@ Create_Alkane
         struct Alkane_Branch* /* restrict */ branch_4     // 4. Ast des neuen Alkane-Objektes
 )
 {
+    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
+    (void) Print_Alkane;
+
     // Neues Objekt erzeugen
     struct Alkane* new_alkane = (struct Alkane*) CALLOC (1, sizeof (struct Alkane));
     ASSERT_ALLOC(new_alkane, "Cannot allocate an Alkane object !", sizeof (struct Alkane));
