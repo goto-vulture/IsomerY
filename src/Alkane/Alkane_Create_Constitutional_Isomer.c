@@ -107,8 +107,10 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_1, empty_branch);
     Add_Alkane_Branch_To_Container (Container_Height_1, single_c_atom_branch);
 
-    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branches were build)\n",
-            (size_t) 1u, count_alkane_branch_container, Container_Height_1->size);
+    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branch%s %s build)\n",
+            (size_t) 1u, count_alkane_branch_container, Container_Height_1->size,
+            (Container_Height_1->size != 1) ? "es" : "",
+            (Container_Height_1->size == 1) ? "was" : "were");
 
     // Alkanastliste mit Objekten, deren maximale Laenge aus ZWEI C-Atoms besteht, erzeugen
     const unsigned char two_c_atoms_numbercode []   = { 1, 1 };         // Zwei C-Atome als Ast
@@ -136,8 +138,10 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_Branch_To_Container (Container_Height_2, three_c_atoms_branch);
     Add_Alkane_Branch_To_Container (Container_Height_2, four_c_atoms_branch);
 
-    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branches were build)\n",
-            (size_t) 2u, count_alkane_branch_container, Container_Height_2->size);
+    PRINTF_FFLUSH("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branch%s %s build)\n",
+            (size_t) 2u, count_alkane_branch_container, Container_Height_2->size,
+            (Container_Height_2->size != 1) ? "es" : "",
+            (Container_Height_2->size == 1) ? "was" : "were");
 
 
 
@@ -248,8 +252,10 @@ Create_Alkane_Constitutional_Isomers
         FREE_AND_SET_TO_NULL (flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
 
-        PRINTF_FFLUSH ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branches were build)\n",
-                next_container + 1, count_alkane_branch_container, container_height_x [next_container]->size);
+        PRINTF_FFLUSH ("Alkane_Branch container %2zu / %2zu fully created. (%" PRIuFAST64 " branch%s %s build)\n",
+                next_container + 1, count_alkane_branch_container, container_height_x [next_container]->size,
+                (container_height_x [next_container]->size != 1) ? "es" : "",
+                (container_height_x [next_container]->size == 1) ? "was" : "were");
     }
     puts ("");
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
@@ -269,8 +275,10 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_To_Container (alkane_container_main_chain_length_1, single_c_atom_alkane);
 
     PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) 1u, (size_t) number_of_c_atoms);
-    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 1u,
-            (size_t) number_of_c_atoms, alkane_container_main_chain_length_1->size);
+    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkane%s %s build)\n", (size_t) 1u,
+            (size_t) number_of_c_atoms, alkane_container_main_chain_length_1->size,
+            (alkane_container_main_chain_length_1->size != 1) ? "s" : "",
+            (alkane_container_main_chain_length_1->size == 1) ? "was" : "were");
 
     // Alkan-Container, deren laengste Kette aus GENAU ZWEI C-Atom besteht
     struct Alkane* two_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, NULL, NULL);
@@ -278,8 +286,10 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_To_Container (alkane_container_main_chain_length_2, two_c_atom_alkane);
 
     PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) 2u, (size_t) number_of_c_atoms);
-    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 2u,
-            (size_t) number_of_c_atoms, alkane_container_main_chain_length_2->size);
+    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkane%s %s build)\n", (size_t) 2u,
+            (size_t) number_of_c_atoms, alkane_container_main_chain_length_2->size,
+            (alkane_container_main_chain_length_2->size != 1) ? "s" : "",
+            (alkane_container_main_chain_length_2->size == 1) ? "was" : "were");
 
     // Alkan-Container, deren laengste Kette aus GENAU DREI C-Atom besteht
     struct Alkane* three_c_atom_alkane = Create_Alkane (single_c_atom_branch, single_c_atom_branch, single_c_atom_branch,
@@ -294,8 +304,10 @@ Create_Alkane_Constitutional_Isomers
     Add_Alkane_To_Container (alkane_container_main_chain_length_3, five_c_atom_alkane);
 
     PRINTF_FFLUSH("Building alkane container %2zu / %2zu\n", (size_t) 3u, (size_t) number_of_c_atoms);
-    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n", (size_t) 3u,
-            (size_t) number_of_c_atoms, alkane_container_main_chain_length_3->size);
+    PRINTF_FFLUSH("Alkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkane%s %s build)\n", (size_t) 3u,
+            (size_t) number_of_c_atoms, alkane_container_main_chain_length_3->size,
+            (alkane_container_main_chain_length_3->size != 1) ? "s" : "",
+            (alkane_container_main_chain_length_3->size == 1) ? "was" : "were");
 
 
     // Jetzt wird es hier wieder interessant:
@@ -582,9 +594,11 @@ Create_Alkane_Constitutional_Isomers
         FREE_AND_SET_TO_NULL(flat_alkane_branch_container);
         flat_alkane_branch_container = NULL;
 
-        PRINTF_FFLUSH("\rAlkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkanes were build)\n",
+        PRINTF_FFLUSH("\rAlkane container %2zu / %2zu fully created. (%" PRIuFAST64 " alkane%s %s build)\n",
                 (size_t) next_alkane_container + 1, (size_t) number_of_c_atoms,
-                alkane_container_main_chain_length_x [next_alkane_container]->size);
+                alkane_container_main_chain_length_x [next_alkane_container]->size,
+                (alkane_container_main_chain_length_x [next_alkane_container]->size != 1) ? "s" : "",
+                (alkane_container_main_chain_length_x [next_alkane_container]->size == 1) ? "was" : "were");
     }
     puts ("");
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. + 3. Teil ===== ===== ===== ===== ===== ===== ===== =====
