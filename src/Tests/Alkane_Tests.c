@@ -691,8 +691,10 @@ Compare_Strings_Case_Insensitive
     char string_2_lowercase [255];
     memset (string_1_lowercase, '\0', sizeof (string_1_lowercase));
     memset (string_2_lowercase, '\0', sizeof (string_2_lowercase));
-    memcpy (string_1_lowercase, string_1, strlen (string_1));
-    memcpy (string_2_lowercase, string_2, strlen (string_2));
+    strncpy (string_1_lowercase, string_1, (COUNT_ARRAY_ELEMENTS(string_1_lowercase) < strlen (string_1)) ?
+            COUNT_ARRAY_ELEMENTS(string_1_lowercase) : strlen (string_1));
+    strncpy (string_2_lowercase, string_2, (COUNT_ARRAY_ELEMENTS(string_2_lowercase) < strlen (string_2)) ?
+            COUNT_ARRAY_ELEMENTS(string_2_lowercase) : strlen (string_2));
 
     // Alle alphabetischen Zeichen in Kleinbuchstaben konvertieren, damit spaeter ein Vergleich unabhaengig von der
     // Gross- und Kleinschreibung stattfinden kann
