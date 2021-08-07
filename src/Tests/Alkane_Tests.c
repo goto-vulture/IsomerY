@@ -689,14 +689,18 @@ Compare_Strings_Case_Insensitive
 
     // Alle alphabetischen Zeichen in Kleinbuchstaben konvertieren, damit spaeter ein Vergleich unabhaengig von der
     // Gross- und Kleinschreibung stattfinden kann
-    for (size_t string_1_char = 0; string_1_char < strlen (string_1_lowercase); ++ string_1_char)
+    for (size_t string_1_char = 0;
+            (string_1_char < strlen (string_1_lowercase)) && (string_1_char < COUNT_ARRAY_ELEMENTS(string_1_lowercase));
+            ++ string_1_char)
     {
         if (isupper (string_1_lowercase [string_1_char]) /* == true */)
         {
             string_1_lowercase [string_1_char] = (char) tolower (string_1_lowercase [string_1_char]);
         }
     }
-    for (size_t string_2_char = 0; string_2_char < strlen (string_2_lowercase); ++ string_2_char)
+    for (size_t string_2_char = 0;
+            (string_2_char < strlen (string_2_lowercase)) && (string_2_char < COUNT_ARRAY_ELEMENTS(string_2_lowercase));
+            ++ string_2_char)
     {
         if (isupper (string_2_lowercase [string_2_char]) /* == true */)
         {
