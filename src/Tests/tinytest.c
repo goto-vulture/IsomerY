@@ -24,6 +24,7 @@ void tt_execute (const char *name, void (*test_function) (void))
 {
     printf ("\n\n===== ===== ===== START RUN (%s) ===== ===== =====\n", name);
 
+    // Variable wird durch die Makros ASSERT_EQUALS und ASSERT_STRING_EQUALS angepasst !
     tt_current_test_failed = 0;
     test_function ();
     if (tt_current_test_failed)
