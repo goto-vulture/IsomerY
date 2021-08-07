@@ -119,6 +119,8 @@ extern const char* tt_current_expression;
 extern const char* tt_current_file;
 extern int tt_current_line;
 
+extern char tt_failed_function_names [32][128];
+extern int tt_current_tested_function_name;
 
 
 extern void tt_execute (const char *name, void (*test_function) (void));

@@ -3,6 +3,7 @@
  */
 
 #include "tinytest.h"
+#include <string.h>
 
 
 
@@ -16,6 +17,9 @@ const char* tt_current_expression   = NULL;
 const char* tt_current_file         = NULL;
 int tt_current_line                 = 0;
 
+char tt_failed_function_names [32][128];
+int tt_current_tested_function_name = 0;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -26,12 +30,33 @@ void tt_execute (const char *name, void (*test_function) (void))
 
     // Variable wird durch die Makros ASSERT_EQUALS und ASSERT_STRING_EQUALS angepasst !
     tt_current_test_failed = 0;
+
+    // Test-Funktion ausfuehren
     test_function ();
+
     if (tt_current_test_failed)
     {
         printf ("failure: %s:%d: In test %s():\n    %s (%s)\n", tt_current_file, tt_current_line, name, tt_current_msg,
                 tt_current_expression);
         tt_fails ++;
+
+        // Solane es noch weitere freie C-Strings gibt, werden die Namen der Funktionen, bei denen der Test
+        // fehlgeschlagen ist, aufgezeichnet
+        if ((size_t) tt_current_tested_function_name <
+                (sizeof (tt_failed_function_names) / sizeof (tt_failed_function_names [0]) - 1))
+        {
+            // Zeiger auf das aktuelle Objekt erstellen, um den folgenden Code kuerzer formulieren zu koennen
+            char* current_container_name = tt_failed_function_names [tt_current_tested_function_name];
+            const size_t current_container_name_size = sizeof (tt_failed_function_names [tt_current_tested_function_name]);
+
+            memset (current_container_name, '\0', current_container_name_size);
+            strncpy (current_container_name, name, current_container_name_size);
+
+            // Nullterminierung garantieren
+            current_container_name [current_container_name_size - 1] = '\0';
+
+            tt_current_tested_function_name ++;
+        }
     }
     else
     {
@@ -62,9 +87,15 @@ int tt_report (void)
 {
     if (tt_fails)
     {
+        for (int i = 0; i < tt_current_tested_function_name; ++ i)
+        {
+            printf ("Failed function %2d: %s\n", i + 1, tt_failed_function_names [i]);
+        }
+
         printf ("\n%c%sFAILED%c%s [%s] (passed:%d, failed:%d, total:%d)\n",
         TT_COLOR_CODE, TT_COLOR_RED, TT_COLOR_CODE, TT_COLOR_RESET, tt_current_file, tt_passes, tt_fails,
                 tt_passes + tt_fails);
+
         return -1;
     }
     else
