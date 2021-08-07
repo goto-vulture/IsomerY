@@ -38,6 +38,8 @@
  * Project home page: http://github.com/joewalnes/tinytest
  *
  * 2010, -Joe Walnes <joe@walnes.com> http://joewalnes.com
+ *
+ * Angepasst von: x86 / Gyps.
  */
 
 #ifndef _TINYTEST_INCLUDED

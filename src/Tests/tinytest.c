@@ -1,5 +1,7 @@
 /**
  * tinytest.c
+ *
+ * Angepasst von: x86 / Gyps.
  */
 
 #include "tinytest.h"
@@ -9,16 +11,17 @@
 
 
 
-int tt_passes                       = 0;
-int tt_fails                        = 0;
-int tt_current_test_failed          = 0;
-const char* tt_current_msg          = NULL;
-const char* tt_current_expression   = NULL;
-const char* tt_current_file         = NULL;
-int tt_current_line                 = 0;
+int tt_passes                       = 0;        // Anzahl an Tests, die erfolgreich durchgefuehrt wurden
+int tt_fails                        = 0;        // Anzahl an Tests, die fehlgeschlagen sind
+int tt_current_test_failed          = 0;        // Ist der akuelle Test fehlgeschlagen ?
+const char* tt_current_msg          = NULL;     // Nachricht des aktuellen Tests
+const char* tt_current_expression   = NULL;     // Aktueller Assert-Ausdruck
+const char* tt_current_file         = NULL;     // Aktueller Dateiname
+int tt_current_line                 = 0;        // Aktuelle Zeile
 
-char tt_failed_function_names [32][128];
-int tt_current_failed_function_name = 0;
+char tt_failed_function_names [32][128];        // Funktionsnamen, bei denen der Test fehlgeschlagen ist
+int tt_current_failed_function_name = 0;        // Aktuller Index fuer das Array, welches die Namen der fehlgeschlagenen
+                                                // Funktionen sichert
 
 
 
