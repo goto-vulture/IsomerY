@@ -709,8 +709,8 @@ Compare_Strings_Case_Insensitive
     }
 
     // Nullterminierung nach den Operationen garantieren
-    string_1_lowercase [sizeof (string_1_lowercase) - 1] = '\0';
-    string_2_lowercase [sizeof (string_2_lowercase) - 1] = '\0';
+    string_1_lowercase [COUNT_ARRAY_ELEMENTS(string_1_lowercase) - 1] = '\0';
+    string_2_lowercase [COUNT_ARRAY_ELEMENTS(string_2_lowercase) - 1] = '\0';
 
     const size_t char_to_compare = (strlen (string_1_lowercase) < strlen (string_2_lowercase))
             ? strlen (string_1_lowercase) : strlen (string_2_lowercase);
