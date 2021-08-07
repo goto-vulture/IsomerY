@@ -80,8 +80,19 @@ Add_Alkane_To_Container
         const size_t new_size_in_byte   = (size_t) (container->allocated_size * sizeof (struct Alkane*));
 
         // Neuen groesseren Speicherbereich anfordern
-        container->data = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
-        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !", new_size_in_byte);
+        struct Alkane** temp_ptr = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
+
+        // Diesmal diese Variante der Nullpointer-Ueberpruefung, da - wenn der realloc () Aufruf fehlschlaegt - der
+        // urspruengliche Speicherbereich nicht mehr erreichbar ist !
+        if (temp_ptr == NULL)
+        {
+            FREE_AND_SET_TO_NULL(container->data)
+            ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !", new_size_in_byte);
+        }
+        else
+        {
+            container->data = temp_ptr;
+        }
 
         // Die neuen Zeiger auf einen definerten Zustand bringen
         // "i = 1", da der neuste Speicherbereich gleich durch das neue Alkane-Objekt belegt wird
@@ -134,8 +145,19 @@ Add_Full_Alkane_To_Container
         const size_t new_size_in_byte   = (size_t) (container->allocated_size * sizeof (struct Alkane*));
 
         // Neuen groesseren Speicherbereich anfordern
-        container->data = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
-        ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !", new_size_in_byte);
+        struct Alkane** temp_ptr = (struct Alkane**) REALLOC (container->data, new_size_in_byte);
+
+        // Diesmal diese Variante der Nullpointer-Ueberpruefung, da - wenn der realloc () Aufruf fehlschlaegt - der
+        // urspruengliche Speicherbereich nicht mehr erreichbar ist !
+        if (temp_ptr == NULL)
+        {
+            FREE_AND_SET_TO_NULL(container->data)
+            ASSERT_ALLOC(container->data, "realloc () call for a Alkane_Container failed !", new_size_in_byte);
+        }
+        else
+        {
+            container->data = temp_ptr;
+        }
 
         // Die neuen Zeiger auf einen definerten Zustand bringen
         // "i = 1", da der neuste Speicherbereich gleich durch das neue Alkane-Objekt belegt wird

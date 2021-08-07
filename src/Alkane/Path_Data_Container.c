@@ -81,8 +81,19 @@ Add_Path_Data_To_Container
         const size_t new_size_in_byte   = (size_t) (container->allocated_size * sizeof (struct Path_Data*));
 
         // Neuen groesseren Speicherbereich anfordern
-        container->data = (struct Path_Data**) REALLOC (container->data, new_size_in_byte);
-        ASSERT_ALLOC(container->data, "realloc () call for a Path_Data_Container failed !", new_size_in_byte);
+        struct Path_Data** temp_ptr = (struct Path_Data**) REALLOC (container->data, new_size_in_byte);
+
+        // Diesmal diese Variante der Nullpointer-Ueberpruefung, da - wenn der realloc () Aufruf fehlschlaegt - der
+        // urspruengliche Speicherbereich nicht mehr erreichbar ist !
+        if (temp_ptr == NULL)
+        {
+            FREE_AND_SET_TO_NULL(container->data)
+            ASSERT_ALLOC(container->data, "realloc () call for a Path_Data_Container failed !", new_size_in_byte);
+        }
+        else
+        {
+            container->data = temp_ptr;
+        }
 
         // Die neuen Zeiger auf einen definerten Zustand bringen
         // "i = 1", da der neuste Speicherbereich gleich durch das neue Path_Data-Objekt belegt wird
