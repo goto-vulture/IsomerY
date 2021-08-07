@@ -97,7 +97,7 @@ Path_Data_To_String
     {
         for (uint_fast8_t i2 = 0; i2 < 10; i2 ++)
         {
-            TO_STRING_HELPER_VA_ARGS(PRIuFAST8, path_data->adj_matrix [i][i2]);
+            TO_STRING_HELPER_VA_ARGS("%" PRIuFAST8, path_data->adj_matrix [i][i2]);
         }
 
         TO_STRING_HELPER("\n");
