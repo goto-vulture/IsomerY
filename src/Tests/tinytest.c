@@ -18,7 +18,7 @@ const char* tt_current_file         = NULL;
 int tt_current_line                 = 0;
 
 char tt_failed_function_names [32][128];
-int tt_current_tested_function_name = 0;
+int tt_current_failed_function_name = 0;
 
 
 
@@ -42,12 +42,12 @@ void tt_execute (const char *name, void (*test_function) (void))
 
         // Solane es noch weitere freie C-Strings gibt, werden die Namen der Funktionen, bei denen der Test
         // fehlgeschlagen ist, aufgezeichnet
-        if ((size_t) tt_current_tested_function_name <
+        if ((size_t) tt_current_failed_function_name <
                 (sizeof (tt_failed_function_names) / sizeof (tt_failed_function_names [0]) - 1))
         {
             // Zeiger auf das aktuelle Objekt erstellen, um den folgenden Code kuerzer formulieren zu koennen
-            char* current_container_name = tt_failed_function_names [tt_current_tested_function_name];
-            const size_t current_container_name_size = sizeof (tt_failed_function_names [tt_current_tested_function_name]);
+            char* current_container_name = tt_failed_function_names [tt_current_failed_function_name];
+            const size_t current_container_name_size = sizeof (tt_failed_function_names [tt_current_failed_function_name]);
 
             memset (current_container_name, '\0', current_container_name_size);
             strncpy (current_container_name, name, current_container_name_size);
@@ -55,7 +55,7 @@ void tt_execute (const char *name, void (*test_function) (void))
             // Nullterminierung garantieren
             current_container_name [current_container_name_size - 1] = '\0';
 
-            tt_current_tested_function_name ++;
+            tt_current_failed_function_name ++;
         }
     }
     else
@@ -87,7 +87,7 @@ int tt_report (void)
 {
     if (tt_fails)
     {
-        for (int i = 0; i < tt_current_tested_function_name; ++ i)
+        for (int i = 0; i < tt_current_failed_function_name; ++ i)
         {
             printf ("Failed function %2d: %s\n", i + 1, tt_failed_function_names [i]);
         }
