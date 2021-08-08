@@ -286,17 +286,19 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
     memset (iupac_name, '\0', sizeof(iupac_name));
     const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
 
-    const char* expected_result = "6,7,8-TriMethyl-7-(1-(1-Methylethyl)-2-(1-Methylethyl)-3,4-Dimethylpentyl)Tridecan";
+    const char* expected_result = "9-Ethyl-6,7,8-TriMethyl-7-(1-(1-Methylethyl)-2-(1-Methylethyl)-3,4-Dimethylpentyl)Tridecan";
 
     struct Alkane alkane;
     memset (&alkane, '\0', sizeof(struct Alkane));
 
     /**
-     * 29 C-Atome
+     * 31 C-Atome
      * Bis zu dreifache Verschachtelungstiefe.
      *
-     *                     C   C   C
-     *                     |   |   |
+     *                 C
+     *                 |
+     *                 C   C   C   C
+     *                 |   |   |   |
      * C - C - C - C - C - C - C - C - C - C - C - C - C
      *                         |
      *                     C   C - C - C
@@ -325,7 +327,8 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
             { .length = 1,  .position = 1,      .nesting_depth = 3 },
             { .length = 1,  .position = 3,      .nesting_depth = 2 },
             { .length = 1,  .position = 4,      .nesting_depth = 2 },
-            { .length = 1,  .position = 8,      .nesting_depth = 1 }
+            { .length = 1,  .position = 8,      .nesting_depth = 1 },
+            { .length = 2,  .position = 9,      .nesting_depth = 1 }
     };
 
     // ... und einfuegen
