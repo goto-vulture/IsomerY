@@ -7,7 +7,8 @@ SEC_TOTAL_ADDED=0
 AVERAGE_SEC=0
 
 
-
+# test=0: Debug-Test
+# test=1: Release-Test
 for (( test=0; test<2; test++ ))
 do
     if [[ ${test} -ne 0 ]];
@@ -23,13 +24,25 @@ do
 
     if [[ ${test} -eq 0 ]];
     then
-        echo -n "Compile Debug version ... "
+        echo -n "Compile Debug version (-j 1) ..."
+        time make -j 1 Debug=1 1> /dev/null
+        echo "Done !"
+
+        make clean 1>> /dev/null
+
+        echo -n "Compile Debug version (-j) ..."
         time make -j Debug=1 1> /dev/null
         printf "Done !\n\n"
     fi
     if [[ ${test} -eq 1 ]];
     then
-        echo -n "Compile Release version ... "
+        echo -n "Compile Release version (-j 1) ..."
+        time make -j 1 Release=1 1> /dev/null
+        echo "Done !"
+
+        make clean 1>> /dev/null
+
+        echo -n "Compile Release version (-j) ..."
         time make -j Release=1 1> /dev/null
         printf "Done !\n\n"
     fi
@@ -39,8 +52,15 @@ do
     do
         printf "===== Program run %2d / %2d =====\n" $(( ${i} + 1 )) ${RUNS}
 
-        # Programm starten und Ausgabe sichern
-        PROGRAM_OUTPUT="$(time ( ./IsomerY_Debug_Linux ) 2>&1 1> /dev/null)"
+        # Programm starten und Zeit-Ausgabe von time sichern
+        if [[ ${test} -eq 0 ]];
+        then
+            PROGRAM_OUTPUT="$(time ( ./IsomerY_Debug_Linux ) 2>&1 1> /dev/null)"
+        fi
+        if [[ ${test} -eq 1 ]];
+        then
+            PROGRAM_OUTPUT="$(time ( ./IsomerY_Release_Linux ) 2>&1 1> /dev/null)"
+        fi
 
         # "real" Zeitinformationen aus der Programmausgabe extrahieren
         TIME_INFO=$(echo ${PROGRAM_OUTPUT} | grep --extended-regexp --only-matching "real[[:blank:]]{1}[[:digit:]]{1,}m[[:digit:]]{1,2}\,[[:digit:]]{3}s")
@@ -68,7 +88,7 @@ do
     # Mittelwert aus allen Ausfuehrungen bestimmen
     AVERAGE_SEC=$(awk "BEGIN {print ${SEC_TOTAL_ADDED} / ${RUNS}}")
 
-    printf "\n=> Average runtime ("
+    printf "=> Average runtime ("
     if [[ ${test} -eq 0 ]];
     then
         echo -n "Debug"
