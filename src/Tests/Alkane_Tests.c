@@ -691,10 +691,19 @@ Compare_Strings_Case_Insensitive
         const char* const restrict string_2             // 2. C-String
 )
 {
+    // Wenn die Laenge der Zeichenketten nicht identisch sind, dann koennen sie - auch ohne Beachtung der Gross- und
+    // Keinschreibung - nicht gleich sein !
+    if (strlen (string_1) != strlen (string_2))
+    {
+        return -1;
+    }
+
     char string_1_lowercase [255];
     char string_2_lowercase [255];
     memset (string_1_lowercase, '\0', sizeof (string_1_lowercase));
     memset (string_2_lowercase, '\0', sizeof (string_2_lowercase));
+    // memcpy wuerde hier auch funktionieren. strncpy stellt aber sicher, dass das Terminationssymbol immer mitkopiert
+    // wird
     strncpy (string_1_lowercase, string_1, (COUNT_ARRAY_ELEMENTS(string_1_lowercase) < strlen (string_1)) ?
             COUNT_ARRAY_ELEMENTS(string_1_lowercase) : strlen (string_1));
     strncpy (string_2_lowercase, string_2, (COUNT_ARRAY_ELEMENTS(string_2_lowercase) < strlen (string_2)) ?
@@ -725,13 +734,8 @@ Compare_Strings_Case_Insensitive
     string_1_lowercase [COUNT_ARRAY_ELEMENTS(string_1_lowercase) - 1] = '\0';
     string_2_lowercase [COUNT_ARRAY_ELEMENTS(string_2_lowercase) - 1] = '\0';
 
-    // Eine Laengenueberpruefung der strlen()-Ergebnisse ist nicht erforderlich, da beide Zeichenketten gerade
-    // garantiert nullterminiert wurden
-    const size_t char_to_compare = (strlen (string_1_lowercase) < strlen (string_2_lowercase))
-            ? strlen (string_1_lowercase) : strlen (string_2_lowercase);
-
     // Vergleich mit den angepassten Zeichenketten durchfuehren
-    return strncmp (string_1_lowercase, string_2_lowercase, char_to_compare);
+    return strncmp (string_1_lowercase, string_2_lowercase, strlen (string_1_lowercase));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
