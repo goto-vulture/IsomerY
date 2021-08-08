@@ -84,9 +84,12 @@ extern void Show_Dynamic_Memory_Status (void);
 // Siehe: https://stackoverflow.com/questions/4190703/is-it-safe-to-delete-a-null-pointer
 #ifndef FREE_AND_SET_TO_NULL
     #define FREE_AND_SET_TO_NULL(pointer)                                                                               \
-        free (pointer);                                                                                                 \
-        pointer = NULL;                                                                                                 \
-        ++ GLOBAL_free_calls;
+        /* if (pointer != NULL) */                                                                                      \
+        {                                                                                                               \
+            free (pointer);                                                                                             \
+            pointer = NULL;                                                                                             \
+            ++ GLOBAL_free_calls;                                                                                       \
+        }
 #else
     #error "The macro \"FREE_AND_SET_TO_NULL\" is already defined !"
 #endif /* FREE_AND_SET_TO_NULL */
