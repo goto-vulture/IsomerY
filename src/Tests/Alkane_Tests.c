@@ -37,6 +37,17 @@ Compare_Alkane_Numbercodes
 );
 
 /**
+ * Eine Zeichenkette kopieren, in der nur Kleinbuchstaben aus der Original-Zeichenkette vorkommen.
+ */
+static void
+String_To_Lower
+(
+        const char* const restrict orig_string,     // Originale Zeichenkette, die konvertiert werden soll
+        char* const restrict to_lower_string,       // Zielspeicher fuer die konvertierte Zeichenkette
+        const size_t to_lower_string_size           // Groesse des Zielspeichers
+);
+
+/**
  * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
  */
 static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
@@ -682,6 +693,39 @@ Compare_Alkane_Numbercodes
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Eine Zeichenkette kopieren, in der nur Kleinbuchstaben aus der Original-Zeichenkette vorkommen.
+ */
+static void
+String_To_Lower
+(
+        const char* const restrict orig_string,     // Originale Zeichenkette, die konvertiert werden soll
+        char* const restrict to_lower_string,       // Zielspeicher fuer die konvertierte Zeichenkette
+        const size_t to_lower_string_size           // Groesse des Zielspeichers
+)
+{
+    strncpy (to_lower_string, orig_string, to_lower_string_size);
+
+    for (size_t current_char = 0;
+            (current_char < strlen (orig_string)) && (current_char < to_lower_string_size);
+            ++ current_char)
+    {
+        // Ist das akutelle Zeichen ein Grossbuchstabe ? Dann wird das Zeichen in ein Kleinbuchstaben konvertiert und
+        // in den Zielstring kopiert
+        if (isupper (orig_string [current_char]) /* == true */)
+        {
+            to_lower_string [current_char] = (char) tolower (orig_string [current_char]);
+        }
+    }
+
+    // Nullterminierung im Zielspeicher garantieren
+    to_lower_string [strlen (orig_string) - 1] = '\0';
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
  */
 static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
@@ -702,37 +746,11 @@ Compare_Strings_Case_Insensitive
     char string_2_lowercase [255];
     memset (string_1_lowercase, '\0', sizeof (string_1_lowercase));
     memset (string_2_lowercase, '\0', sizeof (string_2_lowercase));
-    // memcpy wuerde hier auch funktionieren. strncpy stellt aber sicher, dass das Terminationssymbol immer mitkopiert
-    // wird
-    strncpy (string_1_lowercase, string_1, (COUNT_ARRAY_ELEMENTS(string_1_lowercase) < strlen (string_1)) ?
-            COUNT_ARRAY_ELEMENTS(string_1_lowercase) : strlen (string_1));
-    strncpy (string_2_lowercase, string_2, (COUNT_ARRAY_ELEMENTS(string_2_lowercase) < strlen (string_2)) ?
-            COUNT_ARRAY_ELEMENTS(string_2_lowercase) : strlen (string_2));
 
     // Alle alphabetischen Zeichen in Kleinbuchstaben konvertieren, damit spaeter ein Vergleich unabhaengig von der
     // Gross- und Kleinschreibung stattfinden kann
-    for (size_t string_1_char = 0;
-            (string_1_char < strlen (string_1_lowercase)) && (string_1_char < COUNT_ARRAY_ELEMENTS(string_1_lowercase));
-            ++ string_1_char)
-    {
-        if (isupper (string_1_lowercase [string_1_char]) /* == true */)
-        {
-            string_1_lowercase [string_1_char] = (char) tolower (string_1_lowercase [string_1_char]);
-        }
-    }
-    for (size_t string_2_char = 0;
-            (string_2_char < strlen (string_2_lowercase)) && (string_2_char < COUNT_ARRAY_ELEMENTS(string_2_lowercase));
-            ++ string_2_char)
-    {
-        if (isupper (string_2_lowercase [string_2_char]) /* == true */)
-        {
-            string_2_lowercase [string_2_char] = (char) tolower (string_2_lowercase [string_2_char]);
-        }
-    }
-
-    // Nullterminierung nach den Operationen garantieren
-    string_1_lowercase [COUNT_ARRAY_ELEMENTS(string_1_lowercase) - 1] = '\0';
-    string_2_lowercase [COUNT_ARRAY_ELEMENTS(string_2_lowercase) - 1] = '\0';
+    String_To_Lower(string_1, string_1_lowercase, COUNT_ARRAY_ELEMENTS(string_1_lowercase));
+    String_To_Lower(string_2, string_2_lowercase, COUNT_ARRAY_ELEMENTS(string_2_lowercase));
 
     // Vergleich mit den angepassten Zeichenketten durchfuehren
     return strncmp (string_1_lowercase, string_2_lowercase, strlen (string_1_lowercase));
