@@ -1,6 +1,13 @@
 /**
  * Dynamic_Memory.h
  *
+ * Hier werden die Anzahl an dynamischen Speicheroperaionen mittels globalen Variablen (ja ich weiss ganz boese: man
+ * muss aufpassen, dass diese nicht zubeissen ! Aber bisher hatte ich viel Glueck mit denen. ;)) und Makros
+ * mitgezaehlt, um das Vorhandensein von Speicherlecks bestimmen zu koennen.
+ *
+ * Damit dies sicher geschehen kann, muessen immer die hier definierten Makros verwendet werden ! Auch fuer die free-
+ * Aufrufe !
+ *
  *  Created on: 07.03.2021
  *      Author: x86 / Gyps
  */

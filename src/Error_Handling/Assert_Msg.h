@@ -1,6 +1,8 @@
 /**
  * Assert_Msg.h
  *
+ * Hier sind Asserts definiert, die nicht die Uebersetzungseinheit "tinyunit" benoetigen.
+ *
  *  Created on: 07.03.2021
  *      Author: x86 / Gyps
  */
@@ -58,7 +60,9 @@ extern "C"
 
 /**
  * Ein Assert fuer Fehlerfaelle bei der Allokation von Speicher.
- * Vor der eigentlichen Assert-Meldung wird die Groesse des Speichers angegeben, der allokiert werden sollte.
+ * Vor der eigentlichen Assert-Meldung wird die Groesse des Speichers angegeben, der allokiert werden sollte. Die
+ * Angabe der Speichergroesse ist technisch nicht zwingend notwendig, macht aber die Fehlermeldungen besser, da man
+ * weiss bei welcher Allokationsgroesse es Probleme gab.
  */
 #ifndef ASSERT_ALLOC
     #define ASSERT_ALLOC(ptr, message, memory_size)                     \

@@ -1,6 +1,19 @@
 /**
  * Alkane_Branch.h
  *
+ * Ein Alkan_Branch-Objekt stellt einen Ast eines Alkans dar. Wegen der Vierbindigkeit (im Normalfall) eines C-Atoms,
+ * besteht ein Alkan-Objekt aus maximal vier Alkan_Branch-Objekte.
+ *
+ * In solch einem Alkanast wird der Aufbau des Astes abgespeichert. Und zwar in Form von "verbunden mit"-Aussagen. Eine
+ * genaue Beschreibung was damit gemeint ist (mit einen Beispiel) findet sich ueber der Deklaration der Alkane_Branch
+ * Struktur.
+ *
+ * Hier steht diese Beschreibung ...
+ * struct Alkane_Branch
+ * {
+ *     ...
+ * }
+ *
  *  Created on: 08.03.2021
  *      Author: x86 / Gyps
  */

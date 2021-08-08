@@ -1,6 +1,28 @@
 /**
  * Alkane_Info_Constitutional_Isomer.h
  *
+ * Hier stehen einige allgemeine Infos ueber die Konstitutionsisomere der Alkane. Z.B. die Anzahl der
+ * Konstitutionsisomere bei gegebener Anzahl an C-Atomen.
+ *
+ * Zusaetzlich dazu werden hier einige Limitierungen fuer das Programm festgelegt, um u.a. die Speicherverwaltung zu
+ * vereinfachen. Durch diese Grenzen, die zur Kompilierungszeit bekannt sind, muss in vielen Stellen kein Speicher
+ * dynamisch verwaltet werden. Diese Limitierungen sind aber nur theoretischer Natur ! Denn es wird schon allein wegen
+ * des benoetigten Speichers in absehbarer Zeit nicht moeglich sein z.B. alle Isomere mit 40 C-Atomen zu sichern.
+ *
+ * 40 C-Atome besitzen theoretisch 62481801147341. Ein Alkan-Objekt ist in diesem Fall 1952 Byte gross, wenn der
+ * Speicher bytegenau angefordert wird. Also: 62481801147341 * 1952 Byte:
+ * 1,219644758×10^17    Byte
+ * 1,219644758×10^14    KByte
+ * 1,219644758×10^11    MByte
+ * 1,219644758×10^8     GByte
+ * 121964,4758          TByte
+ *
+ * Vielleicht kann man mit intelligenten Verwenden einzelner Bits die Speichermenge etwas reduzieren. Aber:
+ *
+ * => Die benoetigten Speichermengen sind in der Praxis kaum erreichbar. Selbst wenn man Festplatten und Co. als
+ *    Auslagerungsspeicher verwendet. Dazu kommen die enormen Rechnerkapazitaeten, die fuer die Bestimmung erforderlich
+ *    sind !
+ *
  *  Created on: 07.03.2021
  *      Author: x86 / Gyps
  */

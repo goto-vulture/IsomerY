@@ -1,6 +1,9 @@
 /**
  * Misc.h
  *
+ * Hier sind einige Makros definiert, die sich nicht einer bestimmten Uebersetzungseinheit zuordnen lassen. Z.B. das
+ * Berechnen der Groesse eines Arrays, welches statisch definiert wurde.
+ *
  *  Created on: 14.03.2021
  *      Author: x86 / Gyps
  */

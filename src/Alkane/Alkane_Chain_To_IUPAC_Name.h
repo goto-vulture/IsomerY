@@ -1,6 +1,22 @@
 /**
  * Alkane_Chain_To_IUPAC_Name.h
  *
+ * Konstitutionsisomere in Form von Alkan-Objekten sind schoen und gut. Aber fuer die Verwendung im Bereich der
+ * organischen Chemie sind sie unbrauchbar !
+ *
+ * Es gibt eine Nomenklatur, die von der International Union of Pure and Applied Chemistry (IUPAC) erstellt wurde.
+ * (Siehe: https://de.wikipedia.org/wiki/IUPAC)
+ *
+ * Namen von Chemikalien, die diese Nomenklatur verwenden, werden haeufig IUPAC-Namen genannt. Ich werde in diesem
+ * Programm diese Bezeichnung ebenfalls verwenden, da fuer den Chemiker klar ist was genau damit gemeint ist.
+ *
+ * Ziel dieser Nomenklatur ist, dass die Struktur einer Chemikalie im Namen codiert ist. Es soll also moeglich sein nur
+ * anhand des Namens die Struktur des Molekuels zu rekonstruieren.
+ *
+ * Ein paar Beispiele werden hier vielleicht noch eingefuegt ...
+ *
+ * Jedenfalls macht diese Funktion die Konvertierung der Alkan-Objekte zu den zugehoerigen IUPAC-Namen.
+ *
  *  Created on: 23.03.2021
  *      Author: x86 / Gyps
  */

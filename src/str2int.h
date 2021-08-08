@@ -1,6 +1,9 @@
 /**
  * str2int.h
  *
+ * Hier sind zwei Funktionen definiert, die fuer die Konvertierung von Zeichenketten in Ganzzahen sowie der
+ * Konvertierung von Ganzzahlen in Zeichenketten verantwortlich sind.
+ *
  *  Created on: 07.03.2021
  *      Author: x86 / Gyps
  */

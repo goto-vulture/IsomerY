@@ -18,6 +18,10 @@
 
 
 
+/**
+ * Hauptkette im Alkanobjekt suchen. Das Ergebnis wird in der Funktion dynamisch erzeugt, sodass der Aufrufer das
+ * Objekt am Ende wieder freigeben muss !
+ */
 static struct Path_Data*                            // Zeiger auf das dynamisch erzeugte Ergebnisobjekt
 Find_Main_Chain
 (
@@ -161,7 +165,7 @@ Reorder_Chains
 /**
  * IUPAC-Name des uebergebenen Alkans erzeugen.
  *
- * ...
+ * Genaue Beschreibung der Nomenklatur: siehe Header-Datei !
  *
  * Asserts:
  *      alkane != NULL

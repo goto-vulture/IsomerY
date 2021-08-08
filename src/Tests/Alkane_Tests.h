@@ -1,6 +1,17 @@
 /**
  * Alkane_Tests.h
  *
+ * In dieser Uebersetzungseinheit werden viele Tests der Alkanerstellung und der Erstellung von IUPAC-Namen
+ * durchgefuehrt.
+ *
+ * Die Tests koennen - je nach Computer - mehrere Minuten in Anspruch nehmen ! Falls die Tests innerhalb einer
+ * kuerzeren Zeit durchgefuehrt werden soll, dann kann die Zeile:
+ *
+ * RUN(TEST_All_Possible_Tetradecan_Constitutional_Isomers);
+ *
+ * in der Funktion "Execute_All_Alkane_Tests" auskommentiert werden. Dieser Test verbraucht mit Abstand die meiste
+ * Zeit.
+ *
  *  Created on: 13.03.2021
  *      Author: x86 / Gyps
  */

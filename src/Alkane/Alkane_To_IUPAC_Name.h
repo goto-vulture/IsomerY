@@ -1,6 +1,10 @@
 /**
  * Alkane_To_IUPAC_Name.h
  *
+ * In dieser Uebersetzungseinheit wird der IUPAC-Name eines bereits vollstaendig erzeugten Alkan-Objektes gebildet.
+ * Eine kurze Einleitung der verwendeten Nomenklatur findet sich als Funktionskommentar der Funktion
+ * Convert_Alkane_To_IUPAC_Name
+ *
  *  Created on: 14.03.2021
  *      Author: x86 / Gyps
  */

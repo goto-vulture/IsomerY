@@ -1,6 +1,23 @@
 /*
  * Path_Data.h
  *
+ * Mittels des Path_Data-Objektes koennen Pfade im Molekuel gesichert werden. Mittels dieser Pfade kann die laengste
+ * Kette im Molekuel bestimmt werden. Dies ist sehr wichtig fuer die Generierung des IUPAC-Namen, da die Bestimmung und
+ * Bennenung der Abzweigungen immer von der laengsten Kette her betrachtet werden !
+ *
+ * Ein Pfad kann in einem Molekuel im weitesten Sinne als ein Graphenproblem betrachtet werden. Daher wird das Molekuel
+ * als Adjazenzmatrix angegeben. Dies ist nicht sehr Speichereffizient; aber das Arbeiten mit Adjazenzmatrizen ist sehr
+ * einfach zu realisieren. Um die Adjazenzmatrix nicht dynamisch erzeugen zu muessen, wird die Groesse bereits zur
+ * Kompilierungszeit angegeben. Da dadurch nicht bekannt ist, wie viele C-Atome tatsaechlich im Molekuel sind, muss vom
+ * groessten Fall ausgegangen werden: MAX_NUMBER_OF_C_ATOMS (aktuell 40). Dies fuehrt zu einer Groesse von 40 x 40
+ * Byte. Also 1600 Byte !
+ *
+ * Da diese Objekte nur fuer die Bestimmung der Hauptkette verwendet werden und nicht dauerhaft abgespeichert werden,
+ * halte ich diesen Ansatz der Einfachheit halber fuer akzeptabel; auch wenn dadurch viel Speicher ungenutzt bleibt !
+ *
+ * In der Praxis koennen aktuell mit einer halbwegs akzeptablen Laufzeit nur maximal 15 C-Atome verwendet werden, auch
+ * wenn die Algorithmen an sich keine Limitierungen besitzen.
+ *
  *  Created on: 12.06.2021
  *      Author: x86 / Gyps
  */

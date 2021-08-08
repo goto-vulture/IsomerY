@@ -1,6 +1,28 @@
 /**
  * Alkane.h
  *
+ * Ein Alkan-Objekt wird durch vier Alkane_Branch-Objekte dargestellt und ist das zentrale Objekt in diesem Programm.
+ *
+ * Die Struktur wird durch einen Zahlencode - wie bei dem Alkane_Branch-Objekt - beschrieben.
+ *
+ * Nochmal kurz den Aufbau des Zahlencodes zusammengefasst:
+ * Die Zahlen im branch-Array stellen eine "verbunden mit"-Aussage dar.
+ * Z.B.:
+ * (1, 1, 1, 2, 3)
+ * Das 4. Element (die '2') besagt: Das 4. C-Atom ist mit dem 2. C-Atom verbunden.
+ * Das 5. Element (die '3') besagt: Das 5. C-Atom ist mit dem 3. C-Atom verbunden.
+ *
+ * Dies Idee der Darstellung stammt nicht von mir sondern von
+ * Sascha Kurz, Universität Bayreuth. E-Mail: sascha.kurz@uni-bayreuth.de
+ * und
+ * Armin Moritz, Johanneum-Gymnasium in Herborn, E-Mail: arminmoritz@gmx.de
+ *
+ * Generell haben die Beiden durch das Dokument "Strukturisomere der Alkane" den Grundstein fuer dieses Projekt gelegt.
+ * An sich hat mich diese Problemstellung bereits seit der Oberstufenzeit interessiert. Aber ohne diesen fantastischen
+ * Ansatz von den Beiden haette ich wahrscheinlich dieses Problem nie in ein Programm ueberfuehrt !
+ *
+ * Vielen Dank fuer eure Hilfestellung ! :D
+ *
  *  Created on: 10.03.2021
  *      Author: x86 / Gyps
  */

@@ -1,6 +1,10 @@
 /**
  * Alkane_Create_Constitutional_Isomer.h
  *
+ * Hier wird der Algorithmus, der die Konstitutionsisomere erzeugt, definiert.
+ *
+ * Fuer eine Beschreibung des Algorithmus: Siehe Funktionskommentar von Create_Alkane_Constitutional_Isomers
+ *
  *  Created on: 08.03.2021
  *      Author: x86 / Gyps
  */
