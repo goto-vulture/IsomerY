@@ -674,8 +674,7 @@ static void Print_Percent_Done
     // Wenn nicht (clock () liefert -1), dann wird ein Platzhalter fuer die verbleibende Zeit ausgegeben
     if ((clock_t) (-1) == clock ())
     {
-        printf ("\r");
-        PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: N/A", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done);
+        PRINTF_FFLUSH("\r%s (~ %5.2f %%) ETA: N/A", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done);
 
         return;
     }
@@ -688,8 +687,7 @@ static void Print_Percent_Done
     const float runs_per_clock = (float) runs_done_since_last_call / (float) time_delayed_since_last_call;
     const float ETA = ((float) (max_count_run - current_run) / (float) runs_per_clock) / (float) CLOCKS_PER_SEC;
 
-    printf ("\r");
-    PRINTF_FFLUSH("%s (~ %5.2f %%) ETA: %8.2f sec.", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done, ETA);
+    PRINTF_FFLUSH("\r%s (~ %5.2f %%) ETA: %8.2f sec.", string_prefix, (percent_done > 100.0f) ? 100.0f : percent_done, ETA);
 
     last_call           = clock ();
     last_current_run    = current_run;
