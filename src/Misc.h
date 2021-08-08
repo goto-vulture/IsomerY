@@ -119,6 +119,21 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Ein uebergebenes Array an Zeigern mit den Nullpointer initialisieren.
+ */
+#ifndef SET_POINTER_ARRAY_TO_NULL
+#define SET_POINTER_ARRAY_TO_NULL(array, number_of_elements)                                                            \
+    for (size_t array_index = 0; array_index < (number_of_elements); array_index ++)                                    \
+    {                                                                                                                   \
+        (array) [array_index] = NULL;                                                                                   \
+    }
+#else
+#error "The macro \"SET_POINTER_ARRAY_TO_NULL\" is already defined !"
+#endif /* SET_POINTER_ARRAY_TO_NULL */
+
+//---------------------------------------------------------------------------------------------------------------------
+
 
 
 // ENDE C++-Kompablitaet herstellen
