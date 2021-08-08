@@ -868,7 +868,7 @@ Execute_Creation_Test_With_Expected_Results
     {
         if (count_expected_results_usage [i] != 1)
         {
-            FPRINTF_FFLUSH(stderr, "Expected results: %60s    used %" PRIuFAST8 " time(s) !\n", expected_results [i],
+            FPRINTF_FFLUSH(stderr, "Expected results: %60s    used %" PRIuFAST8 " times !\n", expected_results [i],
                     count_expected_results_usage [i]);
             ++ count_unused_expected_results;
         }
