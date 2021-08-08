@@ -61,6 +61,10 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
         uint_fast64_t* const restrict result_index      // Index des gefundenen IUPAC-Namen in den erwarteten Loesungen
 );
 
+/**
+ * Alkane und die IUPAC-Namen mit einer vorgegebenen Anzahl an C-Atomen erzeugen und schauen ob die erzeugten
+ * IUPAC-Namen in der Liste an erwarteten Loesungen vorhanden sind.
+ */
 static void
 Execute_Creation_Test_With_Expected_Results
 (
@@ -768,6 +772,10 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Alkane und die IUPAC-Namen mit einer vorgegebenen Anzahl an C-Atomen erzeugen und schauen ob die erzeugten
+ * IUPAC-Namen in der Liste an erwarteten Loesungen vorhanden sind.
+ */
 static void
 Execute_Creation_Test_With_Expected_Results
 (
