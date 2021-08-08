@@ -1,6 +1,15 @@
 /**
  * Alkane_Branch_Container.h
  *
+ * Einfacher dynamischer Conainer fuer Alkane_Branch-Objekte. Bzw. genauer gesagt fuer deren Zeiger. Es wird fuer jedes
+ * neue Element im Container kein realloc aufgerufen, sondern es werden blockweise neue Zeiger angefordert, wenn der
+ * Container voll ist. Die Groesse der neu allokierten Bloecke kann mittels der Konstante
+ * ALKANE_BRANCH_CONTAINER_ALLOCATION_STEP_SIZE festgelegt werden. Meiner bisherigen Erfahrungen nach bietet sich eine
+ * Groesse ab 256 an, um das Programm nicht durch zu viele realloc Aufrufe zu verlangsamen. (realloc kopiert den
+ * kompletten Speicher um, falls notwendig !)
+ *
+ * Man hat hier also - wie so oft - die Abwaegung zwische Laufzeit und Speicherverbrauch.
+ *
  *  Created on: 09.03.2021
  *      Author: x86 / Gyps
  */
