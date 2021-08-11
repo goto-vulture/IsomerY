@@ -15,6 +15,17 @@
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 
+/**
+ * Konstante, um die Groesse des Arrays festzulegen. Der Wert ist ein Erfahrungswert. Selbst bei sehr komplexen
+ * Molekuelen werden praktisch immer weniger als 10 Elemente verwendet.
+ * Siehe Testfunktion: TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects
+ */
+#ifndef SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY
+#define SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY 15
+#else
+#error "The marco \"SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY\" is already defined !"
+#endif /* SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY */
+
 
 
 
@@ -50,11 +61,18 @@ Go_Deeper
  * Ein neues Combined_Chain-Objekt erzeugen und mit den Werten eines Chain-Objektes initialisieren.
  *
  * Das Objekt wird dynamisch erzeugt.
+ *
+ * Um das Loeschen der dynamischen Objekte zu vereinfachen, werden alle Adressen der dynamischen Objekte gesichert.
  */
-static struct Combined_Chain*                       // Neues dynamisch erzeugte Combined_Chain-Objekt
+static struct Combined_Chain*                                                   // Neues dynamisch erzeugte
+                                                                                // Combined_Chain-Objekt
 Create_New_Combined_Chain
 (
-        const struct Chain* const restrict chain    // Chain-Objekt, welches fuer die Initialisierung verwendet wird
+        const struct Chain* const restrict chain,                               // Chain-Objekt, welches fuer die
+                                                                                // Initialisierung verwendet wird
+        struct Combined_Chain** const restrict dynamic_created_combined_chain,  // Array um festzuhalten, welche
+                                                                                // Objekte dynamisch erzeugt wurden
+        size_t* const restrict next_free_array_element                          // Naechstes freies Element im Array
 );
 
 /**
@@ -90,6 +108,12 @@ Chain_To_IUPAC
     main_combined_chain.nesting_depth = alkane->chains [0].nesting_depth;
     main_combined_chain.branch_length = alkane->chains [0].length;
 
+    // Alle Combined_Chain-Objekte - bzw. deren Adressen - werden in diesem Array gesichert, um spaeter die
+    // Aufraeumarbeiten einfach durchfueren zu koennen
+    struct Combined_Chain* dynamic_created_objects [SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY];
+    SET_POINTER_ARRAY_TO_NULL(dynamic_created_objects, COUNT_ARRAY_ELEMENTS(dynamic_created_objects));
+    size_t next_free_array_element = 0;
+
     // Dieses Array enthaelt die zuletzt verwendeten Combined_Chain-Objekte.
     // Die Verschachtelunstiefe ist der Index fuer die weitere Verarbeitung.
     struct Combined_Chain* last_cc [MAX_NUMBER_OF_NESTING_DEPTH];
@@ -122,7 +146,8 @@ Chain_To_IUPAC
             // Gibt es eine Steigerung der Verschachtelungstiefe ?
             if (alkane->chains [i].nesting_depth < alkane->chains [i + 1].nesting_depth)
             {
-                current_combined_chain->deeper [current_combined_chain->next_free_depper] = Create_New_Combined_Chain (&(alkane->chains [i]));
+                current_combined_chain->deeper [current_combined_chain->next_free_depper] =
+                        Create_New_Combined_Chain (&(alkane->chains [i]), dynamic_created_objects, &next_free_array_element);
 
                 last_cc [alkane->chains [i].nesting_depth] = current_combined_chain->deeper [current_combined_chain->next_free_depper];
 
@@ -151,7 +176,8 @@ Chain_To_IUPAC
                 // Wenn nicht, dann wird ebenfalls ein neues Combined_Chain-Objekt erstellt
                 if (element_conbined == false)
                 {
-                    current_combined_chain->deeper [current_combined_chain->next_free_depper] = Create_New_Combined_Chain (&(alkane->chains [i]));
+                    current_combined_chain->deeper [current_combined_chain->next_free_depper] =
+                            Create_New_Combined_Chain (&(alkane->chains [i]), dynamic_created_objects, &next_free_array_element);
 
                     last_cc [alkane->chains [i].nesting_depth] = current_combined_chain->deeper [current_combined_chain->next_free_depper];
 
@@ -184,7 +210,8 @@ Chain_To_IUPAC
             // Wenn nicht, dann wird ebenfalls ein neues Combined_Chain-Objekt erstellt
             if (element_conbined == false)
             {
-                current_combined_chain->deeper [current_combined_chain->next_free_depper] = Create_New_Combined_Chain (&(alkane->chains [i]));
+                current_combined_chain->deeper [current_combined_chain->next_free_depper] =
+                        Create_New_Combined_Chain (&(alkane->chains [i]), dynamic_created_objects, &next_free_array_element);
 
                 last_cc [alkane->chains [i].nesting_depth] = current_combined_chain->deeper [current_combined_chain->next_free_depper];
 
@@ -276,6 +303,12 @@ Chain_To_IUPAC
 
     // Nullterminierung garantieren
     iupac_name [iupac_name_length - 1] = '\0';
+
+    // Am Ende alles wieder aufraeumen
+    for (size_t i = 0; i < next_free_array_element; ++ i)
+    {
+        FREE_AND_SET_TO_NULL(dynamic_created_objects [i]);
+    }
 
     return;
 }
@@ -373,11 +406,18 @@ Go_Deeper
  * Ein neues Combined_Chain-Objekt erzeugen und mit den Werten eines Chain-Objektes initialisieren.
  *
  * Das Objekt wird dynamisch erzeugt.
+ *
+ * Um das Loeschen der dynamischen Objekte zu vereinfachen, werden alle Adressen der dynamischen Objekte gesichert.
  */
-static struct Combined_Chain*                       // Neues dynamisch erzeugte Combined_Chain-Objekt
+static struct Combined_Chain*                                                   // Neues dynamisch erzeugte
+                                                                                // Combined_Chain-Objekt
 Create_New_Combined_Chain
 (
-        const struct Chain* const restrict chain    // Chain-Objekt, welches fuer die Initialisierung verwendet wird
+        const struct Chain* const restrict chain,                               // Chain-Objekt, welches fuer die
+                                                                                // Initialisierung verwendet wird
+        struct Combined_Chain** const restrict dynamic_created_combined_chain,  // Array um festzuhalten, welche
+                                                                                // Objekte dynamisch erzeugt wurden
+        size_t* const restrict next_free_array_element                          // Naechstes freies Element im Array
 )
 {
     struct Combined_Chain* new_combined_chain = (struct Combined_Chain*) CALLOC(1, sizeof (struct Combined_Chain));
@@ -390,6 +430,12 @@ Create_New_Combined_Chain
     new_combined_chain->nesting_depth                                       = chain->nesting_depth;
     new_combined_chain->positions [new_combined_chain->next_free_position]  = chain->position;
     new_combined_chain->next_free_position ++;
+
+    ASSERT_MSG(*next_free_array_element < SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY,
+            "dynamic_created_combined_chain array is too small !");
+
+    dynamic_created_combined_chain [*next_free_array_element] = new_combined_chain;
+    (*next_free_array_element) ++;
 
     return new_combined_chain;
 }
@@ -415,3 +461,10 @@ static int compare_1 (const void* element_1, const void* element_2)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#ifdef SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY
+#undef SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY
+#endif /* SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY */
