@@ -38,7 +38,6 @@ extern "C"
 
 /**
  * Diese Funktion konvertiert die zuvor erzeugten Chain-Objekte in den IUPAC-Namen.
- * Intern arbeitet dieser Prozess mit zustandsbasierten statischen Funktionen.
  */
 void
 Chain_To_IUPAC
