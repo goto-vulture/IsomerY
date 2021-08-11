@@ -99,7 +99,7 @@ extern const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF
 
 // Begriffe, die fuer die Erstellung des IUPAC-Namens erforderlich sind
 extern const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS];
-extern const char* ALKAN_WORDS [NUMBER_OF_ALKAN_WORDS];
+extern const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS];
 extern const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS];
 
 

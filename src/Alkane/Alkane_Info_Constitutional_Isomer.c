@@ -46,7 +46,7 @@ const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS] =
  * Quellen: https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Lineare_Ketten
  *          https://de.wikipedia.org/wiki/H%C3%B6here_Alkane
  */
-const char* ALKAN_WORDS [NUMBER_OF_ALKAN_WORDS] =
+const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS] =
 {
         "Methan",         "Ethan",           "Propan",         "Butan",           "Pentan" ,
         "Hexan",          "Heptan",          "Octan",          "Nonan",           "Decan",
