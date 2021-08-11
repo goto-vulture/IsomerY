@@ -320,14 +320,20 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
 
             { .length = 1,  .position = 6,      .nesting_depth = 1 },
             { .length = 1,  .position = 7,      .nesting_depth = 1 },
+
             { .length = 5,  .position = 7,      .nesting_depth = 1 },
+
             { .length = 2,  .position = 1,      .nesting_depth = 2 },
             { .length = 1,  .position = 1,      .nesting_depth = 3 },
+
             { .length = 2,  .position = 2,      .nesting_depth = 2 },
             { .length = 1,  .position = 1,      .nesting_depth = 3 },
+
             { .length = 1,  .position = 3,      .nesting_depth = 2 },
             { .length = 1,  .position = 4,      .nesting_depth = 2 },
+
             { .length = 1,  .position = 8,      .nesting_depth = 1 },
+
             { .length = 2,  .position = 9,      .nesting_depth = 1 }
     };
 
@@ -778,10 +784,32 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
 {
     _Bool result_found = false;
 
+    char converted_iupac_name [255];
+    char converted_expected_results [255];
+
     // Den IUPAC-Namen mit allen erwarteten Ergebnissen vergleichen (Ohne Beachtung der Gross- und Kleinschreibung !)
     for (uint_fast64_t i = 0; i < number_of_expected_results; ++ i)
     {
-        if (Compare_Strings_Case_Insensitive (iupac_name, expected_results [i]) == 0)
+        memset (converted_iupac_name, '\0', sizeof (converted_iupac_name));
+        strncpy (converted_iupac_name, iupac_name, strlen (iupac_name));
+
+        memset (converted_expected_results, '\0', sizeof (converted_expected_results));
+        strncpy (converted_expected_results, expected_results [i], strlen (expected_results [i]));
+
+        // Alle Zeichenketten als englische Variante vergleichen
+        // Also das "e" am Ende hinzufuegen, falls es noch nicht da ist
+        // Dadurch wird auch sichergestellt, dass es keine Rolle spielt, ob in den erwarteten Ergebnissen die deutsche oder
+        // englische Variante steht
+        if (iupac_name [strlen (iupac_name) - 1] != 'e')
+        {
+            converted_iupac_name [strlen (iupac_name)] = 'e';
+        }
+        if (expected_results [i][strlen (expected_results [i]) - 1] != 'e')
+        {
+            converted_expected_results [strlen (expected_results [i])] = 'e';
+        }
+
+        if (Compare_Strings_Case_Insensitive (converted_iupac_name, converted_expected_results) == 0)
         {
             result_found = true;
             if (result_index != NULL)
