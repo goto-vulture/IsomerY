@@ -318,22 +318,29 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
             // Hauptkette
             { .length = 13,  .position = 255,   .nesting_depth = 0 },
 
+            // DiMethyl
             { .length = 1,  .position = 6,      .nesting_depth = 1 },
             { .length = 1,  .position = 7,      .nesting_depth = 1 },
 
+            // Pentyl
             { .length = 5,  .position = 7,      .nesting_depth = 1 },
 
+            // MethylEthyl
             { .length = 2,  .position = 1,      .nesting_depth = 2 },
             { .length = 1,  .position = 1,      .nesting_depth = 3 },
 
+            // MethylEthyl
             { .length = 2,  .position = 2,      .nesting_depth = 2 },
             { .length = 1,  .position = 1,      .nesting_depth = 3 },
 
+            // DiEthyl auf zweiter Ebene
             { .length = 1,  .position = 3,      .nesting_depth = 2 },
             { .length = 1,  .position = 4,      .nesting_depth = 2 },
 
+            // Drittes Methyl auf der ersten Ebene => TriMethyl
             { .length = 1,  .position = 8,      .nesting_depth = 1 },
 
+            // Ethyl
             { .length = 2,  .position = 9,      .nesting_depth = 1 }
     };
 
@@ -762,6 +769,8 @@ Compare_Strings_Case_Insensitive
     String_To_Lower(string_2, string_2_lowercase, COUNT_ARRAY_ELEMENTS(string_2_lowercase));
 
     // Vergleich mit den angepassten Zeichenketten durchfuehren
+    // Es gibt auch die Funktion "strncasecmp()" die vorzeichenlos Zeichenketten vergleicht. Diese ist aber leider eine
+    // GNU-Extension und daher nicht auf allen Systemen verfuegbar !
     return strncmp (string_1_lowercase, string_2_lowercase, strlen (string_1_lowercase));
 }
 
