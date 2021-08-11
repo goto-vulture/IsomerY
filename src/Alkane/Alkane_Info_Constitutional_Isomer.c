@@ -62,6 +62,27 @@ const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS] =
 };
 
 /**
+ * Die Alkanwoerter, die im Programm hinterlegt sind. Diesmal auf Englisch.
+ *
+ * Hauptunterschied:    An den deutschen Namen wird ein "e" angehaengt.
+ *                      Aus "Methan" wird "Methane"; aus "Ethan" wird "Ethane" u.s.w
+ */
+const char* ALKAN_WORDS_En [NUMBER_OF_ALKAN_WORDS] =
+{
+        "Methane",          "Ethane",           "Propane",          "Butane",           "Pentane",
+        "Hexane",           "Heptane",          "Octane",           "Nonane",           "Decane",
+
+        "Undecane",         "Dodecane",         "Tridecane",        "Tetradecane",      "Pentadecane",
+        "Hexadecane",       "Heptadecane",      "Octadecane",       "Nonadecane",       "Eicosane",
+
+        "Heneicosane",      "Docosane",         "Tricosane",        "Tetracosane",      "Pentacosane",
+        "Hexacosane",       "Heptacosane",      "Octacosane",       "Nonacosane",       "Triacontane",
+
+        "Hentriacontane",   "Dotriacontane",    "Dotriacontane",    "Tetratriacontane", "Pentatriacontane",
+        "Hexatriacontane",  "Heptatriacontane", "Octatriacontane",  "Nonatriacontane",  "Tetracontane"
+};
+
+/**
  * Die Substituenten, die im Programm hinterlegt sind.
  *
  * Die Substituenten wurden erzeugt indem die letzten beiden Zeichen der Alkan-Woerter durch "yl" ersetzt werden !
