@@ -282,14 +282,12 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
  */
 void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
 {
-    char iupac_name [IUPAC_NAME_LENGTH];
-    memset (iupac_name, '\0', sizeof(iupac_name));
-    const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(iupac_name) - 1;
-
     const char* expected_result = "9-Ethyl-6,7,8-TriMethyl-7-(1-(1-Methylethyl)-2-(1-Methylethyl)-3,4-Dimethylpentyl)Tridecan";
 
     struct Alkane alkane;
     memset (&alkane, '\0', sizeof(struct Alkane));
+
+    const size_t iupac_name_length = COUNT_ARRAY_ELEMENTS(alkane.iupac_name) - 1;
 
     /**
      * 31 C-Atome
@@ -355,9 +353,9 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
 // @formatter:on
 
     // Konvertierung durchfuehren
-    Chain_To_IUPAC (iupac_name, iupac_name_length, &alkane);
+    Chain_To_IUPAC (alkane.iupac_name, iupac_name_length, &alkane);
 
-    ASSERT_STRING_EQUALS(expected_result, iupac_name);
+    ASSERT_STRING_EQUALS(expected_result, alkane.iupac_name);
 
     return;
 }
