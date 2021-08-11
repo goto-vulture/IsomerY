@@ -732,7 +732,7 @@ String_To_Lower
     }
 
     // Nullterminierung im Zielspeicher garantieren
-    to_lower_string [strlen (orig_string) - 1] = '\0';
+    to_lower_string [strlen (orig_string)] = '\0';
 
     return;
 }
