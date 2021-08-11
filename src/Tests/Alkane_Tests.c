@@ -355,7 +355,8 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
     // Konvertierung durchfuehren
     Chain_To_IUPAC (alkane.iupac_name, iupac_name_length, &alkane);
 
-    ASSERT_STRING_EQUALS(expected_result, alkane.iupac_name);
+    // Ist der erzeugte IUPAC-Name und der erwartete IUPAC-Name gleich ?
+    ASSERT_MSG(Compare_Strings_Case_Insensitive (alkane.iupac_name, expected_result) == 0, "Created name and expected name are not equal !")
 
     return;
 }
