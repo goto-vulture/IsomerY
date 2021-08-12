@@ -52,7 +52,7 @@
  *             noch braucht und ob das Programm vielleicht in einer Dauerschleife haengt !
  */
 #ifndef NO_PROGRESS_OUTPUT
-#define NO_PROGRESS_OUTPUT
+// #define NO_PROGRESS_OUTPUT
 #else
 #error "The macro \"NO_PROGRESS_OUTPUT\" is already defined !"
 #endif /* NO_PROGRESS_OUTPUT */
