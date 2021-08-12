@@ -41,10 +41,27 @@
 #error "The macro \"PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL\" is already defined !"
 #endif /* PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL */
 
+/**
+ * Um die Programmausfuehrung zu beschleunigen koennen mit dieser Konstante alle Fortschrittsausgaben waehrend der
+ * kompilierung entfernt werden.
+ *
+ * Dies bringt bis zu 30 % an Laufzeitgewinn (im Release-Modus); also eine nicht zu unterschatzende Groessenordnung.
+ *
+ * Allerdings: Selbst bei erwarteten Berechnungszeiten von mehreren Stunden sollte diese Moeglichkeit mit Vorsicht
+ *             verwendet werden. Ohne diese Ausgaben ist es praktisch unmoeglich zu bestimmen, wie lange das Programm
+ *             noch braucht und ob das Programm vielleicht in einer Dauerschleife haengt !
+ */
+#ifndef NO_PROGRESS_OUTPUT
+#define NO_PROGRESS_OUTPUT
+#else
+#error "The macro \"NO_PROGRESS_OUTPUT\" is already defined !"
+#endif /* NO_PROGRESS_OUTPUT */
 
 
 
 
+
+#ifndef NO_PROGRESS_OUTPUT
 /**
  * Den aktuellen Fortschritt - mit verbleibener Zeit - prozentual bestimmen und auf stdout ausgeben.
  */
@@ -54,6 +71,7 @@ static void Print_Percent_Done
         const uint_fast64_t current_run,    // Aktueller Wert -> Pozentwert bezogen auf max_count_run wir ermtttelt
         const uint_fast64_t max_count_run   // Maximaler Wert -> Stellt 100 % dar
 );
+#endif /* NO_PROGRESS_OUTPUT */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -356,8 +374,10 @@ Create_Alkane_Constitutional_Isomers
             }
         }
 
+#ifndef NO_PROGRESS_OUTPUT
         register uint_fast64_t max_inner_loop_runs      = 0;
         register uint_fast64_t count_inner_loop_runs    = 0;
+#endif /* NO_PROGRESS_OUTPUT */
 
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
@@ -370,12 +390,14 @@ Create_Alkane_Constitutional_Isomers
                 loop_start += (size_t) container_height_x [i]->size;
             }
 
+#ifndef NO_PROGRESS_OUTPUT
             PRINTF_NO_VA_ARGS_FFLUSH("Start building. Calculate start information ...");
             // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
             for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 max_inner_loop_runs += (i2 - loop_start + 1);
             }
+#endif /* NO_PROGRESS_OUTPUT */
             // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
             CLEAN_LINE();
 
@@ -385,6 +407,7 @@ Create_Alkane_Constitutional_Isomers
             {
                 for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
                 {
+#ifndef NO_PROGRESS_OUTPUT
                     static uint_fast32_t local_run_counter = 0;
                     ++ local_run_counter;
                     ++ count_inner_loop_runs;
@@ -397,6 +420,7 @@ Create_Alkane_Constitutional_Isomers
                         Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
                         local_run_counter = 0;
                     }
+#endif /* NO_PROGRESS_OUTPUT */
 
                     // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
                     if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length)
@@ -428,6 +452,7 @@ Create_Alkane_Constitutional_Isomers
                 loop_end += (size_t) container_height_x [i]->size;
             }
 
+#ifndef NO_PROGRESS_OUTPUT
             // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
             for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
@@ -464,6 +489,7 @@ Create_Alkane_Constitutional_Isomers
                     local_run_counter = 0;
                 }
             }
+#endif /* NO_PROGRESS_OUTPUT */
             // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
             CLEAN_LINE();
 
@@ -479,9 +505,11 @@ Create_Alkane_Constitutional_Isomers
                 {
                     for (register size_t i4 = 0; i4 <= i3; ++ i4) // <= !
                     {
+#ifndef NO_PROGRESS_OUTPUT
                         static uint_fast32_t local_run_counter = 0;
                         ++ local_run_counter;
                         ++ count_inner_loop_runs;
+#endif /* NO_PROGRESS_OUTPUT */
 
                         // Addition der Containerlaengen zwischenspeichern, um diese bei den kommenden Vergleichen
                         // nicht immer berechnen zu muessen
@@ -489,6 +517,7 @@ Create_Alkane_Constitutional_Isomers
                         container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container [i2]->length +
                                 flat_alkane_branch_container [i3]->length);
 
+#ifndef NO_PROGRESS_OUTPUT
                         // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
                         // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
                         if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
@@ -497,13 +526,16 @@ Create_Alkane_Constitutional_Isomers
                             Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
                             local_run_counter = 0;
                         }
+#endif /* NO_PROGRESS_OUTPUT */
 
                         // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
                         // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
                         if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length + 1)
                                 > number_of_c_atoms)
                         {
+#ifndef NO_PROGRESS_OUTPUT
                             count_inner_loop_runs += (i4 + 1);
+#endif /* NO_PROGRESS_OUTPUT */
                             continue;
                         }
 
@@ -654,6 +686,7 @@ Create_Alkane_Constitutional_Isomers
 
 //---------------------------------------------------------------------------------------------------------------------
 
+#ifndef NO_PROGRESS_OUTPUT
 /**
  * Den aktuellen Fortschritt - mit verbleibener Zeit - prozentual bestimmen und auf stdout ausgeben.
  */
@@ -694,6 +727,7 @@ static void Print_Percent_Done
 
     return;
 }
+#endif /* NO_PROGRESS_OUTPUT */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -708,3 +742,7 @@ static void Print_Percent_Done
 #ifdef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
 #undef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
 #endif /* PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL */
+
+#ifdef NO_PROGRESS_OUTPUT
+#undef NO_PROGRESS_OUTPUT
+#endif /* NO_PROGRESS_OUTPUT */
