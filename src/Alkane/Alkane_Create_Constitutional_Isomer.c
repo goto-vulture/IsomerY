@@ -25,7 +25,7 @@
  * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
  */
 #ifndef PROGRESS_OUTPUT_INTERVAL
-#define PROGRESS_OUTPUT_INTERVAL 47500000
+#define PROGRESS_OUTPUT_INTERVAL 50000000
 #else
 #error "The macro \"PROGRESS_OUTPUT_INTERVAL\" is already defined !"
 #endif /* PROGRESS_OUTPUT_INTERVAL */
@@ -36,7 +36,7 @@
  * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
  */
 #ifndef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
-#define PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL 22
+#define PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL 25
 #else
 #error "The macro \"PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL\" is already defined !"
 #endif /* PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL */
