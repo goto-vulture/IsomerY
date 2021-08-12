@@ -724,12 +724,11 @@ String_To_Lower
             (current_char < strlen (orig_string)) && (current_char < to_lower_string_size);
             ++ current_char)
     {
-        // Ist das akutelle Zeichen ein Grossbuchstabe ? Dann wird das Zeichen in ein Kleinbuchstaben konvertiert und
-        // in den Zielstring kopiert
-        if (isupper (orig_string [current_char]) /* == true */)
-        {
+        // Alle Zeichen der Zeichenkette in Kleinbuchstaben umwandeln.
+        // Eine Ueberpruefung, ob das aktuelle Zeichen ein Grossbuchstabe ist, ist nicht notwendig, da tolower() diesen
+        // Test bereits durchfuehrt.
+        // if (isupper (orig_string [current_char]) /* == true */)
             to_lower_string [current_char] = (char) tolower (orig_string [current_char]);
-        }
     }
 
     // Nullterminierung im Zielspeicher garantieren
