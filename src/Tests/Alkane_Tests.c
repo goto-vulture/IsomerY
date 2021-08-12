@@ -255,6 +255,8 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
     const unsigned char branch_2_content [] = { 1, 1, 1 };
     const unsigned char branch_3_content [] = { 1, 1, 1, 1 };
 
+    const char expected_result [] = "2,4,4-TriMethylPentan";
+
     struct Alkane_Branch* branch_1 = Create_Alkane_Branch (branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
     struct Alkane_Branch* branch_2 = Create_Alkane_Branch (branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
     struct Alkane_Branch* branch_3 = Create_Alkane_Branch (branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
@@ -263,6 +265,8 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
 
     // Konvertierung durchfuehren
     Convert_Alkane_To_IUPAC_Name (alkane);
+
+    ASSERT_MSG (Compare_Strings_Case_Insensitive (alkane->iupac_name, expected_result) == 0, "Created name and expected name are not equal !");
 
     Delete_Alkane (alkane);
     Delete_Alkane_Branch (branch_1);
