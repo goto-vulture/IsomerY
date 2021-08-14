@@ -482,7 +482,7 @@ Create_Alkane_Constitutional_Isomers
                     // Ob das Programm dadurch schneller wird, sei mal dahingestellt
                     // Es ist echt lustig eigenen Assembler-Code zu integrieren und dann beim Debuggen zu erkennen,
                     // dass der eigene Code wirklich uebernommen wurde :D
-                    // Im Release-Mode erstellt der Compiler praktisch den gleichen Code, sodass dieser eigentlich
+                    // Im Release-Mode erstellt der Compiler Code mit den XMM-Registern, sodass dieser Code eigentlich
                     // nicht gebraucht wird
 //                    __asm__ volatile
 //                    (
