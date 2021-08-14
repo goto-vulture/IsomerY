@@ -478,12 +478,12 @@ Create_Alkane_Constitutional_Isomers
                     //
                     const uint_fast64_t formula_result = ((i3 * i3) + i3) / 2;
 //                    uint_fast64_t formula_result;
-//
-//                    // Ob das Programm dadurch schneller wird, sei mal dahingestellt
-//                    // Es ist echt lustig eigenen Assembler-Code zu integrieren und dann beim Debuggen zu erkennen,
-//                    // dass der eigene Code wirklich uebernommen wurde :D
-//                    // Im Release-Mode erstellt der Compiler praktisch den gleichen Code, sodass dieser eigentlich
-//                    // nicht gebraucht wird
+
+                    // Ob das Programm dadurch schneller wird, sei mal dahingestellt
+                    // Es ist echt lustig eigenen Assembler-Code zu integrieren und dann beim Debuggen zu erkennen,
+                    // dass der eigene Code wirklich uebernommen wurde :D
+                    // Im Release-Mode erstellt der Compiler praktisch den gleichen Code, sodass dieser eigentlich
+                    // nicht gebraucht wird
 //                    __asm__ volatile
 //                    (
 //                            "mov %1, %0\n\t"
