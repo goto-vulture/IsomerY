@@ -513,6 +513,8 @@ Create_Alkane_Constitutional_Isomers
 
                         // Addition der Containerlaengen zwischenspeichern, um diese bei den kommenden Vergleichen
                         // nicht immer berechnen zu muessen
+                        // Eigentlich ist dafuer eine static-Variable voellig unnoetig. Aber es wirkt sich positiv auf
+                        // die Laufzeit aus !
                         static uint_fast8_t container_i2_i3_length_added = 0;
                         container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container [i2]->length +
                                 flat_alkane_branch_container [i3]->length);
