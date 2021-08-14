@@ -573,10 +573,10 @@ Create_Alkane_Constitutional_Isomers
                             // Fuer den weiteren Verlauf sind im Alkan-Objekt die Alkane_Branch-Objekte nicht von
                             // Bedeutung. Sie sind nur wichtig fuer die systematische Erstellung aller Konstitutions-
                             // isomere !
-                            new_alkane->branches [0] = NULL;
-                            new_alkane->branches [1] = NULL;
-                            new_alkane->branches [2] = NULL;
-                            new_alkane->branches [3] = NULL;
+//                            new_alkane->branches [0] = NULL;
+//                            new_alkane->branches [1] = NULL;
+//                            new_alkane->branches [2] = NULL;
+//                            new_alkane->branches [3] = NULL;
 
                             // Neues Alkan-Objekt zum passenden Container hinzufuegen
                             Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
