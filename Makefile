@@ -38,6 +38,8 @@ CCFLAGS += -Winit-self
 
 # Debug Build: Keine Optimierung und das hoechste Debug Level
 DEBUG_FLAGS = -O0 -g3 -D_FORTIFY_SOURCE=2
+# Eine Praeprozessorkonstante setzen, wenn im Debug-Modus das Programm uebersetzt wird
+DEBUG_FLAGS += -DDEBUG_BUILD
 
 # Release Build: Hoechste Optimierung und keine Debug Informationen
 RELEASE_FLAGS = -O3
@@ -45,6 +47,8 @@ RELEASE_FLAGS = -O3
 RELEASE_FLAGS += -Wl,-O1
 # Positionsunabhaengigen Code erzeugen
 RELEASE_FLAGS += -fPIE
+# Eine Praeprozessorkonstante setzen, wenn im Release-Modus das Programm uebersetzt wird
+RELEASE_FLAGS += -DRELEASE_BUILD
 
 
 
