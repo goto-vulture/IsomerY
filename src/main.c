@@ -74,6 +74,7 @@
 #include "Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "Tests/Alkane_Tests.h"
 #include "str2int.h"
+#include "Print_Tools.h"
 
 
 
@@ -97,8 +98,7 @@ int main (const int argc, const char* const argv [])
     printf ("Sizeof Alkane_Container:        %6zu byte\n", sizeof (struct Alkane_Container));
     printf ("Sizeof Alkane_Branch:           %6zu byte\n", sizeof (struct Alkane_Branch));
     printf ("Sizeof Alkane_Branch_Container: %6zu byte\n", sizeof (struct Alkane_Branch_Container));
-    puts ("\n\n");
-    fflush (stdout);
+    PUTS_FFLUSH ("\n\n");
 
     // Alle Alkan-Tests durchfuehren
     Execute_All_Alkane_Tests ();
