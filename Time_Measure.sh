@@ -1,10 +1,27 @@
 #!/bin/bash
 # Einfaches Messen der Ausfuehrungszeit mittels des time-Befehls
-# Insgesamt wird das Programm 3 Mal im Debug und Release-Modus ausgefuehrt und der Mittelwert berechnet
+# Insgesamt wird das Programm mehrfach im Debug und Release-Modus ausgefuehrt und der Mittelwert berechnet
 
-RUNS=5
+DEFAULT_RUNS=5
+TOTAL_RUNS=0
 SEC_TOTAL_ADDED=0
 AVERAGE_SEC=0
+
+
+
+# CLI-Parameter abfragen - falls vorhanden
+# Falls keine Parameter vorhanden sind, wird der DEFAULT_RUNS Wert verwendet
+if [[ "$#" == 0 ]];
+then
+    TOTAL_RUNS=${DEFAULT_RUNS}
+elif [[ "$#" > 1 ]];
+then
+    printf "Too much CLI parameter ! 0 or 1 parameter (for the number of runs) are expected ! Got %d !\n" "$#"
+    exit 1
+else
+    TOTAL_RUNS=${1}
+fi
+
 
 
 # test=0: Debug-Test
@@ -48,9 +65,9 @@ do
     fi
 
     # Programm mehrmals ausfuehren und die Ausfuehrungszeit sichern
-    for (( i=0; i<${RUNS}; i++ ))
+    for (( i=0; i<${TOTAL_RUNS}; i++ ))
     do
-        printf "===== Program run %2d / %2d =====\n" $(( ${i} + 1 )) ${RUNS}
+        printf "===== Program run %4d / %4d =====\n" $(( ${i} + 1 )) ${TOTAL_RUNS}
 
         # Programm starten und Zeit-Ausgabe von time sichern
         if [[ ${test} -eq 0 ]];
@@ -86,7 +103,7 @@ do
     done
 
     # Mittelwert aus allen Ausfuehrungen bestimmen
-    AVERAGE_SEC=$(awk "BEGIN {print ${SEC_TOTAL_ADDED} / ${RUNS}}")
+    AVERAGE_SEC=$(awk "BEGIN {print ${SEC_TOTAL_ADDED} / ${TOTAL_RUNS}}")
 
     printf "=> Average runtime ("
     if [[ ${test} -eq 0 ]];
