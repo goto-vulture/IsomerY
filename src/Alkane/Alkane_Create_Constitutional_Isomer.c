@@ -381,7 +381,7 @@ Create_Alkane_Constitutional_Isomers
 
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
-        // ===== ===== ===== BEGINN Zentrales Objekt ist eine BINDUNG ===== ===== =====
+        // ===== ===== ===== ===== ===== BEGINN Zentrales Objekt ist eine BINDUNG ===== ===== ===== ===== =====
         if ((((next_alkane_container + 1) % 2) == 0) && next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
             size_t loop_start = 0;
@@ -402,7 +402,7 @@ Create_Alkane_Constitutional_Isomers
             CLEAN_LINE();
 
             // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
-            // ===== BEGINN Berechnungsschleifen =====
+            // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
             for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
             {
                 for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
@@ -435,10 +435,13 @@ Create_Alkane_Constitutional_Isomers
                     Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
                 }
             }
-            // ===== ENDE Berechnungsschleifen =====
+            // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
         }
-        // ===== ===== ===== ENDE Zentrales Objekt ist eine BINDUNG ===== ===== =====
-        // ===== ===== ===== BEGINN Zentrales Objekt ist ein C-ATOM ===== ===== =====
+        // ===== ===== ===== ===== ===== ENDE Zentrales Objekt ist eine BINDUNG ===== ===== ===== ===== =====
+
+        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+        // ===== ===== ===== ===== ===== BEGINN Zentrales Objekt ist ein C-ATOM ===== ===== ===== ===== =====
+        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
         else if (next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
             register size_t loop_start  = 0;
@@ -515,7 +518,7 @@ Create_Alkane_Constitutional_Isomers
             // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
             // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
             // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
-            // ===== BEGINN Berechnungsschleifen =====
+            // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
             for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
             {
                 for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
@@ -669,11 +672,13 @@ Create_Alkane_Constitutional_Isomers
                     }
                 }
             }
-            // ===== ENDE Berechnungsschleifen =====
+            // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
         }
-        // ===== ===== ===== ENDE Zentrales Objekt ist ein C-ATOM ===== ===== =====
+        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+        // ===== ===== ===== ===== ===== ENDE Zentrales Objekt ist ein C-ATOM ===== ===== ===== ===== =====
+        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+
         // ===== ===== ===== BEGINN Maximale Anzahl an C-Atomen ===== ===== =====
-        //
         // Wenn die Alkane mit der Hauptkettenlaenge gleich der Anzahl an C-Atomen erzeugt werden sollen, dann gibt es
         // nur genau eine Moeglichkeit: Und zwar eine gerade Kette !
         // Der Algorithmus braucht diese Unterscheidung nicht zwingend. Denn bei den Konstruieren wird (irgendwann)
