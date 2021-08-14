@@ -542,13 +542,40 @@ Create_Alkane_Constitutional_Isomers
                         ++ count_inner_loop_runs;
 #endif /* NO_PROGRESS_OUTPUT */
 
+                        // Um die Anzahl der Dereferenzierungen zu vermeiden, werden die drei Adressen zwischengespeichert
+                        // Interessanterweise fuehrt dies nur beim Release-Build zu einem kleinen Laufzeitvorteil
+                        // Im Debug-Build steigt die Laufzeit stark an !
+                        //
+                        // OHNE diese Aenderung (14.08.2021) - 15 Durchlaeufe:
+                        // Debug:   15,667 s
+                        // Release: 10,491 s
+                        //
+                        // MIT dieser Aenderung (14.08.2021) - 15 Durchlaeufe:
+                        // Debug:   22,771 s
+                        // Release: 10,394 s
+                        //
+                        // Also ein Laufzeitvorteil von etwa 100 ms. Damit der Debug-Build nicht von dieser Aenderung
+                        // betroffen ist, wird diese Aenderung - und die sich daraus ergebenen Aenderungen im weiteren
+                        // Code - nur im Release-Modus verwendet
+                        // Wenn man so will: Das Beste aus beiden Welten vereinen. :) :D
+#ifdef RELEASE_BUILD
+                        struct Alkane_Branch* flat_alkane_branch_container_i2 = flat_alkane_branch_container [i2];
+                        struct Alkane_Branch* flat_alkane_branch_container_i3 = flat_alkane_branch_container [i3];
+                        struct Alkane_Branch* flat_alkane_branch_container_i4 = flat_alkane_branch_container [i4];
+#endif /* RELEASE_BUILD */
+
                         // Addition der Containerlaengen zwischenspeichern, um diese bei den kommenden Vergleichen
                         // nicht immer berechnen zu muessen
                         // Eigentlich ist dafuer eine static-Variable voellig unnoetig. Aber es wirkt sich positiv auf
                         // die Laufzeit aus !
                         static uint_fast8_t container_i2_i3_length_added = 0;
+#ifdef RELEASE_BUILD
+                        container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container_i2->length +
+                                                        flat_alkane_branch_container_i3->length);
+#else
                         container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container [i2]->length +
-                                flat_alkane_branch_container [i3]->length);
+                                                        flat_alkane_branch_container [i3]->length);
+#endif /* RELEASE_BUILD */
 
 #ifndef NO_PROGRESS_OUTPUT
                         // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
@@ -563,8 +590,13 @@ Create_Alkane_Constitutional_Isomers
 
                         // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
                         // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
-                        if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length + 1)
+#ifdef RELEASE_BUILD
+                        if ((container_i2_i3_length_added + flat_alkane_branch_container_i4->length + 1)
                                 > number_of_c_atoms)
+#else
+                        if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length + 1)
+                            > number_of_c_atoms)
+#endif /* RELEASE_BUILD */
                         {
 #ifndef NO_PROGRESS_OUTPUT
                             count_inner_loop_runs += (i4 + 1);
@@ -575,8 +607,13 @@ Create_Alkane_Constitutional_Isomers
                         for (register size_t i5 = 0; i5 <= i4; ++ i5) // <= !
                         {
                             // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
+#ifdef RELEASE_BUILD
+                            if ((container_i2_i3_length_added + flat_alkane_branch_container_i4->length +
+                                    flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
+#else
                             if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length +
                                     flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
+#endif /* RELEASE_BUILD */
                             {
                                 continue;
                             }
@@ -587,15 +624,27 @@ Create_Alkane_Constitutional_Isomers
                             // Das zentrale C-Atom wird immer dem ersten Alkan_Branch zugeordnet. Dafuer wird ein
                             // temporaerer Alkanast erzeugt, welches den urspruenglichen Ast mit einem Ast, der nur aus
                             // einem C-Atom besteht, beinhaltet
+#ifdef RELEASE_BUILD
+                            struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
+                                    flat_alkane_branch_container_i2, NULL, NULL);
+#else
                             struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
                                     flat_alkane_branch_container [i2], NULL, NULL);
+#endif /* RELEASE_BUILD */
                             struct Alkane_Branch* temp_alkane_branch = Create_Alkane_Branch (temp_alkane->merged_numbercode,
                                     temp_alkane->number_of_c_atoms);
 
+#ifdef RELEASE_BUILD
+                            struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
+                                    flat_alkane_branch_container_i3,
+                                    flat_alkane_branch_container_i4,
+                                    flat_alkane_branch_container [i5]);
+#else
                             struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
                                     flat_alkane_branch_container [i3],
                                     flat_alkane_branch_container [i4],
                                     flat_alkane_branch_container [i5]);
+#endif /* RELEASE_BUILD */
 
                             // Debug-Output des erstellten Alkane-Objektes
                             // Print_Alkane (new_alkane);
