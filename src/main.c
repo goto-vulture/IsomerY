@@ -78,6 +78,11 @@
 
 
 
+/**
+ * Einige wesentliche Informationen des Programms ausgeben.
+ */
+static inline void Show_Program_Details (void);
+
 //=====================================================================================================================
 
 /**
@@ -92,6 +97,8 @@ int main (const int argc, const char* const argv [])
 
     // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
     (void) str2int;
+
+    Show_Program_Details ();
 
     // Einige Debug-Informationen ausgeben
     printf ("Sizeof Alkane:                  %6zu byte\n", sizeof (struct Alkane));
@@ -114,3 +121,39 @@ int main (const int argc, const char* const argv [])
 }
 
 //=====================================================================================================================
+
+/**
+ * Einige wesentliche Informationen des Programms ausgeben.
+ */
+static inline void Show_Program_Details (void)
+{
+    printf ("IsomerY (");
+
+#ifdef RELEASE_BUILD
+    printf ("Release-Build");
+#elif DEBUG_BUILD
+    printf ("Debug-Build");
+#else
+    printf ("N/A");
+#endif /* RELEASE_BUILD */
+
+#ifdef VERSION
+    printf (") Version: %s\n", VERSION);
+#else
+    printf (") Verison: N/A\n");
+#endif /* VERSION */
+
+    // Das wichtigste Bild !
+    puts ("          .-..-.__");
+    puts ("        /`  |\\_( \"\\__");
+    puts ("        |   / __/`'--)");
+    puts ("        |  /  | |");
+    puts ("        /_/ _/_/");
+    puts (" jgs  `|/))))\n");
+    // Die wichtigste Informaion !
+    PUTS_FFLUSH ("For me, a vulture is more desirable than money !");
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
