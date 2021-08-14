@@ -561,7 +561,7 @@ Create_Alkane_Constitutional_Isomers
                             struct Alkane_Branch* temp_alkane_branch = Create_Alkane_Branch (temp_alkane->merged_numbercode,
                                     temp_alkane->number_of_c_atoms);
 
-                            struct Alkane* new_alkane = Create_Alkane (temp_alkane_branch,
+                            struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
                                     flat_alkane_branch_container [i3],
                                     flat_alkane_branch_container [i4],
                                     flat_alkane_branch_container [i5]);
