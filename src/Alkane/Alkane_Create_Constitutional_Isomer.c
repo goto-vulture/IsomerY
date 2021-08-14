@@ -582,9 +582,9 @@ Create_Alkane_Constitutional_Isomers
                             Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
 
                             Delete_Alkane (temp_alkane);
-                            temp_alkane = NULL;
+                            // temp_alkane = NULL;
                             Delete_Alkane_Branch (temp_alkane_branch);
-                            temp_alkane_branch = NULL;
+                            // temp_alkane_branch = NULL;
                         }
                     }
                 }
