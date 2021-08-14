@@ -2,7 +2,7 @@
 # Einfaches Messen der Ausfuehrungszeit mittels des time-Befehls
 # Insgesamt wird das Programm 3 Mal im Debug und Release-Modus ausgefuehrt und der Mittelwert berechnet
 
-RUNS=3
+RUNS=5
 SEC_TOTAL_ADDED=0
 AVERAGE_SEC=0
 
