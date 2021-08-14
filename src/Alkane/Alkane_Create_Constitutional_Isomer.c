@@ -524,6 +524,20 @@ Create_Alkane_Constitutional_Isomers
                     {
 #ifndef NO_PROGRESS_OUTPUT
                         static uint_fast32_t local_run_counter = 0;
+                        // Nett gemeint: Funktioniert auch; Aber bringt sowohl im Debug- als auch im Release-Modus kein
+                        // Laufzeitgewinn. Ganz im Gegenteit. Das Programm wird in beiden Modi lagsamer ! :o
+                        // Siehe: https://github.com/dotnet/runtime/issues/7697
+                        //
+                        // => inc und dec sollten vermieden werden und immer durch den passenden add / sub Ausdruck
+                        // ersetzt werden.
+//                        __asm__ volatile
+//                        (
+//                                "inc %2\n\t"
+//                                "inc %3\n\t"
+//                                : "=r" (local_run_counter), "=r" (count_inner_loop_runs)
+//                                : "r" (local_run_counter), "r" (count_inner_loop_runs)
+//                                :
+//                        );
                         ++ local_run_counter;
                         ++ count_inner_loop_runs;
 #endif /* NO_PROGRESS_OUTPUT */
