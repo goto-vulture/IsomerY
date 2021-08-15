@@ -40,6 +40,10 @@ extern "C"
 
 /**
  * Mittels einer addb (8-Bit Addition) feststellen, ob die Summe beider Summanden in 8-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
+ * Operanden ausgeht."
  */
 #ifndef CARRY_CHECK_8_BIT
 #define CARRY_CHECK_8_BIT(add_1, add_2, result) \
@@ -67,6 +71,10 @@ extern "C"
 
 /**
  * Mittels einer addw (16-Bit Addition) feststellen, ob die Summe beider Summanden in 16-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
+ * Operanden ausgeht."
  */
 #ifndef CARRY_CHECK_16_BIT
 #define CARRY_CHECK_16_BIT(add_1, add_2, result)    \
@@ -94,6 +102,10 @@ __asm__ volatile                                    \
 
 /**
  * Mittels einer addl (32-Bit Addition) feststellen, ob die Summe beider Summanden in 32-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
+ * Operanden ausgeht."
  */
 #ifndef CARRY_CHECK_32_BIT
 #define CARRY_CHECK_32_BIT(add_1, add_2, result)    \
@@ -121,6 +133,10 @@ __asm__ volatile                                    \
 
 /**
  * Mittels einer addq (64-Bit Addition) feststellen, ob die Summe beider Summanden in 64-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
+ * Operanden ausgeht."
  */
 #ifndef CARRY_CHECK_64_BIT
 #define CARRY_CHECK_64_BIT(add_1, add_2, result)    \
@@ -143,6 +159,134 @@ __asm__ volatile                                    \
 #else
 #error "The marco \"CARRY_CHECK_64_BIT\" is already defined !"
 #endif /* CARRY_CHECK_64_BIT */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Mittels einer addb (8-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * komplementdarstellung in 8-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
+ * vorzeichenbehafteten Operanden ausgeht."
+ */
+#ifndef OVERFLOW_CHECK_8_BIT
+#define OVERFLOW_CHECK_8_BIT(add_1, add_2, result)  \
+__asm__ volatile                                    \
+(                                                   \
+    "addb %1, %2"                   NT              \
+    "jo overflow_flag_8_bit"        NT              \
+    "jmp no_overflow_flag_8_bit"    NT              \
+    "overflow_flag_8_bit:"          NT              \
+    "movb $1, %0"                   NT              \
+    "jmp end_overflow_flag_8_bit"   NT              \
+    "no_overflow_flag_8_bit:"       NT              \
+    "movb $0, %0"                   NT              \
+    "end_overflow_flag_8_bit:"      NT              \
+                                                    \
+    : "=r" (result)                                 \
+    : "r" (add_1), "r" (add_2)                      \
+    :                                               \
+);
+#else
+#error "The macro \"OVERFLOW_CHECK_8_BIT\" is already defined !"
+#endif /* OVERFLOW_CHECK_8_BIT */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Mittels einer addw (16-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * komplementdarstellung in 16-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
+ * vorzeichenbehafteten Operanden ausgeht."
+ */
+#ifndef OVERFLOW_CHECK_16_BIT
+#define OVERFLOW_CHECK_16_BIT(add_1, add_2, result) \
+__asm__ volatile                                    \
+(                                                   \
+    "addw %1, %2"                   NT              \
+    "jo overflow_flag_16_bit"       NT              \
+    "jmp no_overflow_flag_16_bit"   NT              \
+    "overflow_flag_16_bit:"         NT              \
+    "movw $1, %0"                   NT              \
+    "jmp end_overflow_flag_16_bit"  NT              \
+    "no_overflow_flag_16_bit:"      NT              \
+    "movw $0, %0"                   NT              \
+    "end_overflow_flag_16_bit:"     NT              \
+                                                    \
+    : "=r" (result)                                 \
+    : "r" (add_1), "r" (add_2)                      \
+    :                                               \
+);
+#else
+#error "The macro \"OVERFLOW_CHECK_16_BIT\" is already defined !"
+#endif /* OVERFLOW_CHECK_16_BIT */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Mittels einer addl (32-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * komplementdarstellung in 32-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
+ * vorzeichenbehafteten Operanden ausgeht."
+ */
+#ifndef OVERFLOW_CHECK_32_BIT
+#define OVERFLOW_CHECK_32_BIT(add_1, add_2, result) \
+__asm__ volatile                                    \
+(                                                   \
+    "addl %1, %2"                   NT              \
+    "jo overflow_flag_32_bit"       NT              \
+    "jmp no_overflow_flag_32_bit"   NT              \
+    "overflow_flag_32_bit:"         NT              \
+    "movl $1, %0"                   NT              \
+    "jmp end_overflow_flag_32_bit"  NT              \
+    "no_overflow_flag_32_bit:"      NT              \
+    "movl $0, %0"                   NT              \
+    "end_overflow_flag_32_bit:"     NT              \
+                                                    \
+    : "=r" (result)                                 \
+    : "r" (add_1), "r" (add_2)                      \
+    :                                               \
+);
+#else
+#error "The macro \"OVERFLOW_CHECK_32_BIT\" is already defined !"
+#endif /* OVERFLOW_CHECK_32_BIT */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Mittels einer addq (64-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * komplementdarstellung in 64-Bit passen.
+ *
+ * https://de.wikipedia.org/wiki/Statusregister
+ * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
+ * vorzeichenbehafteten Operanden ausgeht."
+ */
+#ifndef OVERFLOW_CHECK_64_BIT
+#define OVERFLOW_CHECK_64_BIT(add_1, add_2, result) \
+__asm__ volatile                                    \
+(                                                   \
+    "addq %1, %2"                   NT              \
+    "jo overflow_flag_64_bit"       NT              \
+    "jmp no_overflow_flag_64_bit"   NT              \
+    "overflow_flag_64_bit:"         NT              \
+    "movq $1, %0"                   NT              \
+    "jmp end_overflow_flag_64_bit"  NT              \
+    "no_overflow_flag_64_bit:"      NT              \
+    "movq $0, %0"                   NT              \
+    "end_overflow_flag_64_bit:"     NT              \
+                                                    \
+    : "=r" (result)                                 \
+    : "r" (add_1), "r" (add_2)                      \
+    :                                               \
+);
+#else
+#error "The macro \"OVERFLOW_CHECK_64_BIT\" is already defined !"
+#endif /* OVERFLOW_CHECK_64_BIT */
 
 //---------------------------------------------------------------------------------------------------------------------
 
