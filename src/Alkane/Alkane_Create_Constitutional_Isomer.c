@@ -443,27 +443,20 @@ Create_Alkane_Constitutional_Isomers
 
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
-        // ===== ===== ===== ===== ===== BEGINN Zentrales Objekt ist eine BINDUNG ===== ===== ===== ===== =====
+        // Zentrales Objekt ist eine BINDUNG
         if ((((next_alkane_container + 1) % 2) == 0) && next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
             Central_Object_Is_A_Chain (container_height_index, count_branches, number_of_c_atoms,
                     alkane_container_main_chain_length_x, next_alkane_container,
                     container_height_x, flat_alkane_branch_container);
         }
-        // ===== ===== ===== ===== ===== ENDE Zentrales Objekt ist eine BINDUNG ===== ===== ===== ===== =====
-
-        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
-        // ===== ===== ===== ===== ===== BEGINN Zentrales Objekt ist ein C-ATOM ===== ===== ===== ===== =====
-        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
+        // Zentrales Objekt ist ein C-ATOM
         else if (next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
             Central_Object_Is_A_C_Atom (container_height_index, count_branches, number_of_c_atoms,
                     alkane_container_main_chain_length_x, next_alkane_container,
                     container_height_x, flat_alkane_branch_container);
         }
-        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
-        // ===== ===== ===== ===== ===== ENDE Zentrales Objekt ist ein C-ATOM ===== ===== ===== ===== =====
-        // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
 
         // ===== ===== ===== BEGINN Maximale Anzahl an C-Atomen ===== ===== =====
         // Wenn die Alkane mit der Hauptkettenlaenge gleich der Anzahl an C-Atomen erzeugt werden sollen, dann gibt es
