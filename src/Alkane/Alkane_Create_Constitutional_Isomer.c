@@ -507,6 +507,8 @@ Create_Alkane_Constitutional_Isomers
 
     // Ergebnisse zaehlen
     uint_fast64_t count_results = 0;
+    // Dort wo die Anzahl an C-Atomen in den erzeugten Objekten gleich der uebergebenen Anzahl an C-Atomen ist,
+    // ist ein gueltiges Isomer erzeugt wurden
     for (register size_t next_alkane_container = 0; next_alkane_container < number_of_c_atoms; ++ next_alkane_container)
     {
         uint_fast64_t count_container_results = 0;
@@ -973,6 +975,8 @@ static void Central_Object_Is_A_C_Atom
 
 
 
+// Alle hier erzeugten #defines werden wieder deaktiviert, da sie nur in dieser Uebersetzungseinheit gueltig sein
+// sollen !
 #ifdef PROGRESS_OUTPUT_INTERVAL
 #undef PROGRESS_OUTPUT_INTERVAL
 #endif /* PROGRESS_OUTPUT_INTERVAL */

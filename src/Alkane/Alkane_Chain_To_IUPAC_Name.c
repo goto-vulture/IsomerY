@@ -465,6 +465,9 @@ static int compare_1 (const void* element_1, const void* element_2)
 
 
 
+
+// Alle hier erzeugten #defines werden wieder deaktiviert, da sie nur in dieser Uebersetzungseinheit gueltig sein
+// sollen !
 #ifdef SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY
 #undef SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY
 #endif /* SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY */
