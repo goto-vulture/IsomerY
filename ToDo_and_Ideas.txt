@@ -2,5 +2,5 @@
 - Konvertierung von den Chain-Objekten zu den IUPAC-Namen funktioniert noch nicht einwandfrei
 
 ----- ----- ----- Ideas ----- ----- -----
-- Laufzeitvergleich Debug / Release Build
-- Funktion Create_Alkane_Constitutional_Isomers () verkleinern, indem die Funktion in kleinere Unterfunktionen aufgeteilt wird
+- Laufzeitvergleich Debug / Release Build DONE
+- Funktion Create_Alkane_Constitutional_Isomers () verkleinern, indem die Funktion in kleinere Unterfunktionen aufgeteilt wird DONE
