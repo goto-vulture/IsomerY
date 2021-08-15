@@ -73,6 +73,73 @@ static void Print_Percent_Done
 );
 #endif /* NO_PROGRESS_OUTPUT */
 
+/**
+ * Je nachdem, ob das zentrale Objekt eine Bindung oder ein C-Atom ist, muss anders verfahren werden.
+ *
+ * Wenn das zentrale Objekt eine Bindung ist, dann koennen nur zwei Aeste an der Bindung angebracht werden.
+ * Dadurch ergeben sich zwei ineinander verschachtelte Schleifen. Dadurch bleibt die Laufzeit - in Vergleich zu den
+ * Fall, dass das zentrale Objekt ein C-Atom ist - moderat.
+ */
+static void Central_Object_Is_A_Chain
+(
+        const size_t container_height_index,                                    // Obere Grenze fuer den
+                                                                                // container_height_x Container
+        const size_t count_branches,                                            // Die Anzahl an Aesten in den zu
+                                                                                // verwendenen Containern ermitteln
+        const uint_fast8_t number_of_c_atoms,                                   // Anzahl an C-Atomen von denen die
+                                                                                // Isomere bestimmt werden
+
+        struct Alkane_Container** const alkane_container_main_chain_length_x,   // Container fuer Alkan-Objekte mit
+                                                                                // einer bestimmten Laenge der
+                                                                                // Hauptkette
+        const size_t next_alkane_container,                                     // Index des zu verwendenen
+                                                                                // alkane_container_main_chain_length_x
+        struct Alkane_Branch_Container** container_height_x,                    // Container fuer die
+                                                                                // Alkane_Branch_Container-Zeiger
+                                                                                // Wird hier fuer die Bestimmung des
+                                                                                // Schleifenstarts verwendet
+        struct Alkane_Branch** flat_alkane_branch_container                     // Flaches Speichermodell der
+                                                                                // container_height_x-Daten, damit man
+                                                                                // mit einem einfachen Index darauf
+                                                                                // zugreifen kann
+);
+
+/**
+ * Je nachdem, ob das zentrale Objekt eine Bindung oder ein C-Atom ist, muss anders verfahren werden.
+ *
+ * Wenn das zentrale Objekt ein C-Atom ist, dann koennen bis zu vier Aeste angebracht werden.
+ * Dadurch ergeben sich vier (!) ineinander verschachtelte Schleifen, die fuer eine deutlich laengere Laufzeit sorgen,
+ * als wenn das zentrale Objekt eine Bindung ist !
+ */
+static void Central_Object_Is_A_C_Atom
+(
+        const size_t container_height_index,                                    // Obere Grenze fuer den
+                                                                                // container_height_x Container
+        const size_t count_branches,                                            // Anzahl an Aesten. Wird in dieser
+                                                                                // Funktion NICHT verwendet. Es dient
+                                                                                // dazu, dass die Eingabeparameter
+                                                                                // gleich der Funktion
+                                                                                // Central_Object_Is_A_Chain sind !
+        const uint_fast8_t number_of_c_atoms,                                   // Anzahl an C-Atomen von denen die
+                                                                                // Isomere bestimmt werden
+
+        struct Alkane_Container** const alkane_container_main_chain_length_x,   // Container fuer Alkan-Objekte mit
+                                                                                // einer bestimmten Laenge der
+                                                                                // Hauptkette
+        const size_t next_alkane_container,                                     // Index des zu verwendenen
+                                                                                // alkane_container_main_chain_length_x
+        struct Alkane_Branch_Container** container_height_x,                    // Container fuer die
+                                                                                // Alkane_Branch_Container-Zeiger
+                                                                                // Wird hier fuer die Bestimmung der
+                                                                                // Schleifenstart- und Schleifenend-
+                                                                                // Grenzen verwendet
+        struct Alkane_Branch** flat_alkane_branch_container                     // Flaches Speichermodell der
+                                                                                // container_height_x-Daten, damit man
+                                                                                // mit einem einfachen Index darauf
+                                                                                // zugreifen kann
+);
+
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -374,68 +441,14 @@ Create_Alkane_Constitutional_Isomers
             }
         }
 
-#ifndef NO_PROGRESS_OUTPUT
-        register uint_fast64_t max_inner_loop_runs      = 0;
-        register uint_fast64_t count_inner_loop_runs    = 0;
-#endif /* NO_PROGRESS_OUTPUT */
-
         // Je nachdem, ob das zentrale Objekt ein C-Atom oder eine Bindung ist, muss anders verfahren werden
         // next_alkane_container beginnt bei der Zaehlung mit 0 !
         // ===== ===== ===== ===== ===== BEGINN Zentrales Objekt ist eine BINDUNG ===== ===== ===== ===== =====
         if ((((next_alkane_container + 1) % 2) == 0) && next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
-            size_t loop_start = 0;
-            for (size_t i = 0; i < container_height_index; ++ i)
-            {
-                loop_start += (size_t) container_height_x [i]->size;
-            }
-
-#ifndef NO_PROGRESS_OUTPUT
-            PRINTF_NO_VA_ARGS_FFLUSH("Start building. Calculate start information ...");
-            // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
-            for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
-            {
-                max_inner_loop_runs += (i2 - loop_start + 1);
-            }
-#endif /* NO_PROGRESS_OUTPUT */
-            // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
-            CLEAN_LINE();
-
-            // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
-            // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
-            for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
-            {
-                for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
-                {
-#ifndef NO_PROGRESS_OUTPUT
-                    static uint_fast32_t local_run_counter = 0;
-                    ++ local_run_counter;
-                    ++ count_inner_loop_runs;
-
-                    // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
-                    // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
-                    if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
-                    {
-                        // Prozentualen Fortschritt bestimmen und ausgeben
-                        Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
-                        local_run_counter = 0;
-                    }
-#endif /* NO_PROGRESS_OUTPUT */
-
-                    // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
-                    if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length)
-                            != number_of_c_atoms)
-                    {
-                        continue;
-                    }
-
-                    struct Alkane* new_alkane = Create_Alkane (flat_alkane_branch_container [i2],
-                            flat_alkane_branch_container [i3], NULL, NULL);
-
-                    Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
-                }
-            }
-            // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
+            Central_Object_Is_A_Chain (container_height_index, count_branches, number_of_c_atoms,
+                    alkane_container_main_chain_length_x, next_alkane_container,
+                    container_height_x, flat_alkane_branch_container);
         }
         // ===== ===== ===== ===== ===== ENDE Zentrales Objekt ist eine BINDUNG ===== ===== ===== ===== =====
 
@@ -444,235 +457,9 @@ Create_Alkane_Constitutional_Isomers
         // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
         else if (next_alkane_container != (size_t) (number_of_c_atoms - 1))
         {
-            register size_t loop_start  = 0;
-            register size_t loop_end    = 0;
-            for (size_t i = 0; i < container_height_index - 1; ++ i)
-            {
-                loop_start += (size_t) container_height_x [i]->size;
-            }
-            for (size_t i = 0; i < container_height_index; ++ i)
-            {
-                loop_end += (size_t) container_height_x [i]->size;
-            }
-
-#ifndef NO_PROGRESS_OUTPUT
-            // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
-            for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
-            {
-                static uint_fast32_t local_run_counter = 0;
-                ++ local_run_counter;
-
-                for (register size_t i3 = loop_start; i3 <= i2; ++ i3)
-                {
-                    // for (register size_t i4 = 0; i4 <= i3; ++ i4)
-                    // {
-                    //     max_inner_loop_runs += (i4 /* - i5 */ + 1);
-                    // }
-                    //
-                    // Mithilfe der Gaussschen Summenformel berechnen
-                    // https://de.wikipedia.org/wiki/Gausssche_Summenformel
-                    //
-                    //                                 n
-                    //                               _____
-                    //                               \          n * (n + 1)     n * n + n
-                    // 0 + 1 + 2 + 3 + 4 + ... + n = -     k = ------------- = -----------
-                    //                               /____           2              2
-                    //                               k = 0
-                    //
-                    const uint_fast64_t formula_result = ((i3 * i3) + i3) / 2;
-//                    uint_fast64_t formula_result;
-
-                    // Ob das Programm dadurch schneller wird, sei mal dahingestellt
-                    // Es ist echt lustig eigenen Assembler-Code zu integrieren und dann beim Debuggen zu erkennen,
-                    // dass der eigene Code wirklich uebernommen wurde :D
-                    // Im Release-Mode erstellt der Compiler Code mit den XMM-Registern, sodass dieser Code eigentlich
-                    // nicht gebraucht wird
-//                    __asm__ volatile
-//                    (
-//                            "mov %1, %0\n\t"
-//                            "imul %0, %0\n\t"
-//                            "add %1, %0\n\t"
-//                            "shr $1, %0\n\t"
-//                            : "=r" (formula_result)
-//                            : "r" (i3)
-//                            :
-//                    );
-
-                    // "+ i3", da der Schleifenzaehler immer noch mit 1 addiert wird
-                    max_inner_loop_runs += formula_result + i3;
-                }
-
-                if (local_run_counter == PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL)
-                {
-                    Print_Percent_Done ("Start building. Calculate start information ...", i2 - loop_start,
-                            loop_end - loop_start);
-                    local_run_counter = 0;
-                }
-            }
-#endif /* NO_PROGRESS_OUTPUT */
-            // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
-            CLEAN_LINE();
-
-            // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
-            // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
-            // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
-            // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
-            // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
-            // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
-            for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
-            {
-                for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
-                {
-                    for (register size_t i4 = 0; i4 <= i3; ++ i4) // <= !
-                    {
-#ifndef NO_PROGRESS_OUTPUT
-                        static uint_fast32_t local_run_counter = 0;
-                        // Nett gemeint: Funktioniert auch; Aber bringt sowohl im Debug- als auch im Release-Modus kein
-                        // Laufzeitgewinn. Ganz im Gegenteit. Das Programm wird in beiden Modi lagsamer ! :o
-                        // Siehe: https://github.com/dotnet/runtime/issues/7697
-                        //
-                        // => inc und dec sollten vermieden werden und immer durch den passenden add / sub Ausdruck
-                        // ersetzt werden.
-//                        __asm__ volatile
-//                        (
-//                                "inc %2\n\t"
-//                                "inc %3\n\t"
-//                                : "=r" (local_run_counter), "=r" (count_inner_loop_runs)
-//                                : "r" (local_run_counter), "r" (count_inner_loop_runs)
-//                                :
-//                        );
-                        ++ local_run_counter;
-                        ++ count_inner_loop_runs;
-#endif /* NO_PROGRESS_OUTPUT */
-
-                        // Um die Anzahl der Dereferenzierungen zu vermeiden, werden die drei Adressen zwischengespeichert
-                        // Interessanterweise fuehrt dies nur beim Release-Build zu einem kleinen Laufzeitvorteil
-                        // Im Debug-Build steigt die Laufzeit stark an !
-                        //
-                        // OHNE diese Aenderung (14.08.2021) - 15 Durchlaeufe:
-                        // Debug:   15,667 s
-                        // Release: 10,491 s
-                        //
-                        // MIT dieser Aenderung (14.08.2021) - 15 Durchlaeufe:
-                        // Debug:   22,771 s
-                        // Release: 10,394 s
-                        //
-                        // Also ein Laufzeitvorteil von etwa 100 ms. Damit der Debug-Build nicht von dieser Aenderung
-                        // betroffen ist, wird diese Aenderung - und die sich daraus ergebenen Aenderungen im weiteren
-                        // Code - nur im Release-Modus verwendet
-                        // Wenn man so will: Das Beste aus beiden Welten vereinen. :) :D
-#ifdef RELEASE_BUILD
-                        struct Alkane_Branch* flat_alkane_branch_container_i2 = flat_alkane_branch_container [i2];
-                        struct Alkane_Branch* flat_alkane_branch_container_i3 = flat_alkane_branch_container [i3];
-                        struct Alkane_Branch* flat_alkane_branch_container_i4 = flat_alkane_branch_container [i4];
-#endif /* RELEASE_BUILD */
-
-                        // Addition der Containerlaengen zwischenspeichern, um diese bei den kommenden Vergleichen
-                        // nicht immer berechnen zu muessen
-                        // Eigentlich ist dafuer eine static-Variable voellig unnoetig. Aber es wirkt sich positiv auf
-                        // die Laufzeit aus !
-                        static uint_fast8_t container_i2_i3_length_added = 0;
-#ifdef RELEASE_BUILD
-                        container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container_i2->length +
-                                                        flat_alkane_branch_container_i3->length);
-#else
-                        container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container [i2]->length +
-                                                        flat_alkane_branch_container [i3]->length);
-#endif /* RELEASE_BUILD */
-
-#ifndef NO_PROGRESS_OUTPUT
-                        // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
-                        // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
-                        if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
-                        {
-                            // Prozentualen Fortschritt bestimmen und ausgeben
-                            Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
-                            local_run_counter = 0;
-                        }
-#endif /* NO_PROGRESS_OUTPUT */
-
-                        // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
-                        // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
-#ifdef RELEASE_BUILD
-                        if ((container_i2_i3_length_added + flat_alkane_branch_container_i4->length + 1)
-                                > number_of_c_atoms)
-#else
-                        if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length + 1)
-                            > number_of_c_atoms)
-#endif /* RELEASE_BUILD */
-                        {
-#ifndef NO_PROGRESS_OUTPUT
-                            count_inner_loop_runs += (i4 + 1);
-#endif /* NO_PROGRESS_OUTPUT */
-                            continue;
-                        }
-
-                        for (register size_t i5 = 0; i5 <= i4; ++ i5) // <= !
-                        {
-                            // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
-#ifdef RELEASE_BUILD
-                            if ((container_i2_i3_length_added + flat_alkane_branch_container_i4->length +
-                                    flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
-#else
-                            if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length +
-                                    flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
-#endif /* RELEASE_BUILD */
-                            {
-                                continue;
-                            }
-
-                            // Verbinden der vier Aeste miteinander durch ein zentrales C-Atom
-                            // Das zentrale C-Atom muss irgendwie in den Zahlencode eines Astes eingebaut werden, damit
-                            // es in der Struktur des Alkans erhalten bleibt.
-                            // Das zentrale C-Atom wird immer dem ersten Alkan_Branch zugeordnet. Dafuer wird ein
-                            // temporaerer Alkanast erzeugt, welches den urspruenglichen Ast mit einem Ast, der nur aus
-                            // einem C-Atom besteht, beinhaltet
-#ifdef RELEASE_BUILD
-                            struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
-                                    flat_alkane_branch_container_i2, NULL, NULL);
-#else
-                            struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
-                                    flat_alkane_branch_container [i2], NULL, NULL);
-#endif /* RELEASE_BUILD */
-                            struct Alkane_Branch* temp_alkane_branch = Create_Alkane_Branch (temp_alkane->merged_numbercode,
-                                    temp_alkane->number_of_c_atoms);
-
-#ifdef RELEASE_BUILD
-                            struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
-                                    flat_alkane_branch_container_i3,
-                                    flat_alkane_branch_container_i4,
-                                    flat_alkane_branch_container [i5]);
-#else
-                            struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
-                                    flat_alkane_branch_container [i3],
-                                    flat_alkane_branch_container [i4],
-                                    flat_alkane_branch_container [i5]);
-#endif /* RELEASE_BUILD */
-
-                            // Debug-Output des erstellten Alkane-Objektes
-                            // Print_Alkane (new_alkane);
-
-                            // Alkane_Branch Zeiger des gerade erstellten Alkane-Objektes auf NULL setzen
-                            // Fuer den weiteren Verlauf sind im Alkan-Objekt die Alkane_Branch-Objekte nicht von
-                            // Bedeutung. Sie sind nur wichtig fuer die systematische Erstellung aller Konstitutions-
-                            // isomere !
-//                            new_alkane->branches [0] = NULL;
-//                            new_alkane->branches [1] = NULL;
-//                            new_alkane->branches [2] = NULL;
-//                            new_alkane->branches [3] = NULL;
-
-                            // Neues Alkan-Objekt zum passenden Container hinzufuegen
-                            Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
-
-                            Delete_Alkane (temp_alkane);
-                            // temp_alkane = NULL;
-                            Delete_Alkane_Branch (temp_alkane_branch);
-                            // temp_alkane_branch = NULL;
-                        }
-                    }
-                }
-            }
-            // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
+            Central_Object_Is_A_C_Atom (container_height_index, count_branches, number_of_c_atoms,
+                    alkane_container_main_chain_length_x, next_alkane_container,
+                    container_height_x, flat_alkane_branch_container);
         }
         // ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== =====
         // ===== ===== ===== ===== ===== ENDE Zentrales Objekt ist ein C-ATOM ===== ===== ===== ===== =====
@@ -815,6 +602,377 @@ static void Print_Percent_Done
     return;
 }
 #endif /* NO_PROGRESS_OUTPUT */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Je nachdem, ob das zentrale Objekt eine Bindung oder ein C-Atom ist, muss anders verfahren werden.
+ *
+ * Wenn das zentrale Objekt eine Bindung ist, dann koennen nur zwei Aeste an der Bindung angebracht werden.
+ * Dadurch ergeben sich zwei ineinander verschachtelte Schleifen. Dadurch bleibt die Laufzeit - in Vergleich zu den
+ * Fall, dass das zentrale Objekt ein C-Atom ist - moderat.
+ */
+static void Central_Object_Is_A_Chain
+(
+        const size_t container_height_index,                                    // Obere Grenze fuer den
+                                                                                // container_height_x Container
+        const size_t count_branches,                                            // Die Anzahl an Aesten in den zu
+                                                                                // verwendenen Containern ermitteln
+        const uint_fast8_t number_of_c_atoms,                                   // Anzahl an C-Atomen von denen die
+                                                                                // Isomere bestimmt werden
+
+        struct Alkane_Container** const alkane_container_main_chain_length_x,   // Container fuer Alkan-Objekte mit
+                                                                                // einer bestimmten Laenge der
+                                                                                // Hauptkette
+        const size_t next_alkane_container,                                     // Index des zu verwendenen
+                                                                                // alkane_container_main_chain_length_x
+        struct Alkane_Branch_Container** container_height_x,                    // Container fuer die
+                                                                                // Alkane_Branch_Container-Zeiger
+                                                                                // Wird hier fuer die Bestimmung des
+                                                                                // Schleifenstarts verwendet
+        struct Alkane_Branch** flat_alkane_branch_container                     // Flaches Speichermodell der
+                                                                                // container_height_x-Daten, damit man
+                                                                                // mit einem einfachen Index darauf
+                                                                                // zugreifen kann
+)
+{
+    size_t loop_start = 0;
+    for (size_t i = 0; i < container_height_index; ++ i)
+    {
+        loop_start += (size_t) container_height_x [i]->size;
+    }
+
+#ifndef NO_PROGRESS_OUTPUT
+    register uint_fast64_t max_inner_loop_runs      = 0;
+    register uint_fast64_t count_inner_loop_runs    = 0;
+
+    PRINTF_NO_VA_ARGS_FFLUSH("Start building. Calculate start information ...");
+    // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
+    for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
+    {
+        max_inner_loop_runs += (i2 - loop_start + 1);
+    }
+#endif /* NO_PROGRESS_OUTPUT */
+    // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
+    CLEAN_LINE();
+
+    // Siehe Pseudocode II auf Seite 18 von "Strukturisomere der Alkane"
+    // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
+    for (register size_t i2 = loop_start; i2 < count_branches; ++ i2)
+    {
+        for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
+        {
+#ifndef NO_PROGRESS_OUTPUT
+            static uint_fast32_t local_run_counter = 0;
+            ++ local_run_counter;
+            ++ count_inner_loop_runs;
+
+            // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
+            // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
+            if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
+            {
+                // Prozentualen Fortschritt bestimmen und ausgeben
+                Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
+                local_run_counter = 0;
+            }
+#endif /* NO_PROGRESS_OUTPUT */
+
+            // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
+            if ((flat_alkane_branch_container [i2]->length + flat_alkane_branch_container [i3]->length)
+                    != number_of_c_atoms)
+            {
+                continue;
+            }
+
+            struct Alkane* new_alkane = Create_Alkane (flat_alkane_branch_container [i2],
+                    flat_alkane_branch_container [i3], NULL, NULL);
+
+            Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
+        }
+    }
+    // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Je nachdem, ob das zentrale Objekt eine Bindung oder ein C-Atom ist, muss anders verfahren werden.
+ *
+ * Wenn das zentrale Objekt ein C-Atom ist, dann koennen bis zu vier Aeste angebracht werden.
+ * Dadurch ergeben sich vier (!) ineinander verschachtelte Schleifen, die fuer eine deutlich laengere Laufzeit sorgen,
+ * als wenn das zentrale Objekt eine Bindung ist !
+ */
+static void Central_Object_Is_A_C_Atom
+(
+        const size_t container_height_index,                                    // Obere Grenze fuer den
+                                                                                // container_height_x Container
+        const size_t count_branches,                                            // Anzahl an Aesten. Wird in dieser
+                                                                                // Funktion NICHT verwendet. Es dient
+                                                                                // dazu, dass die Eingabeparameter
+                                                                                // gleich der Funktion
+                                                                                // Central_Object_Is_A_Chain sind !
+        const uint_fast8_t number_of_c_atoms,                                   // Anzahl an C-Atomen von denen die
+                                                                                // Isomere bestimmt werden
+
+        struct Alkane_Container** const alkane_container_main_chain_length_x,   // Container fuer Alkan-Objekte mit
+                                                                                // einer bestimmten Laenge der
+                                                                                // Hauptkette
+        const size_t next_alkane_container,                                     // Index des zu verwendenen
+                                                                                // alkane_container_main_chain_length_x
+        struct Alkane_Branch_Container** container_height_x,                    // Container fuer die
+                                                                                // Alkane_Branch_Container-Zeiger
+                                                                                // Wird hier fuer die Bestimmung der
+                                                                                // Schleifenstart- und Schleifenend-
+                                                                                // Grenzen verwendet
+        struct Alkane_Branch** flat_alkane_branch_container                     // Flaches Speichermodell der
+                                                                                // container_height_x-Daten, damit man
+                                                                                // mit einem einfachen Index darauf
+                                                                                // zugreifen kann
+)
+{
+    (void) count_branches;
+
+    const unsigned char single_c_atom_numbercode [] = { 1 };    // Ein einfaches C-Atom als Ast
+    struct Alkane_Branch* single_c_atom_branch  = Create_Alkane_Branch (single_c_atom_numbercode,
+            sizeof (single_c_atom_numbercode));
+
+    register size_t loop_start  = 0;
+    register size_t loop_end    = 0;
+    for (size_t i = 0; i < container_height_index - 1; ++ i)
+    {
+        loop_start += (size_t) container_height_x [i]->size;
+    }
+    for (size_t i = 0; i < container_height_index; ++ i)
+    {
+        loop_end += (size_t) container_height_x [i]->size;
+    }
+
+#ifndef NO_PROGRESS_OUTPUT
+    register uint_fast64_t max_inner_loop_runs      = 0;
+    register uint_fast64_t count_inner_loop_runs    = 0;
+
+    // Anzahl der moeglichen inneren Schleifendurchlaeufe berechnen
+    for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
+    {
+        static uint_fast32_t local_run_counter = 0;
+        ++ local_run_counter;
+
+        for (register size_t i3 = loop_start; i3 <= i2; ++ i3)
+        {
+            // for (register size_t i4 = 0; i4 <= i3; ++ i4)
+            // {
+            //     max_inner_loop_runs += (i4 /* - i5 */ + 1);
+            // }
+            //
+            // Mithilfe der Gaussschen Summenformel berechnen
+            // https://de.wikipedia.org/wiki/Gausssche_Summenformel
+            //
+            //                                 n
+            //                               _____
+            //                               \          n * (n + 1)     n * n + n
+            // 0 + 1 + 2 + 3 + 4 + ... + n = -     k = ------------- = -----------
+            //                               /____           2              2
+            //                               k = 0
+            //
+            const uint_fast64_t formula_result = ((i3 * i3) + i3) / 2;
+//                    uint_fast64_t formula_result;
+
+            // Ob das Programm dadurch schneller wird, sei mal dahingestellt
+            // Es ist echt lustig eigenen Assembler-Code zu integrieren und dann beim Debuggen zu erkennen,
+            // dass der eigene Code wirklich uebernommen wurde :D
+            // Im Release-Mode erstellt der Compiler Code mit den XMM-Registern, sodass dieser Code eigentlich
+            // nicht gebraucht wird
+//                    __asm__ volatile
+//                    (
+//                            "mov %1, %0\n\t"
+//                            "imul %0, %0\n\t"
+//                            "add %1, %0\n\t"
+//                            "shr $1, %0\n\t"
+//                            : "=r" (formula_result)
+//                            : "r" (i3)
+//                            :
+//                    );
+
+            // "+ i3", da der Schleifenzaehler immer noch mit 1 addiert wird
+            max_inner_loop_runs += formula_result + i3;
+        }
+
+        if (local_run_counter == PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL)
+        {
+            Print_Percent_Done ("Start building. Calculate start information ...", i2 - loop_start,
+                    loop_end - loop_start);
+            local_run_counter = 0;
+        }
+    }
+#endif /* NO_PROGRESS_OUTPUT */
+    // Die Ausgabezeile von der letzten Ausgabe komplett bereinigen
+    CLEAN_LINE();
+
+    // Zwei der vier Schleifen duerfen nur die Aeste aus dem aktuellen Container verwenden. Dies ist notwendig,
+    // damit eine Hauptkette mit der gesuchten Laenge gebildet wird
+    // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
+    // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
+    // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
+    // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
+    for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
+    {
+        for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
+        {
+            for (register size_t i4 = 0; i4 <= i3; ++ i4) // <= !
+            {
+#ifndef NO_PROGRESS_OUTPUT
+                static uint_fast32_t local_run_counter = 0;
+                // Nett gemeint: Funktioniert auch; Aber bringt sowohl im Debug- als auch im Release-Modus kein
+                // Laufzeitgewinn. Ganz im Gegenteit. Das Programm wird in beiden Modi lagsamer ! :o
+                // Siehe: https://github.com/dotnet/runtime/issues/7697
+                //
+                // => inc und dec sollten vermieden werden und immer durch den passenden add / sub Ausdruck
+                // ersetzt werden.
+//                        __asm__ volatile
+//                        (
+//                                "inc %2\n\t"
+//                                "inc %3\n\t"
+//                                : "=r" (local_run_counter), "=r" (count_inner_loop_runs)
+//                                : "r" (local_run_counter), "r" (count_inner_loop_runs)
+//                                :
+//                        );
+                ++ local_run_counter;
+                ++ count_inner_loop_runs;
+#endif /* NO_PROGRESS_OUTPUT */
+
+                // Um die Anzahl der Dereferenzierungen zu vermeiden, werden die drei Adressen zwischengespeichert
+                // Interessanterweise fuehrt dies nur beim Release-Build zu einem kleinen Laufzeitvorteil
+                // Im Debug-Build steigt die Laufzeit stark an !
+                //
+                // OHNE diese Aenderung (14.08.2021) - 15 Durchlaeufe:
+                // Debug:   15,667 s
+                // Release: 10,491 s
+                //
+                // MIT dieser Aenderung (14.08.2021) - 15 Durchlaeufe:
+                // Debug:   22,771 s
+                // Release: 10,394 s
+                //
+                // Also ein Laufzeitvorteil von etwa 100 ms. Damit der Debug-Build nicht von dieser Aenderung
+                // betroffen ist, wird diese Aenderung - und die sich daraus ergebenen Aenderungen im weiteren
+                // Code - nur im Release-Modus verwendet
+                // Wenn man so will: Das Beste aus beiden Welten vereinen. :) :D
+#ifdef RELEASE_BUILD
+                struct Alkane_Branch* flat_alkane_branch_container_i2 = flat_alkane_branch_container [i2];
+                struct Alkane_Branch* flat_alkane_branch_container_i3 = flat_alkane_branch_container [i3];
+                struct Alkane_Branch* flat_alkane_branch_container_i4 = flat_alkane_branch_container [i4];
+#endif /* RELEASE_BUILD */
+
+                // Addition der Containerlaengen zwischenspeichern, um diese bei den kommenden Vergleichen
+                // nicht immer berechnen zu muessen
+                // Eigentlich ist dafuer eine static-Variable voellig unnoetig. Aber es wirkt sich positiv auf
+                // die Laufzeit aus !
+                static uint_fast8_t container_i2_i3_length_added = 0;
+#ifdef RELEASE_BUILD
+                container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container_i2->length +
+                                                flat_alkane_branch_container_i3->length);
+#else
+                container_i2_i3_length_added = (uint_fast8_t) (flat_alkane_branch_container [i2]->length +
+                                                flat_alkane_branch_container [i3]->length);
+#endif /* RELEASE_BUILD */
+
+#ifndef NO_PROGRESS_OUTPUT
+                // Aus Effizienzgruenden soll nur jedes PROGRESS_OUTPUT_INTERVAL. Mal eine Ausgabe stattfinden
+                // Einfache Konsolenausgaben sind langsame Operationen, sodass die Anzahl begrenzt werden sollte
+                if (local_run_counter == PROGRESS_OUTPUT_INTERVAL)
+                {
+                    // Prozentualen Fortschritt bestimmen und ausgeben
+                    Print_Percent_Done ("Building ...", count_inner_loop_runs, max_inner_loop_runs);
+                    local_run_counter = 0;
+                }
+#endif /* NO_PROGRESS_OUTPUT */
+
+                // Besitzt das Objekt, welches in der naechsten inneren Schleife erstellt wird, ZU VIELE C-Atome ?
+                // Wenn ja, dann kann dieses Objekt kein gueltiges Ergebnis sein !
+#ifdef RELEASE_BUILD
+                if ((container_i2_i3_length_added + flat_alkane_branch_container_i4->length + 1)
+                        > number_of_c_atoms)
+#else
+                if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length + 1)
+                    > number_of_c_atoms)
+#endif /* RELEASE_BUILD */
+                {
+#ifndef NO_PROGRESS_OUTPUT
+                    count_inner_loop_runs += (i4 + 1);
+#endif /* NO_PROGRESS_OUTPUT */
+                    continue;
+                }
+
+                for (register size_t i5 = 0; i5 <= i4; ++ i5) // <= !
+                {
+                    // Besitzt das Objekt, welches gleich erstellt wird, die GENAU passende Anzahl an C-Atomen ?
+#ifdef RELEASE_BUILD
+                    if ((container_i2_i3_length_added + flat_alkane_branch_container_i4->length +
+                            flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
+#else
+                    if ((container_i2_i3_length_added + flat_alkane_branch_container [i4]->length +
+                            flat_alkane_branch_container [i5]->length + 1) != number_of_c_atoms)
+#endif /* RELEASE_BUILD */
+                    {
+                        continue;
+                    }
+
+                    // Verbinden der vier Aeste miteinander durch ein zentrales C-Atom
+                    // Das zentrale C-Atom muss irgendwie in den Zahlencode eines Astes eingebaut werden, damit
+                    // es in der Struktur des Alkans erhalten bleibt.
+                    // Das zentrale C-Atom wird immer dem ersten Alkan_Branch zugeordnet. Dafuer wird ein
+                    // temporaerer Alkanast erzeugt, welches den urspruenglichen Ast mit einem Ast, der nur aus
+                    // einem C-Atom besteht, beinhaltet
+#ifdef RELEASE_BUILD
+                    struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
+                            flat_alkane_branch_container_i2, NULL, NULL);
+#else
+                    struct Alkane* temp_alkane = Create_Alkane (single_c_atom_branch,
+                            flat_alkane_branch_container [i2], NULL, NULL);
+#endif /* RELEASE_BUILD */
+                    struct Alkane_Branch* temp_alkane_branch = Create_Alkane_Branch (temp_alkane->merged_numbercode,
+                            temp_alkane->number_of_c_atoms);
+
+#ifdef RELEASE_BUILD
+                    struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
+                            flat_alkane_branch_container_i3,
+                            flat_alkane_branch_container_i4,
+                            flat_alkane_branch_container [i5]);
+#else
+                    struct Alkane* const new_alkane = Create_Alkane (temp_alkane_branch,
+                            flat_alkane_branch_container [i3],
+                            flat_alkane_branch_container [i4],
+                            flat_alkane_branch_container [i5]);
+#endif /* RELEASE_BUILD */
+
+                    // Debug-Output des erstellten Alkane-Objektes
+                    // Print_Alkane (new_alkane);
+
+                    // Alkane_Branch Zeiger des gerade erstellten Alkane-Objektes auf NULL setzen
+                    // Fuer den weiteren Verlauf sind im Alkan-Objekt die Alkane_Branch-Objekte nicht von
+                    // Bedeutung. Sie sind nur wichtig fuer die systematische Erstellung aller Konstitutions-
+                    // isomere !
+//                            new_alkane->branches [0] = NULL;
+//                            new_alkane->branches [1] = NULL;
+//                            new_alkane->branches [2] = NULL;
+//                            new_alkane->branches [3] = NULL;
+
+                    // Neues Alkan-Objekt zum passenden Container hinzufuegen
+                    Add_Alkane_To_Container (alkane_container_main_chain_length_x [next_alkane_container], new_alkane);
+
+                    Delete_Alkane (temp_alkane);
+                    // temp_alkane = NULL;
+                    Delete_Alkane_Branch (temp_alkane_branch);
+                    // temp_alkane_branch = NULL;
+                }
+            }
+        }
+    }
+    // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
+
+    return;
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 
