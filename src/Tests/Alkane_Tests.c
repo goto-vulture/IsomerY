@@ -802,10 +802,10 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
     for (uint_fast64_t i = 0; i < number_of_expected_results; ++ i)
     {
         memset (converted_iupac_name, '\0', sizeof (converted_iupac_name));
-        strncpy (converted_iupac_name, iupac_name, strlen (iupac_name));
+        strncpy (converted_iupac_name, iupac_name, COUNT_ARRAY_ELEMENTS(converted_iupac_name) - 1);
 
         memset (converted_expected_results, '\0', sizeof (converted_expected_results));
-        strncpy (converted_expected_results, expected_results [i], strlen (expected_results [i]));
+        strncpy (converted_expected_results, expected_results [i], COUNT_ARRAY_ELEMENTS(converted_expected_results) - 1);
 
         // Alle Zeichenketten als englische Variante vergleichen
         // Also das "e" am Ende hinzufuegen, falls es noch nicht da ist
