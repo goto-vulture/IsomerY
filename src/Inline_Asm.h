@@ -23,6 +23,17 @@ extern "C"
 
 
 
+/**
+ * Wenn die Inline-Assemlerfragmente mit 64-Bit Code verwendet werden sollen
+ */
+#ifndef USE_X86_64
+// #define USE_X86_64
+#else
+#error "The macro \"USE_X86_64\" is already defined !"
+#endif /* USE_X86_64 */
+
+
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -138,6 +149,7 @@ __asm__ volatile                                        \
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
  * Operanden ausgeht."
  */
+#ifdef USE_X86_64
 #ifndef CARRY_CHECK_64_BIT_ADD
 #define CARRY_CHECK_64_BIT_ADD(add_1, add_2, result)    \
 __asm__ volatile                                        \
@@ -159,6 +171,7 @@ __asm__ volatile                                        \
 #else
 #error "The marco \"CARRY_CHECK_64_BIT_ADD\" is already defined !"
 #endif /* CARRY_CHECK_64_BIT_ADD */
+#endif /* USE_X86_64 */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -266,6 +279,7 @@ __asm__ volatile                                        \
  * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
  * vorzeichenbehafteten Operanden ausgeht."
  */
+#ifdef USE_X86_64
 #ifndef OVERFLOW_CHECK_64_BIT_ADD
 #define OVERFLOW_CHECK_64_BIT_ADD(add_1, add_2, result) \
 __asm__ volatile                                        \
@@ -287,6 +301,7 @@ __asm__ volatile                                        \
 #else
 #error "The macro \"OVERFLOW_CHECK_64_BIT_ADD\" is already defined !"
 #endif /* OVERFLOW_CHECK_64_BIT_ADD */
+#endif /* USE_X86_64 */
 
 //---------------------------------------------------------------------------------------------------------------------
 
