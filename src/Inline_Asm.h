@@ -45,27 +45,27 @@ extern "C"
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
  * Operanden ausgeht."
  */
-#ifndef CARRY_CHECK_8_BIT
-#define CARRY_CHECK_8_BIT(add_1, add_2, result) \
-    __asm__ volatile                            \
-(                                               \
-        "addb %1, %2"                   NT      \
-        "jc carry_flag_8_bit"           NT      \
-        "jmp no_carry_flag_8_bit"       NT      \
-        "carry_flag_8_bit:"             NT      \
-        "movb $1, %0"                   NT      \
-        "jmp end_carry_flag_8_bit"      NT      \
-        "no_carry_flag_8_bit:"          NT      \
-        "movb $0, %0"                   NT      \
-        "end_carry_flag_8_bit:"         NT      \
-                                                \
-        : "=r" (result)                         \
-        : "r" (add_1), "r" (add_2)              \
-        :                                       \
+#ifndef CARRY_CHECK_8_BIT_ADD
+#define CARRY_CHECK_8_BIT_ADD(add_1, add_2, result) \
+    __asm__ volatile                                \
+(                                                   \
+        "addb %1, %2"                   NT          \
+        "jc carry_flag_8_bit_add"       NT          \
+        "jmp no_carry_flag_8_bit_add"   NT          \
+        "carry_flag_8_bit_add:"         NT          \
+        "movb $1, %0"                   NT          \
+        "jmp end_carry_flag_8_bit_add"  NT          \
+        "no_carry_flag_8_bit_add:"      NT          \
+        "movb $0, %0"                   NT          \
+        "end_carry_flag_8_bit_add:"     NT          \
+                                                    \
+        : "=r" (result)                             \
+        : "r" (add_1), "r" (add_2)                  \
+        :                                           \
 );
 #else
-#error "The macro \"CARRY_CHECK_8_BIT\" is already defined !"
-#endif /* CARRY_CHECK_8_BIT */
+#error "The macro \"CARRY_CHECK_8_BIT_ADD\" is already defined !"
+#endif /* CARRY_CHECK_8_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -76,27 +76,27 @@ extern "C"
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
  * Operanden ausgeht."
  */
-#ifndef CARRY_CHECK_16_BIT
-#define CARRY_CHECK_16_BIT(add_1, add_2, result)    \
-__asm__ volatile                                    \
-(                                                   \
-        "addw %1, %2"                   NT          \
-        "jc carry_flag_16_bit"          NT          \
-        "jmp no_carry_flag_16_bit"      NT          \
-        "carry_flag_16_bit:"            NT          \
-        "movw $1, %0"                   NT          \
-        "jmp end_carry_flag_16_bit"     NT          \
-        "no_carry_flag_16_bit:"         NT          \
-        "movw $0, %0"                   NT          \
-        "end_carry_flag_16_bit:"        NT          \
-                                                    \
-        : "=r" (result)                             \
-        : "r" (add_1), "r" (add_2)                  \
-        :                                           \
+#ifndef CARRY_CHECK_16_BIT_ADD
+#define CARRY_CHECK_16_BIT_ADD(add_1, add_2, result)    \
+__asm__ volatile                                        \
+(                                                       \
+        "addw %1, %2"                       NT          \
+        "jc carry_flag_16_bit_add"          NT          \
+        "jmp no_carry_flag_16_bit_add"      NT          \
+        "carry_flag_16_bit:"                NT          \
+        "movw $1, %0"                       NT          \
+        "jmp end_carry_flag_16_bit_add"     NT          \
+        "no_carry_flag_16_bit_add:"         NT          \
+        "movw $0, %0"                       NT          \
+        "end_carry_flag_16_bit_add:"        NT          \
+                                                        \
+        : "=r" (result)                                 \
+        : "r" (add_1), "r" (add_2)                      \
+        :                                               \
 );
 #else
-#error "The macro \"CARRY_CHECK_16_BIT\" is already defined !"
-#endif /* CARRY_CHECK_16_BIT */
+#error "The macro \"CARRY_CHECK_16_BIT_ADD\" is already defined !"
+#endif /* CARRY_CHECK_16_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -107,27 +107,27 @@ __asm__ volatile                                    \
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
  * Operanden ausgeht."
  */
-#ifndef CARRY_CHECK_32_BIT
-#define CARRY_CHECK_32_BIT(add_1, add_2, result)    \
-__asm__ volatile                                    \
-(                                                   \
-        "addl %1, %2"                   NT          \
-        "jc carry_flag_32_bit"          NT          \
-        "jmp no_carry_flag_32_bit"      NT          \
-        "carry_flag_32_bit:"            NT          \
-        "movl $1, %0"                   NT          \
-        "jmp end_carry_flag_32_bit"     NT          \
-        "no_carry_flag_32_bit:"         NT          \
-        "movl $0, %0"                   NT          \
-        "end_carry_flag_32_bit:"        NT          \
-                                                    \
-        : "=r" (result)                             \
-        : "r" (add_1), "r" (add_2)                  \
-        :                                           \
+#ifndef CARRY_CHECK_32_BIT_ADD
+#define CARRY_CHECK_32_BIT_ADD(add_1, add_2, result)    \
+__asm__ volatile                                        \
+(                                                       \
+        "addl %1, %2"                       NT          \
+        "jc carry_flag_32_bit_add"          NT          \
+        "jmp no_carry_flag_32_bit_add"      NT          \
+        "carry_flag_32_bit_add:"            NT          \
+        "movl $1, %0"                       NT          \
+        "jmp end_carry_flag_32_bit_add"     NT          \
+        "no_carry_flag_32_bit_add:"         NT          \
+        "movl $0, %0"                       NT          \
+        "end_carry_flag_32_bit_add:"        NT          \
+                                                        \
+        : "=r" (result)                                 \
+        : "r" (add_1), "r" (add_2)                      \
+        :                                               \
 );
 #else
-#error "The macro \"CARRY_CHECK_32_BIT\" is already defined !"
-#endif /* CARRY_CHECK_32_BIT */
+#error "The macro \"CARRY_CHECK_32_BIT_ADD\" is already defined !"
+#endif /* CARRY_CHECK_32_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -138,27 +138,27 @@ __asm__ volatile                                    \
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
  * Operanden ausgeht."
  */
-#ifndef CARRY_CHECK_64_BIT
-#define CARRY_CHECK_64_BIT(add_1, add_2, result)    \
-__asm__ volatile                                    \
-(                                                   \
-        "addq %1, %2"                   NT          \
-        "jc carry_flag_64_bit"          NT          \
-        "jmp no_carry_flag_64_bit"      NT          \
-        "carry_flag_64_bit:"            NT          \
-        "movq $1, %0"                   NT          \
-        "jmp end_carry_flag_64_bit"     NT          \
-        "no_carry_flag_64_bit:"         NT          \
-        "movq $0, %0"                   NT          \
-        "end_carry_flag_64_bit:"        NT          \
-                                                    \
-        : "=r" (result)                             \
-        : "r" (add_1), "r" (add_2)                  \
-        :                                           \
+#ifndef CARRY_CHECK_64_BIT_ADD
+#define CARRY_CHECK_64_BIT_ADD(add_1, add_2, result)    \
+__asm__ volatile                                        \
+(                                                       \
+        "addq %1, %2"                       NT          \
+        "jc carry_flag_64_bit_add"          NT          \
+        "jmp no_carry_flag_64_bit_add"      NT          \
+        "carry_flag_64_bit_add:"            NT          \
+        "movq $1, %0"                       NT          \
+        "jmp end_carry_flag_64_bit_add"     NT          \
+        "no_carry_flag_64_bit_add:"         NT          \
+        "movq $0, %0"                       NT          \
+        "end_carry_flag_64_bit_add:"        NT          \
+                                                        \
+        : "=r" (result)                                 \
+        : "r" (add_1), "r" (add_2)                      \
+        :                                               \
 );
 #else
-#error "The marco \"CARRY_CHECK_64_BIT\" is already defined !"
-#endif /* CARRY_CHECK_64_BIT */
+#error "The marco \"CARRY_CHECK_64_BIT_ADD\" is already defined !"
+#endif /* CARRY_CHECK_64_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -170,27 +170,27 @@ __asm__ volatile                                    \
  * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
  * vorzeichenbehafteten Operanden ausgeht."
  */
-#ifndef OVERFLOW_CHECK_8_BIT
-#define OVERFLOW_CHECK_8_BIT(add_1, add_2, result)  \
-__asm__ volatile                                    \
-(                                                   \
-    "addb %1, %2"                   NT              \
-    "jo overflow_flag_8_bit"        NT              \
-    "jmp no_overflow_flag_8_bit"    NT              \
-    "overflow_flag_8_bit:"          NT              \
-    "movb $1, %0"                   NT              \
-    "jmp end_overflow_flag_8_bit"   NT              \
-    "no_overflow_flag_8_bit:"       NT              \
-    "movb $0, %0"                   NT              \
-    "end_overflow_flag_8_bit:"      NT              \
-                                                    \
-    : "=r" (result)                                 \
-    : "r" (add_1), "r" (add_2)                      \
-    :                                               \
+#ifndef OVERFLOW_CHECK_8_BIT_ADD
+#define OVERFLOW_CHECK_8_BIT_ADD(add_1, add_2, result)  \
+__asm__ volatile                                        \
+(                                                       \
+    "addb %1, %2"                       NT              \
+    "jo overflow_flag_8_bit_add"        NT              \
+    "jmp no_overflow_flag_8_bit_add"    NT              \
+    "overflow_flag_8_bit_add:"          NT              \
+    "movb $1, %0"                       NT              \
+    "jmp end_overflow_flag_8_bit_add"   NT              \
+    "no_overflow_flag_8_bit_add:"       NT              \
+    "movb $0, %0"                       NT              \
+    "end_overflow_flag_8_bit_add:"      NT              \
+                                                        \
+    : "=r" (result)                                     \
+    : "r" (add_1), "r" (add_2)                          \
+    :                                                   \
 );
 #else
-#error "The macro \"OVERFLOW_CHECK_8_BIT\" is already defined !"
-#endif /* OVERFLOW_CHECK_8_BIT */
+#error "The macro \"OVERFLOW_CHECK_8_BIT_ADD\" is already defined !"
+#endif /* OVERFLOW_CHECK_8_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -202,27 +202,27 @@ __asm__ volatile                                    \
  * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
  * vorzeichenbehafteten Operanden ausgeht."
  */
-#ifndef OVERFLOW_CHECK_16_BIT
-#define OVERFLOW_CHECK_16_BIT(add_1, add_2, result) \
-__asm__ volatile                                    \
-(                                                   \
-    "addw %1, %2"                   NT              \
-    "jo overflow_flag_16_bit"       NT              \
-    "jmp no_overflow_flag_16_bit"   NT              \
-    "overflow_flag_16_bit:"         NT              \
-    "movw $1, %0"                   NT              \
-    "jmp end_overflow_flag_16_bit"  NT              \
-    "no_overflow_flag_16_bit:"      NT              \
-    "movw $0, %0"                   NT              \
-    "end_overflow_flag_16_bit:"     NT              \
-                                                    \
-    : "=r" (result)                                 \
-    : "r" (add_1), "r" (add_2)                      \
-    :                                               \
+#ifndef OVERFLOW_CHECK_16_BIT_ADD
+#define OVERFLOW_CHECK_16_BIT_ADD(add_1, add_2, result) \
+__asm__ volatile                                        \
+(                                                       \
+    "addw %1, %2"                       NT              \
+    "jo overflow_flag_16_bit_add"       NT              \
+    "jmp no_overflow_flag_16_bit_add"   NT              \
+    "overflow_flag_16_bit_add:"         NT              \
+    "movw $1, %0"                       NT              \
+    "jmp end_overflow_flag_16_bit_add"  NT              \
+    "no_overflow_flag_16_bit_add:"      NT              \
+    "movw $0, %0"                       NT              \
+    "end_overflow_flag_16_bit_add:"     NT              \
+                                                        \
+    : "=r" (result)                                     \
+    : "r" (add_1), "r" (add_2)                          \
+    :                                                   \
 );
 #else
-#error "The macro \"OVERFLOW_CHECK_16_BIT\" is already defined !"
-#endif /* OVERFLOW_CHECK_16_BIT */
+#error "The macro \"OVERFLOW_CHECK_16_BIT_ADD\" is already defined !"
+#endif /* OVERFLOW_CHECK_16_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -234,27 +234,27 @@ __asm__ volatile                                    \
  * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
  * vorzeichenbehafteten Operanden ausgeht."
  */
-#ifndef OVERFLOW_CHECK_32_BIT
-#define OVERFLOW_CHECK_32_BIT(add_1, add_2, result) \
-__asm__ volatile                                    \
-(                                                   \
-    "addl %1, %2"                   NT              \
-    "jo overflow_flag_32_bit"       NT              \
-    "jmp no_overflow_flag_32_bit"   NT              \
-    "overflow_flag_32_bit:"         NT              \
-    "movl $1, %0"                   NT              \
-    "jmp end_overflow_flag_32_bit"  NT              \
-    "no_overflow_flag_32_bit:"      NT              \
-    "movl $0, %0"                   NT              \
-    "end_overflow_flag_32_bit:"     NT              \
-                                                    \
-    : "=r" (result)                                 \
-    : "r" (add_1), "r" (add_2)                      \
-    :                                               \
+#ifndef OVERFLOW_CHECK_32_BIT_ADD
+#define OVERFLOW_CHECK_32_BIT_ADD(add_1, add_2, result) \
+__asm__ volatile                                        \
+(                                                       \
+    "addl %1, %2"                       NT              \
+    "jo overflow_flag_32_bit_add"       NT              \
+    "jmp no_overflow_flag_32_bit_add"   NT              \
+    "overflow_flag_32_bit_add:"         NT              \
+    "movl $1, %0"                       NT              \
+    "jmp end_overflow_flag_32_bit_add"  NT              \
+    "no_overflow_flag_32_bit_add:"      NT              \
+    "movl $0, %0"                       NT              \
+    "end_overflow_flag_32_bit_add:"     NT              \
+                                                        \
+    : "=r" (result)                                     \
+    : "r" (add_1), "r" (add_2)                          \
+    :                                                   \
 );
 #else
-#error "The macro \"OVERFLOW_CHECK_32_BIT\" is already defined !"
-#endif /* OVERFLOW_CHECK_32_BIT */
+#error "The macro \"OVERFLOW_CHECK_32_BIT_ADD\" is already defined !"
+#endif /* OVERFLOW_CHECK_32_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -266,27 +266,27 @@ __asm__ volatile                                    \
  * "Ist das Overflow-Flag gesetzt, dann trat bei der letzten Rechenoperation ein Überlauf auf, wenn man von
  * vorzeichenbehafteten Operanden ausgeht."
  */
-#ifndef OVERFLOW_CHECK_64_BIT
-#define OVERFLOW_CHECK_64_BIT(add_1, add_2, result) \
-__asm__ volatile                                    \
-(                                                   \
-    "addq %1, %2"                   NT              \
-    "jo overflow_flag_64_bit"       NT              \
-    "jmp no_overflow_flag_64_bit"   NT              \
-    "overflow_flag_64_bit:"         NT              \
-    "movq $1, %0"                   NT              \
-    "jmp end_overflow_flag_64_bit"  NT              \
-    "no_overflow_flag_64_bit:"      NT              \
-    "movq $0, %0"                   NT              \
-    "end_overflow_flag_64_bit:"     NT              \
-                                                    \
-    : "=r" (result)                                 \
-    : "r" (add_1), "r" (add_2)                      \
-    :                                               \
+#ifndef OVERFLOW_CHECK_64_BIT_ADD
+#define OVERFLOW_CHECK_64_BIT_ADD(add_1, add_2, result) \
+__asm__ volatile                                        \
+(                                                       \
+    "addq %1, %2"                       NT              \
+    "jo overflow_flag_64_bit_add"       NT              \
+    "jmp no_overflow_flag_64_bit_add"   NT              \
+    "overflow_flag_64_bit_add:"         NT              \
+    "movq $1, %0"                       NT              \
+    "jmp end_overflow_flag_64_bit_add"  NT              \
+    "no_overflow_flag_64_bit_add:"      NT              \
+    "movq $0, %0"                       NT              \
+    "end_overflow_flag_64_bit_add:"     NT              \
+                                                        \
+    : "=r" (result)                                     \
+    : "r" (add_1), "r" (add_2)                          \
+    :                                                   \
 );
 #else
-#error "The macro \"OVERFLOW_CHECK_64_BIT\" is already defined !"
-#endif /* OVERFLOW_CHECK_64_BIT */
+#error "The macro \"OVERFLOW_CHECK_64_BIT_ADD\" is already defined !"
+#endif /* OVERFLOW_CHECK_64_BIT_ADD */
 
 //---------------------------------------------------------------------------------------------------------------------
 
