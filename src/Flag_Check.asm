@@ -3,9 +3,10 @@
 # mit denen man die wichtigsten Flags auslesen und im C-Programm verfuegbar machen kann
 # Die 64-Bit Variante wird vielleicht irgendwann nachgeruestet
 
-.text
-.global main
-main:
+# Fuer die Verwendung als Inline-Code auskommentiert
+# .text
+# .global main
+# main:
     # !!! Ist nur fuer die Entwicklung mittels SASM notwendig ! Als Inline Assembler darf dieser Befehl nicht verwendet
     # werden !!!
     # movl %esp, %ebp # for correct debugging
