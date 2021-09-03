@@ -208,6 +208,8 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ENDE Zusammengesetzten Zahlencode des uebergebenen Alkans ueberpruefen ===== ===== =====
 
     // ===== ===== ===== ===== ===== ===== ===== BEGINN Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
+    // Das Zaehlen der erzeugten Ergebnisse - waehrend des kompletten Programmlaufs - dient fuer ein besseres Debugging,
+    // wenn bei einer bestimmten Erzeugung nach Fehlern gesucht werden soll.
     static volatile size_t result_number = 0;
     ++ result_number;
 
@@ -235,6 +237,8 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== ===== ===== ENDE Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
+    // Debug-if
+    // Falls bei einer bestimmten Erzeugung ein Breakpoint gesetzt werden soll, dann ist hier die beste Stelle dafuer !
     if (result_number == 42)
     {
         (void) result_number;
