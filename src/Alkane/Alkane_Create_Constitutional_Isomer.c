@@ -960,11 +960,15 @@ static void Central_Object_Is_A_C_Atom
                     // temp_alkane = NULL;
                     Delete_Alkane_Branch (temp_alkane_branch);
                     // temp_alkane_branch = NULL;
+
                 }
             }
         }
     }
     // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
+
+    Delete_Alkane_Branch (single_c_atom_branch);
+    // single_c_atom_branch = NULL;
 
     return;
 }
