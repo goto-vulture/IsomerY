@@ -810,7 +810,7 @@ static void Central_Object_Is_A_C_Atom
     // Die restlichen beiden Schleifen duerfen auch die Aeste der niedrigeren Container verwenden. Auch hier
     // wird fuer die bessere Umsetzbarkeit ein flaches Speichermodell der Aeste verwendet.
     // Siehe Pseudocode III auf Seite 18 von "Strukturisomere der Alkane"
-    // ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== =====
+    // ===== ===== ===== ===== ===== BEGINN Berechnungsschleifen ===== ===== ===== ===== =====
     for (register size_t i2 = loop_start; i2 < loop_end; ++ i2)
     {
         for (register size_t i3 = loop_start; i3 <= i2; ++ i3) // <= !
@@ -965,7 +965,7 @@ static void Central_Object_Is_A_C_Atom
             }
         }
     }
-    // ===== ===== ===== ENDE Berechnungsschleifen ===== ===== =====
+    // ===== ===== ===== ===== ===== ENDE Berechnungsschleifen ===== ===== ===== ===== =====
 
     Delete_Alkane_Branch (single_c_atom_branch);
     // single_c_atom_branch = NULL;
