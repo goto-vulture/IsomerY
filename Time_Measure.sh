@@ -19,6 +19,7 @@ then
     printf "Too much CLI parameter ! 0 or 1 parameter (for the number of runs) are expected ! Got %d !\n" "$#"
     exit 1
 else
+    printf "Used number of runs: %d\n\n" "${1}"
     TOTAL_RUNS=${1}
 fi
 
