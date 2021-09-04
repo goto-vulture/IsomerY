@@ -383,9 +383,20 @@ Go_Deeper
     // Alle erreichbaren Combined_Chain-Objekte abarbeiten
     for (uint_fast8_t i = 0; i < combined->next_free_depper; ++ i)
     {
-        // Wenn nicht gerade zuvor eine schliessende Klammer hinzugefuegt wurde, dann wird eine neue Ebene (mittels
-        // Klammern) im IUPAC-Namen erstellt
-        if (str [strlen (str) - 1] != '-' && str [strlen (str) - 2] != ')')
+        if (strlen (str) >= 2)
+        {
+            // Wenn nicht gerade zuvor eine schliessende Klammer hinzugefuegt wurde, dann wird eine neue Ebene (mittels
+            // Klammern) im IUPAC-Namen erstellt
+            if (str [strlen (str) - 1] != '-' && str [strlen (str) - 2] != ')')
+            {
+                strncat (str, "-(", size_left);
+                size_left -= strlen ("-(");
+            }
+        }
+        // Wenn es weniger als zwei Zeichen in der aktuell erzeugten Zeichenkette gibt, dann kann nicht zuvor eine
+        // schliessende Klammer (und das folgende Minuszeichen) enthalten sein
+        // => Immer "-(" anhaengen
+        else
         {
             strncat (str, "-(", size_left);
             size_left -= strlen ("-(");
