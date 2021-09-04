@@ -328,7 +328,7 @@ Go_Deeper
         size_t size_left                                        // Anzahl an Zeichen, die noch zur Verfuegung stehen
 )
 {
-    // PRINTF_FFLUSH ("Name: %s\n", str)
+    // PRINTF_FFLUSH ("Name: \"%s\" (size_left: %zu)\n", str, size_left)
 
     // Alle Positionsnummern in Strings konvertieren
     for (uint_fast8_t i = 0; i < combined->next_free_position; ++ i)
@@ -406,7 +406,7 @@ Go_Deeper
         Go_Deeper (combined->deeper [i], combined, str, size_left);
     }
 
-    // PRINTF_FFLUSH ("Name: %s\n", str)
+    // PRINTF_FFLUSH ("Name: \"%s\" (size_left: %zu)\n", str, size_left)
 
     return;
 }
