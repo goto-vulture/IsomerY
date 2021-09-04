@@ -48,8 +48,8 @@ extern void Show_Dynamic_Memory_Status (void);
 
 // Malloc-Aufrufe mitzaehlen
 #ifndef MALLOC
-    #define MALLOC(memory_size)                                                                                         \
-        malloc (memory_size);                                                                                           \
+    #define MALLOC(memory_size)                                                                                       \
+        malloc (memory_size);                                                                                         \
         ++ GLOBAL_malloc_calls;
 #else
     #error "The macro \"MALLOC\" is already defined !"
@@ -59,8 +59,8 @@ extern void Show_Dynamic_Memory_Status (void);
 
 // Calloc-Aufrufe mitzaehlen
 #ifndef CALLOC
-    #define CALLOC(number_of_elements, element_size)                                                                    \
-        calloc (number_of_elements, element_size);                                                                      \
+    #define CALLOC(number_of_elements, element_size)                                                                  \
+        calloc (number_of_elements, element_size);                                                                    \
         ++ GLOBAL_calloc_calls;
 #else
     #error "The macro \"CALLOC\" is already defined !"
@@ -90,12 +90,12 @@ extern void Show_Dynamic_Memory_Status (void);
 // beiden Funktion einfach nichts gemacht !
 // Siehe: https://stackoverflow.com/questions/4190703/is-it-safe-to-delete-a-null-pointer
 #ifndef FREE_AND_SET_TO_NULL
-    #define FREE_AND_SET_TO_NULL(pointer)                                                                               \
-        /* if (pointer != NULL) */                                                                                      \
-        {                                                                                                               \
-            free (pointer);                                                                                             \
-            pointer = NULL;                                                                                             \
-            ++ GLOBAL_free_calls;                                                                                       \
+    #define FREE_AND_SET_TO_NULL(pointer)                                                                             \
+        /* if (pointer != NULL) */                                                                                    \
+        {                                                                                                             \
+            free (pointer);                                                                                           \
+            pointer = NULL;                                                                                           \
+            ++ GLOBAL_free_calls;                                                                                     \
         }
 #else
     #error "The macro \"FREE_AND_SET_TO_NULL\" is already defined !"
