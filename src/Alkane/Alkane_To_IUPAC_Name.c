@@ -138,7 +138,16 @@ Search_For_Chain_Content
  */
 static inline int Compare_Chain_Information (const void* a, const void* b);
 
-static int Compare_Chains (struct Chain chain_a, struct Chain chain_b);
+/**
+ * Zwei Chain-Objekte mit allen Attributen vergleichen.
+ * 0 als Rueckgabewert, falls alle Attribute gleich sind. Ansonsten 1.
+ */
+static inline int
+Compare_Chains
+(
+        const struct Chain chain_a, // Erstes Chain-Objekt
+        const struct Chain chain_b  // Zweites Chain-Objekt
+);
 
 /**
  * Aeste, die auf gleicher Verschachtelungstiefe liegen, anhand der Laenge der Aeste aufsteigend sortieren.
@@ -823,7 +832,16 @@ static inline int Compare_Chain_Information (const void* a, const void* b)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static int Compare_Chains (struct Chain chain_a, struct Chain chain_b)
+/**
+ * Zwei Chain-Objekte mit allen Attributen vergleichen.
+ * 0 als Rueckgabewert, falls alle Attribute gleich sind. Ansonsten 1.
+ */
+static inline int
+Compare_Chains
+(
+        const struct Chain chain_a, // Erstes Chain-Objekt
+        const struct Chain chain_b  // Zweites Chain-Objekt
+)
 {
     if (chain_a.length == chain_b.length && chain_a.nesting_depth == chain_b.nesting_depth &&
             chain_a.position == chain_b.position)
