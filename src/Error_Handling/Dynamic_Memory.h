@@ -103,6 +103,19 @@ extern void Show_Dynamic_Memory_Status (void);
 
 //---------------------------------------------------------------------------------------------------------------------
 
+// Das Loeschen eines Objektes mittels der passenden Loesch-Funktion.
+// Wie fuer Makros typisch: Es ist bloss eine Textersetzung ! Wenn eine falsche Loesch-Funktion angegeben wird, dann
+// wird sich der Compiler beschweren, und das zu Recht. ;)
+//
+#ifndef FREE_WITH_FUNCTION_AND_SET_TO_NULL
+    #define FREE_WITH_FUNCTION_AND_SET_TO_NULL(free_function, pointer)                                                \
+        free_function (pointer);                                                                                      \
+        pointer = NULL;
+#else
+    #error "The macro \"FREE_WITH_FUNCTION_AND_SET_TO_NULL\" is already defined !"
+#endif /* FREE_WITH_FUNCTION_AND_SET_TO_NULL */
+//---------------------------------------------------------------------------------------------------------------------
+
 
 
 // ENDE C++-Kompablitaet herstellen
