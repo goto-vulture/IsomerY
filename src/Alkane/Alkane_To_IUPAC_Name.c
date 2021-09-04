@@ -900,11 +900,115 @@ Reorder_Chains
         }
     }
 
+    // Maximale Verschachtelungstiefe ermitteln
+    size_t max_nesting_depth = 0;
+    for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
+    {
+        if (reorder_data [i].next_free_data > 0)
+        {
+            max_nesting_depth = i;
+        }
+    }
+
+
     // Sortierungen durchfuehren
     for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
     {
         if (reorder_data [i].next_free_data > 0)
         {
+            // Der naechste Schritt ist - mehr oder weniger - optional. Die Positionen der Aeste auf erster
+            // Verschachtelungstiefe werden so umstruktoriert, sodass die Summe der Positionsangaben so gering wie
+            // moeglich ist.
+            // Dies ist moeglich, da bei der Nummerierung von beiden Seiten der Hauptkette begonnen werden kann. Das
+            // einzige wichtige dabei: Alle Positionsnummern muessen von einer Seite aus angegeben werden; sonst ist
+            // keine eindeutige Darstellung des Molekuels mehr moeglich !
+            // Ein Beispiel:
+            //
+            // Angaben der Positonsnummern von LINKS nach RECHTS.
+            //
+            // 3-Ethyl-6,6-DiMethylOctan (3 + 6 + 6 -> 15)
+            //
+            //                       C
+            //                       |
+            // 1 C - C - C - C - C - C - C - C 8
+            //           |           |
+            //           C           C
+            //           |
+            //           C
+            //
+            // Wenn man nun die Nummerierung von RECHTS nach LINKS durchfuehrt: 6-Ethyl-3,3-DiMethylOctan (6 + 3 + 3 -> 12)
+            //
+            // ! ALLERDINGS !
+            // Es wird die Richtung gewaehlt, wo die hoechste Positionsnummer am geringsten ist. Diese Regel hat eine
+            // noch hoehere Prioritaet ! Selbst dann, wenn die Summe der Positionen hoeher ist !
+            // Auch hier wieder ein Beispiel:
+            //
+            // Angaben der Positonsnummern von LINKS nach RECHTS.
+            //
+            // 3,3,8-TriMethylNonan (3 + 3 + 8 -> 14)
+            //
+            //           C
+            //           |
+            // 1 C - C - C - C - C - C - C - C - C 9
+            //           |                   |
+            //           C                   C
+            //
+            // Wenn man nun die Nummerierung von RECHTS nach LINKS durchfuehrt: 2,7,7-Trimethylnonan (2 + 7 + 7 -> 16)
+            // Obwohl von LINKS nach RECHTS eine geringere Summe besitzt, wird dennoch die Variante von RECHTS nach
+            // LINKS gewaehlt, da dort das Maximum der Positionsnummern (7 vs. 8) geringer ist !
+            // Keine Ahnung, warum die Regeln so priorisiert wurden ... Ist nunmal einfach so :o
+
+            // Die Umstruktorierung nur auf der obersten Ebene durchfuehren
+            if (i == 0 && max_nesting_depth == 0)
+            {
+                const uint_fast8_t main_chain_length    = alkane->chains [0].length;
+                size_t current_direction_sum            = 0;
+                size_t inverted_direction_sum           = 0;
+                size_t maximum_current_direction        = 0;
+                size_t maximum_inverted_direction       = 0;
+
+                for (uint_fast8_t i2 = 0; i2 < reorder_data [i].next_free_data; ++ i2)
+                {
+                    // Da die Aeste aufsteigend anhand der Verschachtelungstiefe sortiert sind, weiss man, dass alle Elemente erster
+                    // Verschachtelungstiefe betrachtet wurden, wenn die Verschachtelungstiefe nicht mehr 1 ist
+                    if (reorder_data [i].data [i2].nesting_depth != 1)
+                    {
+                        break;
+                    }
+
+                    const uint_fast8_t current_position = reorder_data [i].data [i2].position;
+
+                    // Summe der Positionen aus beiden Richtungen berechnen
+                    current_direction_sum   += current_position;
+                    inverted_direction_sum  += (size_t) (main_chain_length - current_position + 1);
+
+                    if (current_position > maximum_current_direction)
+                    {
+                        maximum_current_direction = current_position;
+                    }
+                    if ((size_t) (main_chain_length - current_position + 1) > maximum_inverted_direction)
+                    {
+                        maximum_inverted_direction = (size_t) (main_chain_length - current_position + 1);
+                    }
+                }
+
+                // Aenderung durchfuehren, falls notwendig
+                if ((maximum_inverted_direction <= maximum_current_direction) &&
+                        (inverted_direction_sum < current_direction_sum))
+                {
+                    for (uint_fast8_t i2 = 0; i2 < reorder_data [i].next_free_data; ++ i2)
+                    {
+                        if (reorder_data [i].data [i2].nesting_depth != 1)
+                        {
+                            break;
+                        }
+
+                        reorder_data [i].data [i2].position = (uint_fast8_t)
+                                (main_chain_length - reorder_data [i].data [i2].position + 1);
+                    }
+                }
+            }
+
             qsort (reorder_data [i].data, (size_t) (reorder_data [i].next_free_data), sizeof (struct Chain),
                     Compare_Chain_Information);
         }
@@ -927,6 +1031,8 @@ Reorder_Chains
             next_free_chain += reorder_data [i].next_free_data;
         }
     }
+
+
 
     return;
 }
