@@ -87,7 +87,10 @@ c_file_list = [
     "src/Tests/tinytest.c",
 
     # str2int Konverter
-    "src/str2int.c"
+    "src/str2int.c",
+
+    # Schoenheit
+    "src/Beautiful.c"
 ]
 
 ##### Liste der vorhandenen Cpp-Dateien #####
