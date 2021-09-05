@@ -38,6 +38,11 @@ extern void Beautiful_2 (void);
  */
 extern void Beautiful_3 (void);
 
+/**
+ * Show the fourth beautiful vulture.
+ */
+extern void Beautiful_4 (void);
+
 
 
 // ENDE C++-Kompablitaet herstellen
