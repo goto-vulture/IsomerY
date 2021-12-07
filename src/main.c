@@ -75,6 +75,7 @@
 #include "Tests/Alkane_Tests.h"
 #include "str2int.h"
 #include "Print_Tools.h"
+#include "Beautiful.h"
 
 
 
@@ -113,6 +114,11 @@ int main (const int argc, const char* const argv [])
     // Infos ueber die getaetigten Speicheraufrufe anzeigen
     puts ("");
     Show_Dynamic_Memory_Status ();
+
+    Beautiful_1 ();
+    Beautiful_2 ();
+    Beautiful_3 ();
+    Beautiful_4();
 
     // Alle I/O Puffer vor Beendigung des Programms leeren
     fflush (NULL);
