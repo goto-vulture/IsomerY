@@ -4,6 +4,7 @@
 
 CC = gcc
 RM = rm
+MKDIR = mkdir
 
 # Flags, die sowohl im Debug- als auch im Release-Build, verwendet werden
 CCFLAGS = -std=c11 -pedantic -Wall -Wextra -Wconversion -fmessage-length=0
@@ -56,6 +57,8 @@ DEBUG = 0
 RELEASE = 0
 
 PROJECT_NAME = IsomerY
+DOCUMENTATION_PATH = ./Documentation
+
 # addsuffix, welches einen String am Ende einer Variable anbringt, kann das Ergebnis NICHT einer Variablen zuweisen, wenn diese
 # Variable im Aufruf von addsuffix vorhanden ist !
 # D.h.: test += $(addsuffix _X_, $(test)) ist NICHT moeglich !
@@ -240,6 +243,11 @@ Beautiful.o: $(BEAUTIFUL_C)
 clean:
 	@echo Clean IsomerY build.
 	@echo
+	@echo \> Deleting compilation files:
 	$(RM) -f $(PROJECT_NAME)* *.o ./src/Alkane/*.gch ./src/Error_Handling/*.gch gmon.out
+	@echo
+	@echo \> Deleting doxygen documentation:
+	$(RM) -rf $(DOCUMENTATION_PATH)
+	$(MKDIR) $(DOCUMENTATION_PATH)
 	@echo
 	@echo IsomerY build cleaned.
