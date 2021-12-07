@@ -1,5 +1,6 @@
 ----- ----- ----- ToDo ----- ----- -----
 - Konvertierung von den Chain-Objekten zu den IUPAC-Namen funktioniert noch nicht einwandfrei
+- Richtige Dokumentation der C "Klassen"
 
 ----- ----- ----- Ideas ----- ----- -----
 - Laufzeitvergleich Debug / Release Build DONE
