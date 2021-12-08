@@ -6,6 +6,11 @@ CC = gcc
 RM = rm
 MKDIR = mkdir
 
+# Pfad zu doxygen, falls es auf dem System vorhanden ist
+DOXYGEN = doxygen
+DOXYGEN_PATH := $(shell command -v $(DOXYGEN) 2> /dev/null)
+
+
 # Flags, die sowohl im Debug- als auch im Release-Build, verwendet werden
 CCFLAGS = -std=c11 -pedantic -Wall -Wextra -Wconversion -fmessage-length=0
 
@@ -172,6 +177,17 @@ BEAUTIFUL_C = ./src/Beautiful.c
 
 # Komplettes Projekt erstellen
 all: $(TARGET)
+	@echo
+
+# Wenn doxygen auf den System nicht vorhanden ist, dann wird die Kompilierung fortgesetzt; aber ohne Erzeugung der Dokumentation
+ifndef DOXYGEN_PATH
+	@echo No $(DOXYGEN) in $(PATH). Skip the creation of the documentation.
+	@echo If you want the program documentation, try to install $(DOXYGEN) with apt-get install $(DOXYGEN).
+else
+	@echo Generating the documentation ...
+	$(DOXYGEN_PATH) ./Doxyfile
+endif
+
 	@echo
 	@echo IsomerY build completed !
 
