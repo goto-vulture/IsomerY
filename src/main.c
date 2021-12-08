@@ -63,6 +63,13 @@
     #endif /* false */
 #endif /* __STDC_VERSION__ */
 
+// Ein einfache Zeichenkette die anzeigt, dass eine Information nicht vorhanden ist
+#ifndef N_A
+#define N_A "N/A"
+#else
+#error "The macro \"N_A\" is already defined !"
+#endif /* N_A */
+
 #include <stdlib.h>
 #include <assert.h>
 #include "OS_Specific_Configurations.h"
@@ -133,20 +140,20 @@ int main (const int argc, const char* const argv [])
  */
 static inline void Show_Program_Details (void)
 {
-    printf ("IsomerY (");
-
+    printf ("IsomerY (Build type: ");
 #ifdef RELEASE_BUILD
-    printf ("Release-Build");
+    printf ("Release");
 #elif DEBUG_BUILD
-    printf ("Debug-Build");
+    printf ("Debug");
 #else
-    printf ("N/A");
+    printf (N_A);
 #endif /* RELEASE_BUILD */
 
+    printf (") Version: ");
 #ifdef VERSION
-    printf (") Version: %s\n", VERSION);
+    printf ("%s\n", VERSION);
 #else
-    printf (") Verison: N/A\n");
+    printf (N_A "\n");
 #endif /* VERSION */
 
     // Das wichtigste Bild !
