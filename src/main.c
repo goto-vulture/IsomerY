@@ -1,5 +1,13 @@
 /**
- * main.c
+ * @mainpage IsomerY
+ *
+ * @brief Dieses Programm besimmt die Konstitutionsisomre (mit deren IUPAC-Namen) von Alkanen bei gegebener Anzahl an
+ * C-Atomen.
+ *
+ * @author x86 / Gyps
+ */
+
+/*
  *
  *  Created on: 07.03.2021
  *      Author: x86 / Gyps
@@ -12,12 +20,6 @@
  * jgs  `|/))))
  *
  * For me, a vulture is more desirable than money.
- *
- *
- * ===== Programmbeschreibung =====
- * Dieses Programm besimmt die Konstitutionsisomre (mit deren IUPAC-Namen) von Alkanen bei gegebener Anzahl an C-Atomen.
- *
- * ...
  */
 
 /**
@@ -94,9 +96,14 @@ static inline void Show_Program_Details (void);
 //=====================================================================================================================
 
 /**
- * main-Funktion des Programms.
+ * @brief main-Funktion des Programms.
  *
  * Aktuell werden die CLI-Parameter (noch) nicht verwendet.
+ *
+ * @param argc argc-Parameter
+ * @param argv Anzahl an argc-Parametern
+ *
+ * @return 0 bei erfolgreicher Ausfuehrung; Ansonsten != 0
  */
 int main (const int argc, const char* const argv [])
 {
@@ -136,7 +143,7 @@ int main (const int argc, const char* const argv [])
 //=====================================================================================================================
 
 /**
- * Einige wesentliche Informationen des Programms ausgeben.
+ * @brief Einige wesentliche Informationen des Programms ausgeben.
  */
 static inline void Show_Program_Details (void)
 {
