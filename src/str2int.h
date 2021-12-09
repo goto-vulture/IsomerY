@@ -31,6 +31,14 @@ enum str2int_errno
     STR2INT_INCONVERTIBLE
 };
 
+enum int2str_errno
+{
+    INT2STR_SUCCESS = 0,
+    INT2STR_INCONVERTIBLE
+};
+
+
+
 /**
  * @brief C-String zu long int konvertieren.
  *
@@ -53,7 +61,7 @@ extern enum str2int_errno str2int (long int* out, const char* input_string, cons
  * @param[in] output_string_size Maximale Groesse des Ausgabestrings.
  * @param[in] input Integer, der konvertiert wird.
  */
-extern void int2str (char* const output_string, const size_t output_string_size, const long int input);
+extern enum int2str_errno int2str (char* const output_string, const size_t output_string_size, const long int input);
 
 
 

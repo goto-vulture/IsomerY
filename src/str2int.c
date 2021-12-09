@@ -1,5 +1,5 @@
 /**
- * str2int.c
+ * @file str2int.c
  *
  *  Created on: 07.03.2021
  *      Author: x86 / Gyps
@@ -20,9 +20,6 @@
 /**
  * C-String zu long int konvertieren.
  * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt.
- *
- * Asserts:
- *      N/A
  */
 enum str2int_errno                          // Error-enum (STR2INT_SUCCESS: Erfolgreich durchgefuehrt)
 str2int
@@ -76,11 +73,8 @@ str2int
 
 /**
  * long int zu C-String konvertieren.
- *
- * Asserts:
- *      N/A
  */
-void
+enum int2str_errno
 int2str
 (
         char* const output_string,          // Ausgabestring
@@ -88,13 +82,28 @@ int2str
         const long int input                // Integer, der konvertiert werden soll
 )
 {
+    if (output_string == NULL)
+    {
+        return INT2STR_INCONVERTIBLE;
+    }
+    if (output_string_size < 2)
+    {
+        return INT2STR_INCONVERTIBLE;
+    }
+
     memset (output_string, '\0', output_string_size);
     snprintf (output_string, output_string_size - 1, "%ld", input);
+
+    // Gab es eine Ausgabe von snprintf ?
+    if (output_string [0] == '\0' || isspace (output_string [0]))
+    {
+        return INT2STR_INCONVERTIBLE;
+    }
 
     // Nullterminierung garantieren
     output_string [output_string_size - 1] = '\0';
 
-    return;
+    return INT2STR_SUCCESS;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
