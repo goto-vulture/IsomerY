@@ -127,6 +127,9 @@ MAIN_C = ./src/main.c
 STR2INT_H = ./src/str2int.h
 STR2INT_C = ./src/str2int.c
 
+INT2STR_H = ./src/int2str.h
+INT2STR_C = ./src/int2str.c
+
 DYNAMIC_MEMORY_H = ./src/Error_Handling/Dynamic_Memory.h
 DYNAMIC_MEMORY_C = ./src/Error_Handling/Dynamic_Memory.c
 
@@ -191,11 +194,11 @@ endif
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o
+$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -211,6 +214,9 @@ endif
 
 str2int.o: $(STR2INT_C)
 	$(CC) $(CCFLAGS) -c $(STR2INT_C)
+
+int2str.o: $(INT2STR_C)
+	$(CC) $(CCFLAGS) -c $(INT2STR_C)
 
 Dynamic_Memory.o: $(DYNAMIC_MEMORY_C)
 	$(CC) $(CCFLAGS) -c $(DYNAMIC_MEMORY_C)
