@@ -9,7 +9,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "Alkane_Info_Constitutional_Isomer.h"
-#include "../str2int.h"
+#include "../int2str.h"
 #include "../Print_Tools.h"
 #include "../Misc.h"
 #include "../Error_Handling/Assert_Msg.h"
