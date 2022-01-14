@@ -1,7 +1,7 @@
 /**
  * @mainpage IsomerY
  *
- * @brief Dieses Programm besimmt die Konstitutionsisomre (mit deren IUPAC-Namen) von Alkanen bei gegebener Anzahl an
+ * @brief Dieses Programm besimmt die Konstitutionsisomere (mit deren IUPAC-Namen) von Alkanen bei gegebener Anzahl an
  * C-Atomen.
  *
  * @author x86 / Gyps
