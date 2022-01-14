@@ -1,8 +1,5 @@
 /**
  * @file int2str.c
- *
- *  Created on: 09.12.2021
- *      Author: am1
  */
 
 #include "int2str.h"
@@ -17,7 +14,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * long int zu C-String konvertieren.
  */
 enum int2str_errno

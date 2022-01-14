@@ -1,8 +1,5 @@
 /**
  * @file str2int.c
- *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
  */
 
 #include "str2int.h"
@@ -17,7 +14,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * C-String zu long int konvertieren.
  * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt.
  */

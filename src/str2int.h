@@ -3,12 +3,12 @@
  *
  * @brief Konvertierungsfunktion C-String -> int.
  *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
+ * @date 07.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef STR2INT_H
-#define INT2STR_H
+#define INT2STR_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -22,26 +22,30 @@ extern "C"
 
 
 
+/**
+ * @brief Fehlercodes, die Fehlerzustaende bei der Verwendung von str2int(), anzeigen.
+ */
 enum str2int_errno
 {
-    STR2INT_SUCCESS = 0,
-    STR2INT_OVERFLOW,
-    STR2INT_UNDERFLOW,
-    STR2INT_INCONVERTIBLE
+    STR2INT_SUCCESS = 0,    ///< Konvertierung war erfolgreich
+    STR2INT_OVERFLOW,       ///< Overflow waehrend der Konvertierung
+    STR2INT_UNDERFLOW,      ///< Underflow waehrend der Konvertierung
+    STR2INT_INCONVERTIBLE   ///< Zeichenkette ist nicht konvertierbar
 };
 
 
 
 /**
- * @brief C-String zu long int konvertieren.
+ * @brief Konvertierung eines C-Strings zu einem mind. 32 Bit breiten Integer.
  *
- * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt.
+ * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt. Im Fehlerfall wird der Ausgabespeicherbereich
+ * (*out) nicht geaendert.
  *
  * @param[out] out Pointer auf das Ausgabe-Objekt.
  * @param[in] input_string C-String Eingabe.
  * @param[in] base Basis der Zahl (Angabe des Zahlensystems).
  *
- * @return Fehlercode. 0, wenn alles in Ordnung war; ansonsten != 0
+ * @return Fehlercode. STR2INT_SUCCESS, wenn alles in Ordnung war; ansonsten != STR2INT_SUCCESS
  */
 extern enum str2int_errno str2int (long int* out, const char* input_string, const int base);
 

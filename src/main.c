@@ -1,4 +1,5 @@
 /**
+ * @file main.c
  * @mainpage IsomerY
  *
  * @brief Dieses Programm besimmt die Konstitutionsisomere (mit deren IUPAC-Namen) von Alkanen bei gegebener Anzahl an
@@ -7,12 +8,7 @@
  * @author x86 / Gyps
  */
 
-/*
- *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
- *
- *         .-..-.__
+/*         .-..-.__
  *       /`  |\_( "\__
  *       |   / __/`'--)
  *       |  /  | |
@@ -22,42 +18,62 @@
  * For me, a vulture is more desirable than money.
  */
 
-/**
+/*
  * C-Version ueberpruefen, um Schluesselwoerter u.U. durch leere Makros bzw. Alternativwerte zu ersetzen
  *
  * Das Makro __STDC_VERSION__ ist fuer C90 nicht definiert
  * ->   Schluesselwoerter inline und restrict durch leere Markos ersetzen, damit eine Uebersetzung auch mit C90
  *      moeglich ist.
- *
  */
 #ifndef __STDC_VERSION__
+    /**
+     * @brief Das Schluesselwort "inline" als Makro definieren, wenn der C90 Standard verwendet wird.
+     *
+     * In diesem Standard existiert "inline" als Schluesselwort noch nicht. Die Uebersetzung wuerde an diesen
+     * Stellen mit einem Fehler abbrechen.
+     * Die Loesung: "inline" wird ein leeres Makro
+     */
     #ifndef inline
         #define inline
     #else
         #error "The macro \"inline\" is already defined !"
     #endif /* inline */
 
+    /**
+     * @brief Das Schluesselwort "restrict" als Makro definieren, wenn der C90 Standard verwendet wird.
+     *
+     * In diesem Standard existiert "restrict" als Schluesselwort noch nicht. Die Uebersetzung wuerde an diesen
+     * Stellen mit einem Fehler abbrechen.
+     * Die Loesung: "restrict" wird ein leeres Makro
+     */
     #ifndef restrict
         #define restrict
     #else
         #error "The macro \"restrict\" is already defined !"
     #endif /* restrict */
 
-
-    // Die Problematik mit Wahrheitswerten vor C99 loesen, indem "_Bool", "true" und "false" als Makros bei der C90
-    // interpretiert werden
+    /**
+     * @brief Die Problematik mit Wahrheitswerten vor C99 loesen, indem "_Bool" in diesen Faellen mittels Makro mit "int"
+     * ersetzt wird.
+     */
     #ifndef _Bool
         #define _Bool int
     #else
         #error "The macro \"_Bool\" is already defined !"
     #endif /* _Bool */
 
+    /**
+     * @brief In seltenen Faellen ist "true" als Makro nicht vordefiniert. Z.B. vor C99
+     */
     #ifndef true
         #define true 1
     #else
         #error "The macro \"true\" is already defined !"
     #endif /* true */
 
+    /**
+     * @brief In seltenen Faellen ist "false" als Makro nicht vordefiniert. Z.B. vor C99
+     */
     #ifndef false
         #define false 0
     #else
@@ -65,11 +81,13 @@
     #endif /* false */
 #endif /* __STDC_VERSION__ */
 
-// Ein einfache Zeichenkette die anzeigt, dass eine Information nicht vorhanden ist
+/**
+ * @brief Ein einfache Zeichenkette die anzeigt, dass eine Information nicht vorhanden ist.
+ */
 #ifndef N_A
-#define N_A "N/A"
+    #define N_A "N/A"
 #else
-#error "The macro \"N_A\" is already defined !"
+    #error "The macro \"N_A\" is already defined !"
 #endif /* N_A */
 
 #include <stdlib.h>
@@ -100,8 +118,8 @@ static inline void Show_Program_Details (void);
  *
  * Aktuell werden die CLI-Parameter (noch) nicht verwendet.
  *
- * @param argc argc-Parameter
- * @param argv Anzahl an argc-Parametern
+ * @param[in] argc argc-Parameter
+ * @param[in] argv Anzahl an argc-Parametern
  *
  * @return 0 bei erfolgreicher Ausfuehrung; Ansonsten != 0
  */

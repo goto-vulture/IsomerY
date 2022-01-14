@@ -3,12 +3,12 @@
  *
  * @brief Konvertierungsfunktion C-String -> int.
  *
- *  Created on: 09.12.2021
- *      Author: x86 / Gyps
+ * @date 09.12.2021
+ * @author x86 / Gyps
  */
 
 #ifndef STR2INT_H
-#define INT2STR_H
+#define INT2STR_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -22,17 +22,19 @@ extern "C"
 
 
 
+/**
+ * @brief Fehlercodes, die Fehlerzustaende bei der Verwendung von int2str(), anzeigen.
+ */
 enum int2str_errno
 {
-    INT2STR_SUCCESS = 0,
-    INT2STR_INCONVERTIBLE
+    INT2STR_SUCCESS = 0,    ///< Konvertierung war erfolgreich
+    INT2STR_INCONVERTIBLE   ///< Zahl ist nicht konvertierbar
 };
 
 
 
-
 /**
- * @brief long int zu C-String konvertieren.
+ * @brief long int (mind. 32 Bit) zu C-String konvertieren.
  *
  * Fehlerhafte Eingaben werden ueber den Rueckgabewert angezeigt.
  *
