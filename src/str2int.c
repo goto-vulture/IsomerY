@@ -1,5 +1,10 @@
 /**
  * @file str2int.c
+ *
+ * @brief Konvertierungsfunktion C-String -> int.
+ *
+ * @date 07.03.2021
+ * @author x86 / Gyps
  */
 
 #include "str2int.h"
