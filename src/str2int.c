@@ -67,3 +67,22 @@ str2int
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/*
+ * C-String zu long int konvertieren.
+ * Ergebnis wird direkt ueber den Rueckgabewert uebermittelt.
+ */
+long int
+str2int_wo_errno
+(
+        const char* restrict input_string,  // String, der konvertiert werden soll
+        const int base                      // Zahlensystem
+)
+{
+    long int result = 0;
+    const enum str2int_errno conversion_status = str2int(&result, input_string, base);
+
+    return (conversion_status == STR2INT_SUCCESS) ? result : LONG_MIN;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
