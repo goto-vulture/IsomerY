@@ -1,12 +1,14 @@
 /**
- * OS_Specific_Configurations.h
+ * @file OS_Specific_Configurations.h
  *
- *  Created on: 14.03.2021
- *      Author: x86 / Gyps
+ * @brief OS-spezifische Konfigurationen des Programms.
+ *
+ * @date 14.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef OS_SPECIFIC_CONFIGURATIONS_H
-#define OS_SPECIFIC_CONFIGURATIONS_H
+#define OS_SPECIFIC_CONFIGURATIONS_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -22,7 +24,7 @@ extern "C"
 
 
 
-/**
+/*
  * Die static_asserts funktionieren aktuell nur unter Linux
  */
 #if defined(__linux__) || defined(unix) || defined(__unix__) || defined(__unix)
@@ -50,20 +52,22 @@ static_assert (SIZE_MAX >= UINT32_MAX,      "SIZE_MAX needs to be at least 2^32 
 
 
 
-/**
+/*
  * Konfigurationen, wenn man sich auf einem Windows-System befindet
  */
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-    // Eine Konstante definieren, dass man sich auf einem Windows-System befindet
+
     #ifndef WINDOWS
-        #define WINDOWS
+        #define WINDOWS ///< Eine Konstante definieren, dass man sich auf einem Windows-System befindet
     #else
         #error "The macro \"WINDOWS\" is already defined !"
     #endif /* WINDOWS */
 
-    // Damit es unter Windows bei dem Formatstring fuer size_t zu keiner Warnung kommt, wird diese Konstruktion
-    // verwendet. PRI_SIZET wird mit einem MinGW spezifischen Formatstring ersetzt, der die passende Groesse fuer
-    // ein size_t Objekt bereitstellt.
+    /**
+     * Damit es unter Windows bei dem Formatstring fuer size_t zu keiner Warnung kommt, wird diese Konstruktion
+     * verwendet. PRI_SIZET wird mit einem MinGW spezifischen Formatstring ersetzt, der die passende Groesse fuer
+     * ein size_t Objekt bereitstellt.
+     */
     #ifdef _WIN64
         #ifndef PRI_SIZET
             #define PRI_SIZET PRIu64
@@ -80,6 +84,9 @@ static_assert (SIZE_MAX >= UINT32_MAX,      "SIZE_MAX needs to be at least 2^32 
 #else
     // Unter anderen Betriebssystemen ist kein spezieller Formatstring fuer size_t notwendig, also wird der normale
     // (zu) verwendet.
+    /**
+     * Platzhalter-Makro, da unter Windows ein spezieller Formatstring fuer size_t benoetigt wird
+     */
     #ifndef PRI_SIZET
         #define PRI_SIZET "zu"
     #else

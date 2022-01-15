@@ -1,12 +1,14 @@
 /**
- * Print_Tools.h
+ * @file Print_Tools.h
  *
- *  Created on: 13.03.2021
- *      Author: x86
+ * @brief Einige hilfreiche Ausgabe-Tools. Bereitgestellt als Makros.
+ *
+ * @date 13.03.2021
+ * @author x86
  */
 
 #ifndef PRINT_TOOLS_H
-#define PRINT_TOOLS_H
+#define PRINT_TOOLS_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -23,7 +25,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ausgabe mittels printf, wobei automatisch stdout geleert wird.
+ * @brief Ausgabe mittels printf, wobei automatisch stdout geleert wird.
+ *
  * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
  */
 #ifndef PRINTF_FFLUSH
@@ -36,8 +39,9 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
- * Dies dient dazu, dass eine Ausgabe direkt durchgefuehrt wird.
+ * @brief Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
+ *
+ * Dies dient dazu, dass eine Ausgabe in die Datei direkt durchgefuehrt wird.
  */
 #ifndef FPRINTF_FFLUSH
     #define FPRINTF_FFLUSH(file, format_string, ...)             \
@@ -49,7 +53,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ausgabe mittels printf, wobei automatisch stdout geleert wird.
+ * @brief Ausgabe mittels printf, wobei automatisch stdout geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
  *
  * Der Hauptunterschied zwischen diesem Makro und der Verwendung eines Makros mit puts: Es wird hier nicht zwingend ein
@@ -65,8 +69,11 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
+ * @brief Ausgabe mittels fprintf, wobei automatisch der file Puffer geleert wird.
  * Dies dient dazu, dass eine Ausgabe direkt durchgefuehrt wird.
+ *
+ * Der Hauptunterschied zwischen diesem Makro und der Verwendung eines Makros mit puts: Es wird hier nicht zwingend ein
+ * Zeilenumbruch geschrieben !
  */
 #ifndef FPRINTF_NO_VA_ARGS_FFLUSH
     #define FPRINTF_FFLUSH_NO_VA_ARGS(file, format_string)      \
@@ -78,8 +85,9 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ausgabe mittels puts, wobei automatisch stdout geleert wird.
- * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint.
+ * @brief Ausgabe mittels puts, wobei automatisch stdout geleert wird.
+ *
+ * Dies dient dazu, dass eine Ausgabe direkt auf dem Bildschirm erscheint. ("puts()": inklusive eines Zeilenumbruchs)
  */
 #ifndef PUTS_FFLUSH
     #define PUTS_FFLUSH(string)                                 \
@@ -91,7 +99,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Aktuelle Terminalzeile mittels \r leeren.
+ * @brief Aktuelle Terminalzeile mittels \r leeren.
+ *
  * Annahme, dass 96 Zeichen ausreichen.
  */
 #ifndef CLEAN_LINE

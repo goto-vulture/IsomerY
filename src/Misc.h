@@ -1,15 +1,15 @@
 /**
- * Misc.h
+ * @file Misc.h
  *
- * Hier sind einige Makros definiert, die sich nicht einer bestimmten Uebersetzungseinheit zuordnen lassen. Z.B. das
+ * @brief Hier sind einige Makros definiert, die sich nicht einer bestimmten Uebersetzungseinheit zuordnen lassen. Z.B. das
  * Berechnen der Groesse eines Arrays, welches statisch definiert wurde.
  *
- *  Created on: 14.03.2021
- *      Author: x86 / Gyps
+ * @date 14.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef MISC_H
-#define MISC_H
+#define MISC_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -22,7 +22,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Dieses Makro zaehlt die Elemente in einem Array.
+ * @brief Dieses Makro zaehlt die Elemente in einem Array.
+ *
  * ! Dies funktioniert nur dann, wenn die Groesse des Arrays bereits zur Uebersetzungszeit bekannt ist !
  * !!! Wenn dies nicht der Fall ist (wie z.B. bei Speicherbereiche, die durch malloc() angelegt wurden, dann liefert
  *     dieses Makro FALSCHE ERGEBNISSE !!!
@@ -36,7 +37,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
+ * @brief Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
+ *
  * Bei der Konvertierung ist das Procedere immer das gleiche. Nur das Stringliteral unterscheidet sich. Daher bietet
  * sich dafuer ein Makro an.
  * Natuerlich wird dadurch vorausgesetzt, dass die Variablen sowie das Goto-Label vorher korrekt erzeugt wurden. Dieses
@@ -57,7 +59,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
+ * @brief Dieses Makro soll die Erstellung einer Zeichenkettendarstellung von Objekten vereinfachen.
  * Diesmal mit einem Formatstring.
  *
  * Diese Unterteilung ist - leider - notwendig, da bei einem Makro, welches __VA_ARGS__ verwendet, ein Kommata zu viel
@@ -78,7 +80,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Minimales Vergleichsmakro um aus zwei Werten den kleineren auszuwaehlen.
+ * @brief Minimales Vergleichsmakro um aus zwei Werten den kleineren auszuwaehlen.
  *
  * ! Bei dem Makroansatz ist es wichtig, dass das Makro OHNE Seiteneffekte aufgerufen wird !
  *
@@ -99,7 +101,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Minimales Vergleichsmakro um aus zwei Werten den groesseren auszuwaehlen.
+ * @brief Minimales Vergleichsmakro um aus zwei Werten den groesseren auszuwaehlen.
  *
  * ! Bei dem Makroansatz ist es wichtig, dass das Makro OHNE Seiteneffekte aufgerufen wird !
  *
@@ -120,7 +122,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ein uebergebenes Array an Zeigern mit den Nullpointer initialisieren.
+ * @brief Ein uebergebenes Array an Zeigern mit den Nullpointer initialisieren.
  */
 #ifndef SET_POINTER_ARRAY_TO_NULL
 #define SET_POINTER_ARRAY_TO_NULL(array, number_of_elements)                                                            \

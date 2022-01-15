@@ -1,5 +1,7 @@
-/*
- * Inline_Asm.h
+/**
+ * @file Inline_Asm.h
+ *
+ * @brief Hier stehen einige Inline-Assembler Makros, die rein aus persoenlichen Interesse geschrieben wurden.
  *
  * Das Carry-Flag bei der Addition der ersten beiden Makro-Argumente abfragen. Damit kann man feststellen, ob eine
  * Addition das Uebertragsbit setzt. Dieses Bit zeigt an, dass das Ergebnis beider Summanden nicht mehr in das
@@ -8,12 +10,12 @@
  * Diese Tests sind nur selten von Bedeutung. Die Idee war eine halbwegs sinnvolle Verwendung von Inline-Assembler
  * Befehle. Irgendwie muss ich das ja lernen ... :)
  *
- *  Created on: 15.08.2021
- *      Author: x86 / Gyps
+ * @date 15.08.2021
+ * @author x86 / Gyps
  */
 
 #ifndef INLINE_ASM_H
-#define INLINE_ASM_H
+#define INLINE_ASM_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -24,10 +26,10 @@ extern "C"
 
 
 /**
- * Wenn die Inline-Assemlerfragmente mit 64-Bit Code verwendet werden sollen
+ * @brief Wenn die Inline-Assemlerfragmente mit 64-Bit Code verwendet werden sollen
  */
 #ifndef USE_X86_64
-// #define USE_X86_64
+#define USE_X86_64
 #else
 #error "The macro \"USE_X86_64\" is already defined !"
 #endif /* USE_X86_64 */
@@ -37,6 +39,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * @brief Newline-Tabulator String fuer die Formatierung der Inline-Assembler Befehle
+ *
  * Damit bei jedem Assemblerbefehl "\n\t" eingetippt werden muss, gibt es dieses #define.
  * Streng genommen ist ein "\n\t" am eine eines Inline-Assemblerbefehl nicht notwendig. Es hilft aber der
  * Uebersichtlichkeit im Disassembler.
@@ -50,7 +54,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addb (8-Bit Addition) feststellen, ob die Summe beider Summanden in 8-Bit passen.
+ * @brief Mittels einer addb (8-Bit Addition) feststellen, ob die Summe beider Summanden in 8-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
@@ -81,7 +85,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addw (16-Bit Addition) feststellen, ob die Summe beider Summanden in 16-Bit passen.
+ * @brief Mittels einer addw (16-Bit Addition) feststellen, ob die Summe beider Summanden in 16-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
@@ -112,7 +116,7 @@ __asm__ volatile                                        \
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addl (32-Bit Addition) feststellen, ob die Summe beider Summanden in 32-Bit passen.
+ * @brief Mittels einer addl (32-Bit Addition) feststellen, ob die Summe beider Summanden in 32-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
@@ -143,7 +147,7 @@ __asm__ volatile                                        \
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addq (64-Bit Addition) feststellen, ob die Summe beider Summanden in 64-Bit passen.
+ * @brief Mittels einer addq (64-Bit Addition) feststellen, ob die Summe beider Summanden in 64-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
  * "Ist dieses Flag gesetzt, dann trat bei der letzten Rechenoperation ein Übertrag auf, wenn man von vorzeichenlosen
@@ -176,7 +180,7 @@ __asm__ volatile                                        \
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addb (8-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * @brief Mittels einer addb (8-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
  * komplementdarstellung in 8-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
@@ -208,7 +212,7 @@ __asm__ volatile                                        \
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addw (16-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * @brief Mittels einer addw (16-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
  * komplementdarstellung in 16-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
@@ -240,7 +244,7 @@ __asm__ volatile                                        \
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addl (32-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * @brief Mittels einer addl (32-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
  * komplementdarstellung in 32-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister
@@ -272,7 +276,7 @@ __asm__ volatile                                        \
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Mittels einer addq (64-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
+ * @brief Mittels einer addq (64-Bit Addition) feststellen, ob die Summe zweier vorzeichenbehafteter Zahlen in der Zweier-
  * komplementdarstellung in 64-Bit passen.
  *
  * https://de.wikipedia.org/wiki/Statusregister

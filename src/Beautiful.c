@@ -1,10 +1,12 @@
 /**
- * Beautiful.c
+ * @file Beautiful.c
+ *
+ * @brief Schoene Voegel, die gezeigt werden muessen !
  *
  * Alle liebevollen Voegel wurden hier gefunden: https://textart.sh/topic/vulture
  *
- *  Created on: 04.09.2021
- *      Author: am1 / Gyps
+ * @date 04.09.2021
+ * @author am1 / Gyps
  */
 
 
@@ -15,7 +17,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Show the first beautiful bird.
  *
  * Ein wunderschoener Gaensegeier ! Hoffentlich kann ich bald einen besuchen !
@@ -125,7 +127,7 @@ void Beautiful_1 (void)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Show the second beautiful bird.
  *
  * Ein faszinierender Ohrengeier ! Wie sehr wuerde ich mich freuen, wenn er mich als Freund oder zumindest als Bekannter
@@ -218,7 +220,7 @@ void Beautiful_2 (void)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Show the third beautiful bird.
  *
  * Klein aber suess. Ein liebenswerter Schmutzgeier. Wirf die Eier mit Steinen kaputt; ich werde dir dabei helfen ! :)
@@ -281,7 +283,7 @@ void Beautiful_3 (void)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Show the fourth beautiful vulture.
  */
 void Beautiful_4 (void)
