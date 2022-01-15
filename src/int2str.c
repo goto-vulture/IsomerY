@@ -3,6 +3,7 @@
  */
 
 #include "int2str.h"
+#include "Misc.h"
 #include <stdlib.h>
 #include <limits.h>
 #include <errno.h>
@@ -47,6 +48,26 @@ int2str
     output_string [output_string_size - 1] = '\0';
 
     return INT2STR_SUCCESS;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/*
+ * long int zu C-String konvertieren. Ohne Notwendigkeit, dass der Aufrufer vorher Speicher bereitstellen muss.
+ */
+char*
+int2str_static_result
+(
+        const long int input    // Integer, der konvertiert werden soll
+)
+{
+    // 25 Zeichen reichen fuer 32 und 64 Bit Eingaben aus
+    static char static_result [25];
+    memset (static_result, '\0', sizeof(static_result));
+
+    const enum int2str_errno conversion_status = int2str(static_result, COUNT_ARRAY_ELEMENTS(static_result) - 1, input);
+
+    return (conversion_status == INT2STR_SUCCESS) ? static_result : NULL;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

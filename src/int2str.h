@@ -7,7 +7,7 @@
  * @author x86 / Gyps
  */
 
-#ifndef STR2INT_H
+#ifndef INT2STR_H
 #define INT2STR_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
@@ -46,6 +46,18 @@ enum int2str_errno
  */
 extern enum int2str_errno int2str (char* const output_string, const size_t output_string_size, const long int input);
 
+/**
+ * @brief long int (mind. 32 Bit) zu C-String konvertieren.
+ *
+ * Diese Funktion verwendet ein statischen C-String fuer das Ergebnis, sodass der Aufrufer vorher keinen Speicher
+ * bereitstellen muss.
+ *
+ * @param[in] input Integer, der konvertiert wird.
+ *
+ * @return Adresse auf den statischen Ergebnis-C-String; oder NULL, wenn die Konvertierung nicht gelungen ist
+ */
+extern char* int2str_static_result (const long int input);
+
 
 
 // ENDE C++-Kompablitaet herstellen
@@ -53,4 +65,4 @@ extern enum int2str_errno int2str (char* const output_string, const size_t outpu
 }
 #endif /* __cplusplus */
 
-#endif /* STR2INT_H */
+#endif /* INT2STR_H */
