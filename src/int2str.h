@@ -56,7 +56,7 @@ extern enum int2str_errno int2str (char* const output_string, const size_t outpu
  *
  * @return Adresse auf den statischen Ergebnis-C-String; oder NULL, wenn die Konvertierung nicht gelungen ist
  */
-extern char* int2str_static_result (const long int input);
+extern char* int2str_wo_errno (const long int input);
 
 
 

@@ -56,7 +56,7 @@ int2str
  * long int zu C-String konvertieren. Ohne Notwendigkeit, dass der Aufrufer vorher Speicher bereitstellen muss.
  */
 char*
-int2str_static_result
+int2str_wo_errno
 (
         const long int input    // Integer, der konvertiert werden soll
 )
