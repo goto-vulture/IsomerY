@@ -132,6 +132,8 @@ extern "C"
     object_type Get_ ## object_type_name ## _Container_Element(struct object_type_name ## _container* container,    \
     uint_fast64_t index)                                                                                            \
     {                                                                                                               \
+        if (container == NULL) { return 0; }                                                                        \
+        if (container->container_size <= index) { return 0; }                                                       \
         return container->data[index];                                                                              \
     }
 #else
