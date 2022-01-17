@@ -36,9 +36,9 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 #ifndef CREATE_CONTAINER
-#define CREATE_CONTAINER(object_type, object_type_name, object_size) \
+#define CREATE_CONTAINER(object_type, object_type_name) \
     CREATE_CONTAINER_STRUCT(object_type, object_type_name) \
-    CREATE_CREATE_CONTAINER_FUNCTION(object_type, object_type_name, object_size) \
+    CREATE_CREATE_CONTAINER_FUNCTION(object_type, object_type_name) \
     CREATE_DELETE_CONTAINER_FUNCTION(object_type_name) \
     CREATE_GET_ELEMENT_CONTAINER_FUNCTION(object_type, object_type_name) \
     CREATE_SET_ELEMENT_CONTAINER_FUNCTION(object_type, object_type_name) \
@@ -66,7 +66,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 #ifndef CREATE_CREATE_CONTAINER_FUNCTION
-#define CREATE_CREATE_CONTAINER_FUNCTION(object_type, object_type_name, object_size) \
+#define CREATE_CREATE_CONTAINER_FUNCTION(object_type, object_type_name) \
         struct object_type_name ## _container* Create_ ## object_type_name ## _Container(void); \
         struct object_type_name ## _container* Create_ ## object_type_name ## _Container(void)\
         { \
@@ -77,11 +77,11 @@ extern "C"
                 return NULL; \
             } \
             \
-            new_container->one_object_size = object_size; \
+            new_container->one_object_size = sizeof(object_type); \
             \
-            new_container->data = (object_type*) CALLOC (ALLOCATION_STEP_SIZE, object_size); \
+            new_container->data = (object_type*) CALLOC (ALLOCATION_STEP_SIZE, sizeof(object_type)); \
             ASSERT_ALLOC(new_container->data, "Try to create a " #object_type_name " container.", \
-                    ALLOCATION_STEP_SIZE * object_size)\
+                    ALLOCATION_STEP_SIZE * sizeof(object_type))\
             new_container->container_size = ALLOCATION_STEP_SIZE; \
             return new_container; \
 }
