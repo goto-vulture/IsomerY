@@ -6,6 +6,9 @@
  * Ein einfaches Containerkonzept, welches ueber Makros versucht einen allgemeinen dynamischen Container fuer
  * alle Datentypen bereitzustellen.
  *
+ * Dabei wird ein Makroparameter fuer den Typ, der im Container gespeichert werden soll, verwendet. Dies entspricht
+ * einem sehr rudimentaeren Template-Konzept wie in C++.
+ *
  * @date 16.01.2022
  * @author am1
  */
@@ -28,13 +31,16 @@ extern "C"
 
 
 #ifndef ALLOCATION_STEP_SIZE
-#define ALLOCATION_STEP_SIZE 10
+#define ALLOCATION_STEP_SIZE 10 ///< Allokationsschritt
 #else
 #error "The macro \"ALLOCATION_STEP_SIZE\" is already defined !"
 #endif /* ALLOCATION_STEP_SIZE */
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Container mit allen Funktionen sowie die notwendige Strukturdefinition erzeugen.
+ */
 #ifndef CREATE_CONTAINER
 #define CREATE_CONTAINER(object_type, object_type_name) \
     CREATE_CONTAINER_STRUCT(object_type, object_type_name) \
@@ -49,6 +55,9 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Strukturdefinition fuer den dynamischen Container erzeugen. Hierbei ist der Objekt-Typ ein Makroparameter.
+ */
 #ifndef CREATE_CONTAINER_STRUCT
 #define CREATE_CONTAINER_STRUCT(object_type, object_type_name) \
     struct object_type_name ## _container \
@@ -65,6 +74,9 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Erzeugungsfunktion fuer den dynamischen Container mittels eines Makros erzeugen.
+ */
 #ifndef CREATE_CREATE_CONTAINER_FUNCTION
 #define CREATE_CREATE_CONTAINER_FUNCTION(object_type, object_type_name) \
         struct object_type_name ## _container* Create_ ## object_type_name ## _Container(void); \
@@ -91,6 +103,9 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Loeschfunktion fuer den dynamischen Container erzeugen. Hierbei wird ein Praeprozessormakro verwendet.
+ */
 #ifndef CREATE_DELETE_CONTAINER_FUNCTION
 #define CREATE_DELETE_CONTAINER_FUNCTION(object_type_name) \
         void Delete_ ## object_type_name ## _Container(struct object_type_name ## _container* container); \
@@ -113,6 +128,11 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Get-Funktion fuer den dynamischen Container mittels Makro erzeugen.
+ *
+ * Die Get-Funktion des Containers gibt das Objekt an der Stelle des uebergebenen Indexes zurueck.
+ */
 #ifndef CREATE_GET_ELEMENT_CONTAINER_FUNCTION
 #define CREATE_GET_ELEMENT_CONTAINER_FUNCTION(object_type, object_type_name) \
     object_type Get_ ## object_type_name ## _Container_Element(struct object_type_name ## _container* container, \
@@ -128,6 +148,15 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Set-Funktion fuer den dynamischen Container mithilfe eines Makros erzeugen.
+ *
+ * Die erzeugte Funktion uebernimmt einen Index, wo das neue Objekt im Speicherbereich des Containers gesichert werden
+ * soll.
+ *
+ * Bei der Verwendung des Containers sollte NUR die GET-Funktion ODER die Append-Funktion verwendet werden, da der
+ * Zaehler der Append-Funktion durch die Set-Funktion nicht angepasst wird.
+ */
 #ifndef CREATE_SET_ELEMENT_CONTAINER_FUNCTION
 #define CREATE_SET_ELEMENT_CONTAINER_FUNCTION(object_type, object_type_name) \
     void Set_ ## object_type_name ## _Container_Element(struct object_type_name ## _container* container, \
@@ -154,6 +183,16 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Append-Funktion fuer den dynamischen Container mittels eines Makros erzeugen.
+ *
+ * Die Append-Funktion fuegt das uebergebene Objekt an der naechsten freien Stelle im Container ab. Dabei wird NICHT der
+ * Container nach freien Elementen durchsucht. Das uebergebene Objekt wird einfach an der naechsten freien Stelle, die
+ * anhand eines einfachen Zaehlers ermittelt wird, gesichert.
+ *
+ * Bei der Verwendung des Containers sollte NUR die GET-Funktion ODER die Append-Funktion verwendet werden, da der
+ * Zaehler der Append-Funktion durch die Set-Funktion nicht angepasst wird.
+ */
 #ifndef CREATE_APPEND_ELEMENT_CONTAINER_FUNCTION
 #define CREATE_APPEND_ELEMENT_CONTAINER_FUNCTION(object_type, object_type_name) \
     void Append_ ## object_type_name ## _Container_Element(struct object_type_name ## _container* container, \
