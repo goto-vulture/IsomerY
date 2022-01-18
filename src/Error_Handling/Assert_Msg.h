@@ -1,7 +1,7 @@
 /**
  * @file Assert_Msg.h
  *
- * @brief Hier sind Asserts definiert, die nicht die Uebersetzungseinheit "tinyunit" benoetigen.
+ * @brief Hier sind Asserts definiert, die nicht die Uebersetzungseinheit "tinytest" benoetigen.
  *
  * @date 07.03.2021
  * @author x86 / Gyps
