@@ -1,8 +1,10 @@
-/*
- * Path_Data.c
+/**
+ * @file Path_Data.c
  *
- *  Created on: 12.06.2021
- *      Author: x86 / Gyps
+ * @brief Mittels des Path_Data-Objektes koennen Pfade im Molekuel gesichert werden.
+ *
+ * @date 12.06.2021
+ * @author x86 / Gyps
  */
 
 #include "Path_Data.h"
@@ -17,7 +19,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein neues Path_Data-Objekt erstellen.
  *
  * Asserts:
@@ -43,7 +45,7 @@ Create_Path_Data
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Path_Data Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuers debugging hilfreich.
  *
  * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
@@ -74,8 +76,6 @@ Path_Data_To_String
                                                                 // werden soll
         char* const restrict string_memory,                     // Speicher, der fuer die Zeichenkettenerzeugung
                                                                 // verwendet werden soll
-                                                                // Der Speicher muss vorher vom Aufrufer allokiert
-                                                                // werden !
         const size_t string_memory_size                         // Groesse des Zeichenkettenspeichers
                                                                 // Wenn der Speicher nicht ausreicht, dann wird am
                                                                 // vorletzten Zeichen die Zeichenkette abgeschnitten
@@ -158,7 +158,7 @@ Path_Data_To_String
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Path_Data-Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging.
  *
  * Asserts:
@@ -184,7 +184,7 @@ Print_Path_Data
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Path_Data-Objekt loeschen.
  *
  * Asserts:

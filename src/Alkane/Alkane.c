@@ -1,8 +1,11 @@
 /**
- * Alkane.c
+ * @file Alkane.c
  *
- *  Created on: 10.03.2021
- *      Author: x86 / Gyps
+ * @brief Ein Alkan-Objekt wird durch vier Alkane_Branch-Objekte dargestellt und ist das zentrale Objekt in diesem
+ * Programm.
+ *
+ * @date 10.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane.h"
@@ -20,7 +23,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane Objekt dynamisch erzeugen.
  *
  * Alle Zeiger duerfen NULL sein, in diesem Fall wird davon ausgegangen, dass dieser Ast nur aus einem H-Atom besteht.
@@ -129,7 +132,7 @@ Create_Alkane
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
  *
  * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
@@ -256,7 +259,7 @@ Alkane_To_String
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * AlkaneObjekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die Funktion
  * "Alkane_To_String" verwendet.
  *
@@ -283,7 +286,7 @@ Print_Alkane
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane Objekt loeschen.
  *
  * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden

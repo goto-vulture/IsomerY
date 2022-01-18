@@ -1,7 +1,8 @@
 /**
- * Alkane.h
+ * @file Alkane.h
  *
- * Ein Alkan-Objekt wird durch vier Alkane_Branch-Objekte dargestellt und ist das zentrale Objekt in diesem Programm.
+ * @brief Ein Alkan-Objekt wird durch vier Alkane_Branch-Objekte dargestellt und ist das zentrale Objekt in diesem
+ * Programm.
  *
  * Die Struktur wird durch einen Zahlencode - wie bei dem Alkane_Branch-Objekt - beschrieben.
  *
@@ -23,12 +24,12 @@
  *
  * Vielen Dank fuer eure Hilfestellung ! :D
  *
- *  Created on: 10.03.2021
- *      Author: x86 / Gyps
+ * @date 10.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef ALKANE_H
-#define ALKANE_H
+#define ALKANE_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -43,7 +44,7 @@ extern "C"
 
 
 /**
- * Groesse des char-Arrays fuer den IUPAC-Namen.
+ * @brief Groesse des char-Arrays fuer den IUPAC-Namen.
  */
 #ifndef IUPAC_NAME_LENGTH
     #define IUPAC_NAME_LENGTH 150u
@@ -54,28 +55,39 @@ extern "C"
 
 
 /**
- * Uebersicht ueber die Zustaende, die ein Alkane-Objekt annehmen kann. Diese Zustaende dienen hauptsaechlich dazu,
- * dass - ohne Analyse des eigentlichen Objektes - z.B. festgestellt werden kann, ob das Objekt wichtige Daten
- * enthaelt oder ob das Objekt initialisert werden muss.
+ * @brief Uebersicht ueber die Zustaende, die ein Alkane-Objekt annehmen kann.
+ *
+ * Diese Zustaende dienen hauptsaechlich dazu, dass - ohne Analyse des eigentlichen Objektes - z.B. festgestellt werden
+ * kann, ob das Objekt wichtige Daten enthaelt oder ob das Objekt initialisert werden muss.
  */
 enum Alkane_State
 {
-    ALKANE_CREATED = 0,                 // Objekt wurde erzeugt
-    ALKANE_INITIALIZED_WITH_ZERO_BYTES, // Objekt wurde mit 0 Bytes initialisiert
-    ALKANE_INITIALIZED_WITH_DATA,       // Objekt wurde mit Daten initialisert -> Es befinden sich also richtige
-                                        // Informationen in dem Objekt
-    ALKANE_DELETED,                     // Objekt wurde geloescht und enthaelt keine Informationen mehr
-    ALKANE_INVALID_BRANCH,              // Objekt enthaelt ungueltige Informationen (Dieser Zustand sollte in der
-                                        // Praxis nicht vorkommen - aber man weiss ja nie)
+    ALKANE_CREATED = 0,                 ///< Objekt wurde erzeugt
+    ALKANE_INITIALIZED_WITH_ZERO_BYTES, ///< Objekt wurde mit 0 Bytes initialisiert
 
-    ALKANE_UNKNOWN_STATE                // Unbekannter Zustand. Dies ist hauptsaechlich dafuer da, wenn kein anderer
-                                        // Zustand angegeben werden kann
+    /**
+     * @brief Objekt wurde mit Daten initialisert -> Es befinden sich also richtige Informationen in dem Objekt
+     */
+    ALKANE_INITIALIZED_WITH_DATA,
+
+    ALKANE_DELETED,                     ///< Objekt wurde geloescht und enthaelt keine Informationen mehr
+
+    /**
+     * @brief Objekt enthaelt ungueltige Informationen (Dieser Zustand sollte in der Praxis nicht vorkommen - aber man
+     * weiss ja nie)
+     */
+    ALKANE_INVALID_BRANCH,
+
+    /**
+     * @brief Unbekannter Zustand. Dies ist hauptsaechlich dafuer da, wenn kein anderer Zustand angegeben werden kann
+     */
+    ALKANE_UNKNOWN_STATE
 };
 
 
 
 /**
- * Dieses Objekt stellt ein komplettes Alkanmolekuel dar.
+ * @brief Dieses Objekt stellt ein komplettes Alkanmolekuel dar.
  *
  * Ein Alkan besteht aus genau 4 Alkane_Branch-Objekte.
  *
@@ -94,41 +106,61 @@ enum Alkane_State
  */
 struct Alkane
 {
-    struct Alkane_Branch* branches [4];                         // Die Alkane_Branch-Objekte
-    uint_fast8_t next_free_branch;                              // Index des naechsten freien Alkane_Branch Zeigers
-
-    unsigned char merged_numbercode [MAX_NUMBER_OF_C_ATOMS];    // Zusammengefuehrter Zahlencode
-                                                                // Hiermit wird die genaue Struktur des Alkans bestimmt
-    uint_fast8_t number_of_c_atoms;                             // Anzahl an C-Atomen im kompletten Alkan
-
-    unsigned char structure [MAX_NUMBER_OF_C_ATOMS]             // Aufbau des Alkans ueber eine Adjazenzmatrix
-                             [MAX_NUMBER_OF_C_ATOMS];           // Da die Bindungen in beide Richtungen existieren, ist
-                                                                // die Adjazenzmatrix symmetrisch zur Diagonalen
+    struct Alkane_Branch* branches [4];                         ///< Die Alkane_Branch-Objekte
+    uint_fast8_t next_free_branch;                              ///< Index des naechsten freien Alkane_Branch Zeigers
 
     /**
-     * Ketteninformationen, die fuer die Zeichnung und fuer die Erstellung des IUPAC-Namen benoetigt werden.
+     * @brief Zusammengefuehrter Zahlencode
+     *
+     * Hiermit wird die genaue Struktur des Alkans bestimmt
+     */
+    unsigned char merged_numbercode [MAX_NUMBER_OF_C_ATOMS];
+
+    uint_fast8_t number_of_c_atoms;                             ///< Anzahl an C-Atomen im kompletten Alkan
+
+    /**
+     * @brief Aufbau des Alkans ueber eine Adjazenzmatrix
+     *
+     * Da die Bindungen in beide Richtungen existieren, ist die Adjazenzmatrix symmetrisch zur Diagonalen
+     */
+    unsigned char structure [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS];
+
+    /**
+     * @brief Ketteninformationen, die fuer die Zeichnung und fuer die Erstellung des IUPAC-Namen benoetigt werden.
      */
     struct Chain
     {
-        uint_fast8_t length;                                    // Laenge der Kette
-        uint_fast8_t position;                                  // Position der Kette bezogen auf die Kette, an dem
-                                                                // sich diese Kette befindet
-        uint_fast8_t nesting_depth;                             // Verschachtelungstiefe (Tiefe 0 steht fuer die
-                                                                // Hauptkette !)
-    } chains [MAX_NUMBER_OF_C_ATOMS];                           // Ketteninformationen des Isomers
+        uint_fast8_t length;                                    //< Laenge der Kette
+
+        /**
+         * @brief Position der Kette bezogen auf die Kette, an dem sich diese Kette befindet
+         */
+        uint_fast8_t position;
+
+        /**
+         * @brief Verschachtelungstiefe
+         *
+         * Tiefe 0 steht fuer die Hauptkette
+         */
+        uint_fast8_t nesting_depth;
+    } chains [MAX_NUMBER_OF_C_ATOMS];                           //< Ketteninformationen des Isomers
                                                                 // ToDo: Arraygroesse verringern falls moeglich
-    uint_fast8_t next_free_chain;                               // Index der naechsten freien Kette
+    uint_fast8_t next_free_chain;                               //< Index der naechsten freien Kette
 
-    char iupac_name [IUPAC_NAME_LENGTH];                        // Der IUPAC-Name des Alkans (Die Laenge entspricht
-                                                                // eingener Erfahrungen und wird hoffentlich reichen)
+    /**
+     * @brief Der IUPAC-Name des Alkans
+     *
+     * Die Laenge entspricht/ eingener Erfahrungen und wird hoffentlich reichen.
+     */
+    char iupac_name [IUPAC_NAME_LENGTH];
 
-    enum Alkane_State state;                                    // Status des Objektes
+    enum Alkane_State state;                                    //< Status des Objektes
 };
 
 //=====================================================================================================================
 
 /**
- * Alkane Objekt dynamisch erzeugen.
+ * @brief Alkane Objekt dynamisch erzeugen.
  *
  * Alle Zeiger duerfen NULL sein, in diesem Fall wird davon ausgegangen, dass dieser Ast nur aus einem H-Atom besteht.
  * Damit die Adressen, die ungleich NULL sind, aufsteigend im Alkane-Objekt gespeichert werden, (dies vereinfacht die
@@ -137,6 +169,13 @@ struct Alkane
  *
  * Asserts:
  *      N/A
+ *
+ * @param[in] branch_1 Erster Ast des neuen Alkans
+ * @param[in] branch_2 Zweiter Ast des neuen Alkans
+ * @param[in] branch_3 Dritter Ast des neuen Alkans
+ * @param[in] branch_4 Vierter Ast des neuen Alkans
+ *
+ * @return Zeiger auf das erzeugte Alkan-Objekt
  */
 extern struct Alkane*                                     // Erzeugtes Alkane-Objekt
 Create_Alkane
@@ -150,7 +189,7 @@ Create_Alkane
 );
 
 /**
- * Alkane Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
+ * @brief Alkane Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
  *
  * Der Speicher fuer die Zeichenkette muss vom Aufrufer allokiert werden !
  *
@@ -172,6 +211,12 @@ Create_Alkane
  *      alkane != NULL,
  *      string_memory != NULL,
  *      string_memory_size > 0
+ *
+ * @param[in] alkane Alkan-Objekt, welches als Zeichenkette dargestellt werden soll
+ * @param[out] string_memory Speicher, der fuer die Zeichenkettenerzeugung verwendet werden soll
+ * @param[in] string_memory_size Groesse des Zeichenkettenspeichers
+ *
+ * @return Adresse der Eingabe-Zeichenkette
  */
 extern const char*                                      // Adresse der Eingabe-Zeichenkette
 Alkane_To_String
@@ -186,11 +231,13 @@ Alkane_To_String
 );
 
 /**
- * AlkaneObjekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die Funktion
- * "Alkane_To_String" verwendet.
+ * @brief Alkane-Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die
+ * Funktion Alkane_To_String() verwendet.
  *
  * Asserts:
  *      alkane != NULL
+ *
+ * @param[in] alkane Alkane Objekt, welches ausgegeben werden soll
  */
 extern void
 Print_Alkane
@@ -199,7 +246,7 @@ Print_Alkane
 );
 
 /**
- * Alkane Objekt loeschen.
+ * @brief Alkane Objekt loeschen.
  *
  * Die enthaltenen Alkane_Branch-Objekte werden NICHT geloescht, wenn das Alkane-Objekt geloescht wird. Es werden
  * lediglich die Zeiger des Objektes auf NULL gesetzt !
@@ -209,6 +256,8 @@ Print_Alkane
  *
  * Asserts:
  *      alkane != NULL
+ *
+ * @param[in] alkane Alkane, welches geloescht werden soll
  */
 extern void
 Delete_Alkane

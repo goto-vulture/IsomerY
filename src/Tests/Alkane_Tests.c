@@ -1,8 +1,11 @@
 /**
- * Alkane_Tests.c
+ * @file Alkane_Tests.c
  *
- *  Created on: 13.03.2021
- *      Author: x86 / Gyps
+ * @brief In dieser Uebersetzungseinheit werden viele Tests der Alkanerstellung und der Erstellung von IUPAC-Namen
+ * durchgefuehrt.
+ *
+ * @date 13.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_Tests.h"

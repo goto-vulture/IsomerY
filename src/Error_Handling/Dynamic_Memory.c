@@ -1,8 +1,10 @@
 /**
- * Dynamic_Memory.c
+ * @file Dynamic_Memory.c
  *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
+ * @brief Anzahl an malloc (), calloc (), realloc () und free () Aufrufe ausgeben.
+ *
+ * @date 07.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Dynamic_Memory.h"
@@ -20,7 +22,7 @@ uint_fast64_t GLOBAL_free_calls     = 0;
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Aktuelle Anzahl der durch die Makros MALLOC, CALLOC und FREE getaetigten malloc (), calloc () und free () Aufrufe
  * sowie die Anzahl an fehlenden free () Aufrufe ausgeben.
  */
