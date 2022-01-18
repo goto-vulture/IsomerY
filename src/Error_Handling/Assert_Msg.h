@@ -1,14 +1,14 @@
 /**
- * Assert_Msg.h
+ * @file Assert_Msg.h
  *
- * Hier sind Asserts definiert, die nicht die Uebersetzungseinheit "tinyunit" benoetigen.
+ * @brief Hier sind Asserts definiert, die nicht die Uebersetzungseinheit "tinyunit" benoetigen.
  *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
+ * @date 07.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef ERROR_HANDLING_ASSERT_MSG_H
-#define ERROR_HANDLING_ASSERT_MSG_H
+#define ERROR_HANDLING_ASSERT_MSG_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -27,7 +27,7 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ein Assert mit benutzerdefinierter Fehlermeldung.
+ * @brief Ein Assert mit benutzerdefinierter Fehlermeldung.
  */
 #ifndef ASSERT_MSG
     #define ASSERT_MSG(expr, message) assert (((void) (message), expr));
@@ -38,7 +38,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ein Assert mit benutzerdefinierter Fehlermeldung in Form eines Format-Strings.
+ * @brief Ein Assert mit benutzerdefinierter Fehlermeldung in Form eines Format-Strings.
+ *
  * Der Einfachheit halber wird die Fehlermeldung - inkl. der Parameter - auf stderr ausgegeben.
  * Zusaetzlich wird ein Zeilenumbruch auf stderr ausgegeben, damit die Format-String Fehlermeldung und die
  * Fehlermeldung vom ASSERT-Makro nicht in einer Zeile stehen.
@@ -59,7 +60,8 @@ extern "C"
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Ein Assert fuer Fehlerfaelle bei der Allokation von Speicher.
+ * @brief Ein Assert fuer Fehlerfaelle bei der Allokation von Speicher.
+ *
  * Vor der eigentlichen Assert-Meldung wird die Groesse des Speichers angegeben, der allokiert werden sollte. Die
  * Angabe der Speichergroesse ist technisch nicht zwingend notwendig, macht aber die Fehlermeldungen besser, da man
  * weiss bei welcher Allokationsgroesse es Probleme gab.
