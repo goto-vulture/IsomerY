@@ -1,5 +1,10 @@
 /**
- * tinytest.c
+ * @file tinytest.c
+ *
+ * @brief TinyTest: A really really really tiny and simple no-hassle C unit-testing framework.
+ *
+ * @date 2010
+ * @author Joe Walnes <joe@walnes.com> http://joewalnes.com
  *
  * Angepasst von: x86 / Gyps.
  */

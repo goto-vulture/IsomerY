@@ -1,12 +1,15 @@
-/* minunit.h */
 /**
- * Ein ganz simples Testframework.
+ * @file minunit.h
+ *
+ * @brief Ein ganz simples Testframework.
+ *
+ *  Wird aktuell (noch) nicht verwendet. Stattdessen wird tinytest verwendet.
  *
  * Quelle: http://www.jera.com/techinfo/jtns/jtn002.html
  */
 
 #ifndef TESTS_MINUNIT_H
-#define TESTS_MINUNIT_H
+#define TESTS_MINUNIT_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
