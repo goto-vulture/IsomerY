@@ -63,7 +63,7 @@ Create_Alkane
 
     // Anzahl an C-Atomen im gesamten Alkan bestimmen
     unsigned int number_of_c_atoms = 0;
-    for (size_t i = 0; i < (sizeof (new_alkane->branches) / sizeof (new_alkane->branches [0])); ++ i)
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(new_alkane->branches); ++ i)
     {
         // Hier koennen noch Nullzeiger auftreten !
         if (new_alkane->branches [i] != NULL)
@@ -178,7 +178,7 @@ Alkane_To_String
                                                         // Speicher geschrieben wurde
 
     // Die Aeste des Alkans in die Zeichenkettendarstellung einbinden
-    for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(alkane->branches); ++ i)
     {
         TO_STRING_HELPER_VA_ARGS("Branch %" PRI_SIZET ": (%p)\n", i, (void*) alkane->branches [i]);
         if (alkane->branches [i] != NULL)
@@ -313,7 +313,7 @@ Delete_Alkane
 
     // Alle Zeiger sicherheitshalber auf NULL setzen, auch wenn ein Zugriff drauf nach dieser Funktion recht
     // unwahrscheinlich ist
-    for (size_t i = 0; i < (sizeof (alkane->branches) / sizeof (alkane->branches [0])); ++ i)
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(alkane->branches); ++ i)
     {
         alkane->branches [i] = NULL;
     }
