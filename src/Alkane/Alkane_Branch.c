@@ -1,8 +1,10 @@
 /**
- * Alkane_Branch.c
+ * @file Alkane_Branch.c
  *
- *  Created on: 08.03.2021
- *      Author: x86 / Gyps
+ * @brief Ein Alkan_Branch-Objekt stellt einen Ast eines Alkans dar.
+ *
+ * @date 08.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_Branch.h"
@@ -18,10 +20,11 @@
 
 
 
+CREATE_CONTAINER(struct Alkane_Branch*, Alkane_Branch)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane_Branch Objekt dynamisch erzeugen.
  *
  * Asserts:
@@ -71,7 +74,7 @@ Create_Alkane_Branch
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane_Branch Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging hilfreich.
  * Die Darstellung sieht in etwa so aus:
  *
@@ -162,7 +165,7 @@ Alkane_Branch_To_String
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane_Branch Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird die
  * Funktion "Alkane_Branch_To_String" verwendet.
  *
@@ -189,7 +192,7 @@ Print_Alkane_Branch
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane_Branch Objekt loeschen.
  * Da es sich bei dem Objekt um dynamischen Speicher handelt, muss sichergestellt werden, dass alle Objekte, die zuvor
  * erstellt wurden, geloescht werden. Nach dem Loeschen sollte der verwendete Zeiger nicht mehr dereferenziert werden !

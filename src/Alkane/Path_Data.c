@@ -14,7 +14,8 @@
 #include "../Misc.h"
 
 
-
+// Container erzeugen
+CREATE_CONTAINER(struct Path_Data*, Path_Data)
 
 
 //---------------------------------------------------------------------------------------------------------------------

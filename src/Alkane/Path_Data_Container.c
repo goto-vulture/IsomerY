@@ -1,8 +1,17 @@
-/*
- * Path_Data_Container.c
+/**
+ * @file Path_Data_Container.c
  *
- *  Created on: 12.06.2021
- *      Author: x86 / Gyps
+ * @brief Wurde durch einen Container, der mittels DMMC.h erstellt wurde, ersetzt !
+ */
+
+#if 0
+/**
+ * @file Path_Data_Container.c
+ *
+ * @brief Einfacher dynamischer Conainer fuer Path_Data-Objekte. Bzw. genauer gesagt fuer deren Zeiger.
+ *
+ * @date 12.06.2021
+ * @author x86 / Gyps
  */
 
 #include "Path_Data_Container.h"
@@ -17,7 +26,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein neuen leeren Path_Data_Container erstellen.
  *
  * Asserts:
@@ -54,7 +63,7 @@ Create_Path_Data_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein Path_Data-Objekt zu einem existierenden Path_Data_Container hinzufuegen.
  *
  * Der Container kopiert das Path_Data-Objekt NICHT ! Es wird nur die Speicheradresse im Container abgelegt !
@@ -119,7 +128,7 @@ Add_Path_Data_To_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Path_Data_Container Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging
  * hilfreich.
  *
@@ -198,7 +207,7 @@ Path_Data_Container_To_String
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Path_Data_Container Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird
  * die Funktion "Path_Data_Container_To_String" verwendet.
  *
@@ -226,7 +235,7 @@ Print_Path_Data_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein Path_Data_Container loeschen.
  *
  * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Path_Data-Objekte aufgerufen, sodass am Ende
@@ -266,3 +275,5 @@ Delete_Path_Data_Container
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+#endif /* 0 */

@@ -35,6 +35,7 @@ extern "C"
 
 #include <stddef.h>
 #include "Alkane_Info_Constitutional_Isomer.h"
+#include "../DMMC.h"
 
 
 
@@ -97,6 +98,9 @@ struct Path_Data
 
     enum Path_Data_State state;                         ///< Status des Objektes
 };
+
+// Container erzeugen
+CREATE_CONTAINER_H(struct Path_Data*, Path_Data)
 
 //=====================================================================================================================
 
