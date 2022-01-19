@@ -1,8 +1,11 @@
 /**
- * Alkane_Info_Constitutional_Isomer.c
+ * @file Alkane_Info_Constitutional_Isomer.c
  *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
+ * @brief Hier stehen einige allgemeine Infos ueber die Konstitutionsisomere der Alkane. Z.B. die Anzahl der
+ * Konstitutionsisomere bei gegebener Anzahl an C-Atomen.
+ *
+ * @date 07.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_Info_Constitutional_Isomer.h"
@@ -10,9 +13,9 @@
 
 
 /**
- * Anzahl an Konstitutionsisomere (Strukturisomere) bei gegebener Anzahl an C-Atomen.
+ * @brief Anzahl an Konstitutionsisomere (Strukturisomere) bei gegebener Anzahl an C-Atomen.
  *
- * Quelle: http://www.mathe2.uni-bayreuth.de/sascha/oeis/alkane.html
+ * @see http://www.mathe2.uni-bayreuth.de/sascha/oeis/alkane.html
  */
 const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOMS] =
 {
@@ -30,9 +33,9 @@ const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOM
 };
 
 /**
- * Die Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
+ * @brief Die Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
  *
- * Quelle: https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Zahlenpr%C3%A4fixe_in_chemischen_Namen
+ * @see https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Zahlenpr%C3%A4fixe_in_chemischen_Namen
  */
 const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS] =
 {
@@ -41,10 +44,10 @@ const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS] =
 };
 
 /**
- * Die Alkanwoerter, die im Programm hinterlegt sind.
+ * @brief Die Alkanwoerter, die im Programm hinterlegt sind. (Deutsch)
  *
- * Quellen: https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Lineare_Ketten
- *          https://de.wikipedia.org/wiki/H%C3%B6here_Alkane
+ * @see https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Lineare_Ketten
+ * @see https://de.wikipedia.org/wiki/H%C3%B6here_Alkane
  */
 const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS] =
 {
@@ -62,7 +65,7 @@ const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS] =
 };
 
 /**
- * Die Alkanwoerter, die im Programm hinterlegt sind. Diesmal auf Englisch.
+ * @brief Die Alkanwoerter, die im Programm hinterlegt sind. Diesmal auf Englisch.
  *
  * Hauptunterschied:    An den deutschen Namen wird ein "e" angehaengt.
  *                      Aus "Methan" wird "Methane"; aus "Ethan" wird "Ethane" u.s.w
@@ -83,7 +86,7 @@ const char* ALKAN_WORDS_En [NUMBER_OF_ALKAN_WORDS] =
 };
 
 /**
- * Die Substituenten, die im Programm hinterlegt sind.
+ * @brief Die Substituenten, die im Programm hinterlegt sind.
  *
  * Die Substituenten wurden erzeugt indem die letzten beiden Zeichen der Alkan-Woerter durch "yl" ersetzt werden !
  */

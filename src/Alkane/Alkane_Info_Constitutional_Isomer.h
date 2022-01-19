@@ -1,7 +1,7 @@
 /**
- * Alkane_Info_Constitutional_Isomer.h
+ * @file Alkane_Info_Constitutional_Isomer.h
  *
- * Hier stehen einige allgemeine Infos ueber die Konstitutionsisomere der Alkane. Z.B. die Anzahl der
+ * @brief Hier stehen einige allgemeine Infos ueber die Konstitutionsisomere der Alkane. Z.B. die Anzahl der
  * Konstitutionsisomere bei gegebener Anzahl an C-Atomen.
  *
  * Zusaetzlich dazu werden hier einige Limitierungen fuer das Programm festgelegt, um u.a. die Speicherverwaltung zu
@@ -23,12 +23,12 @@
  *    Auslagerungsspeicher verwendet. Dazu kommen die enormen Rechnerkapazitaeten, die fuer die Bestimmung erforderlich
  *    sind !
  *
- *  Created on: 07.03.2021
- *      Author: x86 / Gyps
+ * @date 07.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef ALKANE_INFO_CONSTITUTIONAL_ISOMER_H
-#define ALKANE_INFO_CONSTITUTIONAL_ISOMER_H
+#define ALKANE_INFO_CONSTITUTIONAL_ISOMER_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -39,7 +39,8 @@ extern "C"
 
 
 /**
- * Maximale Anzahl an C-Atomen, die das Programm unterstuetzt.
+ * @brief Maximale Anzahl an C-Atomen, die das Programm unterstuetzt.
+ *
  * Die Algorithmen besitzen an sich kein Limit. Es wurde aber eine obere Grenze gewaehlt, damit die Speicherverwaltung
  * einfacher wird.
  */
@@ -50,7 +51,7 @@ extern "C"
 #endif /* MAX_NUMBER_OF_C_ATOMS */
 
 /**
- * Anzahl an Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
+ * @brief Anzahl an Zahlenwoerter (Zahlenpraefixe), die im Programm hinterlegt sind.
  */
 #ifndef NUMBER_OF_NUMBER_WORDS
     #define NUMBER_OF_NUMBER_WORDS 10u
@@ -59,7 +60,8 @@ extern "C"
 #endif /* NUMBER_OF_NUMBER_WORDS */
 
 /**
- * Maximal moegliche Verschachtelungstiefe, die das Programm unterstuetzt.
+ * @brief Maximal moegliche Verschachtelungstiefe, die das Programm unterstuetzt.
+ *
  * Auch hier - wie bei MAX_NUMBER_OF_C_ATOMS -: Die Algorithmen besitzen an sich kein Limit. Es wurde aber eine obere
  * Grenze gewaehlt, damit die Speicherverwaltung einfacher wird.
  */
@@ -70,7 +72,7 @@ extern "C"
 #endif /* MAX_NUMBER_OF_NESTING_DEPTH */
 
 /**
- * Anzahl an Alkanwoerter, die im Programm hinterlegt sind.
+ * @brief Anzahl an Alkanwoerter, die im Programm hinterlegt sind.
  */
 #ifndef NUMBER_OF_ALKAN_WORDS
     #define NUMBER_OF_ALKAN_WORDS 40u
@@ -79,7 +81,8 @@ extern "C"
 #endif /* NUMBER_OF_ALKAN_WORDS */
 
 /**
- * Anzahl an Substituenten, die im Programm hinterlegt sind.
+ * @brief Anzahl an Substituenten, die im Programm hinterlegt sind.
+ *
  * Die Substituenten wurden erzeugt indem die letzten beiden Zeichen der Alkan-Woerter durch "yl" ersetzt werden !
  */
 #ifndef NUMBER_OF_ALKYL_WORDS
@@ -94,14 +97,18 @@ extern "C"
 
 
 
-// Anzahl der Konsitutionsisomere (Strukturisomere) bei gegebener Anzahl an C-Atomen
+/*
+ * Anzahl der Konsitutionsisomere (Strukturisomere) bei gegebener Anzahl an C-Atomen
+ */
 extern const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOMS];
 
-// Begriffe, die fuer die Erstellung des IUPAC-Namens erforderlich sind
+/*
+ * Begriffe, die fuer die Erstellung des IUPAC-Namens erforderlich sind
+ */
 extern const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS];
-extern const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS];
-extern const char* ALKAN_WORDS_EN [NUMBER_OF_ALKAN_WORDS];
-extern const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS];
+extern const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS];  // Alkanwoerter in Deutsch
+extern const char* ALKAN_WORDS_EN [NUMBER_OF_ALKAN_WORDS];  // Alkanwoerter in Englisch
+extern const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS];     // Alkylwoerter (sind in Deutsch und Englisch gleich)
 
 
 
