@@ -70,7 +70,7 @@ const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS] =
  * Hauptunterschied:    An den deutschen Namen wird ein "e" angehaengt.
  *                      Aus "Methan" wird "Methane"; aus "Ethan" wird "Ethane" u.s.w
  */
-const char* ALKAN_WORDS_En [NUMBER_OF_ALKAN_WORDS] =
+const char* ALKAN_WORDS_EN [NUMBER_OF_ALKAN_WORDS] =
 {
         "Methane",          "Ethane",           "Propane",          "Butane",           "Pentane",
         "Hexane",           "Heptane",          "Octane",           "Nonane",           "Decane",
