@@ -12,6 +12,7 @@
 #include "../Print_Tools.h"
 #include "../Misc.h"
 #include "Alkane_Chain_To_IUPAC_Name.h"
+#include "Path_Data.h"
 #include "Path_Data_Container.h"
 
 
