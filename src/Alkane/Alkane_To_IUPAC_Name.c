@@ -335,7 +335,7 @@ Find_Main_Chain
 /**
  * Tiefensuchen bei allen moeglichen Pfaden, die die Hauptkette darstellen koennten, durchfuehren.
  */
-void
+static void
 Do_DFS
 (
         const struct Alkane* const restrict alkane,                     // Alkan-Objekt, welches betrachtet werden soll
