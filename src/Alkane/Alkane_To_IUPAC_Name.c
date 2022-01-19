@@ -1,8 +1,11 @@
 /**
- * Alkane_To_IUPAC_Name.c
+ * @file Alkane_To_IUPAC_Name.c
  *
- *  Created on: 14.03.2021
- *      Author: x86 / Gyps
+ * @brief In dieser Uebersetzungseinheit wird der IUPAC-Name eines bereits vollstaendig erzeugten Alkan-Objektes
+ * gebildet.
+ *
+ * @date 14.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_To_IUPAC_Name.h"
@@ -172,7 +175,7 @@ Reorder_Chains
 
 //=====================================================================================================================
 
-/**
+/*
  * IUPAC-Name des uebergebenen Alkans erzeugen.
  *
  * Genaue Beschreibung der Nomenklatur: siehe Header-Datei !

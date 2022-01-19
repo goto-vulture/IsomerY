@@ -1,16 +1,18 @@
 /**
- * Alkane_To_IUPAC_Name.h
+ * @file Alkane_To_IUPAC_Name.h
  *
- * In dieser Uebersetzungseinheit wird der IUPAC-Name eines bereits vollstaendig erzeugten Alkan-Objektes gebildet.
+ * @brief In dieser Uebersetzungseinheit wird der IUPAC-Name eines bereits vollstaendig erzeugten Alkan-Objektes
+ * gebildet.
+ *
  * Eine kurze Einleitung der verwendeten Nomenklatur findet sich als Funktionskommentar der Funktion
  * Convert_Alkane_To_IUPAC_Name
  *
- *  Created on: 14.03.2021
- *      Author: x86 / Gyps
+ * @date 14.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef ALKANE_TO_IUPAC_NAME_H
-#define ALKANE_TO_IUPAC_NAME_H
+#define ALKANE_TO_IUPAC_NAME_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -25,7 +27,7 @@ extern "C"
 
 
 /**
- * IUPAC-Name des uebergebenen Alkans erzeugen.
+ * @brief IUPAC-Name des uebergebenen Alkans erzeugen.
  *
  * Der IUPAC-Name ist ein Name nach der Nomenklatur, die von der Institution International Union of Pure and Applied
  * Chemistry (IUPAC) entwickelt wurde. Ohne alle hier relevanten Regeln nennen zu muessen: Die Idee ist, dass aus dem
@@ -135,6 +137,8 @@ extern "C"
  *
  * Asserts:
  *      alkane != NULL
+ *
+ * @param[in] alkane Alkae Objekt, von dem der IUPAC-Name gebildet werden soll
  */
 extern void
 Convert_Alkane_To_IUPAC_Name
