@@ -904,29 +904,32 @@ Reorder_Chains
     {
         for (size_t i2 = 1; i2 < alkane->next_free_chain; ++ i2)
         {
-            if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == (i + 1))
+            if (alkane->chains [i2].nesting_depth != (i + 1))
+            {
+                continue;
+            }
+
+            if (alkane->chains [i2 + 1].nesting_depth == (i + 1))
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
-            else if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == 0)
+            else if (alkane->chains [i2 + 1].nesting_depth == 0)
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
-            else if (alkane->chains [i2].nesting_depth == (i + 1) &&
-                    Compare_Chains (alkane->chains [i2 - 1], reorder_data [i].sub_main_chain) == 0)
+            else if (Compare_Chains (alkane->chains [i2 - 1], reorder_data [i].sub_main_chain) == 0)
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
-            else if (alkane->chains [i2].nesting_depth == (i + 1) &&
-                    Compare_Chains (alkane->chains [i2 - 1], alkane->chains [i2]) == 0)
+            else if (Compare_Chains (alkane->chains [i2 - 1], alkane->chains [i2]) == 0)
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
-            else if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == (i + 2)) // + 2 !
+            else if (alkane->chains [i2 + 1].nesting_depth == (i + 2)) // + 2 !
             {
                 // Sub main chain gefunden
                 reorder_data [i + 1].sub_main_chain = alkane->chains [i2];
