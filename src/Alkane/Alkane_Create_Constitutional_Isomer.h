@@ -1,16 +1,16 @@
 /**
- * Alkane_Create_Constitutional_Isomer.h
+ * @file Alkane_Create_Constitutional_Isomer.h
  *
- * Hier wird der Algorithmus, der die Konstitutionsisomere erzeugt, definiert.
+ * @brief Hier wird der Algorithmus, der die Konstitutionsisomere erzeugt, definiert.
  *
  * Fuer eine Beschreibung des Algorithmus: Siehe Funktionskommentar von Create_Alkane_Constitutional_Isomers
  *
- *  Created on: 08.03.2021
- *      Author: x86 / Gyps
+ * @date 08.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef ALKANE_CREATE_CONSTITUTIONAL_ISOMER_H
-#define ALKANE_CREATE_CONSTITUTIONAL_ISOMER_H
+#define ALKANE_CREATE_CONSTITUTIONAL_ISOMER_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -25,7 +25,7 @@ extern "C"
 
 
 /**
- * Die Alkan Konstitutionsisomere bei gegebener Anzahl an C-Atomen bestimmen.
+ * @brief Die Alkan Konstitutionsisomere bei gegebener Anzahl an C-Atomen bestimmen.
  *
  * Die Grundidee stammt aus dem Dokument "Strukturisomere der Alkane" von
  * Sascha Kurz, Universität Bayreuth. E-Mail: sascha.kurz@uni-bayreuth.de
@@ -135,6 +135,10 @@ extern "C"
  *
  * Asserts:
  *      number_of_c_atoms < MAX_NUMBER_OF_C_ATOMS
+ *
+ * @param[in] number_of_c_atoms Anzahl an C-Atomen, die die Strukturisomere haben muessen
+ *
+ * @return Container mit allen erzeugten Alkane Objekte
  */
 extern struct Alkane_Container*
 Create_Alkane_Constitutional_Isomers

@@ -130,7 +130,7 @@ struct Alkane
      */
     struct Chain
     {
-        uint_fast8_t length;                                    //< Laenge der Kette
+        uint_fast8_t length;                                    ///< Laenge der Kette
 
         /**
          * @brief Position der Kette bezogen auf die Kette, an dem sich diese Kette befindet
@@ -143,9 +143,9 @@ struct Alkane
          * Tiefe 0 steht fuer die Hauptkette
          */
         uint_fast8_t nesting_depth;
-    } chains [MAX_NUMBER_OF_C_ATOMS];                           //< Ketteninformationen des Isomers
+    } chains [MAX_NUMBER_OF_C_ATOMS];                           ///< Ketteninformationen des Isomers
                                                                 // ToDo: Arraygroesse verringern falls moeglich
-    uint_fast8_t next_free_chain;                               //< Index der naechsten freien Kette
+    uint_fast8_t next_free_chain;                               ///< Index der naechsten freien Kette
 
     /**
      * @brief Der IUPAC-Name des Alkans
@@ -154,7 +154,7 @@ struct Alkane
      */
     char iupac_name [IUPAC_NAME_LENGTH];
 
-    enum Alkane_State state;                                    //< Status des Objektes
+    enum Alkane_State state;                                    ///< Status des Objektes
 };
 
 //=====================================================================================================================

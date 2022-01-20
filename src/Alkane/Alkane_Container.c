@@ -1,8 +1,10 @@
 /**
- * Alkane_Container.c
+ * @file Alkane_Container.c
  *
- *  Created on: 10.03.2021
- *      Author: x86 / Gyps
+ * @brief Einfacher dynamischer Conainer fuer Alkane-Objekte. Bzw. genauer gesagt fuer deren Zeiger.
+ *
+ * @date 10.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_Container.h"
@@ -19,7 +21,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein neuen leeren Alkane_Container erstellen.
  *
  * Asserts:
@@ -53,7 +55,7 @@ Create_Alkane_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein Alkane-Objekt zu einem existierenden Alkane_Container hinzufuegen.
  *
  * Der Container kopiert das Alkane-Objekt NICHT ! Es wird nur die Speicheradresse im Container abgelegt !
@@ -118,7 +120,7 @@ Add_Alkane_To_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein Alkane-Objekt zu einem existierenden Alkane_Container hinzufuegen.
  *
  * Bei dieser Funktion kopiert der Container das uebergebene Alkane-Objekt komplett !
@@ -193,7 +195,7 @@ Add_Full_Alkane_To_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane_Container Objekt in eine Zeichenkettendarstellung ueberfuehren. Dies ist insbesondere fuer debugging
  * hilfreich.
  *
@@ -269,7 +271,7 @@ Alkane_Container_To_String
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Alkane_Container Objekt auf stdout ausgeben. Hauptsaechlich fuer das Debbuging. Fuer die Konvertierung wird
  * die Funktion "Alkane_Container_To_String" verwendet.
  *
@@ -296,7 +298,7 @@ Print_Alkane_Container
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Ein Alkane_Container loeschen.
  *
  * Beim Loeschen werden die Loeschfunktionen aller enthaltenen Alkane-Objekte aufgerufen, sodass am Ende sowohl der

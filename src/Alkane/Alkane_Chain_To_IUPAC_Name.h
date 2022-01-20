@@ -1,7 +1,7 @@
 /**
- * Alkane_Chain_To_IUPAC_Name.h
+ * @file Alkane_Chain_To_IUPAC_Name.h
  *
- * Konstitutionsisomere in Form von Alkan-Objekten sind schoen und gut. Aber fuer die Verwendung im Bereich der
+ * @brief Konstitutionsisomere in Form von Alkan-Objekten sind schoen und gut. Aber fuer die Verwendung im Bereich der
  * organischen Chemie sind sie unbrauchbar !
  *
  * Es gibt eine Nomenklatur, die von der International Union of Pure and Applied Chemistry (IUPAC) erstellt wurde.
@@ -17,12 +17,12 @@
  *
  * Jedenfalls macht diese Funktion die Konvertierung der Alkan-Objekte zu den zugehoerigen IUPAC-Namen.
  *
- *  Created on: 23.03.2021
- *      Author: x86 / Gyps
+ * @date 23.03.2021
+ * @author x86 / Gyps
  */
 
 #ifndef ALKANE_CHAIN_TO_IUPAC_NAME_H
-#define ALKANE_CHAIN_TO_IUPAC_NAME_H
+#define ALKANE_CHAIN_TO_IUPAC_NAME_H ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -37,7 +37,11 @@ extern "C"
 
 
 /**
- * Diese Funktion konvertiert die zuvor erzeugten Chain-Objekte in den IUPAC-Namen.
+ * @brief Diese Funktion konvertiert die zuvor erzeugten Chain-Objekte den IUPAC-Namen.
+ *
+ * @param[out] iupac_name Speicher fuer den IUPAC-Namen
+ * @param[in] iupac_name_length Laenge/Groesse des Speichers fuer den IUPAC-Namen
+ * @param[in] alkane Alkane Objekt, von dem der IUPAC-Name erzeugt werden soll
  */
 void
 Chain_To_IUPAC

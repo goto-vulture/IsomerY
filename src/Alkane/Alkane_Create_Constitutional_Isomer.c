@@ -1,8 +1,10 @@
 /**
- * Alkane_Create_Constitutional_Isomer.c
+ * @file Alkane_Create_Constitutional_Isomer.c
  *
- *  Created on: 08.03.2021
- *      Author: x86 / Gyps
+ * @brief Hier wird der Algorithmus, der die Konstitutionsisomere erzeugt, definiert.
+ *
+ * @date 08.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_Create_Constitutional_Isomer.h"
@@ -20,8 +22,9 @@
 #include "../Misc.h"
 
 /**
- * Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
+ * @brief Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
  * durchfuehrt.
+ *
  * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
  */
 #ifndef PROGRESS_OUTPUT_INTERVAL
@@ -31,8 +34,9 @@
 #endif /* PROGRESS_OUTPUT_INTERVAL */
 
 /**
- * Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
+ * @brief Die Anzahl an Schleifendurchlaeufen, die erreicht werden muessen, damit das Programm eine Fortschrittsausgabe
  * bei der Berechnung der moeglichen innersten Schleifendurchlaeufe.
+ *
  * Dies dient hauptsaechlich dazu, dass die Anzahl an Ausgaben reduziert werden, um die Laufzeit zu beschleunigen.
  */
 #ifndef PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL
@@ -42,8 +46,8 @@
 #endif /* PROGRESS_OUTPUT_LOOP_COUNTER_INTERVAL */
 
 /**
- * Um die Programmausfuehrung zu beschleunigen koennen mit dieser Konstante alle Fortschrittsausgaben waehrend der
- * kompilierung entfernt werden.
+ * @brief Um die Programmausfuehrung zu beschleunigen koennen mit dieser Konstante alle Fortschrittsausgaben waehrend
+ * der Kompilierung entfernt werden.
  *
  * Dies bringt bis zu 30 % an Laufzeitgewinn (im Release-Modus); also eine nicht zu unterschatzende Groessenordnung.
  *
@@ -142,7 +146,7 @@ static void Central_Object_Is_A_C_Atom
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/**
+/*
  * Die Alkan Konstitutionsisomere bei gegebener Anzahl an C-Atomen bestimmen.
  *
  * Die Grundidee stammt aus dem Dokument "Strukturisomere der Alkane" von

@@ -1,8 +1,11 @@
 /**
- * Alkane_Chain_To_IUPAC_Name.c
+ * @file Alkane_Chain_To_IUPAC_Name.c
  *
- *  Created on: 23.03.2021
- *      Author: x86 / Gyps
+ * @brief Konstitutionsisomere in Form von Alkan-Objekten sind schoen und gut. Aber fuer die Verwendung im Bereich der
+ * organischen Chemie sind sie unbrauchbar !
+ *
+ * @date 23.03.2021
+ * @author x86 / Gyps
  */
 
 #include "Alkane_Chain_To_IUPAC_Name.h"
@@ -16,8 +19,9 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 
 /**
- * Konstante, um die Groesse des Arrays festzulegen. Der Wert ist ein Erfahrungswert. Selbst bei sehr komplexen
+ * @brief Konstante, um die Groesse des Arrays festzulegen. Der Wert ist ein Erfahrungswert. Selbst bei sehr komplexen
  * Molekuelen werden praktisch immer weniger als 10 Elemente verwendet.
+ *
  * Siehe Testfunktion: TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects
  */
 #ifndef SIZE_OF_DYNAMIC_CREATED_OBJECTS_ARRAY
@@ -29,17 +33,19 @@
 
 
 
-
+/**
+ * @brief Objekt, welches fuer die Zusammenfuehrung von Chain Objekten verwendet wird
+ */
 struct Combined_Chain
 {
-    uint_fast8_t positions [NUMBER_OF_NUMBER_WORDS];
-    uint_fast8_t next_free_position;
+    uint_fast8_t positions [NUMBER_OF_NUMBER_WORDS]; ///< Positionsinformationen
+    uint_fast8_t next_free_position; ///< Naechstes freies Objekt im Array positions
 
-    uint_fast8_t branch_length;
-    uint_fast8_t nesting_depth;
+    uint_fast8_t branch_length; ///< Astlaenge
+    uint_fast8_t nesting_depth; ///< Verschachtelungstiefe
 
-    struct Combined_Chain* deeper [NUMBER_OF_NUMBER_WORDS];
-    uint_fast8_t next_free_depper;
+    struct Combined_Chain* deeper [NUMBER_OF_NUMBER_WORDS]; ///< Objekte, die in einer tieferen Verschachtelung liegen
+    uint_fast8_t next_free_depper; ///< Naechstes freies Objekt im Array deeper
 };
 
 
@@ -87,7 +93,7 @@ static int compare_1 (const void* element_1, const void* element_2);
 
 //=====================================================================================================================
 
-/**
+/*
  * Diese Funktion konvertiert die zuvor erzeugten Chain-Objekte in den IUPAC-Namen.
  */
 void
