@@ -37,31 +37,31 @@ do
     SEC_TOTAL_ADDED=0
     AVERAGE_SEC=0
 
-    # Programm vor Zeitmessung neu uebersetzen
+    # Programm vor Zeitmessung ohne Dokumentation neu uebersetzen
     make clean 1>> /dev/null
 
     if [[ ${test} -eq 0 ]];
     then
         echo -n "Compile Debug version (-j 1) ..."
-        time make -j 1 Debug=1 1> /dev/null
+        time make -j 1 Debug=1 NO_DOCUMENTATION=1 1> /dev/null
         echo "Done !"
 
         make clean 1>> /dev/null
 
         echo -n "Compile Debug version (-j) ..."
-        time make -j Debug=1 1> /dev/null
+        time make -j Debug=1 NO_DOCUMENTATION=1 1> /dev/null
         printf "Done !\n\n"
     fi
     if [[ ${test} -eq 1 ]];
     then
         echo -n "Compile Release version (-j 1) ..."
-        time make -j 1 Release=1 1> /dev/null
+        time make -j 1 Release=1 NO_DOCUMENTATION=1 1> /dev/null
         echo "Done !"
 
         make clean 1>> /dev/null
 
         echo -n "Compile Release version (-j) ..."
-        time make -j Release=1 1> /dev/null
+        time make -j Release=1 NO_DOCUMENTATION=1 1> /dev/null
         printf "Done !\n\n"
     fi
 

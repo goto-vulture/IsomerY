@@ -63,6 +63,7 @@ RELEASE = 0
 
 PROJECT_NAME = IsomerY
 DOCUMENTATION_PATH = ./Documentation
+NO_DOCUMENTATION = 0
 
 # addsuffix, welches einen String am Ende einer Variable anbringt, kann das Ergebnis NICHT einer Variablen zuweisen, wenn diese
 # Variable im Aufruf von addsuffix vorhanden ist !
@@ -104,6 +105,12 @@ else
 			DEBUG = 1
 		endif
 	endif
+endif
+
+# Soll die Dokumentation mittels Doxygen erzeugt werden ? Die Erzeugung der Dokumentation benoetigt mit Abstand die meiste
+# Zeit bei der Erstellung des Programms
+ifeq ($(NO_DOCUMENTATION), 1)
+	NO_DOCUMENTATION = 1
 endif
 
 
@@ -187,8 +194,10 @@ ifndef DOXYGEN_PATH
 	@echo No $(DOXYGEN) in $(PATH). Skip the creation of the documentation.
 	@echo If you want the program documentation, try to install $(DOXYGEN) with apt-get install $(DOXYGEN).
 else
+ifeq ($(NO_DOCUMENTATION), 0)
 	@echo Generating the documentation ...
 	$(DOXYGEN_PATH) ./Doxyfile
+endif
 endif
 
 	@echo
@@ -210,6 +219,11 @@ else
 	@echo Using DEBUG build.
 endif
 	@echo
+ifeq ($(NO_DOCUMENTATION), 1)
+	@echo No documentation will be generated.
+else
+	@echo Documentation will be generated.
+endif
 	$(CC) $(CCFLAGS) -c $(MAIN_C) $(DYNAMIC_MEMORY_H) $(ALKANE_H)
 
 str2int.o: $(STR2INT_C)
