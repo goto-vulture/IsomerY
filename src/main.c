@@ -147,10 +147,10 @@ int main (const int argc, const char* const argv [])
     puts ("");
     Show_Dynamic_Memory_Status ();
 
-    Beautiful_1 ();
-    Beautiful_2 ();
-    Beautiful_3 ();
-    Beautiful_4();
+//    Beautiful_1();
+//    Beautiful_2();
+//    Beautiful_3();
+//    Beautiful_4();
 
     // Alle I/O Puffer vor Beendigung des Programms leeren
     fflush (NULL);
