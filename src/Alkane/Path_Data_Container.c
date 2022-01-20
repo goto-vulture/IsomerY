@@ -4,6 +4,8 @@
  * @brief Wurde durch einen Container, der mittels DMMC.h erstellt wurde, ersetzt !
  */
 
+unsigned char variable_to_prevent_an_warning_because_of_an_empty_translation_unit_2 = 0;
+
 #if 0
 /**
  * @file Path_Data_Container.c
