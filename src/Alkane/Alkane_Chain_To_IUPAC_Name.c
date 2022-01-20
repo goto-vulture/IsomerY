@@ -34,7 +34,10 @@
 
 
 /**
- * @brief Objekt, welches fuer die Zusammenfuehrung von Chain Objekten verwendet wird
+ * @brief Objekt, welches fuer die Zusammenfuehrung von Chain Objekten verwendet wird.
+ *
+ * Hierbei handelt es sich um eine einfache verkettete Liste. Die Combined_Chain Objekte werden aufsteigend anhand der
+ * Verschachtelung mittels Zeiger verknuepft.
  */
 struct Combined_Chain
 {
@@ -134,8 +137,7 @@ Chain_To_IUPAC
      * Die Grundidee bei der Erzeugung der Combined_Chain-Objekte ist, dass immer die Verschachtelungstiefen des
      * aktuellen Objektes mit dem zukuenftigen Objekt verglichen werden.
      *
-     * Wenn ja, dann existiert eine tiefere Ebene. Dies ist eigentlich schnell einleuchtend. Allerdings gibt es dabei
-     * ein paar Dinge zu beachten:
+     * Allerdings gibt es dabei ein paar Dinge zu beachten:
      *
      * - Wenn nicht der Fall ist, dass die Verschachtelunstiefe im zukuenftigen Objekt groesser als im aktuellen
      *   Objekt ist, dann koennte es sein, dass das aktuelle Objekt mit bereits vorhandenen Eintraegen im
@@ -168,6 +170,7 @@ Chain_To_IUPAC
                 // werden ?
                 for (uint_fast8_t i2 = 0; i2 < current_combined_chain->next_free_depper; ++ i2)
                 {
+                    // Laenge identisch und Verschachtelungstiefe identisch ? -> Zusammenfassung moeglich !
                     if (current_combined_chain->deeper [i2]->branch_length == alkane->chains [i].length &&
                             current_combined_chain->deeper [i2]->nesting_depth == alkane->chains [i].nesting_depth)
                     {
@@ -229,6 +232,8 @@ Chain_To_IUPAC
 
     // ===== ===== ===== BEGINN Namen erzeugen ===== ===== =====
     // Die Abzweigungen 1. Verschachtelungstiefe alphabetisch sortieren
+    // An sich ist dieser Prozess fuer eine eindeutige Benennung nicht erforderlich. Aber in der IUPAC-Nomenklatur ist
+    // eine alphabetische Sortierung vorgeschrieben !
     qsort (main_combined_chain.deeper, main_combined_chain.next_free_depper, sizeof (struct Combined_Chain*), compare_1);
 
     // Alle Combined_Chain-Objekte durchgehen, die sich auf erster Ebene befinden
@@ -259,7 +264,7 @@ Chain_To_IUPAC
             // Zahlenwort anbringen, falls notwendig
             // Theoretisch koennte man auch bei einem Objekt das Zahlenwort "Mono" anfuegen. Dies wird in der Praxis
             // aber fast nie gemacht. Hoechstens dann, um Unklarheiten auszuraeumen. Daher wird es auch hier nicht
-            // gemacht
+            // gemacht, da Unklarheiten in der Praxis fast nie auftreten.
             if (main_combined_chain.deeper [i]->next_free_position > 1)
             {
                 strncat (iupac_name, NUMBER_WORDS [main_combined_chain.deeper [i]->next_free_position - 1], iupac_name_space_left);
@@ -424,7 +429,8 @@ Go_Deeper
  *
  * Das Objekt wird dynamisch erzeugt.
  *
- * Um das Loeschen der dynamischen Objekte zu vereinfachen, werden alle Adressen der dynamischen Objekte gesichert.
+ * Um das spaetere Loeschen der dynamischen Objekte zu vereinfachen, werden alle Adressen der dynamischen Objekte
+ * gesichert.
  */
 static struct Combined_Chain*                                                   // Neues dynamisch erzeugte
                                                                                 // Combined_Chain-Objekt

@@ -886,29 +886,58 @@ Reorder_Chains
                                                 // falls notwendig
 )
 {
+    // Wenn es nur die Hauptkette gibt, dann macht eine Neustrukturierung der Aeste keinen Sinn
     if (alkane->next_free_chain == 1)
     {
         return;
     }
 
+    /**
+     * Temoraere Daten um eine spaetere richtige Umstrukturierung der Chain Objekte zu ermoeglichen. Diese
+     * Umstrukturierung ist notwending damit die Erzeugung des IUPAC-Namen (mit allen Nomenklaturregeln) funktioniert.
+     */
     struct Reorder_Data
     {
-        struct Chain sub_main_chain;
-        struct Chain data [MAX_NUMBER_OF_C_ATOMS];
-        uint_fast8_t next_free_data;
+        struct Chain sub_main_chain;                // "Verschachtelungs-Hauptkette"
+        struct Chain data [MAX_NUMBER_OF_C_ATOMS];  // Chain-Objekte, die als Gruppe bei der Umstrukturierung betrachtet
+                                                    // werden muessen
+        uint_fast8_t next_free_data;                // Naechtes freies Element im Array
     } reorder_data [MAX_NUMBER_OF_NESTING_DEPTH];
 
     memset (reorder_data, '\0', sizeof (reorder_data));
 
+    // Fuer die spaetere Sortierung der Chain Objekte muessen diese temporaer umstrukturiert werden
+    // Dafuer werden alle Chain Objekte durchlaufen und wie folgt in ein Array zusammengefasst:
+    //
+    // - Alle Chain Objekte auf der gleichen Verschachtelungsebene, wenn diese Chain Objekte nicht Teil einer weiteren
+    //   Verschachtelung sind.
+    //   Damit werden z.B. 1x Ethyl und 1x Methyl zusammengefasst, wenn die Bedingungen stimmen
+    //   Dies ist erforderlich, damit die spaetere alphabetische Sortierung auf den richtigen Daten angewendet wird
+    //
+    // - Wenn die Verschachtelungstiefe steigt, dann wissen wir, dass es sich um eine Hauptkette in einer
+    //   Verschachtelung handelt. Dabei wird die "Verschachtelungs-Hauptkette" als zusaetzliches Element in den
+    //   reorder_data gespeichert. Alle weiteren Chain Objekte, die direkt oder indirekt mit dieser "Verschachtelungs-
+    //   hauptkette" verbunden sind, werden in das Array eingetragen, da bei der spaeteren Bennenung dieses Chain
+    //   Objekt gesondert behandelt werden muss.
     for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
     {
-        for (size_t i2 = 1; i2 < alkane->next_free_chain; ++ i2)
+        for (size_t i2 = 1; i2 < alkane->next_free_chain; ++ i2) // i2 == 1, da die Hauptkette nie umstrukturiert wird
         {
+            // Nur wenn die Verschachtelungstiefe passt, k
             if (alkane->chains [i2].nesting_depth != (i + 1))
             {
                 continue;
             }
 
+            // Die fuenf Faelle fuer das Umgruppieren von Chain Objekten:
+            // - Ist die Verschachtelungstiefe des aktuellen Chain Objektes mit dem naechsten identisch ?
+            // - Ist das aktuelle Chain Objekt das letzte im Array ?
+            // - Ist das vorherige Chain Objekt identisch mit der aktuellen "Verschachtelungs-Hauptkette" ? (Dieser
+            //   Fall muss betrachtet werden, damit z.B. zwei aufeinanderfolgende Ethyl-Abzweigungen fuer die spaetere
+            //   Benennung richtig gruppiert werden.)
+            // - Ist das akuelle Chain Objekt komplett mit dem vorherigen Chain Objekt identisch ?
+            // - Ist die Verschachtelungstiefe des naechsten Chain Objektes groesser als die des aktuellen Objektes ?
+            //   Wenn ja, dann wurde eine "Verschachtelungs-Hauptkette" gefunden
             if (alkane->chains [i2 + 1].nesting_depth == (i + 1))
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
@@ -931,7 +960,7 @@ Reorder_Chains
             }
             else if (alkane->chains [i2 + 1].nesting_depth == (i + 2)) // + 2 !
             {
-                // Sub main chain gefunden
+                // Sub main chain ("Verschachtelungs-Hauptkette") gefunden, da Steigerung der Verschachtelungstiefe
                 reorder_data [i + 1].sub_main_chain = alkane->chains [i2];
             }
         }
