@@ -920,6 +920,12 @@ Reorder_Chains
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
+            else if (alkane->chains [i2].nesting_depth == (i + 1) &&
+                    Compare_Chains (alkane->chains [i2 - 1], alkane->chains [i2]) == 0)
+            {
+                reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
+                reorder_data [i].next_free_data ++;
+            }
             else if (alkane->chains [i2].nesting_depth == (i + 1) && alkane->chains [i2 + 1].nesting_depth == (i + 2)) // + 2 !
             {
                 // Sub main chain gefunden
