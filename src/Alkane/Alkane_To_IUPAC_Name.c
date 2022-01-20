@@ -325,6 +325,12 @@ Find_Main_Chain
 
     // printf ("Result Index: %d\n", result_path_index);
 
+    // Vor dem Loeschen des Containers alle enthaltene Objekte loeschen
+    for (uint_fast64_t i = 0; i < path_data_container->size; ++ i)
+    {
+        Delete_Path_Data (path_data_container->data[i]);
+        path_data_container->data[i] = NULL;
+    }
     Delete_Path_Data_Container (path_data_container);
 
     return result_path_data;

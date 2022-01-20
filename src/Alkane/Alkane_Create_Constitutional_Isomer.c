@@ -540,6 +540,12 @@ Create_Alkane_Constitutional_Isomers
     {
         if (container_height_x [next_container] != NULL)
         {
+            // Vor dem Loeschen des Containers alle enthaltene Objekte loeschen
+            for (uint_fast64_t i = 0; i < container_height_x [next_container]->size; ++ i)
+            {
+                Delete_Alkane_Branch (container_height_x [next_container]->data[i]);
+                container_height_x [next_container]->data[i] = NULL;
+            }
             Delete_Alkane_Branch_Container (container_height_x [next_container]);
             container_height_x [next_container] = NULL;
         }
