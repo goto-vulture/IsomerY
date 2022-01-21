@@ -205,8 +205,12 @@ static inline void Show_Program_Details (void)
     printf (N_A);
 #endif /* RELEASE_BUILD */
 
-    printf(" | OS: ");
-	
+    // Dieser Check der Bitbreite ist nicht 100% exakt, da ein Byte nicht zwingend 8 Bit gross sein muss ...
+    // ... zumindest in der Theorie. In der Praxis wird man ueber dieses Problem nicht stolpern.
+    // Es gibt keinen sicheren portablen Weg, um die Bitbreite zu bestimmen ! Besseres als das hier gibt es
+    // leider nicht ...
+    printf(" (%zu Bit) | OS: ", (CHAR_BIT * sizeof(void*)));
+
 #ifdef LINUX
     printf ("Linux");
 #elif defined(WINDOWS)
