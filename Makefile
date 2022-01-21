@@ -230,6 +230,7 @@ ifeq ($(NO_DOCUMENTATION), 1)
 else
 	@echo Documentation will be generated.
 endif
+	@echo
 	$(CC) $(CCFLAGS) -c $(MAIN_C) $(DYNAMIC_MEMORY_H) $(ALKANE_H)
 
 str2int.o: $(STR2INT_C)
