@@ -199,7 +199,7 @@ static inline void Show_Program_Details (void)
     printf ("IsomerY (Build type: ");
 #ifdef RELEASE_BUILD
     printf ("Release");
-#elif DEBUG_BUILD
+#elif defined(DEBUG_BUILD)
     printf ("Debug");
 #else
     printf (N_A);
