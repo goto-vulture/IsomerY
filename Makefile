@@ -8,7 +8,7 @@ MKDIR = mkdir
 
 # Pfad zu doxygen, falls es auf dem System vorhanden ist
 DOXYGEN = doxygen
-DOXYGEN_PATH := $(shell command -v $(DOXYGEN) 2> /dev/null)
+DOXYGEN_PATH = $(shell command -v $(DOXYGEN) 2> /dev/null)
 
 
 # Flags, die sowohl im Debug- als auch im Release-Build, verwendet werden
