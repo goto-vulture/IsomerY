@@ -93,6 +93,17 @@ do
         # echo ${MIN}
         # echo ${SEC}
 
+        if [[ -z ${MIN} ]];
+        then
+            echo "No minute output found! Maybe the programm exited abnormal (e.g. Segfault)."
+            exit 1
+        fi
+        if [[ -z ${SEC} ]];
+        then
+            echo "No second output found! Maybe the programm exited abnormal (e.g. Segfault)."
+            exit 1
+        fi
+
         # Gesamte Anzahl an Sekunden, die das Programm in diesem Durchlauf gebraucht hat, ermitteln
         SEC_TOTAL=$(awk "BEGIN {print ${SEC} + 60 * ${MIN}}")
 
