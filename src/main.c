@@ -205,6 +205,16 @@ static inline void Show_Program_Details (void)
     printf (N_A);
 #endif /* RELEASE_BUILD */
 
+    printf(" | OS: ");
+	
+#ifdef LINUX
+    printf ("Linux");
+#elif defined(WINDOWS)
+    printf ("Windows");
+#else
+    printf (N_A);
+#endif /* LINUX */
+
     printf (") Version: ");
 #ifdef VERSION
     printf ("%s\n", VERSION);

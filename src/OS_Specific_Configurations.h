@@ -28,6 +28,13 @@ extern "C"
  * Die static_asserts funktionieren aktuell nur unter Linux
  */
 #if defined(__linux__) || defined(unix) || defined(__unix__) || defined(__unix)
+
+    #ifndef LINUX
+        #define LINUX
+    #else
+        #error "The Macro \"LINUX\" is already defined !"
+    #endif /* LINUX */
+
 // Ist auf der Zielplattform ein Byte genau 8 Bit gross ?
 // Wenn nicht dann wird die Kompilierung nicht ausgefuehrt, da alle verwendeten Mechanismen davon ausgehen das dies der
 // Fall ist !
