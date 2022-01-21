@@ -213,7 +213,8 @@ extern "C"
         if (container->size >= container->allocated_size)                                                                       \
         {                                                                                                                       \
             container->allocated_size += ALLOCATION_STEP_SIZE;                                                                  \
-            container->data = (object_type*) REALLOC (container->data, container->allocated_size * container->one_object_size); \
+            container->data =                                                                                                   \
+                    (object_type*) REALLOC (container->data, (size_t)(container->allocated_size * container->one_object_size)); \
             ASSERT_ALLOC(container->data, "Try to reallocate the memory for a/an " #object_type_name " container.",             \
                     container->size * container->one_object_size)                                                               \
             memset(container->data + (container->size - ALLOCATION_STEP_SIZE), '\0',                                            \
@@ -257,7 +258,8 @@ extern "C"
         if (container->size >= container->allocated_size)                                                                       \
         {                                                                                                                       \
             container->allocated_size += ALLOCATION_STEP_SIZE;                                                                  \
-            container->data = (object_type*) REALLOC (container->data, container->allocated_size * container->one_object_size); \
+            container->data =                                                                                                   \
+                    (object_type*) REALLOC (container->data, (size_t)(container->allocated_size * container->one_object_size)); \
             ASSERT_ALLOC(container->data, "Try to reallocate the memory for a/an " #object_type_name " container.",             \
                     container->size * container->one_object_size)                                                               \
             memset(container->data + container->size, '\0',                                                                     \

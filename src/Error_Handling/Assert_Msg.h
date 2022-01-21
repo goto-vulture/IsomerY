@@ -67,12 +67,12 @@ extern "C"
  * weiss bei welcher Allokationsgroesse es Probleme gab.
  */
 #ifndef ASSERT_ALLOC
-    #define ASSERT_ALLOC(ptr, message, memory_size)                     \
-    if (ptr == NULL)                                                    \
-    {                                                                   \
-        fprintf (stderr, "Try to allocate %zu bytes !\n", memory_size); \
-        fflush (stderr);                                                \
-        ASSERT_MSG(false, message)                                      \
+    #define ASSERT_ALLOC(ptr, message, memory_size)                                 \
+    if (ptr == NULL)                                                                \
+    {                                                                               \
+        fprintf (stderr, "Try to allocate %zu bytes !\n", (size_t) memory_size);    \
+        fflush (stderr);                                                            \
+        ASSERT_MSG(false, message)                                                  \
     }
 #else
     #error "The macro \"ASSERT_ALLOC\" is already defined !"
