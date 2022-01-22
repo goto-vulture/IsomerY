@@ -6,6 +6,8 @@ DEFAULT_RUNS=5
 TOTAL_RUNS=0
 SEC_TOTAL_ADDED=0
 AVERAGE_SEC=0
+DEFAULT_NUM_C_ATOMS=10
+TOTAL_NUM_C_ATOMS=1
 
 
 
@@ -14,15 +16,22 @@ AVERAGE_SEC=0
 if [[ "$#" == 0 ]];
 then
     TOTAL_RUNS=${DEFAULT_RUNS}
-elif [[ "$#" > 1 ]];
+    TOTAL_NUM_C_ATOMS=${DEFAULT_NUM_C_ATOMS}
+elif [[ "$#" == 1 ]];
 then
-    printf "Too much CLI parameter ! 0 or 1 parameter (for the number of runs) are expected ! Got %d !\n" "$#"
-    exit 1
-else
-    printf "Used number of runs: %d\n\n" "${1}"
     TOTAL_RUNS=${1}
+    TOTAL_NUM_C_ATOMS=${DEFAULT_NUM_C_ATOMS}
+elif [[ "$#" == 2 ]];
+then
+    TOTAL_RUNS=${1}
+    TOTAL_NUM_C_ATOMS=${2}
+else
+    printf "Too much CLI parameter ! 0 - 2 parameter (for the number of runs) are expected ! Got %d !\n" "$#"
+    exit 1
 fi
 
+printf "Using %4d for the number of runs.\n" ${TOTAL_RUNS}
+printf "Using %4d for the number of c-atoms.\n\n" ${TOTAL_NUM_C_ATOMS}
 
 
 # test=0: Debug-Test
@@ -73,11 +82,11 @@ do
         # Programm starten und Zeit-Ausgabe von time sichern
         if [[ ${test} -eq 0 ]];
         then
-            PROGRAM_OUTPUT="$(time ( ./IsomerY_Debug_Linux ) 2>&1 1> /dev/null)"
+            PROGRAM_OUTPUT="$(time ( ./IsomerY_Debug_Linux -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)"
         fi
         if [[ ${test} -eq 1 ]];
         then
-            PROGRAM_OUTPUT="$(time ( ./IsomerY_Release_Linux ) 2>&1 1> /dev/null)"
+            PROGRAM_OUTPUT="$(time ( ./IsomerY_Release_Linux -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)"
         fi
 
         # "real" Zeitinformationen aus der Programmausgabe extrahieren
