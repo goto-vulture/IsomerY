@@ -9,6 +9,8 @@
 
 #include "CLI_Parameter.h"
 #include <stddef.h>
+#include <stdlib.h>
+#include "Print_Tools.h"
 
 
 
@@ -26,3 +28,21 @@ const char* const GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION = "Weitere Programmbesch
 
 // Variablen fuer die geparsten CLI-Parameter
 int GLOBAL_MAX_C_ATOMS_FOR_TESTS = 0;
+
+
+
+//---------------------------------------------------------------------------------------------------------------------
+
+void Check_CLI_Parameter_MAX_C_ATOMS_FOR_TESTS (void)
+{
+    const int max_c_atom_for_tests = 14;
+
+    if (GLOBAL_MAX_C_ATOMS_FOR_TESTS > max_c_atom_for_tests)
+    {
+        FPRINTF_FFLUSH(stderr, "Too much c atoms for the tests ! Current maximum: %d\n", max_c_atom_for_tests)
+        exit(1);
+    }
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------

@@ -32,6 +32,11 @@ extern int GLOBAL_MAX_C_ATOMS_FOR_TESTS;
 
 
 
+// Testfunktionen fur die uebergebenen CLI-Parameter
+extern void Check_CLI_Parameter_MAX_C_ATOMS_FOR_TESTS (void);
+
+
+
 // ENDE C++-Kompablitaet herstellen
 #ifdef __cplusplus
 }

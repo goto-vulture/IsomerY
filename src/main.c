@@ -147,6 +147,7 @@ int main (const int argc, const char* argv [])
     if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
     {
         printf ("Anzahl an C-Atome fuer die Tests: %d\n", GLOBAL_MAX_C_ATOMS_FOR_TESTS);
+        Check_CLI_Parameter_MAX_C_ATOMS_FOR_TESTS();
     }
     if (new_argc != 0)
     {
