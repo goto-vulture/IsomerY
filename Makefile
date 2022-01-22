@@ -181,6 +181,9 @@ ASSERT_MSG_H = ./src/Error_Handling/Assert_Msg.h
 
 BEAUTIFUL_H = ./src/Beautiful.h
 BEAUTIFUL_C = ./src/Beautiful.c
+
+ARGPARSE_H = ./src/argparse.h
+ARGPARSE_C = ./src/argparse.c
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
 
 
@@ -203,11 +206,11 @@ endif
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o
+$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -273,6 +276,9 @@ Path_Data_Container.o: $(PATH_DATA_CONAINER_C)
 
 Beautiful.o: $(BEAUTIFUL_C)
 	$(CC) $(CCFLAGS) -c $(BEAUTIFUL_C)
+
+argparse.o: $(ARGPARSE_C)
+	$(CC) $(CCFLAGS) -c $(ARGPARSE_C)
 ##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen
