@@ -103,6 +103,8 @@
 #include "str2int.h"
 #include "Print_Tools.h"
 #include "Beautiful.h"
+#include "argparse.h"
+#include "CLI_Parameter.h"
 
 
 
@@ -123,10 +125,39 @@ static inline void Show_Program_Details (void);
  *
  * @return 0 bei erfolgreicher Ausfuehrung; Ansonsten != 0
  */
-int main (const int argc, const char* const argv [])
+int main (const int argc, const char* argv [])
 {
-    (void) argc;
-    (void) argv;
+    // ===== ===== ===== BEGINN CLI-Parameter parsen ===== ===== =====
+    struct argparse_option cli_options [] =
+    {
+            OPT_HELP(),
+
+            OPT_GROUP("Hauptfunktionen"),
+            OPT_INTEGER('c', "num_c", &GLOBAL_MAX_C_ATOMS_FOR_TESTS,
+                    "Anzahl an C-Atome, die fuer die Tests verwendet werden sollen", NULL, 0, 0),
+
+            OPT_END()
+    };
+
+    struct argparse argparse_object;
+    argparse_init(&argparse_object, cli_options, GLOBAL_USAGES, 0);
+    argparse_describe(&argparse_object, GLOBAL_PROGRAM_DESCRIPTION, GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION);
+    const int new_argc = argparse_parse(&argparse_object, argc, argv);
+
+    if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
+    {
+        printf ("Anzahl an C-Atome fuer die Tests: %d\n", GLOBAL_MAX_C_ATOMS_FOR_TESTS);
+    }
+    if (new_argc != 0)
+    {
+        printf ("argc: %d\n", new_argc);
+        for (int i = 0; i < new_argc; ++ i)
+        {
+            printf("argv [%d]: %s\n", i, *(argv + i));
+        }
+    }
+    // ===== ===== ===== ENDE CLI-Parameter parsen ===== ===== =====
+
 
     // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
     (void) str2int;
