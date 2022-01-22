@@ -66,9 +66,9 @@ argparse_getvalue(struct argparse *self, const struct argparse_option *opt,
         break;
     case ARGPARSE_OPT_BIT:
         if (flags & OPT_UNSET) {
-            *(int *)opt->value &= ~opt->data;
+            *(int *)opt->value &= (int) (~opt->data);
         } else {
-            *(int *)opt->value |= opt->data;
+            *(int *)opt->value |= (int) opt->data;
         }
         break;
     case ARGPARSE_OPT_STRING:
@@ -85,11 +85,11 @@ argparse_getvalue(struct argparse *self, const struct argparse_option *opt,
     case ARGPARSE_OPT_INTEGER:
         errno = 0;
         if (self->optvalue) {
-            *(int *)opt->value = strtol(self->optvalue, (char **)&s, 0);
+            *(int *)opt->value = (int) strtol(self->optvalue, (char **)&s, 0);
             self->optvalue     = NULL;
         } else if (self->argc > 1) {
             self->argc--;
-            *(int *)opt->value = strtol(*++self->argv, (char **)&s, 0);
+            *(int *)opt->value = (int) strtol(*++self->argv, (char **)&s, 0);
         } else {
             argparse_error(self, opt, "requires a value", flags);
         }
@@ -113,6 +113,10 @@ argparse_getvalue(struct argparse *self, const struct argparse_option *opt,
             argparse_error(self, opt, "numerical result out of range", flags);
         if (s[0] != '\0') // no digits or contains invalid characters
             argparse_error(self, opt, "expects a numerical value", flags);
+        break;
+    case ARGPARSE_OPT_END:
+        break;
+    case ARGPARSE_OPT_GROUP:
         break;
     default:
         assert(0);
@@ -245,6 +249,8 @@ argparse_parse(struct argparse *self, int argc, const char **argv)
                 break;
             case -2:
                 goto unknown;
+            default:
+                (void) 0; // Empty ... (To avoid "-Wswitch-default" warning)
             }
             while (self->optvalue) {
                 switch (argparse_short_opt(self, self->options)) {
@@ -252,6 +258,8 @@ argparse_parse(struct argparse *self, int argc, const char **argv)
                     break;
                 case -2:
                     goto unknown;
+                default:
+                    (void) 0; // Empty ... (To avoid "-Wswitch-default" warning)
                 }
             }
             continue;
@@ -268,20 +276,22 @@ argparse_parse(struct argparse *self, int argc, const char **argv)
             break;
         case -2:
             goto unknown;
+        default:
+            (void) 0; // Empty ... (To avoid "-Wswitch-default" warning)
         }
         continue;
 
 unknown:
         fprintf(stderr, "error: unknown option `%s`\n", self->argv[0]);
         argparse_usage(self);
-        if (!self->flags & ARGPARSE_IGNORE_UNKNOWN_ARGS) {
+        if (!(self->flags & ARGPARSE_IGNORE_UNKNOWN_ARGS)) {
             exit(EXIT_FAILURE);
         }
     }
 
 end:
     memmove(self->out + self->cpidx, self->argv,
-            self->argc * sizeof(*self->out));
+            (size_t) self->argc * sizeof(*self->out));
     self->out[self->cpidx + self->argc] = NULL;
 
     return self->cpidx + self->argc;
@@ -346,22 +356,22 @@ argparse_usage(struct argparse *self)
             fputc('\n', stdout);
             continue;
         }
-        pos = fprintf(stdout, "    ");
+        pos = (size_t) fprintf(stdout, "    ");
         if (options->short_name) {
-            pos += fprintf(stdout, "-%c", options->short_name);
+            pos += (size_t) fprintf(stdout, "-%c", options->short_name);
         }
         if (options->long_name && options->short_name) {
-            pos += fprintf(stdout, ", ");
+            pos += (size_t) fprintf(stdout, ", ");
         }
         if (options->long_name) {
-            pos += fprintf(stdout, "--%s", options->long_name);
+            pos += (size_t) fprintf(stdout, "--%s", options->long_name);
         }
         if (options->type == ARGPARSE_OPT_INTEGER) {
-            pos += fprintf(stdout, "=<int>");
+            pos += (size_t) fprintf(stdout, "=<int>");
         } else if (options->type == ARGPARSE_OPT_FLOAT) {
-            pos += fprintf(stdout, "=<flt>");
+            pos += (size_t) fprintf(stdout, "=<flt>");
         } else if (options->type == ARGPARSE_OPT_STRING) {
-            pos += fprintf(stdout, "=<str>");
+            pos += (size_t) fprintf(stdout, "=<str>");
         }
         if (pos <= usage_opts_width) {
             pad = usage_opts_width - pos;
