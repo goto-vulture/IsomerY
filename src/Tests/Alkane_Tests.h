@@ -92,6 +92,24 @@ extern void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void);
 extern void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void);
 
 /**
+ * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
+ * Methan keinen Sinn ergibt.
+ */
+extern void TEST_All_Possible_Methan_Constitutional_Isomers (void);
+
+/**
+ * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
+ * Ethan keinen Sinn ergibt.
+ */
+extern void TEST_All_Possible_Ethan_Constitutional_Isomers (void);
+
+/**
+ * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
+ * Propan keinen Sinn ergibt.
+ */
+extern void TEST_All_Possible_Propan_Constitutional_Isomers (void);
+
+/**
  * @brief Alle moeglichen Konstitutionsisomere des Butan mit IUPAC-Namen erzeugen.
  *
  * Dabei werden die IUPAC-Namen kontrolliert.

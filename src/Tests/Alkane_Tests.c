@@ -23,6 +23,7 @@
 #include "../Print_Tools.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Error_Handling/Assert_Msg.h"
+#include "../CLI_Parameter.h"
 
 
 
@@ -97,32 +98,39 @@ extern int                          // 0, falls alle Tests erfolgreich waren; -1
 Execute_All_Alkane_Tests
 (void)
 {
+    // Alle Testfunktionen fuer die Alkanerzeugung
+    void (*test_functions_consitutional_isomer_creation []) (void) =
+    {
+            TEST_All_Possible_Methan_Constitutional_Isomers,
+            TEST_All_Possible_Ethan_Constitutional_Isomers,
+            TEST_All_Possible_Propan_Constitutional_Isomers,
+            TEST_All_Possible_Butan_Constitutional_Isomers,
+            TEST_All_Possible_Pentan_Constitutional_Isomers,
+            TEST_All_Possible_Hexan_Constitutional_Isomers,
+            TEST_All_Possible_Heptan_Constitutional_Isomers,
+            TEST_All_Possible_Octan_Constitutional_Isomers,
+            TEST_All_Possible_Nonan_Constitutional_Isomers,
+            TEST_All_Possible_Decan_Constitutional_Isomers,
+
+            TEST_All_Possible_Undecan_Constitutional_Isomers,
+            TEST_All_Possible_Dodecan_Constitutional_Isomers,
+            TEST_All_Possible_Tridecan_Constitutional_Isomers,
+            TEST_All_Possible_Tetradecan_Constitutional_Isomers
+    };
+
     // Alkan-Tests ausfuehren
-    RUN(TEST_Create_Alkane_Constitutional_Isomers);
-    RUN(TEST_Create_Alkane);
-    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
-    RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
-    RUN(TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects);
-    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+//    RUN(TEST_Create_Alkane_Constitutional_Isomers);
+//    RUN(TEST_Create_Alkane);
+//    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
+//    RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
+//    RUN(TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects);
+//    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
 
-    RUN(TEST_All_Possible_Butan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Pentan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Hexan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Heptan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Octan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Nonan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Decan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Undecan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Dodecan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Tridecan_Constitutional_Isomers);
-    RUN(TEST_All_Possible_Tetradecan_Constitutional_Isomers);
+    // Diese Variable dient nur dazu die Zeichenkette bei den Ausgaben in der Testbibliothek zu verkuerzen
+    const int index = GLOBAL_MAX_C_ATOMS_FOR_TESTS;
 
-    // Um unused-Warnungen beim Programm Cppcheck zu vermeiden
-    (void) TEST_All_Possible_Decan_Constitutional_Isomers;
-    (void) TEST_All_Possible_Undecan_Constitutional_Isomers;
-    (void) TEST_All_Possible_Dodecan_Constitutional_Isomers;
-    (void) TEST_All_Possible_Tridecan_Constitutional_Isomers;
-    (void) TEST_All_Possible_Tetradecan_Constitutional_Isomers;
+    // Testfunktion aufrufen
+    RUN(test_functions_consitutional_isomer_creation[index-1]);
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
@@ -398,6 +406,48 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     Delete_Alkane_Branch (branch_1);
     Delete_Alkane_Branch (branch_2);
     Delete_Alkane_Branch (branch_3);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
+ * Methan keinen Sinn ergibt.
+ */
+void TEST_All_Possible_Methan_Constitutional_Isomers (void)
+{
+    puts("Empty test function.");
+    ASSERT_EQUALS(0, 0);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
+ * Ethan keinen Sinn ergibt.
+ */
+void TEST_All_Possible_Ethan_Constitutional_Isomers (void)
+{
+    puts("Empty test function.");
+    ASSERT_EQUALS(0, 0);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
+ * Propan keinen Sinn ergibt.
+ */
+void TEST_All_Possible_Propan_Constitutional_Isomers (void)
+{
+    puts("Empty test function.");
+    ASSERT_EQUALS(0, 0);
 
     return;
 }
@@ -852,6 +902,12 @@ Execute_Creation_Test_With_Expected_Results
         const size_t number_of_expected_results                 // Anzahl an erwarteten Loesungen
 )
 {
+    // Bei weniger als 4 C-Atome existieren - bis auf eine gerade Verbindung - keine weiteren Isomere
+    if (number_of_c_atoms < 4)
+    {
+        return;
+    }
+
     // Alle Alkane erzeugen
     struct Alkane_Container* all_alkanes = Create_Alkane_Constitutional_Isomers (number_of_c_atoms);
 
