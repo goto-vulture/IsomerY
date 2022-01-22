@@ -33,6 +33,9 @@ int GLOBAL_MAX_C_ATOMS_FOR_TESTS = 0;
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/*
+ * Testfunktion fuer die Anzahl an C-Atomen, die bei den Tests verwendet werden.
+ */
 void Check_CLI_Parameter_MAX_C_ATOMS_FOR_TESTS (void)
 {
     const int max_c_atom_for_tests = 14;

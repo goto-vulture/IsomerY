@@ -20,19 +20,24 @@ extern "C"
 
 
 
-extern const char* const GLOBAL_USAGES [];
+extern const char* const GLOBAL_USAGES []; ///< Beschreibung ueber die Verwendung des CLI Interfaces
 
-extern const char* const GLOBAL_PROGRAM_DESCRIPTION;
-extern const char* const GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION;
+extern const char* const GLOBAL_PROGRAM_DESCRIPTION; ///< Allgemeine Programmbeschreibung
+extern const char* const GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION; ///< Zusaetzliche Programmbeschreibung
 
 
 
 // Variablen fuer die geparsten CLI-Parameter
+/**
+ * @brief CLI-Parameter: Anzahl an C-Atomen, die bei den Tests verwendet werden sollen
+ */
 extern int GLOBAL_MAX_C_ATOMS_FOR_TESTS;
 
 
 
-// Testfunktionen fur die uebergebenen CLI-Parameter
+/**
+ * @brief Testfunktion fuer die Anzahl an C-Atomen, die bei den Tests verwendet werden.
+ */
 extern void Check_CLI_Parameter_MAX_C_ATOMS_FOR_TESTS (void);
 
 
