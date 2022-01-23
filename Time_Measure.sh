@@ -3,16 +3,20 @@
 # Insgesamt wird das Programm mehrfach im Debug und Release-Modus ausgefuehrt und der Mittelwert berechnet
 
 DEFAULT_RUNS=5
+DEFAULT_NUM_C_ATOMS=10
+
 TOTAL_RUNS=0
+TOTAL_NUM_C_ATOMS=0
+
 SEC_TOTAL_ADDED=0
 AVERAGE_SEC=0
-DEFAULT_NUM_C_ATOMS=10
-TOTAL_NUM_C_ATOMS=1
-
 
 
 # CLI-Parameter abfragen - falls vorhanden
-# Falls keine Parameter vorhanden sind, wird der DEFAULT_RUNS Wert verwendet
+# Falls keine Parameter vorhanden sind, werden die Standard-Werte verwendet
+#
+# 1. CLI-Parameter: Anzahl an Testdurchlaeufe des Programms
+# 2. CLI-Parameter: Anzahl der C-Atome, die fuer die Isomererstellung verwendet werden sollen
 if [[ "$#" == 0 ]];
 then
     TOTAL_RUNS=${DEFAULT_RUNS}
@@ -49,6 +53,7 @@ do
     # Programm vor Zeitmessung ohne Dokumentation neu uebersetzen
     make clean 1>> /dev/null
 
+    # Debug-Tests
     if [[ ${test} -eq 0 ]];
     then
         echo -n "Compile Debug version (-j 1) ..."
@@ -61,6 +66,8 @@ do
         time make -j Debug=1 NO_DOCUMENTATION=1 1> /dev/null
         printf "Done !\n\n"
     fi
+
+    # Release-Tests
     if [[ ${test} -eq 1 ]];
     then
         echo -n "Compile Release version (-j 1) ..."
@@ -102,6 +109,8 @@ do
         # echo ${MIN}
         # echo ${SEC}
 
+        # Sind Zeitinformationen nach den Testdurchlaeufen vorhanden ?
+        # In Ausnahmefaellen kommen keine Werte zustande
         if [[ -z ${MIN} ]];
         then
             echo "No minute output found! Maybe the programm exited abnormal (e.g. Segfault)."
