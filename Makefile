@@ -112,7 +112,9 @@ endif
 ifeq ($(NO_DOCUMENTATION), 1)
 	NO_DOCUMENTATION = 1
 endif
-
+ifeq ($(NO_DOCU), 1)
+	NO_DOCUMENTATION = 1
+endif
 
 
 # Unter Windows wird u.a. das Flag "-Wno-pedantic-ms-format" benoetigt, da die MinGW Implementierung nicht standardkonforme
