@@ -81,7 +81,9 @@ ADDITIONAL_LINUX_FLAGS = -fstack-protector -Wl,-z,relro -Wl,-z,now -Wformat-secu
 # -D__USE_MINGW_ANSI_STDIO=1: Standardmaessig ist der Formatstring "%z" fuer size_t Variablen abgeschaltet (warum auch immer) ...
 #                             Dieses Flag schaltet das Element ein, sodass size_t Variablen richtig ausgegeben werden koennen
 #                             Siehe: https://lists.gnu.org/archive/html/bug-gnulib/2014-09/msg00056.html
-ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format -D__USE_MINGW_ANSI_STDIO=1 -fstack-protector -Wformat-security
+# Unter Windows fuehrt die Erzeugung des Stack-Protektors zu Segmentation Faults beim Aufruf von Funktionen (also wirklich
+# WAEHREND des Aufrufes ! -> wird unter Windows nicht mehr verwendet.)
+ADDITIONAL_WINDOWS_FLAGS = -Wno-pedantic-ms-format -D__USE_MINGW_ANSI_STDIO=1 -Wformat-security # -fstack-protector
 
 # Der Debug-Build ist die Standardvariante, wenn nichts anderes angegeben wurde
 # Fuer den Release-Build muss die Variable "Release", "RELEASE" oder "release" auf 1 gesetzt werden
