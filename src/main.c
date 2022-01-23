@@ -143,6 +143,20 @@ int main (const int argc, const char* argv [])
     argparse_init(&argparse_object, cli_options, GLOBAL_USAGES, 0);
     argparse_describe(&argparse_object, GLOBAL_PROGRAM_DESCRIPTION, GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION);
     const int new_argc = argparse_parse(&argparse_object, argc, argv);
+    
+    // Wurden ueberhaupt ausreichend CLI-Parameter uebergeben ?
+    if (argc < 2)
+    {
+        puts ("Missing CLI parameter !");
+        int current_string = 0;
+        while (GLOBAL_USAGES [current_string] != NULL)
+        {
+            printf ("%s\n", GLOBAL_USAGES [current_string]);
+            ++ current_string;
+        }
+        fflush(stdout);
+        exit(1);
+    }
 
     if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
     {
