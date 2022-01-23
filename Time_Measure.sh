@@ -90,10 +90,19 @@ do
         if [[ ${test} -eq 0 ]];
         then
             PROGRAM_OUTPUT="$(time ( ./IsomerY_Debug_Linux -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)"
+            last_call=${?}
         fi
         if [[ ${test} -eq 1 ]];
         then
             PROGRAM_OUTPUT="$(time ( ./IsomerY_Release_Linux -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)"
+            last_call=${?}
+        fi
+        
+        # Ist das Testprogramm normal beendet worden ?
+        if [[ ${last_call} -ne 0 ]];
+        then
+            echo "In the last program call the program exits abnormal! (With return value: ${last_call})"
+            exit 1
         fi
 
         # "real" Zeitinformationen aus der Programmausgabe extrahieren
