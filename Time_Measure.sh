@@ -85,16 +85,39 @@ do
     for (( i=0; i<${TOTAL_RUNS}; i++ ))
     do
         printf "===== Program run %4d / %4d =====\n" $(( ${i} + 1 )) ${TOTAL_RUNS}
+        PROG_NAME=""
 
         # Programm starten und Zeit-Ausgabe von time sichern
         if [[ ${test} -eq 0 ]];
         then
-            PROGRAM_OUTPUT="$(time ( ./IsomerY_Debug_Linux -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)"
+            # Linux oder Windows ?
+            if [[ -e "./IsomerY_Debug_Win" ]];
+            then
+                PROG_NAME="./IsomerY_Debug_Win"
+            elif [[ -e "./IsomerY_Debug_Linux" ]];
+            then
+                PROG_NAME="./IsomerY_Debug_Linux"
+            else
+                echo "No debug program file found !"
+                exit 1
+            fi
+            PROGRAM_OUTPUT=$(time ( ${PROG_NAME} -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)
             last_call=${?}
         fi
         if [[ ${test} -eq 1 ]];
         then
-            PROGRAM_OUTPUT="$(time ( ./IsomerY_Release_Linux -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)"
+            # Linux oder Windows ?
+            if [[ -e "./IsomerY_Release_Win" ]];
+            then
+                PROG_NAME="./IsomerY_Release_Win"
+            elif [[ -e "./IsomerY_Release_Linux" ]];
+            then
+                PROG_NAME="./IsomerY_Release_Linux"
+            else
+                echo "No release program file found !"
+                exit 1
+            fi
+            PROGRAM_OUTPUT=$(time ( ${PROG_NAME} -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)
             last_call=${?}
         fi
         
