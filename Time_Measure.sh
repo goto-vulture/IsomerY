@@ -129,7 +129,7 @@ do
         fi
 
         # "real" Zeitinformationen aus der Programmausgabe extrahieren
-        TIME_INFO=$(echo ${PROGRAM_OUTPUT} | grep --extended-regexp --only-matching "real[[:blank:]]{1}[[:digit:]]{1,}m[[:digit:]]{1,2}\,[[:digit:]]{3}s")
+        TIME_INFO=$(echo ${PROGRAM_OUTPUT} | grep --extended-regexp --only-matching "real[[:blank:]]{1}[[:digit:]]{1,}m[[:digit:]]{1,2}(\.|\,)[[:digit:]]{3}s")
 
         # Zeitinformationen an Leerzeichen aufspalten
         SPLITTED_TIME_INFO=($TIME_INFO)
