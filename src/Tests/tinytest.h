@@ -102,6 +102,15 @@ extern "C"
 #endif /* RUN */
 
 /**
+ * @brief Test-Funktion (mit manueller Zeichenkette als Funktionsname) starten.
+ */
+#ifndef RUN_2
+#define RUN_2(test_function, manual_test_function_name) tt_execute((manual_test_function_name), (test_function))
+#else
+#error "The macro \"RUN_2\" is already defined !"
+#endif /* RUN_2 */
+
+/**
  * @brief Bericht aller bisher stattgefundenen Asserts ausgeben.
  */
 #ifndef TEST_REPORT
