@@ -113,13 +113,16 @@ endif
 
 # Soll die Dokumentation mittels Doxygen erzeugt werden ? Die Erzeugung der Dokumentation benoetigt mit Abstand die meiste
 # Zeit bei der Erstellung des Programms
+# "NO_DOCUMENTATION", "NO_DOCU", "NO_DOCS": Alle CLI-Parameter schalten die Erzeugung der Doxygen-Dokumentation ab
 ifeq ($(NO_DOCUMENTATION), 1)
 	NO_DOCUMENTATION = 1
 endif
 ifeq ($(NO_DOCU), 1)
 	NO_DOCUMENTATION = 1
 endif
-
+ifeq ($(NO_DOCS), 1)
+	NO_DOCUMENTATION = 1
+endif
 
 # Unter Windows wird u.a. das Flag "-Wno-pedantic-ms-format" benoetigt, da die MinGW Implementierung nicht standardkonforme
 # Formatstrings verwendet. Mit diesem Compilerflag wird die Warnung, dass die MinGW Formatstrings nicht dem Standard
