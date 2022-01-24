@@ -2,6 +2,9 @@
 # Einfaches Messen der Ausfuehrungszeit mittels des time-Befehls
 # Insgesamt wird das Programm mehrfach im Debug und Release-Modus ausgefuehrt und der Mittelwert berechnet
 
+# Wichtig, damit das Trennzeichen bei Gleitkommazahlen immer ein Kommata ist !
+LC_NUMERIC="de_DE.UTF-8"
+
 DEFAULT_RUNS=5
 DEFAULT_NUM_C_ATOMS=10
 
