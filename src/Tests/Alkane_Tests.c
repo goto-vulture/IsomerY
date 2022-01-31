@@ -65,6 +65,9 @@ Compare_Strings_Case_Insensitive
 /**
  * Ueberpruefung, ob der uebergebene IUPAC-Name in den erwarteten Loesungen vorkommt. Die Zeichenketten werden OHNE
  * Beachtung der Gross- und Kleinschreibung miteinander verglichen.
+ *
+ * Von der Funktionalitaet stellt die Funktion "strncasecmp" aus der Standard-Lib das gleiche zur Verfuegung. Allerdings
+ * ist dies eine GNU-Erweiterung und deren Verwendung macht den Code u.U. nicht mehr portabel. -> NICHT VERWENDEN !
  */
 static _Bool                                            // true, falls der IUPAC-Name in den erwarteten Loesungen
                                                         // vorkommt, ansonsten false
@@ -859,6 +862,9 @@ Compare_Strings_Case_Insensitive
 /**
  * Ueberpruefung, ob der uebergebene IUPAC-Name in den erwarteten Loesungen vorkommt. Die Zeichenketten werden OHNE
  * Beachtung der Gross- und Kleinschreibung miteinander verglichen.
+ *
+ * Von der Funktionalitaet stellt die Funktion "strncasecmp" aus der Standard-Lib das gleiche zur Verfuegung. Allerdings
+ * ist dies eine GNU-Erweiterung und deren Verwendung macht den Code u.U. nicht mehr portabel. -> NICHT VERWENDEN !
  */
 static _Bool                                            // true, falls der IUPAC-Name in den erwarteten Loesungen
                                                         // vorkommt, ansonsten false
