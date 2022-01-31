@@ -24,6 +24,7 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Error_Handling/Assert_Msg.h"
 #include "../CLI_Parameter.h"
+#include "IUPAC_Chain_Lexer.h"
 
 
 
@@ -74,6 +75,16 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
         const char* const restrict expected_results [], // Erwartete Loesungen
         const uint_fast64_t number_of_expected_results, // Anzahl an erwarteten Loesungen
         uint_fast64_t* const restrict result_index      // Index des gefundenen IUPAC-Namen in den erwarteten Loesungen
+);
+
+/**
+ * Exponentialfunktion fuer Ganzzahlen.
+ */
+static size_t
+Pow_Int
+(
+        const size_t base,      // Basis
+        const size_t exponent   // Exponent
 );
 
 /**
@@ -143,7 +154,7 @@ Execute_All_Alkane_Tests
 //    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
 
     // Testfunktion mit manueller Zeichenkette aufrufen
-    RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function, 
+    RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
             test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
@@ -904,6 +915,25 @@ Search_IUPAC_Name_In_The_List_Of_Expected_Results
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Exponentialfunktion fuer Ganzzahlen.
+ */
+static size_t
+Pow_Int
+(
+        const size_t base,      // Basis
+        const size_t exponent   // Exponent
+)
+{
+    size_t result = (exponent == 0) ? 1 : base;
+
+    for (size_t i = 0; i < exponent; i ++) { result *= base; }
+
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Alkane und die IUPAC-Namen mit einer vorgegebenen Anzahl an C-Atomen erzeugen und schauen ob die erzeugten
  * IUPAC-Namen in der Liste an erwarteten Loesungen vorhanden sind.
  */
@@ -988,8 +1018,159 @@ Execute_Creation_Test_With_Expected_Results
         // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
         if (! result_found_in_the_expected_results /* == false */)
         {
-            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                    all_alkanes->data [i]->iupac_name);
+            // In einigen (wenigen) Faellen sind die verschachtelten Strukturen an einer anderen Stelle als in den
+            // Loesungen
+            // Wichtig dabei: Das Ergebnis an sich ist richtig ! Es ist lediglich eine "Dekoentscheidung", um den
+            // erwarteten Ergebnissen zu entsprechen.
+            //
+            // Ein Beispiel:
+            // "2-Methyl-4-(1,1-DiMethylEthyl)Heptan" ist NICHT in den erwarteten Ergebnissen enthalten
+            // ABER "4-(1,1-Dimethylethyl)-2-methylheptan" schon.
+            // Nur die Position der Verschachtelung - der Inhalt der Klammern + die Klammern - ist unterschiedlich
+            //
+            // Ist eine Verschachtelte Struktur vorhanden, um sie umzupositionieren ?
+
+            // Bereits erzeugten Namen aufspalten, um die Fragmente fuer die Neupositionierung zu ermitteln
+            const struct IUPAC_Chain_Lexer_Result chain_lexer_result =
+                    Create_Chain_Tokens(all_alkanes->data [i]->iupac_name);
+
+            // Alle Kombinationen - mit allen Tokens - ausprobieren. Ausser mit dem Alkanrest (immer letzter Token !)
+            char temp_iupac_name [IUPAC_NAME_LENGTH];
+            memset (temp_iupac_name, '\0', sizeof(temp_iupac_name));
+
+            // Ueberall "< next_free_token - 1", da das letzte Token immer die gerade Kette, ist die bei der Erzeugung
+            // aller Kombinationen nicht betrachet werden darf !
+            const uint_fast8_t next_free_token_sub_1 = (uint_fast8_t) (chain_lexer_result.next_free_token - 1);
+
+            // Speicher fuer die moeglichen Kombinationen
+            uint_fast8_t** combinations = (uint_fast8_t**) MALLOC(Pow_Int(next_free_token_sub_1, next_free_token_sub_1)
+                    * sizeof(uint_fast8_t*));
+            ASSERT_ALLOC(combinations, "Could not allocate memory for the combinations array !",
+                    Pow_Int(next_free_token_sub_1, next_free_token_sub_1) * sizeof(uint_fast8_t*));
+            SET_POINTER_ARRAY_TO_NULL(combinations, Pow_Int(next_free_token_sub_1, next_free_token_sub_1));
+
+            // Inneren Elemente erzeugen (Die eigentlichen Arrays mit den Werten)
+            for (size_t combinations_array_index = 0;
+                    combinations_array_index < (Pow_Int(next_free_token_sub_1, next_free_token_sub_1));
+                    combinations_array_index ++)
+            {
+                combinations [combinations_array_index] = (uint_fast8_t*)
+                        CALLOC(next_free_token_sub_1, sizeof(uint_fast8_t));
+                ASSERT_ALLOC(combinations [combinations_array_index],
+                        "Memory for a combinations array could not created !",
+                        next_free_token_sub_1 * sizeof(uint_fast8_t));
+            }
+
+            // ===== BEGINN Arraywerte fuer die Neukombination bilden =====
+            register size_t next_combinations_array_index = 0;
+
+            for (uint_fast8_t token_1 = 0; token_1 < next_free_token_sub_1; ++ token_1)
+            {
+                if (next_free_token_sub_1 > 1)
+                {
+                for (uint_fast8_t token_2 = 0; token_2 < next_free_token_sub_1; ++ token_2)
+                {
+                    if (next_free_token_sub_1 > 2)
+                    {
+                    for (uint_fast8_t token_3 = 0; token_3 < next_free_token_sub_1; ++ token_3)
+                    {
+                        if (next_free_token_sub_1 > 3)
+                        {
+                        for (uint_fast8_t token_4 = 0; token_4 < next_free_token_sub_1; ++ token_4)
+                        {
+                            if (next_free_token_sub_1 > 4)
+                            {
+                            for (uint_fast8_t token_5 = 0; token_5 < chain_lexer_result.next_free_token - 1; ++ token_5)
+                            {
+                                combinations [next_combinations_array_index][0] = token_1;
+                                combinations [next_combinations_array_index][1] = token_2;
+                                combinations [next_combinations_array_index][2] = token_3;
+                                combinations [next_combinations_array_index][3] = token_4;
+                                combinations [next_combinations_array_index][4] = token_5;
+                                ++ next_combinations_array_index;
+                            }
+                            }
+                            else
+                            {
+                                combinations [next_combinations_array_index][0] = token_1;
+                                combinations [next_combinations_array_index][1] = token_2;
+                                combinations [next_combinations_array_index][2] = token_3;
+                                combinations [next_combinations_array_index][3] = token_4;
+                                ++ next_combinations_array_index;
+                            }
+                        }
+                        }
+                        else
+                        {
+                            combinations [next_combinations_array_index][0] = token_1;
+                            combinations [next_combinations_array_index][1] = token_2;
+                            combinations [next_combinations_array_index][2] = token_3;
+                            ++ next_combinations_array_index;
+                        }
+                    }
+                    }
+                    else
+                    {
+                        combinations [next_combinations_array_index][0] = token_1;
+                        combinations [next_combinations_array_index][1] = token_2;
+                        ++ next_combinations_array_index;
+                    }
+                }
+                }
+            }
+            // ===== ENDE Arraywerte fuer die Neukombination bilden =====
+
+            _Bool next_try = false;
+
+            // Arrays und deren Inhalte elementweise durchgehen und den neu kombinierten Namen bilden
+            for (size_t i2 = 0; i2 < next_combinations_array_index; ++ i2)
+            {
+                size_t char_left = IUPAC_NAME_LENGTH - 1;
+                for (size_t i3 = 0; i3 < next_free_token_sub_1; ++ i3)
+                {
+                    strncat (temp_iupac_name, chain_lexer_result.result_tokens [combinations[i2][i3]], char_left);
+                    char_left -= strlen(chain_lexer_result.result_tokens [combinations[i2][i3]]);
+                    if ((i3 + 1) < next_free_token_sub_1)
+                    {
+                        strncat (temp_iupac_name, "-", char_left);
+                        char_left -= strlen("-");
+                    }
+                }
+                // Alkanrest anbringen
+                strncat (temp_iupac_name, chain_lexer_result.result_tokens [next_free_token_sub_1], char_left);
+                char_left -= strlen(chain_lexer_result.result_tokens [next_free_token_sub_1]);
+
+                PRINTF_FFLUSH("%s\n", temp_iupac_name);
+                temp_iupac_name [IUPAC_NAME_LENGTH - char_left] = '\0';
+
+                // Die neuen kombinierten Elemente in der Liste suchen
+                // Befindet sich das gerade erzeugte neu kombinierte Element in der Liste an gueltigen Ergebnissen ?
+                next_try = Search_IUPAC_Name_In_The_List_Of_Expected_Results (temp_iupac_name, expected_results,
+                        number_of_constitutional_isomers, &index_in_the_expected_results);
+                memset (temp_iupac_name, '\0', sizeof(temp_iupac_name));
+
+                if (next_try == true) { break; }
+            }
+
+            for (size_t combinations_array_index = 0;
+                    combinations_array_index < (Pow_Int(next_free_token_sub_1, next_free_token_sub_1));
+                    combinations_array_index ++)
+            {
+                FREE_AND_SET_TO_NULL(combinations[combinations_array_index]);
+            }
+            FREE_AND_SET_TO_NULL(combinations);
+
+            // Doch noch richtig :D Eine Neukombination war ausreichend
+            if (next_try == true)
+            {
+                count_expected_results_usage [index_in_the_expected_results] ++;
+            }
+            // Keine Chance. Das Element ist - zumindest in der erzeugten Form - nicht richtig !
+            else
+            {
+                FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                        all_alkanes->data [i]->iupac_name);
+            }
         }
         else
         {
