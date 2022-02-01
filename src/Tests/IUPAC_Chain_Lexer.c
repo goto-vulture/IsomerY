@@ -3,6 +3,8 @@
  *
  * @brief Einfacher Lexer, um IUPAC-Namen an den Grenzen der Ketten (OHNE Beachtung von Verschachtelungen) zu trennen.
  *
+ * Funktional ist der Aufbau sehr einfach. Zustandsfunktionen, die direkt oder indirekt rekursiv aufgerufen werden.
+ *
  * Aufbau des Lexers:
  *
  *
@@ -22,7 +24,9 @@
 
 
 
-
+/**
+ * Rekursiv verwendete Zustaende des Lexers.
+ */
 static void Next_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data);
 static void Safe_Split_Char_Found (struct IUPAC_Chain_Lexer_Result* const lexer_data);
 static void Possible_Split_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data);
@@ -31,6 +35,9 @@ static void End_Char_Found (struct IUPAC_Chain_Lexer_Result* const lexer_data);
 
 //=====================================================================================================================
 
+/**
+ * Lexter mit der Originalzeichenkette starten.
+ */
 struct IUPAC_Chain_Lexer_Result Create_Chain_Tokens (const char* const iupac_name)
 {
     struct IUPAC_Chain_Lexer_Result result;

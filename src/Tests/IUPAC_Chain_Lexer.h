@@ -37,16 +37,32 @@ extern "C"
 
 
 
+/**
+ * @brief Datenobjekt, welches fuer die Verwendung des Lexers verwendet wird. Im Objekt sind die Ergebnisse enthalten.
+ */
 struct IUPAC_Chain_Lexer_Result
 {
-    char result_tokens [MAX_NUMBER_OF_NESTING_DEPTH][IUPAC_NAME_LENGTH];
-    uint_fast8_t next_free_token;
+    char result_tokens [MAX_NUMBER_OF_NESTING_DEPTH][IUPAC_NAME_LENGTH];    ///< Ergebnisse
+    uint_fast8_t next_free_token;                                           ///< Nachestes freies Token
+    /**
+     * @brief Naechstes freies Zeichen im akteullen Token.
+     */
     uint_fast8_t next_free_char_in_token;
 
-    const char* orig_string;
+    const char* orig_string;                                                ///< Original-String, der verarbeitet wird
+    /**
+     * @brief Aktuelles Zeichen im Original-String, welches verarbetet wird.
+     */
     uint_fast8_t current_char;
 };
 
+/**
+ * @brief Lexter mit der Originalzeichenkette starten.
+ *
+ * @param[in] Zeichenkette, die verarbeitet wird.
+ *
+ * @return Ergebnisobjekt mit den aufgeteilten Zeichenketten.
+ */
 struct IUPAC_Chain_Lexer_Result Create_Chain_Tokens (const char* const iupac_name);
 
 
