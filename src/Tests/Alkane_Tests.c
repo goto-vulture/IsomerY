@@ -1138,8 +1138,8 @@ Execute_Creation_Test_With_Expected_Results
                     char_left -= strlen(chain_lexer_result.result_tokens [combinations[i2][i3]]);
                     if ((i3 + 1) < next_free_token_sub_1)
                     {
-                        strncat (temp_iupac_name, "-", char_left);
-                        char_left -= strlen("-");
+                        temp_iupac_name [IUPAC_NAME_LENGTH - char_left - 1] = '-';
+                        char_left --;
                     }
                 }
                 // Alkanrest anbringen
