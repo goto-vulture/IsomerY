@@ -1184,7 +1184,7 @@ Execute_Creation_Test_With_Expected_Results
         }
     }
 
-    puts ("");
+    PUTS_FFLUSH ("");
     size_t count_unused_expected_results = 0;
 
     // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
