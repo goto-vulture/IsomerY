@@ -1147,7 +1147,7 @@ Execute_Creation_Test_With_Expected_Results
                 char_left -= strlen(chain_lexer_result.result_tokens [next_free_token_sub_1]);
 
                 // PRINTF_FFLUSH("%s\n", temp_iupac_name);
-                temp_iupac_name [IUPAC_NAME_LENGTH - char_left] = '\0';
+                temp_iupac_name [IUPAC_NAME_LENGTH - char_left - 1] = '\0';
 
                 // Die neuen kombinierten Elemente in der Liste suchen
                 // Befindet sich das gerade erzeugte neu kombinierte Element in der Liste an gueltigen Ergebnissen ?
