@@ -1146,7 +1146,7 @@ Execute_Creation_Test_With_Expected_Results
                 strncat (temp_iupac_name, chain_lexer_result.result_tokens [next_free_token_sub_1], char_left);
                 char_left -= strlen(chain_lexer_result.result_tokens [next_free_token_sub_1]);
 
-                PRINTF_FFLUSH("%s\n", temp_iupac_name);
+                // PRINTF_FFLUSH("%s\n", temp_iupac_name);
                 temp_iupac_name [IUPAC_NAME_LENGTH - char_left] = '\0';
 
                 // Die neuen kombinierten Elemente in der Liste suchen

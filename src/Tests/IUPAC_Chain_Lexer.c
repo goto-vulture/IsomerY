@@ -156,10 +156,11 @@ static void End_Char_Found (struct IUPAC_Chain_Lexer_Result* const lexer_data)
 {
     lexer_data->orig_string = NULL;
 
-    for (uint_fast8_t i = 0; i < lexer_data->next_free_token; ++ i)
-    {
-        PRINTF_FFLUSH("%" PRIxFAST8 ": %s\n", i, lexer_data->result_tokens [i]);
-    }
+    // Debug-Ausgaben
+    // for (uint_fast8_t i = 0; i < lexer_data->next_free_token; ++ i)
+    // {
+    //     PRINTF_FFLUSH("%" PRIxFAST8 ": %s\n", i, lexer_data->result_tokens [i]);
+    // }
 
     return;
 }
