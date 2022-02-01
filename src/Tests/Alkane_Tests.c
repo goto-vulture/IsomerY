@@ -1126,7 +1126,7 @@ Execute_Creation_Test_With_Expected_Results
             }
             // ===== ENDE Arraywerte fuer die Neukombination bilden =====
 
-            _Bool next_try = false;
+            _Bool next_try_successful = false;
 
             // Arrays und deren Inhalte elementweise durchgehen und den neu kombinierten Namen bilden
             for (size_t i2 = 0; i2 < next_combinations_array_index; ++ i2)
@@ -1151,11 +1151,11 @@ Execute_Creation_Test_With_Expected_Results
 
                 // Die neuen kombinierten Elemente in der Liste suchen
                 // Befindet sich das gerade erzeugte neu kombinierte Element in der Liste an gueltigen Ergebnissen ?
-                next_try = Search_IUPAC_Name_In_The_List_Of_Expected_Results (temp_iupac_name, expected_results,
-                        number_of_constitutional_isomers, &index_in_the_expected_results);
+                next_try_successful = Search_IUPAC_Name_In_The_List_Of_Expected_Results (temp_iupac_name, 
+                        expected_results, number_of_constitutional_isomers, &index_in_the_expected_results);
                 memset (temp_iupac_name, '\0', sizeof(temp_iupac_name));
 
-                if (next_try == true) { break; }
+                if (next_try_successful == true) { break; }
             }
 
             for (size_t combinations_array_index = 0;
@@ -1167,7 +1167,7 @@ Execute_Creation_Test_With_Expected_Results
             FREE_AND_SET_TO_NULL(combinations);
 
             // Doch noch richtig :D Eine Neukombination war ausreichend
-            if (next_try == true)
+            if (next_try_successful == true)
             {
                 count_expected_results_usage [index_in_the_expected_results] ++;
             }
