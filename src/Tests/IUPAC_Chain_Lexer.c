@@ -6,12 +6,25 @@
  * Funktional ist der Aufbau sehr einfach. Zustandsfunktionen, die direkt oder indirekt rekursiv aufgerufen werden.
  *
  * Aufbau des Lexers:
- *
- *
- *
- *  Create_Chain_Tokens() -> Next_Char() -> End_Char
- *
- *
+ *                                    +---> return
+ *                                    |
+ *                            +----------------+
+ *                            | End_Char_Found |
+ *                            +----------------+
+ *                                    ^
+ *                              +--+  |  +-------------------------------+
+ *                              |  |  |  |                               |
+ *                              v  |  |  v                               |
+ * +---------------------+    +-----------+    +----------------------+  |
+ * | Create_chain_Tokens | -> | Next_Char | -> | Safe_Splt_Char_Found | -+
+ * +---------------------+    +-----------+    +----------------------+
+ *                               ^  |    ^
+ *                               |  |    |
+ *                               |  |    +-----------------------------------------+
+ *                               |  v                                              |
+ *                            +---------------------+    +----------------------+  |
+ *                            | Possible_Split_Char | -> | Spilt_Char_Confirmed | -+
+ *                            +---------------------+    +----------------------+
  *
  * @date 27.01.2022
  * @author am1
