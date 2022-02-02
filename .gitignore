@@ -36,3 +36,7 @@ oprofile_data/
 
 # Von doxygen erstellte Dokumentation
 Documentation/
+
+# Programmausgaben, die in eine Datei weitergeleitet werden
+out.txt
+out_error.txt
