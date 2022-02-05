@@ -971,6 +971,14 @@ Execute_Creation_Test_With_Expected_Results
     uint_fast8_t* count_expected_results_usage = (uint_fast8_t*) CALLOC (number_of_expected_results, sizeof (uint_fast8_t));
     ASSERT_ALLOC(count_expected_results_usage, "Cannot allocate memory for the count_expected_results array !",
             number_of_expected_results * sizeof (uint_fast8_t));
+    
+    // Die Liste an Namen, die nicht in den erwarteten Loesungen gefunden wurden
+    // Dadurch kann am Ende eine Liste an falschen Ergebnissen erzeugt werden
+    const uint_fast8_t count_wrong_results = 50;
+    uint_fast8_t next_free_wrong_results = 0;
+    char wrong_results [count_wrong_results][IUPAC_NAME_LENGTH];
+    memset(wrong_results, '\0', sizeof(wrong_results));
+    
 
     // ===== ===== ===== BEGINN Testbereich ===== ===== =====
     // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
@@ -1174,6 +1182,13 @@ Execute_Creation_Test_With_Expected_Results
             // Keine Chance. Das Element ist - zumindest in der erzeugten Form - nicht richtig !
             else
             {
+                if (next_free_wrong_results < count_wrong_results)
+                {
+                    // Falsche erzeugten Namen kopieren
+                    strncpy(wrong_results[next_free_wrong_results], all_alkanes->data[i]->iupac_name, 
+                            IUPAC_NAME_LENGTH);
+                    next_free_wrong_results ++;
+                }
                 FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
                         all_alkanes->data [i]->iupac_name);
             }
@@ -1196,6 +1211,19 @@ Execute_Creation_Test_With_Expected_Results
                     count_expected_results_usage [i]);
             ++ count_unused_expected_results;
         }
+    }
+    // Alle falschen Ergebnisse ausgeben
+    for (uint_fast8_t i = 0; i < next_free_wrong_results; ++ i)
+    {
+        if (i == 0)
+        {
+            puts("");
+        }
+        FPRINTF_FFLUSH(stderr, "Wrong result:     %60s !\n", wrong_results[i]);
+    }
+    if (next_free_wrong_results >= count_wrong_results)
+    {
+        PUTS_FFLUSH("...")
     }
 
     // Wurden alle erwarteten Ergebnisse verwendet ?
