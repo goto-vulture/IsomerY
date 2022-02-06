@@ -979,7 +979,7 @@ Execute_Creation_Test_With_Expected_Results
             number_of_expected_results * sizeof (uint_fast8_t));
     
     // Die Liste an Namen, die nicht in den erwarteten Loesungen gefunden wurden
-    // Dadurch kann am Ende eine Liste an falschen Ergebnissen erzeugt werden
+    // Dadurch kann am Ende eine Zusammenfassung an falschen Ergebnissen erzeugt werden
     uint_fast8_t next_free_wrong_results = 0;
     char wrong_results [MAX_WRONG_RESULTS][IUPAC_NAME_LENGTH];
     memset(wrong_results, '\0', sizeof(wrong_results));
