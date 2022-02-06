@@ -28,6 +28,12 @@
 
 
 
+#ifndef MAX_WRONG_RESULTS
+#define MAX_WRONG_RESULTS 50
+#else
+#error "The macro \"MAX_WRONG_RESULTS\" is already defined !"
+#endif /* MAX_WRONG_RESULTS */
+
 
 
 /**
@@ -974,9 +980,8 @@ Execute_Creation_Test_With_Expected_Results
     
     // Die Liste an Namen, die nicht in den erwarteten Loesungen gefunden wurden
     // Dadurch kann am Ende eine Liste an falschen Ergebnissen erzeugt werden
-    const uint_fast8_t count_wrong_results = 50;
     uint_fast8_t next_free_wrong_results = 0;
-    char wrong_results [count_wrong_results][IUPAC_NAME_LENGTH];
+    char wrong_results [MAX_WRONG_RESULTS][IUPAC_NAME_LENGTH];
     memset(wrong_results, '\0', sizeof(wrong_results));
     
 
@@ -1182,7 +1187,7 @@ Execute_Creation_Test_With_Expected_Results
             // Keine Chance. Das Element ist - zumindest in der erzeugten Form - nicht richtig !
             else
             {
-                if (next_free_wrong_results < count_wrong_results)
+                if (next_free_wrong_results < MAX_WRONG_RESULTS)
                 {
                     // Falsche erzeugten Namen kopieren
                     strncpy(wrong_results[next_free_wrong_results], all_alkanes->data[i]->iupac_name, 
@@ -1221,7 +1226,7 @@ Execute_Creation_Test_With_Expected_Results
         }
         FPRINTF_FFLUSH(stderr, "Wrong result:    %60s !\n", wrong_results[i]);
     }
-    if (next_free_wrong_results >= count_wrong_results)
+    if (next_free_wrong_results >= MAX_WRONG_RESULTS)
     {
         PUTS_FFLUSH("...")
     }
@@ -1242,3 +1247,7 @@ Execute_Creation_Test_With_Expected_Results
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+#ifdef MAX_WRONG_RESULTS
+#undef MAX_WRONG_RESULTS
+#endif /* MAX_WRONG_RESULTS */
