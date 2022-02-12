@@ -38,6 +38,17 @@ do
         #fi
         echo ""
     fi
+
+    i_plus_one=$(( $i + 1 ))
+    # Beim letzten Durchlauf die aktuelle Zeile leeren
+    # Dient nur der besseren Lesbarkeit der Ausgaben !
+    if [[ ${i_plus_one} -ge 255 ]];
+    then
+        for (( i2=0; i2<32; i2++ ));
+        do
+            printf " "
+        done
+    fi
 done
 
 printf "\n\nNumber of used addresses: %d\n" ${count_used_addresses}
