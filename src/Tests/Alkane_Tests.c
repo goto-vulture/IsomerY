@@ -1233,7 +1233,7 @@ Execute_Creation_Test_With_Expected_Results
     {
         if (i == 0)
         {
-            puts("");
+            PUTS_FFLUSH("");
         }
         FPRINTF_FFLUSH(stderr, "Wrong result:    %60s !\n", wrong_results[i]);
     }
