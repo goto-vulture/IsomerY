@@ -1100,7 +1100,7 @@ Execute_Creation_Test_With_Expected_Results
                         {
                             if (next_free_token_sub_1 > 4)
                             {
-                            for (uint_fast8_t token_5 = 0; token_5 < chain_lexer_result.next_free_token - 1; ++ token_5)
+                            for (uint_fast8_t token_5 = 0; token_5 < next_free_token_sub_1; ++ token_5)
                             {
                                 combinations [next_combinations_array_index][0] = token_1;
                                 combinations [next_combinations_array_index][1] = token_2;
