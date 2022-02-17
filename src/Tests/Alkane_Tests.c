@@ -1083,72 +1083,66 @@ Execute_Creation_Test_With_Expected_Results
             // ===== BEGINN Arraywerte fuer die Neukombination bilden =====
             register size_t next_combinations_array_index = 0;
 
+            const uint_fast8_t MAX_LOOP_NESTING = 6;
+            uint_fast8_t tokens [MAX_LOOP_NESTING];
+            memset (tokens, '\0', sizeof (tokens));
+
             // Sehr billige Herangehensweise. Aber mir fiel nichts besseres ein ... :/
-            for (uint_fast8_t token_1 = 0; token_1 < next_free_token_sub_1; ++ token_1)
+            for (tokens[0] = 0; tokens[0] < next_free_token_sub_1; ++ tokens[0])
             {
                 if (next_free_token_sub_1 > 1)
                 {
-                for (uint_fast8_t token_2 = 0; token_2 < next_free_token_sub_1; ++ token_2)
+                for (tokens[1] = 0; tokens[1] < next_free_token_sub_1; ++ tokens[1])
                 {
                     if (next_free_token_sub_1 > 2)
                     {
-                    for (uint_fast8_t token_3 = 0; token_3 < next_free_token_sub_1; ++ token_3)
+                    for (tokens[2] = 0; tokens[2] < next_free_token_sub_1; ++ tokens[2])
                     {
                         if (next_free_token_sub_1 > 3)
                         {
-                        for (uint_fast8_t token_4 = 0; token_4 < next_free_token_sub_1; ++ token_4)
+                        for (tokens[3] = 0; tokens[3] < next_free_token_sub_1; ++ tokens[3])
                         {
                             if (next_free_token_sub_1 > 4)
                             {
-                            for (uint_fast8_t token_5 = 0; token_5 < next_free_token_sub_1; ++ token_5)
+                            for (tokens[4] = 0; tokens[4] < next_free_token_sub_1; ++ tokens[4])
                             {
                                 if (next_free_token_sub_1 > 5)
                                 {
-                                for (uint_fast8_t token_6 = 0; token_6 < next_free_token_sub_1; ++ token_6)
+                                for (tokens[5] = 0; tokens[5] < next_free_token_sub_1; ++ tokens[5])
                                 {
-                                    combinations [next_combinations_array_index][0] = token_1;
-                                    combinations [next_combinations_array_index][1] = token_2;
-                                    combinations [next_combinations_array_index][2] = token_3;
-                                    combinations [next_combinations_array_index][3] = token_4;
-                                    combinations [next_combinations_array_index][4] = token_5;
-                                    combinations [next_combinations_array_index][5] = token_6;
+                                    for (uint_fast8_t token_index = 0; token_index < MAX_LOOP_NESTING; token_index ++)
+                                    { combinations [next_combinations_array_index][token_index] = tokens[token_index]; }
                                     ++ next_combinations_array_index;
                                 }
                                 }
                                 else
                                 {
-                                    combinations [next_combinations_array_index][0] = token_1;
-                                    combinations [next_combinations_array_index][1] = token_2;
-                                    combinations [next_combinations_array_index][2] = token_3;
-                                    combinations [next_combinations_array_index][3] = token_4;
-                                    combinations [next_combinations_array_index][4] = token_5;
+                                    for (uint_fast8_t token_index = 0; token_index < MAX_LOOP_NESTING - 1; token_index ++)
+                                    { combinations [next_combinations_array_index][token_index] = tokens[token_index]; }
                                     ++ next_combinations_array_index;
                                 }
                             }
                             }
                             else
                             {
-                                combinations [next_combinations_array_index][0] = token_1;
-                                combinations [next_combinations_array_index][1] = token_2;
-                                combinations [next_combinations_array_index][2] = token_3;
-                                combinations [next_combinations_array_index][3] = token_4;
+                                for (uint_fast8_t token_index = 0; token_index < MAX_LOOP_NESTING - 2; token_index ++)
+                                { combinations [next_combinations_array_index][token_index] = tokens[token_index]; }
                                 ++ next_combinations_array_index;
                             }
                         }
                         }
                         else
                         {
-                            combinations [next_combinations_array_index][0] = token_1;
-                            combinations [next_combinations_array_index][1] = token_2;
-                            combinations [next_combinations_array_index][2] = token_3;
+                            for (uint_fast8_t token_index = 0; token_index < MAX_LOOP_NESTING - 3; token_index ++)
+                            { combinations [next_combinations_array_index][token_index] = tokens[token_index]; }
                             ++ next_combinations_array_index;
                         }
                     }
                     }
                     else
                     {
-                        combinations [next_combinations_array_index][0] = token_1;
-                        combinations [next_combinations_array_index][1] = token_2;
+                        for (uint_fast8_t token_index = 0; token_index < MAX_LOOP_NESTING - 4; token_index ++)
+                        { combinations [next_combinations_array_index][token_index] = tokens[token_index]; }
                         ++ next_combinations_array_index;
                     }
                 }
