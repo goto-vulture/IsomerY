@@ -977,13 +977,13 @@ Execute_Creation_Test_With_Expected_Results
     uint_fast8_t* count_expected_results_usage = (uint_fast8_t*) CALLOC (number_of_expected_results, sizeof (uint_fast8_t));
     ASSERT_ALLOC(count_expected_results_usage, "Cannot allocate memory for the count_expected_results array !",
             number_of_expected_results * sizeof (uint_fast8_t));
-    
+
     // Die Liste an Namen, die nicht in den erwarteten Loesungen gefunden wurden
     // Dadurch kann am Ende eine Zusammenfassung an falschen Ergebnissen erzeugt werden
     uint_fast8_t next_free_wrong_results = 0;
     char wrong_results [MAX_WRONG_RESULTS][IUPAC_NAME_LENGTH];
     memset(wrong_results, '\0', sizeof(wrong_results));
-    
+
 
     // ===== ===== ===== BEGINN Testbereich ===== ===== =====
     // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
@@ -1083,6 +1083,7 @@ Execute_Creation_Test_With_Expected_Results
             // ===== BEGINN Arraywerte fuer die Neukombination bilden =====
             register size_t next_combinations_array_index = 0;
 
+            // Sehr billige Herangehensweise. Aber mir fiel nichts besseres ein ... :/
             for (uint_fast8_t token_1 = 0; token_1 < next_free_token_sub_1; ++ token_1)
             {
                 if (next_free_token_sub_1 > 1)
@@ -1164,7 +1165,7 @@ Execute_Creation_Test_With_Expected_Results
 
                 // Die neuen kombinierten Elemente in der Liste suchen
                 // Befindet sich das gerade erzeugte neu kombinierte Element in der Liste an gueltigen Ergebnissen ?
-                next_try_successful = Search_IUPAC_Name_In_The_List_Of_Expected_Results (temp_iupac_name, 
+                next_try_successful = Search_IUPAC_Name_In_The_List_Of_Expected_Results (temp_iupac_name,
                         expected_results, number_of_constitutional_isomers, &index_in_the_expected_results);
                 memset (temp_iupac_name, '\0', sizeof(temp_iupac_name));
 
@@ -1190,7 +1191,7 @@ Execute_Creation_Test_With_Expected_Results
                 if (next_free_wrong_results < MAX_WRONG_RESULTS)
                 {
                     // Falsche erzeugten Namen kopieren
-                    strncpy(wrong_results[next_free_wrong_results], all_alkanes->data[i]->iupac_name, 
+                    strncpy(wrong_results[next_free_wrong_results], all_alkanes->data[i]->iupac_name,
                             IUPAC_NAME_LENGTH);
                     next_free_wrong_results ++;
                 }
