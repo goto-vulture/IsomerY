@@ -1102,12 +1102,28 @@ Execute_Creation_Test_With_Expected_Results
                             {
                             for (uint_fast8_t token_5 = 0; token_5 < next_free_token_sub_1; ++ token_5)
                             {
-                                combinations [next_combinations_array_index][0] = token_1;
-                                combinations [next_combinations_array_index][1] = token_2;
-                                combinations [next_combinations_array_index][2] = token_3;
-                                combinations [next_combinations_array_index][3] = token_4;
-                                combinations [next_combinations_array_index][4] = token_5;
-                                ++ next_combinations_array_index;
+                                if (next_free_token_sub_1 > 5)
+                                {
+                                for (uint_fast8_t token_6 = 0; token_6 < next_free_token_sub_1; ++ token_6)
+                                {
+                                    combinations [next_combinations_array_index][0] = token_1;
+                                    combinations [next_combinations_array_index][1] = token_2;
+                                    combinations [next_combinations_array_index][2] = token_3;
+                                    combinations [next_combinations_array_index][3] = token_4;
+                                    combinations [next_combinations_array_index][4] = token_5;
+                                    combinations [next_combinations_array_index][5] = token_6;
+                                    ++ next_combinations_array_index;
+                                }
+                                }
+                                else
+                                {
+                                    combinations [next_combinations_array_index][0] = token_1;
+                                    combinations [next_combinations_array_index][1] = token_2;
+                                    combinations [next_combinations_array_index][2] = token_3;
+                                    combinations [next_combinations_array_index][3] = token_4;
+                                    combinations [next_combinations_array_index][4] = token_5;
+                                    ++ next_combinations_array_index;
+                                }
                             }
                             }
                             else
