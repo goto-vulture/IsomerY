@@ -1029,8 +1029,14 @@ Execute_Creation_Test_With_Expected_Results
             ASSERT_EQUALS(1, count_chains_with_nesting_depth_0);
         }
 
+        // Kopie des aktuellen Alkan-Objektes
+        // Wenn die Erstellung des IUPAC-Namens im ersten Verlauf nicht gelingt, dann wird in einigen Faellen ein
+        // weiterer Verlauf mit anderen Optionen durchgefuehrt
+        // Da beim Aufruf von "Convert_Alkane_To_IUPAC_Name()" das Alkan-Objekt veraendert wird, fuehrt dies dazu, dass
+        // bei den weiteren Verlaeufen teilweise komplett andere Ergebnisse erzeugt werden !
         struct Alkane temp_alkane_copy;
         memcpy (&temp_alkane_copy, all_alkanes->data[i], sizeof (temp_alkane_copy));
+
         Convert_Alkane_To_IUPAC_Name (all_alkanes->data [i], false);
 
         // Falls ein erwartetes Ergebnis verwendet wurde, dann wird in dieser Variable der Index des erwarteten
