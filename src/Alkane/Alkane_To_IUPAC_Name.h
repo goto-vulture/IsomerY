@@ -138,7 +138,7 @@ extern "C"
  * Asserts:
  *      alkane != NULL
  *
- * @param[in] alkane Alkae Objekt, von dem der IUPAC-Name gebildet werden soll
+ * @param[in] alkane Alkane Objekt, von dem der IUPAC-Name gebildet werden soll
  * @param[in] reversed_number_order Erzeugung der Positionsnummern auf oberster Ebene in umgedrehter Position
  */
 extern void
