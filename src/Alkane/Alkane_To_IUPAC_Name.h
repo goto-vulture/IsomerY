@@ -139,11 +139,14 @@ extern "C"
  *      alkane != NULL
  *
  * @param[in] alkane Alkae Objekt, von dem der IUPAC-Name gebildet werden soll
+ * @param[in] reversed_number_order Erzeugung der Positionsnummern auf oberster Ebene in umgedrehter Position
  */
 extern void
 Convert_Alkane_To_IUPAC_Name
 (
-        struct Alkane* const restrict alkane    // Alkan, von dem der IUPAC-Name gebildet werden soll
+        struct Alkane* const restrict alkane,   // Alkan, von dem der IUPAC-Name gebildet werden soll
+        const _Bool reversed_number_order       // Erzeugung der Positionsnummern auf oberster Ebene in umgedrehter
+                                                // Position
 );
 
 

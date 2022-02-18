@@ -281,7 +281,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name (void)
     struct Alkane* alkane = Create_Alkane (branch_2, branch_1, branch_3, NULL);
 
     // Konvertierung durchfuehren
-    Convert_Alkane_To_IUPAC_Name (alkane);
+    Convert_Alkane_To_IUPAC_Name (alkane, false);
 
     ASSERT_STRING_EQUALS(expected_result, alkane->iupac_name);
 
@@ -315,7 +315,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
     struct Alkane* alkane = Create_Alkane (branch_1, branch_2, branch_3, NULL);
 
     // Konvertierung durchfuehren
-    Convert_Alkane_To_IUPAC_Name (alkane);
+    Convert_Alkane_To_IUPAC_Name (alkane, false);
 
     ASSERT_MSG (Compare_Strings_Case_Insensitive (alkane->iupac_name, expected_result) == 0, "Created name and expected name are not equal !");
 
@@ -438,7 +438,7 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
     struct Alkane* alkane = Create_Alkane (branch_2, branch_1, branch_3, NULL);
 
     // Konvertierung durchfuehren
-    Convert_Alkane_To_IUPAC_Name (alkane);
+    Convert_Alkane_To_IUPAC_Name (alkane, false);
 
     ASSERT_STRING_EQUALS(expected_result, alkane->iupac_name);
 
@@ -1029,14 +1029,16 @@ Execute_Creation_Test_With_Expected_Results
             ASSERT_EQUALS(1, count_chains_with_nesting_depth_0);
         }
 
-        Convert_Alkane_To_IUPAC_Name (all_alkanes->data [i]);
+        struct Alkane temp_alkane_copy;
+        memcpy (&temp_alkane_copy, all_alkanes->data[i], sizeof (temp_alkane_copy));
+        Convert_Alkane_To_IUPAC_Name (all_alkanes->data [i], false);
 
         // Falls ein erwartetes Ergebnis verwendet wurde, dann wird in dieser Variable der Index des erwarteten
         // Ergebnisses hinterlegt
         uint_fast64_t index_in_the_expected_results = UINT_FAST64_MAX;
 
         // Befindet sich das gerade erzeugte Ergebnis in der Liste an gueltigen Ergebnissen ?
-        const _Bool result_found_in_the_expected_results =
+        _Bool result_found_in_the_expected_results =
                 Search_IUPAC_Name_In_The_List_Of_Expected_Results (all_alkanes->data [i]->iupac_name, expected_results,
                         number_of_constitutional_isomers, &index_in_the_expected_results);
 
@@ -1198,7 +1200,7 @@ Execute_Creation_Test_With_Expected_Results
             // Doch noch richtig :D Eine Neukombination war ausreichend
             if (next_try_successful == true)
             {
-                count_expected_results_usage [index_in_the_expected_results] ++;
+                result_found_in_the_expected_results = true;
             }
             // Keine Chance. Das Element ist - zumindest in der erzeugten Form - nicht richtig !
             else
@@ -1214,7 +1216,33 @@ Execute_Creation_Test_With_Expected_Results
                         all_alkanes->data [i]->iupac_name);
             }
         }
-        else
+        if (! result_found_in_the_expected_results /* == false */)
+        {
+            // In seltenen Faellen koennen beide Richtungen bei der Positionierung verwendet werden
+            // Manchmal wird daher in den erwarteten Loesungen die andere Richtung verwendet, als die, die vom
+            // Algorithmus verwendet wurde
+            // IUPAC-Name mit anderer Positionsierungsrichtung nochmal erstellen und schauen, ob dieses Ergebnis in den
+            // erwarteten Loesungen enthalten ist
+
+            memset(all_alkanes->data [i]->iupac_name, '\0', sizeof (all_alkanes->data [i]->iupac_name));
+            Convert_Alkane_To_IUPAC_Name (&temp_alkane_copy, true);
+
+            PRINTF_FFLUSH("!!! %s !!!\n", temp_alkane_copy.iupac_name)
+
+            _Bool name_with_reversed_number_order_successful = false;
+
+            name_with_reversed_number_order_successful = Search_IUPAC_Name_In_The_List_Of_Expected_Results
+                    (temp_alkane_copy.iupac_name, expected_results, number_of_constitutional_isomers,
+                            &index_in_the_expected_results);
+
+            // Doch noch richtig ?
+            if (name_with_reversed_number_order_successful /* == true */)
+            {
+                result_found_in_the_expected_results = true;
+            }
+        }
+
+        if (result_found_in_the_expected_results /* == true */)
         {
             count_expected_results_usage [index_in_the_expected_results] ++;
         }

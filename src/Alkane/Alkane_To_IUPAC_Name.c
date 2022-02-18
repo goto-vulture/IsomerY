@@ -113,7 +113,9 @@ Chains_Go_Deeper
 (
         struct Alkane* const restrict alkane,       // Alkane-Objekt, dessen Aeste durchsucht werden
         struct Path_Data* const restrict path_data, // Path_Data-Objekt, des letzten Astes
-        const uint_fast8_t nesting_depth            // Aktuelle Verschachtelungstiefe
+        const uint_fast8_t nesting_depth,           // Aktuelle Verschachtelungstiefe
+        const _Bool reversed_number_order           // Erzeugung der Positionsnummern auf oberster Ebene in umgedrehter
+                                                    // Position
 );
 
 /**
@@ -186,7 +188,9 @@ Reorder_Chains
 void
 Convert_Alkane_To_IUPAC_Name
 (
-        struct Alkane* const restrict alkane    // Alkan, von dem der IUPAC-Name gebildet werden soll
+        struct Alkane* const restrict alkane,   // Alkan, von dem der IUPAC-Name gebildet werden soll
+        const _Bool reversed_number_order       // Erzeugung der Positionsnummern auf oberster Ebene in umgedrehter
+                                                // Position
 )
 {
     ASSERT_MSG(alkane != NULL, "alkane is NULL !");
@@ -259,7 +263,7 @@ Convert_Alkane_To_IUPAC_Name
 
     // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
     // der Benennung beruecksichtigt werden muessen
-    Chains_Go_Deeper (alkane, main_chain, 1);
+    Chains_Go_Deeper (alkane, main_chain, 1, reversed_number_order);
 
     // Aeste, die auf einer Verschachtelungsebene liegen, anhand der Laenge der Aeste aufsteigend sortieren
     // Dies ist fuer eine einfachere Erzeugung des IUPAC-Namen notwendig
@@ -686,7 +690,9 @@ Chains_Go_Deeper
 (
         struct Alkane* const restrict alkane,       // Alkane-Objekt, dessen Aeste durchsucht werden
         struct Path_Data* const restrict path_data, // Path_Data-Objekt, des letzten Astes
-        const uint_fast8_t nesting_depth            // Aktuelle Verschachtelungstiefe
+        const uint_fast8_t nesting_depth,           // Aktuelle Verschachtelungstiefe
+        const _Bool reversed_number_order           // Erzeugung der Positionsnummern auf oberster Ebene in umgedrehter
+                                                    // Position
 )
 {
     // Die komplette Adjazenzmatrix durchsuchen
@@ -738,9 +744,36 @@ Chains_Go_Deeper
                     // 0 Indexierung beim Vergleich verwenden !
                     if (path_data->result_path [current_result_data_element] == merged_numbercode_at_i - 1)
                     {
-                        // 1 Indexierung bei der Positionsinformation verwenden !
-                        alkane->chains [alkane->next_free_chain].position =
+                        // Sollen auf der obersten Ebene die Positionsnummern in umgekehrter Reihenfolge erzeugt werden ?
+                        // Beispiel:
+                        //
+                        // C - C - C - C
+                        //     |
+                        //     C
+                        //
+                        // => 2-Methyl-Butan
+                        //
+                        // Umgekehrte Reihenfolge:
+                        //
+                        // C - C - C - C
+                        //     |
+                        //     C
+                        //
+                        // => 3-Methly-Butan
+                        //
+                        // In wenigen Faellen ist dies fuer die Bestimmung, ob ein erzeugter IUPAC-Name richtig ist,
+                        // notwendig
+                        if (reversed_number_order /* == true */ && nesting_depth == 1)
+                        {
+                            alkane->chains [alkane->next_free_chain].position =
+                                    (unsigned char) (alkane->chains[0].length - current_result_data_element);
+                        }
+                        else
+                        {
+                            // 1 Indexierung bei der Positionsinformation verwenden !
+                            alkane->chains [alkane->next_free_chain].position =
                                 (unsigned char) (current_result_data_element + 1);
+                        }
                     }
                 }
                 alkane->next_free_chain ++;
@@ -751,7 +784,7 @@ Chains_Go_Deeper
                 {
                     // Wenn noch weitere Aeste existieren, dann wird mit dem temporaeren Path_Data-Objekt diese Funktion
                     // nochmal rekursiv aufgerufen
-                    Chains_Go_Deeper (alkane, temp_chain, (uint_fast8_t) (nesting_depth + 1));
+                    Chains_Go_Deeper (alkane, temp_chain, (uint_fast8_t) (nesting_depth + 1), reversed_number_order);
                 }
 
                 Delete_Alkane (temp_alkane);
