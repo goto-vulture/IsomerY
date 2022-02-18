@@ -1276,7 +1276,7 @@ Execute_Creation_Test_With_Expected_Results
         }
         FPRINTF_FFLUSH(stderr, "Wrong result:    %60s !\n", wrong_results[i]);
     }
-    if (next_free_wrong_results >= MAX_WRONG_RESULTS)
+    if (next_free_wrong_results > MAX_WRONG_RESULTS)
     {
         PUTS_FFLUSH("...")
     }
