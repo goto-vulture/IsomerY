@@ -34,6 +34,12 @@
 #error "The macro \"MAX_WRONG_RESULTS\" is already defined !"
 #endif /* MAX_WRONG_RESULTS */
 
+#ifndef MAX_LOOP_NESTING
+#define MAX_LOOP_NESTING 6
+#else
+#error "The macro \"MAX_LOOP_NESTING\" is already defined !"
+#endif /* MAX_LOOP_NESTING */
+
 
 
 /**
@@ -1083,7 +1089,6 @@ Execute_Creation_Test_With_Expected_Results
             // ===== BEGINN Arraywerte fuer die Neukombination bilden =====
             register size_t next_combinations_array_index = 0;
 
-            const uint_fast8_t MAX_LOOP_NESTING = 6;
             uint_fast8_t tokens [MAX_LOOP_NESTING];
             memset (tokens, '\0', sizeof (tokens));
 
@@ -1262,3 +1267,7 @@ Execute_Creation_Test_With_Expected_Results
 #ifdef MAX_WRONG_RESULTS
 #undef MAX_WRONG_RESULTS
 #endif /* MAX_WRONG_RESULTS */
+
+#ifdef MAX_LOOP_NESTING
+#undef MAX_LOOP_NESTING
+#endif /* MAX_LOOP_NESTING */
