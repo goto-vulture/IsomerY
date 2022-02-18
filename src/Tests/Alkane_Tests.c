@@ -1267,13 +1267,11 @@ Execute_Creation_Test_With_Expected_Results
             ++ count_unused_expected_results;
         }
     }
+
+    PUTS_FFLUSH("");
     // Alle falschen Ergebnisse ausgeben
     for (uint_fast8_t i = 0; i < next_free_wrong_results; ++ i)
     {
-        if (i == 0)
-        {
-            PUTS_FFLUSH("");
-        }
         FPRINTF_FFLUSH(stderr, "Wrong result:    %60s !\n", wrong_results[i]);
     }
     if (next_free_wrong_results > MAX_WRONG_RESULTS)
