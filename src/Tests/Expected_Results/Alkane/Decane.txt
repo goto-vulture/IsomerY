@@ -40,7 +40,7 @@
 "3-Ethyl-2,4-dimethylhexan",        "3-Ethyl-2,5-dimethylhexan",            "3-Ethyl-3,4-dimethylhexan",
 "4-Ethyl-2,2-dimethylhexan",        "4-Ethyl-2,3-dimethylhexan",
 
-"4-Ethyl-2,4-dimethylhexan",        "3-Ethyl-4,4-dimethylhexan",            "3-Ethyl-2,2,3-trimethylpentan",
+"4-Ethyl-2,4-dimethylhexan",        "4-Ethyl-3,3-dimethylhexan",            "3-Ethyl-2,2,3-trimethylpentan",
 "3-Ethyl-2,2,4-trimethylpentan",    "3-Ethyl-2,3,4-trimethylpentan",
 
 "3,3-Diethyl-2-methylpentan",       "4-Propylheptan",                       "4-(1-Methylethyl)heptan",
