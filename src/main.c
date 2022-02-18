@@ -143,7 +143,7 @@ int main (const int argc, const char* argv [])
     argparse_init(&argparse_object, cli_options, GLOBAL_USAGES, 0);
     argparse_describe(&argparse_object, GLOBAL_PROGRAM_DESCRIPTION, GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION);
     const int new_argc = argparse_parse(&argparse_object, argc, argv);
-    
+
     // Wurden ueberhaupt ausreichend CLI-Parameter uebergeben ?
     if (argc < 2)
     {
@@ -184,13 +184,13 @@ int main (const int argc, const char* argv [])
     printf ("Sizeof Alkane_Container:        %6zu byte\n", sizeof (struct Alkane_Container));
     printf ("Sizeof Alkane_Branch:           %6zu byte\n", sizeof (struct Alkane_Branch));
     printf ("Sizeof Alkane_Branch_Container: %6zu byte\n", sizeof (struct Alkane_Branch_Container));
-    PUTS_FFLUSH ("\n\n");
+    PRINT_NEWLINE PRINT_NEWLINE
 
     // Alle Alkan-Tests durchfuehren
     Execute_All_Alkane_Tests ();
 
     // Infos ueber die getaetigten Speicheraufrufe anzeigen
-    puts ("");
+    PRINT_NEWLINE
     Show_Dynamic_Memory_Status ();
 
 //    Beautiful_1();

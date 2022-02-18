@@ -346,7 +346,7 @@ Create_Alkane_Constitutional_Isomers
                 (container_height_x [next_container]->size != 1) ? "es" : "",
                 (container_height_x [next_container]->size == 1) ? "was" : "were");
     }
-    puts ("");
+    PRINT_NEWLINE
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 1. Teil ===== ===== ===== ===== ===== ===== ===== =====
 
 
@@ -503,7 +503,7 @@ Create_Alkane_Constitutional_Isomers
                 (alkane_container_main_chain_length_x [next_alkane_container]->size != 1) ? "s" : "",
                 (alkane_container_main_chain_length_x [next_alkane_container]->size == 1) ? "was" : "were");
     }
-    puts ("");
+    PRINT_NEWLINE
     // ===== ===== ===== ===== ===== ===== ===== ===== ENDE 2. + 3. Teil ===== ===== ===== ===== ===== ===== ===== =====
 
     // Ergebniscontainer anlegen

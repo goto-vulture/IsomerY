@@ -112,6 +112,14 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+#ifndef PRINT_NEWLINE
+    #define PRINT_NEWLINE PUTS_FFLUSH("")
+#else
+    #error "The macro \"PRINT_NEWLINE\" is already defined !"
+#endif /* PRINT_NEWLINE */
+
+//---------------------------------------------------------------------------------------------------------------------
+
 
 
 // ENDE C++-Kompablitaet herstellen
