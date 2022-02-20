@@ -1259,7 +1259,7 @@ Execute_Creation_Test_With_Expected_Results
     }
     // ===== ===== ===== ENDE Testschleife ===== ===== =====
 
-    PRINT_NEWLINE
+    if (next_free_wrong_results > 0) { PRINT_NEWLINE }
     size_t count_unused_expected_results = 0;
 
     // Welche erwarteten Ergebnisse wurden nicht GENAU einmal verwendet ?
@@ -1273,7 +1273,7 @@ Execute_Creation_Test_With_Expected_Results
         }
     }
 
-    PRINT_NEWLINE
+    if (next_free_wrong_results > 0) { PRINT_NEWLINE }
     // Alle falschen Ergebnisse ausgeben
     for (uint_fast8_t i = 0; i < next_free_wrong_results; ++ i)
     {
