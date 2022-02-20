@@ -39,8 +39,8 @@ const uint_fast64_t NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [MAX_NUMBER_OF_C_ATOM
  */
 const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS] =
 {
-        "Mono", "Di",    "Tri",   "Tetra", "Penta",
-        "Hexa", "Hepta", "Ocata", "Nona",  "Deca"
+        "Mono", "Di",	 "Tri",  "Tetra", "Penta",
+        "Hexa", "Hepta", "Octa", "Nona",  "Deca"
 };
 
 /**
