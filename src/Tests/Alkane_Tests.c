@@ -991,7 +991,8 @@ Execute_Creation_Test_With_Expected_Results
     memset(wrong_results, '\0', sizeof(wrong_results));
 
 
-    // ===== ===== ===== BEGINN Testbereich ===== ===== =====
+    // ===== ===== ===== ===== ===== BEGINN Testbereich ===== ===== ===== ===== =====
+    // ===== ===== ===== BEGINN Testschleife ===== ===== =====
     // Fuer alle gerade erzeugten Alkane den IUPAC-Namen bilden
     for (uint_fast64_t i = 0; i < number_of_constitutional_isomers; ++ i)
     {
@@ -1048,7 +1049,9 @@ Execute_Creation_Test_With_Expected_Results
                 Search_IUPAC_Name_In_The_List_Of_Expected_Results (all_alkanes->data [i]->iupac_name, expected_results,
                         number_of_constitutional_isomers, &index_in_the_expected_results);
 
-        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird das Programm mit einer Fehlermeldung beendet
+        // ===== BEGINN Umformungen versuchen =====
+        // Wenn sich das Ergebnis nicht in der Liste befindet, dann wird der 1. Umformungsverusch unternommen, um ein
+        // gueltiges Ergebnis zu bilden
         if (! result_found_in_the_expected_results /* == false */)
         {
             // In einigen (wenigen) Faellen sind die verschachtelten Strukturen an einer anderen Stelle als in den
@@ -1222,6 +1225,7 @@ Execute_Creation_Test_With_Expected_Results
                         all_alkanes->data [i]->iupac_name);
             }
         }
+        // 2. Umformungsversuch
         if (! result_found_in_the_expected_results /* == false */)
         {
             // In seltenen Faellen koennen beide Richtungen bei der Positionierung verwendet werden
@@ -1244,15 +1248,17 @@ Execute_Creation_Test_With_Expected_Results
             // Doch noch richtig ?
             if (name_with_reversed_number_order_successful /* == true */)
             {
-                result_found_in_the_expected_results = true;
+                //result_found_in_the_expected_results = true;
             }
         }
+        // ===== ENDE Umformungen versuchen =====
 
         if (result_found_in_the_expected_results /* == true */)
         {
             count_expected_results_usage [index_in_the_expected_results] ++;
         }
     }
+    // ===== ===== ===== ENDE Testschleife ===== ===== =====
 
     PRINT_NEWLINE
     size_t count_unused_expected_results = 0;
@@ -1284,7 +1290,7 @@ Execute_Creation_Test_With_Expected_Results
     {
         FPRINTF_FFLUSH(stderr, "\n==>> Unused expected results: %zu ! <<==\n", count_unused_expected_results);
     }
-    // ===== ===== ===== ENDE Testbereich ===== ===== =====
+    // ===== ===== ===== ===== ===== ENDE Testbereich ===== ===== ===== ===== =====
 
     FREE_AND_SET_TO_NULL(count_expected_results_usage);
     Delete_Alkane_Container (all_alkanes);
