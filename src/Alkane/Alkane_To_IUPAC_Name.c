@@ -227,8 +227,10 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== ===== ===== BEGINN Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
     // Das Zaehlen der erzeugten Ergebnisse - waehrend des kompletten Programmlaufs - dient fuer ein besseres Debugging,
     // wenn bei einer bestimmten Erzeugung nach Fehlern gesucht werden soll.
+#ifndef RELEASE_BUILD
     static volatile size_t result_number = 0;
     ++ result_number;
+#endif /* RELEASE_BUILD */
 
     // Graphen erstellen -> Adjazenzmatrix mit Werten fuellen
     // current_c_atom = 1: Das erste Element ueberspringen, da dies die Ausnahmen-1 ist und keine verbunden-mit-Aussage
@@ -256,10 +258,12 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== BEGINN Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
     // Debug-if
     // Falls bei einer bestimmten Erzeugung ein Breakpoint gesetzt werden soll, dann ist hier die beste Stelle dafuer !
+#ifndef RELEASE_BUILD
     if (result_number == 42)
     {
         (void) result_number;
     }
+#endif /* RELEASE_BUILD */
 
     // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
     // der Benennung beruecksichtigt werden muessen
