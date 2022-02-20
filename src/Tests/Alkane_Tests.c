@@ -1211,19 +1211,6 @@ Execute_Creation_Test_With_Expected_Results
             {
                 result_found_in_the_expected_results = true;
             }
-            // Keine Chance. Das Element ist - zumindest in der erzeugten Form - nicht richtig !
-            else
-            {
-                if (next_free_wrong_results < MAX_WRONG_RESULTS)
-                {
-                    // Falsche erzeugten Namen kopieren
-                    strncpy(wrong_results[next_free_wrong_results], all_alkanes->data[i]->iupac_name,
-                            IUPAC_NAME_LENGTH);
-                    next_free_wrong_results ++;
-                }
-                FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
-                        all_alkanes->data [i]->iupac_name);
-            }
         }
         // 2. Umformungsversuch
         if (! result_found_in_the_expected_results /* == false */)
@@ -1233,11 +1220,9 @@ Execute_Creation_Test_With_Expected_Results
             // Algorithmus verwendet wurde
             // IUPAC-Name mit anderer Positionsierungsrichtung nochmal erstellen und schauen, ob dieses Ergebnis in den
             // erwarteten Loesungen enthalten ist
-
-            memset(all_alkanes->data [i]->iupac_name, '\0', sizeof (all_alkanes->data [i]->iupac_name));
             Convert_Alkane_To_IUPAC_Name (&temp_alkane_copy, true);
 
-            PRINTF_FFLUSH("!!! %s !!!\n", temp_alkane_copy.iupac_name)
+            // PRINTF_FFLUSH("!!! %s !!!\n", temp_alkane_copy.iupac_name)
 
             _Bool name_with_reversed_number_order_successful = false;
 
@@ -1248,14 +1233,28 @@ Execute_Creation_Test_With_Expected_Results
             // Doch noch richtig ?
             if (name_with_reversed_number_order_successful /* == true */)
             {
-                //result_found_in_the_expected_results = true;
+                result_found_in_the_expected_results = true;
             }
         }
         // ===== ENDE Umformungen versuchen =====
 
+        // Ist das Element - mit oder ohne Umformung - in der Liste der erwarteten Elemente ?
         if (result_found_in_the_expected_results /* == true */)
         {
             count_expected_results_usage [index_in_the_expected_results] ++;
+        }
+        // Keine Chance. Das Element ist - zumindest in der erzeugten Form - nicht richtig !
+        else
+        {
+            if (next_free_wrong_results < MAX_WRONG_RESULTS)
+            {
+                // Falsche erzeugten Namen kopieren
+                strncpy(wrong_results[next_free_wrong_results], all_alkanes->data[i]->iupac_name,
+                        IUPAC_NAME_LENGTH);
+                next_free_wrong_results ++;
+            }
+            FPRINTF_FFLUSH(stderr, "Cannot find the current result \"%s\" in the list of expected results !\n",
+                    all_alkanes->data [i]->iupac_name);
         }
     }
     // ===== ===== ===== ENDE Testschleife ===== ===== =====
