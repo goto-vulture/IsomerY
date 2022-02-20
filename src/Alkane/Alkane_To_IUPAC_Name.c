@@ -983,21 +983,28 @@ Reorder_Chains
             // - Ist das akuelle Chain Objekt komplett mit dem vorherigen Chain Objekt identisch ?
             // - Ist die Verschachtelungstiefe des naechsten Chain Objektes groesser als die des aktuellen Objektes ?
             //   Wenn ja, dann wurde eine "Verschachtelungs-Hauptkette" gefunden
+
+            // Ist die Verschachtelungstiefe des aktuellen Chain Objektes mit dem naechsten identisch ?
             if (alkane->chains [i2 + 1].nesting_depth == (i + 1))
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
+            // Ist das aktuelle Chain Objekt das letzte im Array ?
             else if (alkane->chains [i2 + 1].nesting_depth == 0)
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
+            // Ist das vorherige Chain Objekt identisch mit der aktuellen "Verschachtelungs-Hauptkette" ? (Dieser
+            // Fall muss betrachtet werden, damit z.B. zwei aufeinanderfolgende Ethyl-Abzweigungen fuer die spaetere
+            // Benennung richtig gruppiert werden.)
             else if (Compare_Chains (alkane->chains [i2 - 1], reorder_data [i].sub_main_chain) == 0)
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
                 reorder_data [i].next_free_data ++;
             }
+            // Ist das akuelle Chain Objekt komplett mit dem vorherigen Chain Objekt identisch ?
             else if (Compare_Chains (alkane->chains [i2 - 1], alkane->chains [i2]) == 0)
             {
                 reorder_data [i].data [reorder_data [i].next_free_data] = alkane->chains [i2];
@@ -1020,7 +1027,6 @@ Reorder_Chains
             max_nesting_depth = i;
         }
     }
-
 
     // Sortierungen durchfuehren
     for (size_t i = 0; i < MAX_NUMBER_OF_NESTING_DEPTH; ++ i)
@@ -1142,8 +1148,6 @@ Reorder_Chains
             next_free_chain += reorder_data [i].next_free_data;
         }
     }
-
-
 
     return;
 }
