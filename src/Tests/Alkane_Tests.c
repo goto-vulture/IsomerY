@@ -158,7 +158,9 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers)
     };
 
+    #ifdef CREATE_Test_Function_And_Their_Name
     #undef CREATE_Test_Function_And_Their_Name
+    #endif /* CREATE_Test_Function_And_Their_Name */
 
     // Alkan-Tests ausfuehren
 //    RUN(TEST_Create_Alkane_Constitutional_Isomers);
