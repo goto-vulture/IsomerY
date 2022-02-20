@@ -951,6 +951,22 @@ Reorder_Chains
 
     memset (reorder_data, '\0', sizeof (reorder_data));
 
+    // In einigen Faellen, wenn alternative Zahlenpraefixe wie "Bis" oder "Tris" verwendet werden koennten, erzeugt die
+    // Umsortierung noch falsche Ergebnisse.
+    // ToDO: Umsortierug von Gruppen ermoeglichen
+    // Als Workaround wird die Zusammenfassung von Gruppen NICHT durchgefuehrt ! Ergebnisse ohne solche
+    // Zusammenfassungen sind zwar laenger; aber dennoch inhaltlich richtig
+    // Beispiel:
+    // OHNE Zusammenfassung:    4-(1-Methylethyl)-4-(1-Methylethyl)heptan
+    // MIT Zusammenfassung:     4,4-Bis(1-Methylethyl)heptan
+    //
+    // Erkennung einer falschen Umsortierung:
+    // Die Anzahl an Aesten mit deren Attributen (Laenge und Verschachtelungstiefe) ! OHNE Position ! darf durch die
+    // Umsortierung nicht geaendert werden
+    struct Alkane temp_alkane;
+    memcpy (&temp_alkane, alkane, sizeof (temp_alkane));
+
+
     // Fuer die spaetere Sortierung der Chain Objekte muessen diese temporaer umstrukturiert werden
     // Dafuer werden alle Chain Objekte durchlaufen und wie folgt in ein Array zusammengefasst:
     //
@@ -1146,6 +1162,38 @@ Reorder_Chains
             memcpy (&(alkane->chains [next_free_chain]), reorder_data [i].data, reorder_data [i].next_free_data *
                     sizeof (struct Chain));
             next_free_chain += reorder_data [i].next_free_data;
+        }
+    }
+
+    // Der Test am Ende:
+    // Hat die Umsortierung "Schaden" angerichtet?
+    _Bool chain_found [MAX_NUMBER_OF_C_ATOMS];
+    _Bool chain_used [MAX_NUMBER_OF_C_ATOMS];   // Damit jeder Ast aus dem Temp-Objekt nur maximal einmal verwendet wird
+    memset (chain_found, '\0', sizeof (chain_found));
+    memset (chain_used, '\0', sizeof (chain_used));
+
+    for (uint_fast8_t i = 0; i < alkane->next_free_chain; ++ i)
+    {
+        for (uint_fast8_t i2 = 0; i2 < temp_alkane.next_free_chain; ++ i2)
+        {
+            if (! chain_used [i2] /* == false */ &&
+                    alkane->chains [i].length == temp_alkane.chains [i2].length &&
+                    alkane->chains [i].nesting_depth == temp_alkane.chains [i2].nesting_depth)
+            {
+                chain_found [i] = true;
+                chain_used [i2] = true;
+                break;
+            }
+        }
+    }
+
+    // Wenn das Umsortieren "Schaden" angerichtet hat, dann wird der Zustand vor der Umsortierung wiederhergestellt
+    for (uint_fast8_t i = 0; i < alkane->next_free_chain; ++ i)
+    {
+        if (! chain_found [i] /* == false */)
+        {
+            memcpy(alkane, &temp_alkane, sizeof(temp_alkane));
+            break;
         }
     }
 
