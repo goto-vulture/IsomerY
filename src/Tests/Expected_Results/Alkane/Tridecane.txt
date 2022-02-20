@@ -381,7 +381,9 @@
 "2,2,5,5,7-Pentamethyloctane",
 "2,2,5,6,6-Pentamethyloctane",
 "2,2,5,6,7-Pentamethyloctane",
-"2,2,6,6,7-Pentamethyloctane",
+
+// Die Variante, die angegeben wurde: "2,2,6,6,7-Pentamethyloctane", Es gibt eine optimiertere Benennung, die hier von Hand ersetzend eingefuegt wurde
+"2,3,3,7,7-Pentamethyloctane",
 "2,3,3,4,4-Pentamethyloctane",
 "2,3,3,4,5-Pentamethyloctane",
 "2,3,3,4,6-Pentamethyloctane",
