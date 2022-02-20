@@ -1,14 +1,12 @@
 ----- ----- ----- ToDo ----- ----- -----
 - Konvertierung von den Chain-Objekten zu den IUPAC-Namen funktioniert noch nicht einwandfrei
-    - In einigen Faellen werden komplementaere Namen mit anderen Positionsinformationen gebildet:
-    - Erwartet: 4-Methyl-5-(1-methylethyl)octan
-    - Gebildet: 5-Methyl-4-(1-MethylEthyl)Octan
-    
-    - Teilweise werden ab C13 aber auch Ergebnisse erzeugt, die garantiert falsch sind:
-    - 3,5-DiMethyl-4-(1-EthylEthyl)Heptan
-    - 5-(1-EthylEthyl)Nonan
-    - 2-Methyl-4-(1-EthylEthyl)Octan
-    - Dabei handelt es sich wahrscheinlich um ein paar Sonderfaelle, in der die Verarbeitung nicht richtig geschieht
+    - Zahlenpraefixe, die gesamte Gruppen zusammenfassen, koennen aktuell noch nicht verwendet werden, da u.A. die
+      Umsortierung bei solchen Isomeren falsche Ergebnisse erzeugt.
+      Aktueller Workaround: Bei diesen Isomeren wird auf das Umstrukturieren der Aeste verzichtet. Gleichzeitig werden
+      die "Langformen" der Namen gebildet
+      Bsp.
+      - OHNE Zusammenfassung mit Zahlenpraefix: 4-(1-Methylethyl)-4-(1-Methylethyl)heptan
+      - MIT Zusammenfassung mit Zahlenpraefix:  4,4-Bis(1-Methylethyl)heptan
 - Richtige Dokumentation der C "Klassen" DONE (mit Doxygen)
 
 ----- ----- ----- Ideas ----- ----- -----
