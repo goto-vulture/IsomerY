@@ -815,7 +815,9 @@
 
 "4,4-Dipropylheptane",
 "4-(1-Methylethyl)-4-propylheptane",
-"4,4-Bis(1-methylethyl)heptane",
+// Namen mit dem alternativen Zahlenpraefix "Bis" und Co. werden (vorerst) mit komplementaeren Bezeichnungen ersetzt !
+//"4,4-Bis(1-methylethyl)heptane",
+"4-(1-methylethyl)-4-(1-methylethyl)heptane",
 
 "2,5-Dimethyl-4-(1-methylpropyl)heptane",
 "2,6-Dimethyl-4-(1-methylpropyl)heptane",
@@ -896,7 +898,9 @@
 
 "4-Ethyl-2,5-dimethyl-3-(1-methylethyl)hexane",
 
-"2-Methyl-3,3-bis(1-methylethyl)hexane",
+// Namen mit dem alternativen Zahlenpraefix "Bis" und Co. werden (vorerst) mit komplementaeren Bezeichnungen ersetzt !
+//"2-Methyl-3,3-bis(1-methylethyl)hexane",
+"2-Methyl-3-(1-methylethyl)-3-(1-methylethyl)hexane",
 
 "3-(1,1-Dimethylethyl)-2,2,3-trimethylhexane",
 "3-(1,1-Dimethylethyl)-2,2,4-trimethylhexane",
@@ -908,5 +912,7 @@
 "3,3-Diethyl-2,2,4,4-tetramethylpentane",
 "2,2,3,4,4-Pentamethyl-3-(1-methylethyl)pentane",
 "3-Ethyl-2,2,4-trimethyl-3-(1-methylethyl)pentane",
-"2,4-Dimethyl-3,3-bis(1-methylethyl)pentane",
+// Namen mit dem alternativen Zahlenpraefix "Bis" und Co. werden (vorerst) mit komplementaeren Bezeichnungen ersetzt !
+//"2,4-Dimethyl-3,3-bis(1-methylethyl)pentane",
+"2,4-Dimethyl-3-(1-methylethyl)-3-(1-methylethyl)pentane",
 "3-(1,1-Dimethylethyl)-2,2,4,4-tetramethylpentane"
