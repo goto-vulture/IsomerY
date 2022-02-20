@@ -378,14 +378,22 @@ Do_DFS
     const uint_fast8_t count_ch3_elemets = next_free_ch3_element;
 
     // Alle Kombinationen an CH3-Elementen ausprobieren, wobei die Reihenfolge der CH3-Elemente KEINE Rolle spielt !
-    // Gleichzeitig muessen die Faelle, wo Start und Ziel gleich sind, nicht betrachtet werden
     for (uint_fast8_t current_ch3_element_start = 0; current_ch3_element_start < count_ch3_elemets;
             ++ current_ch3_element_start)
     {
-        for (uint_fast8_t current_ch3_element_end = (uint_fast8_t) (current_ch3_element_start + 1);
-                current_ch3_element_end < count_ch3_elemets;
+        for (uint_fast8_t current_ch3_element_end = 0; current_ch3_element_end < count_ch3_elemets;
                 ++ current_ch3_element_end)
         {
+            // Wenn KEIN manueller Startknoten gewaehlt wird, dann koennen die Schleifendurchlauefe, wo Start und Ziel
+            // identisch sind, uebersprungen werden
+            if (start_c_atom == UINT_FAST8_MAX)
+            {
+                if (current_ch3_element_start == current_ch3_element_end)
+                {
+                    continue;
+                }
+            }
+
             struct Path_Data* current_path_data = Create_Path_Data ();
             Add_Path_Data_To_Container (path_data_container, current_path_data);
 
