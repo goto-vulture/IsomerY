@@ -227,10 +227,10 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== ===== ===== BEGINN Hauptkette bestimmen ===== ===== ===== ===== ===== ===== =====
     // Das Zaehlen der erzeugten Ergebnisse - waehrend des kompletten Programmlaufs - dient fuer ein besseres Debugging,
     // wenn bei einer bestimmten Erzeugung nach Fehlern gesucht werden soll.
-#ifndef RELEASE_BUILD
+//#ifndef RELEASE_BUILD
     static volatile size_t result_number = 0;
     ++ result_number;
-#endif /* RELEASE_BUILD */
+//#endif /* RELEASE_BUILD */
 
     // Graphen erstellen -> Adjazenzmatrix mit Werten fuellen
     // current_c_atom = 1: Das erste Element ueberspringen, da dies die Ausnahmen-1 ist und keine verbunden-mit-Aussage
@@ -258,12 +258,12 @@ Convert_Alkane_To_IUPAC_Name
     // ===== ===== ===== ===== ===== BEGINN Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
     // Debug-if
     // Falls bei einer bestimmten Erzeugung ein Breakpoint gesetzt werden soll, dann ist hier die beste Stelle dafuer !
-#ifndef RELEASE_BUILD
+//#ifndef RELEASE_BUILD
     if (result_number == 42)
     {
         (void) result_number;
     }
-#endif /* RELEASE_BUILD */
+//#endif /* RELEASE_BUILD */
 
     // Durch die Festlegung der Hauptkette koennen - und werden in den meisten Faellen - Aeste gebildet werden, die bei
     // der Benennung beruecksichtigt werden muessen
@@ -286,11 +286,11 @@ Convert_Alkane_To_IUPAC_Name
     // Erzeugten IUPAC-Name im Alkan-Objekt hinterlegen (tiefe Kopie)
     memcpy (alkane->iupac_name, iupac_name, sizeof (iupac_name));
 
-#ifndef RELEASE_BUILD
+//#ifndef RELEASE_BUILD
     PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu | %6zu)\n", iupac_name, strlen (iupac_name), result_number);
-#else
-    PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu)\n", iupac_name, strlen (iupac_name));
-#endif /* RELEASE_BUILD */
+//#else
+    //PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu)\n", iupac_name, strlen (iupac_name));
+//#endif /* RELEASE_BUILD */
     // ===== ===== ===== ===== ===== ENDE Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
 
     FREE_AND_SET_TO_NULL(main_chain);
