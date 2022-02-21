@@ -3,13 +3,42 @@
 # Dies soll die Anzahl an moeglichen Geraeten einschraenken, wenn sich die Adressen der anderen Rechner im lokalen Netzwerk
 # geaendert haben
 
+local_address=0
+network_mask=0
+start_address=0
+
+
+if [[ "$#" == 0 ]];
+then
+    local_address="192.168.178."
+    network_mask="255.255.255.0"
+    start_address="192.168.178.1"
+elif [[ "$#" == 1 ]];
+then
+    local_address=${1}
+elif [[ "$#" == 2 ]];
+then
+    local_address=${1}
+    network_mask=${2}
+elif [[ "$#" == 3 ]];
+then
+    local_address=${1}
+    network_mask=${2}
+    start_address=${3}
+else
+    printf "Too much CLI parameter ! Got: %d; max. possible: 3 !\n" "#$"
+    exit 1
+fi
 
 
 count_used_addresses=0
 
-for (( i=1; i<255; i++ ))
+start_host_part=$(echo ${start_address} | cut -d '.' -f 4)
+printf "Start address: %s\n\n" ${start_address}
+
+for (( i=${start_host_part}; i<255; i++ ))
 do
-    local_address="192.168.178."
+    local_address=${1}
     local_address+=${i}
 
     printf "Using: %s\r" ${local_address}
