@@ -287,7 +287,10 @@ Convert_Alkane_To_IUPAC_Name
     memcpy (alkane->iupac_name, iupac_name, sizeof (iupac_name));
 
 //#ifndef RELEASE_BUILD
-    PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu | %6zu)\n", iupac_name, strlen (iupac_name), result_number);
+    // Hinweis in der Ausgabe, ob das Ergebnis mit umgekehrter Zahlenreihenfolge erstellt wurde (Hilft bei der
+    // Fehlersuche)
+    PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu | %6zu) %s\n", iupac_name, strlen (iupac_name), result_number,
+            (reversed_number_order /* == true */) ? "Reversed order !" : "");
 //#else
     //PRINTF_FFLUSH("=> IUPAC name: %60s <= (length: %2zu)\n", iupac_name, strlen (iupac_name));
 //#endif /* RELEASE_BUILD */
