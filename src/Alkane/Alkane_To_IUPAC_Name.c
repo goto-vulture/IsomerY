@@ -1184,8 +1184,10 @@ Reorder_Chains
         for (uint_fast8_t i2 = 0; i2 < temp_alkane.next_free_chain; ++ i2)
         {
             if (! chain_used [i2] /* == false */ &&
-                    alkane->chains [i].length == temp_alkane.chains [i2].length &&
-                    alkane->chains [i].nesting_depth == temp_alkane.chains [i2].nesting_depth)
+                    Compare_Chains(alkane->chains[i], temp_alkane.chains[i2]) == 0
+                    /* alkane->chains [i].length == temp_alkane.chains [i2].length &&
+                    alkane->chains [i].nesting_depth == temp_alkane.chains [i2].nesting_depth &&
+                    alkane->chains [i].position == temp_alkane.chains [i2].position */)
             {
                 chain_found [i] = true;
                 chain_used [i2] = true;
