@@ -180,7 +180,8 @@ Alkane_To_String
     // Die Aeste des Alkans in die Zeichenkettendarstellung einbinden
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(alkane->branches); ++ i)
     {
-        TO_STRING_HELPER_VA_ARGS("Branch %" PRI_SIZET ": (%p)\n", i, (void*) alkane->branches [i]);
+        TO_STRING_HELPER_VA_ARGS("Branch %" PRI_SIZET ": %s%p%s\n", i, (alkane->branches [i] != NULL) ? "(" : "",
+                (void*) alkane->branches [i], (alkane->branches [i] != NULL) ? ")" : "");
         if (alkane->branches [i] != NULL)
         {
             char temp_string [150];
@@ -203,7 +204,15 @@ Alkane_To_String
         TO_STRING_HELPER("\n");
     }
 
-    TO_STRING_HELPER("\n(");
+    // Chain-Objekte ausgeben
+    TO_STRING_HELPER("Chain  x: (length, position, nesting_depth)\n");
+    for (uint_fast8_t i = 0; i < alkane->next_free_chain; ++ i)
+    {
+        TO_STRING_HELPER_VA_ARGS("Chain %2" PRIuFAST8 ": (%3" PRIuFAST8 ", %3" PRIuFAST8 ", %3" PRIuFAST8 ")\n", i,
+                alkane->chains[i].length, alkane->chains[i].position, alkane->chains[i].nesting_depth);
+    }
+
+    TO_STRING_HELPER("Numbercode: (");
 
     // Aufbau des Alkans in eine Zeichenkettendarstellung ueberfuehren
     for (uint_fast8_t i = 0; i < alkane->number_of_c_atoms; ++ i)
@@ -216,10 +225,10 @@ Alkane_To_String
         }
     }
 
-    TO_STRING_HELPER(")\n\n");
+    TO_STRING_HELPER(")\n");
 
     // Laengeninformation einfuegen
-    TO_STRING_HELPER_VA_ARGS("Length: %" PRIuFAST8 "\n", alkane->number_of_c_atoms);
+    TO_STRING_HELPER_VA_ARGS("Number of c atoms: %" PRIuFAST8 "\n", alkane->number_of_c_atoms);
 
     TO_STRING_HELPER("State: ");
 
