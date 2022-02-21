@@ -5,8 +5,9 @@
 # Wichtig, damit das Trennzeichen bei Gleitkommazahlen immer ein Kommata ist !
 LC_NUMERIC="de_DE.UTF-8"
 
-DEFAULT_RUNS=5
-DEFAULT_NUM_C_ATOMS=10
+# Keine Default-Werte mehr !
+# DEFAULT_RUNS=5
+# DEFAULT_NUM_C_ATOMS=10
 
 TOTAL_RUNS=0
 TOTAL_NUM_C_ATOMS=0
@@ -22,12 +23,16 @@ AVERAGE_SEC=0
 # 2. CLI-Parameter: Anzahl der C-Atome, die fuer die Isomererstellung verwendet werden sollen
 if [[ "$#" == 0 ]];
 then
-    TOTAL_RUNS=${DEFAULT_RUNS}
-    TOTAL_NUM_C_ATOMS=${DEFAULT_NUM_C_ATOMS}
+    # TOTAL_RUNS=${DEFAULT_RUNS}
+    # TOTAL_NUM_C_ATOMS=${DEFAULT_NUM_C_ATOMS}
+    echo "Missing parameter ! (Number of runs and c-atoms)"
+    exit 1
 elif [[ "$#" == 1 ]];
 then
     TOTAL_RUNS=${1}
-    TOTAL_NUM_C_ATOMS=${DEFAULT_NUM_C_ATOMS}
+    # TOTAL_NUM_C_ATOMS=${DEFAULT_NUM_C_ATOMS}
+    echo "Missing parameter ! (Number of c-atoms)"
+    exit 1
 elif [[ "$#" == 2 ]];
 then
     TOTAL_RUNS=${1}
@@ -123,7 +128,7 @@ do
             PROGRAM_OUTPUT=$(time ( ${PROG_NAME} -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)
             last_call=${?}
         fi
-        
+
         # Ist das Testprogramm normal beendet worden ?
         if [[ ${last_call} -ne 0 ]];
         then
