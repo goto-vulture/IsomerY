@@ -1555,7 +1555,7 @@
 "2,5-Dimethyl-4-(2-methylpropyl)octan",
 "2,6-Dimethyl-4-(2-methylpropyl)octan",
 "2,7-Dimethyl-4-(2-methylpropyl)octan",
-"3,3-Dimethyl-4-(2-methylpropyl)octan",
+/* "3,3-Dimethyl-4-(2-methylpropyl)octan", Komplementaer: */ "2-Methyl-4-(1,1-DiMethylPropyl)Octan",
 
 "3-(1,1-Dimethylethyl)-2,2-dimethyloctan",
 "4-(1,1-Dimethylethyl)-2,2-dimethyloctan",
@@ -1579,7 +1579,7 @@
 "5-(1,1-Dimethylethyl)-3,3-dimethyloctan",
 "5-(1,1-Dimethylethyl)-3,4-dimethyloctan",
 "5-(1,1-Dimethylethyl)-3,5-dimethyloctan",
-"5-(1,1-Dimethylethyl)-4,4-dimethyloctan",
+/* "5-(1,1-Dimethylethyl)-4,4-dimethyloctan", Komplementaer: */ "5,5-DiMethyl-4-(1,1-DiMethylEthyl)Octan",
 
 "3-Ethyl-4-(1-methylpropyl)octan",
 
@@ -1894,14 +1894,14 @@
 "2,5,5-Trimethyl-4-(1-methylpropyl)heptan",
 "3,3,5-Trimethyl-4-(1-methylpropyl)heptan",
 "3,4,5-Trimethyl-4-(1-methylpropyl)heptan",
-"2,2,5-Trimethyl-4-(2-methylpropyl)heptan",
+/* "2,2,5-Trimethyl-4-(2-methylpropyl)heptan", Komplementaer: */ "2,2,6-TriMethyl-4-(1-MethylPropyl)Heptan",
 "2,2,6-Trimethyl-4-(2-methylpropyl)heptan",
-"2,3,5-Trimethyl-4-(2-methylpropyl)heptan",
+/* "2,3,5-Trimethyl-4-(2-methylpropyl)heptan", Komplementaer: */ "2,3,6-TriMethyl-4-(1-MethylPropyl)Heptan",
 "2,3,6-Trimethyl-4-(2-methylpropyl)heptan",
-"2,4,5-Trimethyl-4-(2-methylpropyl)heptan",
+/* "2,4,5-Trimethyl-4-(2-methylpropyl)heptan", Komplementaer: */ "2,4,6-TriMethyl-4-(1-MethylPropyl)Heptan",
 
 "2,4,6-Trimethyl-4-(2-methylpropyl)heptan",
-"2,5,5-Trimethyl-4-(2-methylpropyl)heptan",
+/* "2,5,5-Trimethyl-4-(2-methylpropyl)heptan", Komplementaer: */ "2,6-DiMethyl-4-(1,1-DiMethylPropyl)Heptan",
 "3-(1,1-Dimethylethyl)-2,2,3-trimethylheptan",
 "3-(1,1-Dimethylethyl)-2,2,4-trimethylheptan",
 "3-(1,1-Dimethylethyl)-2,2,5-trimethylheptan",
@@ -1924,7 +1924,7 @@
 
 "3-Ethyl-5-methyl-4-(1-methylpropyl)heptan",
 "5-Ethyl-2-methyl-4-(1-methylpropyl)heptan",
-"5-Ethyl-2-methyl-4-(2-methylpropyl)heptan",
+/* "5-Ethyl-2-methyl-4-(2-methylpropyl)heptan", Komplementaer: */ "2,6-DiMethyl-4-(1-EthylPropyl)Heptan",
 "4-(1,1-Dimethylethyl)-3-ethyl-2-methylheptan",
 "4-(1,1-Dimethylethyl)-3-ethyl-3-methylheptan",
 "4-(1,1-Dimethylethyl)-3-ethyl-4-methylheptan",
