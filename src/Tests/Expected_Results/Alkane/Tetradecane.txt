@@ -541,7 +541,10 @@
 "2,2,6,7,7-Pentamethylnonan",
 
 "2,2,6,7,8-Pentamethylnonan",
-"2,2,7,7,8-Pentamethylnonan",
+
+// "2,2,7,7,8-Pentamethylnonan", Optimierte Variante:
+"2,3,3,8,8-Pentamethylnonan",
+
 "2,3,3,4,4-Pentamethylnonan",
 "2,3,3,4,5-Pentamethylnonan",
 "2,3,3,4,6-Pentamethylnonan",
@@ -1061,7 +1064,10 @@
 "2,2,4,6,6,7-Hexamethyloctan",
 "2,2,5,5,6,6-Hexamethyloctan",
 "2,2,5,5,6,7-Hexamethyloctan",
-"2,2,5,6,6,7-Hexamethyloctan",
+
+// "2,2,5,6,6,7-Hexamethyloctan", Optimierte Variante:
+"2,3,3,4,7,7-Hexamethyloctan",
+
 "2,3,3,4,4,5-Hexamethyloctan",
 "2,3,3,4,4,6-Hexamethyloctan",
 "2,3,3,4,4,7-Hexamethyloctan",
@@ -1228,7 +1234,10 @@
 "6-Ethyl-2,2,5,5-tetramethyloctan",
 "6-Ethyl-2,2,5,6-tetramethyloctan",
 "6-Ethyl-2,2,5,7-tetramethyloctan",
-"6-Ethyl-2,2,6,7-tetramethyloctan",
+
+// "6-Ethyl-2,2,6,7-tetramethyloctan", Optimierte Variante:
+"3-Ethyl-2,3,7,7-tetramethyloctan",
+
 "6-Ethyl-2,3,3,4-tetramethyloctan",
 "6-Ethyl-2,3,3,5-tetramethyloctan",
 "6-Ethyl-2,3,3,6-tetramethyloctan",
