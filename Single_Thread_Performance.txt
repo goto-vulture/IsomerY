@@ -1,0 +1,8 @@
+Single Thread Performance einige meiner CPUs:
+(Werte von: https://www.cpubenchmark.net/singleThread.html)
+
+Intel Pentium E5400 @ 2.70GHz:          1.085
+AMD Athlon 5350 APU:                      702
+Intel Atom D510 @ 1.66GHz (fuer N450):    292
+AMD FX-8320E Eight-Core:                1.409
+Intel Core i5-3320M @ 2.60GHz:          1.616
