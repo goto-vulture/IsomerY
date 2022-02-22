@@ -9,6 +9,8 @@
       - MIT Zusammenfassung mit Zahlenpraefix:  4,4-Bis(1-Methylethyl)heptan
 - Richtige Dokumentation der C "Klassen" DONE (mit Doxygen)
 
+- IUPAC-Name zeichnen (Sowohl als ASCII-Bild, als auch als richtige Grafik)
+
 ----- ----- ----- Ideas ----- ----- -----
 - Laufzeitvergleich Debug / Release Build DONE
 - Funktion Create_Alkane_Constitutional_Isomers () verkleinern, indem die Funktion in kleinere Unterfunktionen aufgeteilt wird DONE
