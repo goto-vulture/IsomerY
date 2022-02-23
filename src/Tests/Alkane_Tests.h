@@ -186,6 +186,34 @@ extern void TEST_All_Possible_Tridecan_Constitutional_Isomers (void);
  */
 extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void);
 
+/**
+ * @brief Das Zusammenfassen von Gruppen im IUPAC-Namen testen.
+ *
+ * Was ist damit genau gemeint?
+ *
+ * Mit "Gruppen" sind kombinierte Aeste gemeint, die mehrfach vorkommen.
+ * Z.B.: (1-methylethyl)
+ *
+ * Ein Alkan wie "4-(1-methylethyl)-4-(1-methylethyl)heptane"
+ *
+ *             C
+ *             |
+ *             C - C
+ *             |
+ * C - C - C - C - C - C - C
+ *             |
+ *             C - C
+ *             |
+ *             C
+ *
+ * Die beiden Gruppen "(1-methylehtyl)" koennen zusammengefasst werden:
+ * 4,4-Bis(1-methylethyl)heptane
+ *
+ * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
+ *
+ */
+extern void TEST_Group_Compression (void);
+
 
 
 // ENDE C++-Kompablitaet herstellen

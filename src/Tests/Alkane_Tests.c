@@ -156,6 +156,7 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Dodecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tridecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers)
+            CREATE_Test_Function_And_Their_Name(TEST_Group_Compression)
     };
 
     #ifdef CREATE_Test_Function_And_Their_Name
@@ -776,6 +777,65 @@ void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void)
     // Test durchfuehren
     Execute_Creation_Test_With_Expected_Results (number_of_c_atoms, number_of_constitutional_isomers, expected_results,
             COUNT_ARRAY_ELEMENTS(expected_results));
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Das Zusammenfassen von Gruppen im IUPAC-Namen testen.
+ *
+ * Was ist damit genau gemeint?
+ *
+ * Mit "Gruppen" sind kombinierte Aeste gemeint, die mehrfach vorkommen.
+ * Z.B.: (1-methylethyl)
+ *
+ * Ein Alkan wie "4-(1-methylethyl)-4-(1-methylethyl)heptane"
+ *
+ *             C
+ *             |
+ *             C - C
+ *             |
+ * C - C - C - C - C - C - C
+ *             |
+ *             C - C
+ *             |
+ *             C
+ *
+ * Die beiden Gruppen "(1-methylehtyl)" koennen zusammengefasst werden:
+ * 4,4-Bis(1-methylethyl)heptane
+ *
+ * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
+ *
+ */
+void TEST_Group_Compression (void)
+{
+    const char expected_iupac_name [] = "4,4-Bis(1-methylethyl)heptane";
+
+    const unsigned char branch_1_content [] = { 1, 1, 2 };
+    const unsigned char branch_2_content [] = { 1, 1, 2 };
+    const unsigned char branch_3_content [] = { 1, 1 ,1 };
+    const unsigned char branch_4_content [] = { 1, 1, 1 };
+
+    struct Alkane_Branch* branch_1 = Create_Alkane_Branch(branch_1_content, COUNT_ARRAY_ELEMENTS(branch_1_content));
+    struct Alkane_Branch* branch_2 = Create_Alkane_Branch(branch_2_content, COUNT_ARRAY_ELEMENTS(branch_2_content));
+    struct Alkane_Branch* branch_3 = Create_Alkane_Branch(branch_3_content, COUNT_ARRAY_ELEMENTS(branch_3_content));
+    struct Alkane_Branch* branch_4 = Create_Alkane_Branch(branch_4_content, COUNT_ARRAY_ELEMENTS(branch_4_content));
+
+    struct Alkane* alkane = Create_Alkane(branch_1, branch_2, branch_3, branch_4);
+
+    // Kovertierung durchfuehren
+    Convert_Alkane_To_IUPAC_Name(alkane, false);
+
+    // Wurde der richtige Name erzeugt?
+    ASSERT_STRING_EQUALS(expected_iupac_name, alkane->iupac_name);
+
+    Delete_Alkane(alkane);
+    Delete_Alkane_Branch(branch_1);
+    Delete_Alkane_Branch(branch_2);
+    Delete_Alkane_Branch(branch_3);
+    Delete_Alkane_Branch(branch_4);
 
     return;
 }
