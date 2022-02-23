@@ -91,6 +91,12 @@ extern "C"
     #error "The macro \"NUMBER_OF_ALKYL_WORDS\" is already defined !"
 #endif /* NUMBER_OF_ALKYL_WORDS */
 
+#ifndef NUMBER_OF_GROUP_MERGE_WORDS
+    #define NUMBER_OF_GROUP_MERGE_WORDS 5u
+#else
+    #error "The macro \"NUMBER_OF_GROUP_MERGE_WORDS\" is already defined !"
+#endif /* NUMBER_OF_GROUP_MERGE_WORDS */
+
 
 
 #include <inttypes.h>
@@ -109,6 +115,8 @@ extern const char* NUMBER_WORDS [NUMBER_OF_NUMBER_WORDS];
 extern const char* ALKAN_WORDS_DE [NUMBER_OF_ALKAN_WORDS];  // Alkanwoerter in Deutsch
 extern const char* ALKAN_WORDS_EN [NUMBER_OF_ALKAN_WORDS];  // Alkanwoerter in Englisch
 extern const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS];     // Alkylwoerter (sind in Deutsch und Englisch gleich)
+
+extern const char* GROUP_MERGE_WORDS[NUMBER_OF_GROUP_MERGE_WORDS]; // Bezeichnungen, wenn Gruppen zusammengefasst werden
 
 
 

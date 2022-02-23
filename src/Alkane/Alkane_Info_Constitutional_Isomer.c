@@ -104,3 +104,13 @@ const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS] =
         "Hentriacontyl",  "Dotriacontyl",    "Dotriacontyl",   "Tetratriacontyl", "Pentatriacontyl",
         "Hexatriacontyl", "Heptatriacontyl", "Octatriacontyl", "Nonatriacontyl",  "Tetracontyl"
 };
+
+/**
+ * @brief Praefixe, die die Zusammenfassung von Gruppen markiert.
+ *
+ * @see https://de.wikipedia.org/wiki/Nomenklatur_(Chemie)#Alternative_Zahlenpr%C3%A4fixe
+ */
+const char* GROUP_MERGE_WORDS[NUMBER_OF_GROUP_MERGE_WORDS] =
+{
+        "hen", "bis", "tris", "tetrakis", "pentakis"
+};
