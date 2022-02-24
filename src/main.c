@@ -137,7 +137,7 @@ int main (const int argc, const char* argv [])
                     "Anzahl an C-Atome, die fuer die Tests verwendet werden sollen", NULL, 0, 0),
 
             OPT_GROUP("Debug- / Testfunktionen"),
-            OPT_BOOLEAN('t', "test_function", NULL,
+            OPT_BOOLEAN('t', "test_function", &GLOBAL_SELECT_TEST_FUNCTION,
                     "Auflistung aller Testfunktionen und Auswahl einer Funktion", NULL, 0, 0),
 
             OPT_END()

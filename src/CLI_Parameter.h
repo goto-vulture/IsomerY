@@ -20,6 +20,10 @@ extern "C"
 
 
 
+#include <stdbool.h>
+
+
+
 extern const char* const GLOBAL_USAGES []; ///< Beschreibung ueber die Verwendung des CLI Interfaces
 
 extern const char* const GLOBAL_PROGRAM_DESCRIPTION; ///< Allgemeine Programmbeschreibung
@@ -32,6 +36,11 @@ extern const char* const GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION; ///< Zusaetzlich
  * @brief CLI-Parameter: Anzahl an C-Atomen, die bei den Tests verwendet werden sollen
  */
 extern int GLOBAL_MAX_C_ATOMS_FOR_TESTS;
+
+/**
+ * @brief CLI-Parameter: Soll eine Testfunktion zur Laufzeit vom Nutzer ausgewaehlt werden ?
+ */
+extern _Bool GLOBAL_SELECT_TEST_FUNCTION;
 
 
 

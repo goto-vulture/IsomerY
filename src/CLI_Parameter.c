@@ -29,6 +29,8 @@ const char* const GLOBAL_ADDITIONAL_PROGRAM_DESCRIPTION = "Weitere Programmbesch
 // Variablen fuer die geparsten CLI-Parameter
 int GLOBAL_MAX_C_ATOMS_FOR_TESTS = 0;
 
+_Bool GLOBAL_SELECT_TEST_FUNCTION = false;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------
