@@ -172,8 +172,11 @@ Execute_All_Alkane_Tests
 //    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
 
     // Testfunktion mit manueller Zeichenkette aufrufen
-    RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
-            test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
+    if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
+    {
+        RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
+                test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
+    }
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
