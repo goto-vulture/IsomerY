@@ -850,7 +850,7 @@ void TEST_Group_Compression (void)
 {
     const char expected_iupac_name [] = "4,4-Bis(1-methylethyl)heptane";
 
-    const unsigned char branch_1_content [] = { 1, 1, 2 };
+    const unsigned char branch_1_content [] = { 1, 1, 2, 3 };
     const unsigned char branch_2_content [] = { 1, 1, 2 };
     const unsigned char branch_3_content [] = { 1, 1 ,1 };
     const unsigned char branch_4_content [] = { 1, 1, 1 };
