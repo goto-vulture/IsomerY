@@ -155,7 +155,7 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Undecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Dodecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tridecan_Constitutional_Isomers),
-            CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers)
+            CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_Group_Compression)
     };
 
