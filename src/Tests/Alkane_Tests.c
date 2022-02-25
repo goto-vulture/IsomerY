@@ -25,6 +25,7 @@
 #include "../Error_Handling/Assert_Msg.h"
 #include "../CLI_Parameter.h"
 #include "IUPAC_Chain_Lexer.h"
+#include "../str2int.h"
 
 
 
@@ -163,15 +164,48 @@ Execute_All_Alkane_Tests
     #undef CREATE_Test_Function_And_Their_Name
     #endif /* CREATE_Test_Function_And_Their_Name */
 
-    // Alkan-Tests ausfuehren
-//    RUN(TEST_Create_Alkane_Constitutional_Isomers);
-//    RUN(TEST_Create_Alkane);
-//    RUN(TEST_Convert_Alkane_To_IUPAC_Name);
-//    RUN(TEST_Convert_Alkane_To_IUPAC_Name_2);
-//    RUN(TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects);
-//    RUN(TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name);
+    // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
+    if (GLOBAL_SELECT_TEST_FUNCTION /* == true */)
+    {
+        char input_buffer [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+        long int selected_test_function = 0;
 
-    // Testfunktion mit manueller Zeichenkette aufrufen
+        puts("===>>> Testfunctions available <<<===");
+        for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
+        {
+            printf ("%2zu: %s\n", i + 1, test_functions[i].function_name);
+        }
+        fflush(stdout);
+
+        // Einleseschleife
+        while (true)
+        {
+            int c = 0;
+            printf ("(1 - %zu) => ", COUNT_ARRAY_ELEMENTS((test_functions)));
+            scanf ("%9s", input_buffer);
+
+            // Idee von: https://stackoverflow.com/questions/28297306/how-to-limit-input-length-with-scanf
+            while ((c = fgetc(stdin)) != '\n' && c != EOF); /* Flush stdin */
+
+            // Ist die Eingabe ueberhaupt ein Integer?
+            const enum str2int_errno conversion_errno = str2int(&selected_test_function, input_buffer, 10);
+
+            if (conversion_errno == STR2INT_SUCCESS && selected_test_function > 0 &&
+                    selected_test_function <= (long int) COUNT_ARRAY_ELEMENTS(test_functions))
+            {
+                break;
+            }
+            puts("Invalid input !");
+            memset (input_buffer, '\0', sizeof(input_buffer));
+        }
+
+        PRINTF_FFLUSH("\nUsing the test function \"%s\"\n", test_functions [selected_test_function - 1].function_name);
+
+        // Testfunktion aufrufen
+        RUN_2(test_functions [selected_test_function - 1].test_function,
+                test_functions [selected_test_function - 1].function_name);
+    }
+    // Testfunktion anhand der Anzahl an C-Atomen, die eingegeben worden sind, aufrufen
     if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
     {
         RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
