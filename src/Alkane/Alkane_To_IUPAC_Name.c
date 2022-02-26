@@ -175,6 +175,33 @@ Reorder_Chains
                                                 // falls notwendig
 );
 
+/**
+ * Mit "Gruppen" sind kombinierte Aeste gemeint, die mehrfach vorkommen.
+ * Z.B.: (1-methylethyl)
+ *
+ * Ein Alkan wie "4-(1-methylethyl)-4-(1-methylethyl)heptane"
+ *
+ *             C
+ *             |
+ *             C - C
+ *             |
+ * C - C - C - C - C - C - C
+ *             |
+ *             C - C
+ *             |
+ *             C
+ *
+ * Die beiden Gruppen "(1-methylehtyl)" koennen zusammengefasst werden:
+ * 4,4-Bis(1-methylethyl)heptane
+ *
+ * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
+ */
+static void
+Group_Compression
+(
+        struct Alkane* const restrict alkane    // Alkane-Objekt, bei dem versucht wird Gruppen zusammenzufassen
+);
+
 //=====================================================================================================================
 
 /*
@@ -272,6 +299,9 @@ Convert_Alkane_To_IUPAC_Name
     // Aeste, die auf einer Verschachtelungsebene liegen, anhand der Laenge der Aeste aufsteigend sortieren
     // Dies ist fuer eine einfachere Erzeugung des IUPAC-Namen notwendig
     Reorder_Chains (alkane);
+
+    // Koennen Gruppen zusammengefasst werden ?
+    Group_Compression (alkane);
     // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
@@ -1206,6 +1236,38 @@ Reorder_Chains
         }
     }
 
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Mit "Gruppen" sind kombinierte Aeste gemeint, die mehrfach vorkommen.
+ * Z.B.: (1-methylethyl)
+ *
+ * Ein Alkan wie "4-(1-methylethyl)-4-(1-methylethyl)heptane"
+ *
+ *             C
+ *             |
+ *             C - C
+ *             |
+ * C - C - C - C - C - C - C
+ *             |
+ *             C - C
+ *             |
+ *             C
+ *
+ * Die beiden Gruppen "(1-methylehtyl)" koennen zusammengefasst werden:
+ * 4,4-Bis(1-methylethyl)heptane
+ *
+ * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
+ */
+static void
+Group_Compression
+(
+        struct Alkane* const restrict alkane    // Alkane-Objekt, bei dem versucht wird Gruppen zusammenzufassen
+)
+{
     return;
 }
 
