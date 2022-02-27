@@ -1296,10 +1296,7 @@ Group_Compression
     {
         for (uint_fast8_t second_token_index = 0; second_token_index < lexer_result.next_free_token; ++ second_token_index)
         {
-            if (first_token_index == second_token_index)
-            {
-                continue;
-            }
+            if (first_token_index == second_token_index) { continue; }
 
             if (strncmp (lexer_result.result_tokens [first_token_index], lexer_result.result_tokens [second_token_index],
                     sizeof (lexer_result.result_tokens [0])) == 0)
@@ -1322,6 +1319,8 @@ Group_Compression
         // Wurden Gruppen gefunden, die zusammengefasst werden koennen ?
         if (next_free_groupable_chain_tokens > 0)
         {
+            // Wurde der Name bereits zurueckgesetzt ?
+            // Einmal muss das gemacht werden, damit Namensfragmente nicht mehrfach im Ergebnis vorkommen
             if (! name_resetted /* == false */)
             {
                 memset (iupac_name, '\0', IUPAC_NAME_LENGTH);
@@ -1330,12 +1329,13 @@ Group_Compression
 
             uint_fast8_t prefix_length = 0;
 
+            // Alle Gruppen, die zusammengefuegt werden koennen, verarbeiten
             for (uint_fast8_t i2 = 0; i2 < next_free_groupable_chain_tokens; ++ i2)
             {
                 // Nummer, die am Beginn der Gruppe steht, extrahieren
                 char group_position_number [4] = { '\0', '\0', '\0', '\0' };
-                uint_fast8_t next_free_group_position_number = 0;
-                size_t current_char_in_group = 0;
+                uint_fast8_t next_free_group_position_number    = 0;
+                size_t current_char_in_group                    = 0;
 
                 while (isdigit (lexer_result.result_tokens [groupable_chain_tokens [i2]][current_char_in_group]))
                 {
@@ -1373,6 +1373,7 @@ Group_Compression
     // Die uebrigen Tokens vom Lexer hintereinander zum Ergebnis anhaengen
     for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
     {
+        // Nur die Tokens verwenden, die noch nicht verwendet wurden
         if (! lexer_tokens_used [i] /* == false */)
         {
             strncat (iupac_name, lexer_result.result_tokens [i], iupac_name_space_left);
