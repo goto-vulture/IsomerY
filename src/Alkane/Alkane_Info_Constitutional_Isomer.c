@@ -112,5 +112,5 @@ const char* ALKYL_WORDS [NUMBER_OF_ALKYL_WORDS] =
  */
 const char* GROUP_MERGE_WORDS[NUMBER_OF_GROUP_MERGE_WORDS] =
 {
-        "hen", "bis", "tris", "tetrakis", "pentakis"
+        "Hen", "Bis", "Tris", "Tetrakis", "Pentakis"
 };
