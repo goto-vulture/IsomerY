@@ -182,7 +182,12 @@ Execute_All_Alkane_Tests
         {
             int c = 0;
             printf ("(1 - %zu) => ", COUNT_ARRAY_ELEMENTS((test_functions)));
-            scanf ("%9s", input_buffer);
+            const int char_read = scanf ("%9s", input_buffer);
+            if (char_read == EOF)
+            {
+                puts("Got EOF ! Retry ...");
+                memset (input_buffer, '\0', sizeof(input_buffer));
+            }
 
             // Idee von: https://stackoverflow.com/questions/28297306/how-to-limit-input-length-with-scanf
             while ((c = fgetc(stdin)) != '\n' && c != EOF); /* Flush stdin */
