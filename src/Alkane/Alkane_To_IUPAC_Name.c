@@ -1371,13 +1371,34 @@ Group_Compression
     }
 
     // Die uebrigen Tokens vom Lexer hintereinander zum Ergebnis anhaengen
-    for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
+    if (name_resetted /* == true */)
     {
-        // Nur die Tokens verwenden, die noch nicht verwendet wurden
-        if (! lexer_tokens_used [i] /* == false */)
+        // Anzahl an verwendeten Tokens zaehlen
+        uint_fast8_t used_tokens = 0;
+
+        for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
         {
-            strncat (iupac_name, lexer_result.result_tokens [i], iupac_name_space_left);
-            iupac_name_space_left -= strlen (lexer_result.result_tokens [i]);
+            if (lexer_tokens_used [i] /* == true */)
+            {
+                ++ used_tokens;
+            }
+        }
+
+        // "- 1", da das Token fuer die gerade Kette ignoriert werden muss
+        if (used_tokens < (lexer_result.next_free_token - 1))
+        {
+            strncat (iupac_name, "-", iupac_name_space_left);
+            iupac_name_space_left -= strlen ("-");
+        }
+
+        for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
+        {
+            // Nur die Tokens verwenden, die noch nicht verwendet wurden
+            if (! lexer_tokens_used [i] /* == false */)
+            {
+                strncat (iupac_name, lexer_result.result_tokens [i], iupac_name_space_left);
+                iupac_name_space_left -= strlen (lexer_result.result_tokens [i]);
+            }
         }
     }
 
