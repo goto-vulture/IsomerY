@@ -1298,7 +1298,18 @@ Group_Compression
         {
             if (first_token_index == second_token_index) { continue; }
 
-            if (strncmp (lexer_result.result_tokens [first_token_index], lexer_result.result_tokens [second_token_index],
+            // Da in den Tokens die Positionsnummern enthalten sind, ist eine einfacher textueller Vergleich in den
+            // meisten Faellen nicht ausreichend, da auch gleiche Gruppen mit verschiedenen Positionsnummmern
+            // zusammengefasst werden muessen
+            uint_fast8_t first_token_offset = 0;
+            uint_fast8_t second_token_offset = 0;
+            while (! isalpha (lexer_result.result_tokens [first_token_index][first_token_offset]) /* == false */)
+            { first_token_offset ++; }
+            while (! isalpha (lexer_result.result_tokens [second_token_index][second_token_offset]) /* == false */)
+            { second_token_offset ++; }
+
+            if (strncmp (&(lexer_result.result_tokens [first_token_index][first_token_offset]),
+                    &(lexer_result.result_tokens [second_token_index][second_token_offset]),
                     sizeof (lexer_result.result_tokens [0])) == 0)
             {
                 if (! lexer_tokens_used [first_token_index] /* == false */)
