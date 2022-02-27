@@ -10,6 +10,7 @@
 
 #include "Alkane_To_IUPAC_Name.h"
 #include <string.h>
+#include <ctype.h>
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Print_Tools.h"
@@ -17,6 +18,7 @@
 #include "Alkane_Chain_To_IUPAC_Name.h"
 #include "Path_Data.h"
 #include "Path_Data_Container.h"
+#include "../Tests/IUPAC_Chain_Lexer.h"
 
 
 
@@ -195,11 +197,16 @@ Reorder_Chains
  * 4,4-Bis(1-methylethyl)heptane
  *
  * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
+ *
+ * Das Zusammenfassen von Gruppen geschieht auf den Level des bereits erzeugten IUPAC-Namen. Dafuer wird der erzeugte
+ * Name zerlegt und auf gleiche Gruppen durchsucht.
+ * Das Zerlegen findet mithilfe des IUPAC_Chain_Lexers statt, der eigentlich nur fuer Testfunktionen entwickelt wurde.
  */
 static void
 Group_Compression
 (
-        struct Alkane* const restrict alkane    // Alkane-Objekt, bei dem versucht wird Gruppen zusammenzufassen
+        char* const restrict iupac_name,    // Speicher fuer den IUPAC-Namen
+        const size_t iupac_name_length      // Groesse des Speichers, welches fuer den IUPAC-Namen reserviert wurde
 );
 
 //=====================================================================================================================
@@ -299,9 +306,6 @@ Convert_Alkane_To_IUPAC_Name
     // Aeste, die auf einer Verschachtelungsebene liegen, anhand der Laenge der Aeste aufsteigend sortieren
     // Dies ist fuer eine einfachere Erzeugung des IUPAC-Namen notwendig
     Reorder_Chains (alkane);
-
-    // Koennen Gruppen zusammengefasst werden ?
-    Group_Compression (alkane);
     // ===== ===== ===== ===== ===== ENDE Aeste und deren Positionen bestimmen ===== ===== ===== ===== =====
 
     // ===== ===== ===== ===== ===== BEGINN Aus den Astinformationen den Namen bestimmen ===== ===== ===== ===== =====
@@ -312,6 +316,9 @@ Convert_Alkane_To_IUPAC_Name
 
     // Gerade erzeugte Ketteninformationen benutzen, um daraus den IUPAC-Namen zu bilden
     Chain_To_IUPAC (iupac_name, iupac_name_length, alkane);
+
+    // Koennen Gruppen zusammengefasst werden ?
+    Group_Compression (iupac_name, iupac_name_length);
 
     // Erzeugten IUPAC-Name im Alkan-Objekt hinterlegen (tiefe Kopie)
     memcpy (alkane->iupac_name, iupac_name, sizeof (iupac_name));
@@ -1261,13 +1268,118 @@ Reorder_Chains
  * 4,4-Bis(1-methylethyl)heptane
  *
  * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
+ *
+ * Das Zusammenfassen von Gruppen geschieht auf den Level des bereits erzeugten IUPAC-Namen. Dafuer wird der erzeugte
+ * Name zerlegt und auf gleiche Gruppen durchsucht.
+ * Das Zerlegen findet mithilfe des IUPAC_Chain_Lexers statt, der eigentlich nur fuer Testfunktionen entwickelt wurde.
  */
 static void
 Group_Compression
 (
-        struct Alkane* const restrict alkane    // Alkane-Objekt, bei dem versucht wird Gruppen zusammenzufassen
+        char* const restrict iupac_name,    // Speicher fuer den IUPAC-Namen
+        const size_t iupac_name_length      // Groesse des Speichers, welches fuer den IUPAC-Namen reserviert wurde
 )
 {
+    const struct IUPAC_Chain_Lexer_Result lexer_result = Create_Chain_Tokens (iupac_name);
+
+    uint_fast8_t groupable_chain_tokens [NUMBER_OF_GROUP_MERGE_WORDS];
+    uint_fast8_t next_free_groupable_chain_tokens = 0;
+    memset (groupable_chain_tokens, '\0', sizeof(groupable_chain_tokens));
+
+    _Bool lexer_tokens_used [MAX_NUMBER_OF_C_ATOMS];
+    memset (lexer_tokens_used, '\0', sizeof (lexer_tokens_used));
+    _Bool name_resetted             = false;
+    size_t iupac_name_space_left    = iupac_name_length;
+
+    // Alle Kombinationen durchgehen, um moegliche Gruppen fuer die Zusammenfassung zu finden
+    for (uint_fast8_t first_token_index = 0; first_token_index < lexer_result.next_free_token; ++ first_token_index)
+    {
+        for (uint_fast8_t second_token_index = 0; second_token_index < lexer_result.next_free_token; ++ second_token_index)
+        {
+            if (first_token_index == second_token_index)
+            {
+                continue;
+            }
+
+            if (strncmp (lexer_result.result_tokens [first_token_index], lexer_result.result_tokens [second_token_index],
+                    sizeof (lexer_result.result_tokens [0])) == 0)
+            {
+                if (! lexer_tokens_used [first_token_index] /* == false */)
+                {
+                    groupable_chain_tokens [next_free_groupable_chain_tokens] = first_token_index;
+                    lexer_tokens_used [first_token_index] = true;
+                    ++ next_free_groupable_chain_tokens;
+                }
+                if (! lexer_tokens_used [second_token_index] /* == false */)
+                {
+                    groupable_chain_tokens [next_free_groupable_chain_tokens] = second_token_index;
+                    lexer_tokens_used [second_token_index] = true;
+                    ++ next_free_groupable_chain_tokens;
+                }
+            }
+        }
+
+        // Wurden Gruppen gefunden, die zusammengefasst werden koennen ?
+        if (next_free_groupable_chain_tokens > 0)
+        {
+            if (! name_resetted /* == false */)
+            {
+                memset (iupac_name, '\0', IUPAC_NAME_LENGTH);
+                name_resetted = true;
+            }
+
+            uint_fast8_t prefix_length = 0;
+
+            for (uint_fast8_t i2 = 0; i2 < next_free_groupable_chain_tokens; ++ i2)
+            {
+                // Nummer, die am Beginn der Gruppe steht, extrahieren
+                char group_position_number [4] = { '\0', '\0', '\0', '\0' };
+                uint_fast8_t next_free_group_position_number = 0;
+                size_t current_char_in_group = 0;
+
+                while (isdigit (lexer_result.result_tokens [groupable_chain_tokens [i2]][current_char_in_group]))
+                {
+                    group_position_number [next_free_group_position_number] =
+                            lexer_result.result_tokens [groupable_chain_tokens [i2]][current_char_in_group];
+                    ++ next_free_group_position_number;
+                    ++ current_char_in_group;
+                    ++ prefix_length;
+                }
+
+                strncat (iupac_name, group_position_number, iupac_name_space_left);
+                iupac_name_space_left -= strlen (group_position_number);
+                if ((i2 + 1) < next_free_groupable_chain_tokens)
+                {
+                    strncat (iupac_name, ",", iupac_name_space_left);
+                    iupac_name_space_left -= strlen (",");
+                }
+            }
+
+            strncat (iupac_name, "-", iupac_name_space_left);
+            iupac_name_space_left -= strlen ("-");
+            strncat (iupac_name, GROUP_MERGE_WORDS [next_free_groupable_chain_tokens - 1],
+                    strlen (GROUP_MERGE_WORDS [next_free_groupable_chain_tokens - 1]));
+
+            // Eins der zusammengefassten Gruppen in den Namen einbauen
+            strncat (iupac_name, &(lexer_result.result_tokens [groupable_chain_tokens [0]][prefix_length]),
+                    iupac_name_space_left);
+            iupac_name_space_left -= strlen (&(lexer_result.result_tokens [groupable_chain_tokens [0]][prefix_length]));
+
+            next_free_groupable_chain_tokens = 0;
+            memset (groupable_chain_tokens, '\0', sizeof (groupable_chain_tokens));
+        }
+    }
+
+    // Die uebrigen Tokens vom Lexer hintereinander zum Ergebnis anhaengen
+    for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
+    {
+        if (! lexer_tokens_used [i] /* == false */)
+        {
+            strncat (iupac_name, lexer_result.result_tokens [i], iupac_name_space_left);
+            iupac_name_space_left -= strlen (lexer_result.result_tokens [i]);
+        }
+    }
+
     return;
 }
 
