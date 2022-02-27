@@ -880,9 +880,9 @@ extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void)
  */
 extern void TEST_Group_Compression (void)
 {
-    const char expected_iupac_name [] = "4,4-Bis(1-methylethyl)heptane";
+    const char expected_iupac_name [] = "4,4-Bis(1-MethylEthyl)Heptan";
 
-    const unsigned char branch_1_content [] = { 1, 1, 2 };
+    const unsigned char branch_1_content [] = { 1, 1, 2, 3 };
     const unsigned char branch_2_content [] = { 1, 1, 2 };
     const unsigned char branch_3_content [] = { 1, 1 ,1 };
     const unsigned char branch_4_content [] = { 1, 1, 1 };
@@ -1208,6 +1208,11 @@ Execute_Creation_Test_With_Expected_Results
             // "2-Methyl-4-(1,1-DiMethylEthyl)Heptan" ist NICHT in den erwarteten Ergebnissen enthalten
             // ABER "4-(1,1-Dimethylethyl)-2-methylheptan" schon.
             // Nur die Position der Verschachtelung - der Inhalt der Klammern + die Klammern - ist unterschiedlich
+            //
+            // Der Lexer teilt den IUPAC-Namen in folgende Fragmente auf:
+            // - 2-Methyl
+            // - 4-(1,1-DiMethylEthyl)
+            // - Heptan
             //
             // Ist eine Verschachtelte Struktur vorhanden, um sie umzupositionieren ?
 
