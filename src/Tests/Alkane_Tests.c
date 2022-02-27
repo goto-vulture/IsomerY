@@ -255,7 +255,7 @@ Execute_All_Alkane_Tests
  *
  * Wird der Nummerncode richtig gebildet ?
  */
-void TEST_Create_Alkane (void)
+extern void TEST_Create_Alkane (void)
 {
     /**
      * 24 C-Atome
@@ -312,7 +312,7 @@ void TEST_Create_Alkane (void)
  *
  * Aus Laufzeitgruenden wird nur bis inklusive 11 getestet.
  */
-void TEST_Create_Alkane_Constitutional_Isomers (void)
+extern void TEST_Create_Alkane_Constitutional_Isomers (void)
 {
     for (uint_fast8_t i = 1; i <= 11; ++ i)
     {
@@ -334,7 +334,7 @@ void TEST_Create_Alkane_Constitutional_Isomers (void)
  *
  * Wird der IUPAC-Name richtig gebildet ?
  */
-void TEST_Convert_Alkane_To_IUPAC_Name (void)
+extern void TEST_Convert_Alkane_To_IUPAC_Name (void)
 {
     const unsigned char branch_1_content [] = { 1, 1, 2 };
     const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4 };
@@ -372,7 +372,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name (void)
  *
  * Wird der IUPAC-Name richtig gebildet ?
  */
-void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
+extern void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
 {
     const unsigned char branch_1_content [] = { 1 };
     const unsigned char branch_2_content [] = { 1, 1, 1 };
@@ -407,7 +407,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name_2 (void)
  *
  * Wird der IUPAC-Name richtig gebildet ?
  */
-void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
+extern void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
 {
     const char* expected_result = "9-Ethyl-6,7,8-TriMethyl-7-(1-(1-Methylethyl)-2-(1-Methylethyl)-3,4-Dimethylpentyl)Tridecan";
 
@@ -495,7 +495,7 @@ void TEST_Convert_Alkane_To_IUPAC_Name_With_Manual_Chain_Objects (void)
  *
  * Wird der IUPAC-Name richtig gebildet ?
  */
-void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
+extern void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
 {
     const unsigned char branch_1_content [] = { 1, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     const unsigned char branch_2_content [] = { 1, 1, 2, 3, 4, 5 };
@@ -528,7 +528,7 @@ void TEST_Convert_Alkane_With_Nested_2_To_IUPAC_Name (void)
  * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
  * Methan keinen Sinn ergibt.
  */
-void TEST_All_Possible_Methan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Methan_Constitutional_Isomers (void)
 {
     puts("Empty test function.");
     ASSERT_EQUALS(0, 0);
@@ -542,7 +542,7 @@ void TEST_All_Possible_Methan_Constitutional_Isomers (void)
  * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
  * Ethan keinen Sinn ergibt.
  */
-void TEST_All_Possible_Ethan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Ethan_Constitutional_Isomers (void)
 {
     puts("Empty test function.");
     ASSERT_EQUALS(0, 0);
@@ -556,7 +556,7 @@ void TEST_All_Possible_Ethan_Constitutional_Isomers (void)
  * @brief Alibi Test-Funktion, damit das Testframework eine Funktion hat, selbst wenn die Erzeugung der Isomere vom
  * Propan keinen Sinn ergibt.
  */
-void TEST_All_Possible_Propan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Propan_Constitutional_Isomers (void)
 {
     puts("Empty test function.");
     ASSERT_EQUALS(0, 0);
@@ -571,7 +571,7 @@ void TEST_All_Possible_Propan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Butan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Butan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 4;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -597,7 +597,7 @@ void TEST_All_Possible_Butan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 5;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -623,7 +623,7 @@ void TEST_All_Possible_Pentan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 6;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -649,7 +649,7 @@ void TEST_All_Possible_Hexan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 7;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -675,7 +675,7 @@ void TEST_All_Possible_Heptan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Octan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Octan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 8;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -701,7 +701,7 @@ void TEST_All_Possible_Octan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 9;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -727,7 +727,7 @@ void TEST_All_Possible_Nonan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Decan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Decan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 10;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -753,7 +753,7 @@ void TEST_All_Possible_Decan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 11;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -779,7 +779,7 @@ void TEST_All_Possible_Undecan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Dodecan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Dodecan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 12;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -805,7 +805,7 @@ void TEST_All_Possible_Dodecan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Tridecan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Tridecan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 13;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -831,7 +831,7 @@ void TEST_All_Possible_Tridecan_Constitutional_Isomers (void)
  *
  * Dabei werden die IUPAC-Namen kontrolliert.
  */
-void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void)
+extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void)
 {
     const uint_fast8_t number_of_c_atoms = 14;
     const uint_fast64_t number_of_constitutional_isomers = NUMBER_OF_ALKANE_CONSTITUTIONAL_ISOMER [number_of_c_atoms - 1];
@@ -878,7 +878,7 @@ void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void)
  * "Bis" zeigt an, dass es sich um genau zwei gleiche Gruppen handelt, die zusammengefasst wurden.
  *
  */
-void TEST_Group_Compression (void)
+extern void TEST_Group_Compression (void)
 {
     const char expected_iupac_name [] = "4,4-Bis(1-methylethyl)heptane";
 
