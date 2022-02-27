@@ -1357,8 +1357,8 @@ Group_Compression
 
             strncat (iupac_name, "-", iupac_name_space_left);
             iupac_name_space_left -= strlen ("-");
-            strncat (iupac_name, GROUP_MERGE_WORDS [next_free_groupable_chain_tokens - 1],
-                    strlen (GROUP_MERGE_WORDS [next_free_groupable_chain_tokens - 1]));
+            strncat (iupac_name, GROUP_MERGE_WORDS [next_free_groupable_chain_tokens - 1], iupac_name_space_left);
+            iupac_name_space_left -= strlen (GROUP_MERGE_WORDS [next_free_groupable_chain_tokens - 1]);
 
             // Eins der zusammengefassten Gruppen in den Namen einbauen
             strncat (iupac_name, &(lexer_result.result_tokens [groupable_chain_tokens [0]][prefix_length]),
