@@ -80,7 +80,17 @@ static void Next_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data)
     }
     else if (current_char == '-')
     {
-        Possible_Split_Char(lexer_data);
+        // In einigen Faellen erscheint ein Minuszeichen obwohl das aktuelle Ergebnis keine Zeichen enthaelt
+        // Wenn dies der Fall ist, dann muss das Zeichen uebersprungen werden
+        if (lexer_data->next_free_char_in_token > 0)
+        {
+            Possible_Split_Char(lexer_data);
+        }
+        else
+        {
+            lexer_data->current_char ++;
+            Next_Char(lexer_data);
+        }
     }
     else
     {
