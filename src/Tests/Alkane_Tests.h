@@ -214,6 +214,15 @@ extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void);
  */
 extern void TEST_Group_Compression (void);
 
+/**
+ * @brief Alle Testfunktionen ausfuehren.
+ *
+ * Die Funktionalitaet liegt nicht direkt im Koerper dieser Funktion. Vielmehr dient diese Funktion als eine Art
+ * "Platzhalterfunktion", da in der Funktion "Execute_All_Alkane_Tests" alle Testfunktionen mittels Fuktionszeiger
+ * verfuegbar gemacht werden, indem sie in die Liste der Testfunktionen uebernommen wird.
+ */
+extern void TEST_Use_All_Testfunctions (void);
+
 
 
 // ENDE C++-Kompablitaet herstellen

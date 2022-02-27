@@ -157,12 +157,20 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Dodecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tridecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers),
-            CREATE_Test_Function_And_Their_Name(TEST_Group_Compression)
+            CREATE_Test_Function_And_Their_Name(TEST_Group_Compression),
+
+            CREATE_Test_Function_And_Their_Name(TEST_Use_All_Testfunctions)
     };
 
     #ifdef CREATE_Test_Function_And_Their_Name
     #undef CREATE_Test_Function_And_Their_Name
     #endif /* CREATE_Test_Function_And_Their_Name */
+
+    #ifndef CLI_INPUT_USE_ALL_TESTFUNCTIONS
+    #define CLI_INPUT_USE_ALL_TESTFUNCTIONS COUNT_ARRAY_ELEMENTS(test_functions)
+    #else
+    #error "The macro \"CLI_INPUT_USE_ALL_TESTFUNCTIONS\" is already defined !"
+    #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
 
     // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
     if (GLOBAL_SELECT_TEST_FUNCTION /* == true */)
@@ -195,10 +203,14 @@ Execute_All_Alkane_Tests
             // Ist die Eingabe ueberhaupt ein Integer?
             const enum str2int_errno conversion_errno = str2int(&selected_test_function, input_buffer, 10);
 
-            if (conversion_errno == STR2INT_SUCCESS && selected_test_function > 0 &&
-                    selected_test_function <= (long int) COUNT_ARRAY_ELEMENTS(test_functions))
+            if (conversion_errno == STR2INT_SUCCESS)
             {
-                break;
+                if ((selected_test_function > 0 && selected_test_function <=
+                        (long int) COUNT_ARRAY_ELEMENTS(test_functions)) ||
+                        selected_test_function == CLI_INPUT_USE_ALL_TESTFUNCTIONS)
+                {
+                    break;
+                }
             }
             puts("Invalid input !");
             memset (input_buffer, '\0', sizeof(input_buffer));
@@ -207,8 +219,19 @@ Execute_All_Alkane_Tests
         PRINTF_FFLUSH("\nUsing the test function \"%s\"\n", test_functions [selected_test_function - 1].function_name);
 
         // Testfunktion aufrufen
-        RUN_2(test_functions [selected_test_function - 1].test_function,
-                test_functions [selected_test_function - 1].function_name);
+        if (selected_test_function != CLI_INPUT_USE_ALL_TESTFUNCTIONS)
+        {
+            RUN_2(test_functions [selected_test_function - 1].test_function,
+                    test_functions [selected_test_function - 1].function_name);
+        }
+        else
+        {
+            // ALLE Testfunktionen nacheinander ausfuehren
+            for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
+            {
+                RUN_2(test_functions [i].test_function, test_functions [i].function_name);
+            }
+        }
     }
     // Testfunktion anhand der Anzahl an C-Atomen, die eingegeben worden sind, aufrufen
     if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
@@ -216,6 +239,10 @@ Execute_All_Alkane_Tests
         RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
                 test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
     }
+
+    #ifdef CLI_INPUT_USE_ALL_TESTFUNCTIONS
+    #undef CLI_INPUT_USE_ALL_TESTFUNCTIONS
+    #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
@@ -879,6 +906,20 @@ void TEST_Group_Compression (void)
     Delete_Alkane_Branch(branch_3);
     Delete_Alkane_Branch(branch_4);
 
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Alle Testfunktionen ausfuehren.
+ *
+ * Die Funktionalitaet liegt nicht direkt im Koerper dieser Funktion. Vielmehr dient diese Funktion als eine Art
+ * "Platzhalterfunktion", da in der Funktion "Execute_All_Alkane_Tests" alle Testfunktionen mittels Fuktionszeiger
+ * verfuegbar gemacht werden, indem sie in die Liste der Testfunktionen uebernommen wird.
+ */
+extern inline void TEST_Use_All_Testfunctions (void)
+{
     return;
 }
 
