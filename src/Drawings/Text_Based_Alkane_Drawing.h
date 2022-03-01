@@ -9,8 +9,8 @@
  * @author: N450
  */
 
-#ifndef TERMINAL_ALKANE_DRAWING
-#define TERMINAL_ALKANE_DRAWING ///< Include-Guard
+#ifndef TEXT_BASED_ALKANE_DRAWING
+#define TEXT_BASED_ALKANE_DRAWING ///< Include-Guard
 
 // BEGINN C++-Kompablitaet herstellen
 #ifdef __cplusplus
@@ -29,4 +29,4 @@ extern "C"
 }
 #endif /* __cplusplus */
 
-#endif /* TERMINAL_ALKANE_DRAWING */
+#endif /* TEXT_BASED_ALKANE_DRAWING */
