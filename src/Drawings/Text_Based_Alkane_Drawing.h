@@ -165,18 +165,33 @@ struct Text_Based_Alkane_Drawing
 /**
  * @brief Eine text-basierte Zeichnung eines Alkans erstellen.
  *
+ * Grundsaetziches Vorgehen:
+ * - Aufspaltung des Namens an bestimmten Minuszeichnen mithilfe des Chain-Lexers, der urspruenglich fuer die
+ *   Testfunktionen geschrieben wurde
+ *
+ * - Ermittlung der tiefsten Verschachtelung
+ *
+ * - Zeichnung der Hauptkette in der mittleren Zeile (Anhand der tiefsten Verschachtelung wird entschieden wie gross
+ *   der Abstand zwischen den C-Atomen sein wird)
+ *
+ * - Zeichnung aller Aeste, die sich direkt an der Hauptkette befinden und keine Verschachtelung besitzen
+ *
+ * - Zeichnung aller Aeste, die eine Verschachtelung besitzen. Dabei wird "von Oben nach Unten" die Zeichnung erzeugt.
+ *   Stufenweise wird in die Tiefe der Verschachtelung gegangen.
+ *
  * Asserts:
  *      iupac_name != NULL
  *      name_length > 0
+ *      name_length <= IUPAC_NAME_LENGTH
  *
  * @param[in] iupac_name IUPAC-Name eines Alkans
  * @param[in] name_length Laenge des IUPAC-Namen
  */
-extern struct Text_Based_Alkane_Drawing*
+extern struct Text_Based_Alkane_Drawing*        // Das Ergebnis (die textbasierte-Zeichnung)
 Create_Text_Based_Alkane_Drawing
 (
-        const char* const iupac_name,
-        const size_t name_length
+        const char* const restrict iupac_name,  // IUPAC-Name, der gezeichnet werden soll
+        const size_t name_length                // Laenge des IUPAC-Namen
 );
 
 /**
@@ -190,7 +205,7 @@ Create_Text_Based_Alkane_Drawing
 extern void
 Delete_Text_Based_Alkane_Drawing
 (
-        struct Text_Based_Alkane_Drawing* text_based_drawing
+        struct Text_Based_Alkane_Drawing* restrict text_based_drawing   // Objekt, welches geloescht werden soll
 );
 
 
