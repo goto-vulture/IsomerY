@@ -208,6 +208,22 @@ Delete_Text_Based_Alkane_Drawing
         struct Text_Based_Alkane_Drawing* restrict text_based_drawing   // Objekt, welches geloescht werden soll
 );
 
+/**
+ * @brief Die textbasierte Zeichnung auf stdout ausgegeben.
+ *
+ * Dabei wird wirklich nur die Zeichenflache (ein zweidimensionales Array) sowie der IUPAC-Name ausgegeben.
+ *
+ * Asserts:
+ *          text_based_drawing != NULL
+ *
+ * @param[in] Text_Based_Alkane_Drawing, wo die Zeichenflache ausgegeben wird
+ */
+extern void
+Show_Text_Based_Alkane_Drawing
+(
+        const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
+);
+
 
 // ENDE C++-Kompablitaet herstellen
 #ifdef __cplusplus

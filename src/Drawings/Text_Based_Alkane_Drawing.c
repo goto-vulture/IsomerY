@@ -9,6 +9,7 @@
 
 #include "Text_Based_Alkane_Drawing.h"
 #include "../Tests/IUPAC_Chain_Lexer.h"
+#include "../Print_Tools.h"
 
 
 
@@ -119,6 +120,47 @@ Delete_Text_Based_Alkane_Drawing
 
     text_based_drawing->state = TEXT_BASED_ALKANE_DRAWING_DELETED;
     FREE_AND_SET_TO_NULL(text_based_drawing);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Die textbasierte Zeichnung auf stdout ausgegeben.
+ *
+ * Dabei wird wirklich nur die Zeichenflache (ein zweidimensionales Array) sowie der IUPAC-Name ausgegeben.
+ *
+ * Asserts:
+ *          text_based_drawing != NULL
+ *
+ * @param[in] Text_Based_Alkane_Drawing, wo die Zeichenflache ausgegeben wird
+ */
+extern void
+Show_Text_Based_Alkane_Drawing
+(
+        const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
+)
+{
+    ASSERT_MSG(text_based_drawing != NULL, "drawing is NULL !");
+
+    printf("%s\n", text_based_drawing->iupac_name);
+    printf("+");
+    for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2 + 2; ++ i)
+    {
+        printf("-");
+    }
+    printf("+\n");
+    for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
+    {
+        printf("| %s |\n", text_based_drawing->drawing [i]);
+    }
+    printf("+");
+    for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2 + 2; ++ i)
+    {
+        printf("-");
+    }
+    PUTS_FFLUSH("+");
 
     return;
 }
