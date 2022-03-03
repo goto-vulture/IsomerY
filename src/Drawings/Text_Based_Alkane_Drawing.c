@@ -8,6 +8,20 @@
  */
 
 #include "Text_Based_Alkane_Drawing.h"
+#include "../Tests/IUPAC_Chain_Lexer.h"
+
+
+
+/**
+ * Die Anzahl eines bestimmten Zeichens in einer Zeichenkette ermitteln und zurueckgeben.
+ */
+static uint_fast8_t                             // Anzahl der gesuchten Zeichen in der Zeichenkette
+Count_Char_In_String
+(
+        const char* const restrict c_string,    // Zeichenkette, die durchsucht wird
+        const size_t string_length,             // Laenge der Zeichenkette
+        const char searched_char                // Zu suchendes Zeichen
+);
 
 
 
@@ -66,6 +80,22 @@ Create_Text_Based_Alkane_Drawing
 
     drawing->state = TEXT_BASED_ALKANE_DRAWING_INITIALIZED_WITH_DATA;
 
+    // Name zerlegen
+    const struct IUPAC_Chain_Lexer_Result lexer_result = Create_Chain_Tokens (iupac_name);
+
+    // => Schritt 1: Ermittlung der tiefsten Verschachtelung
+    uint_fast8_t deepest_nesting = 0;
+    for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
+    {
+        const uint_fast8_t char_occurence =
+                Count_Char_In_String (lexer_result.result_tokens [i], TEXT_BASED_ALKANE_DRAWING_DIM_2, '(');
+
+        if (char_occurence > deepest_nesting)
+        {
+            deepest_nesting = char_occurence;
+        }
+    }
+
     return drawing;
 }
 
@@ -91,6 +121,32 @@ Delete_Text_Based_Alkane_Drawing
     FREE_AND_SET_TO_NULL(text_based_drawing);
 
     return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Die Anzahl eines bestimmten Zeichens in einer Zeichenkette ermitteln und zurueckgeben.
+ */
+static uint_fast8_t                             // Anzahl der gesuchten Zeichen in der Zeichenkette
+Count_Char_In_String
+(
+        const char* const restrict c_string,    // Zeichenkette, die durchsucht wird
+        const size_t string_length,             // Laenge der Zeichenkette
+        const char searched_char                // Zu suchendes Zeichen
+)
+{
+    uint_fast8_t result = 0;
+
+    for (size_t i = 0; i < string_length; ++ i)
+    {
+        if (c_string [i] == searched_char)
+        {
+            ++ result;
+        }
+    }
+
+    return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
