@@ -198,7 +198,7 @@ Create_Text_Based_Alkane_Drawing
  * @brief Eine text-basierte Zeichnung komplett loeschen.
  *
  * Asserts:
- *         alkane != NULL
+ *         text_based_drawing != NULL
  *
  * @param[in] text_based_drawing Text-Zeichnung, welches geloescht werden soll
  */
