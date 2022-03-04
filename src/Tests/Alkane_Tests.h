@@ -215,6 +215,21 @@ extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void);
 extern void TEST_Group_Compression (void);
 
 /**
+ * @brief Das textbasierte Zeichnen eines Alkans testen. Erster Zeichnungstest.
+ *
+ * Es soll "4-(1-methylethyl)heptane" gezeichnet werden.
+ *
+ * Das Ergebnis soll etwa so aussehen:
+ *
+ * C - C - C - C - C - C - C
+ *             |
+ *             C - C
+ *             |
+ *             C
+ */
+extern void TEST_Text_Based_Alkane_Drawing_1 (void);
+
+/**
  * @brief Alle Testfunktionen ausfuehren.
  *
  * Die Funktionalitaet liegt nicht direkt im Koerper dieser Funktion. Vielmehr dient diese Funktion als eine Art
