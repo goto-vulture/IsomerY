@@ -944,6 +944,15 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     struct Text_Based_Alkane_Drawing* result_drawing =
             Create_Text_Based_Alkane_Drawing (test_iupac_name, strlen (test_iupac_name));
 
+    size_t longest_string = 0;
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawing); ++ i)
+    {
+        if (strlen (expected_drawing[i]) > longest_string)
+        {
+            longest_string = strlen (expected_drawing [i]);
+        }
+    }
+
     // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
     // das Ergebnis richtig
     _Bool wrong_result_occured = false;
@@ -962,6 +971,23 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
             ++ first_non_empty_string;
         }
     }
+
+    // Ausgabe der erwarteten Loesung und der erzeugten Loesung
+    // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
+    puts ("Expected result:");
+    printf ("+");
+    PRINT_X_TIMES_SAME_CHAR('-', longest_string)
+    puts ("+");
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawing); ++ i)
+    {
+        printf ("|%*s|\n", (int) longest_string, expected_drawing [i]);
+    }
+    printf ("+");
+    PRINT_X_TIMES_SAME_CHAR('-', longest_string)
+    puts ("+");
+    puts ("Created:");
+    Show_Text_Based_Alkane_Drawing (result_drawing);
+    fflush (stdout);
 
     // War der Test aller Zeichenketten erfolgreich ?
     ASSERT_EQUALS (false, wrong_result_occured);
