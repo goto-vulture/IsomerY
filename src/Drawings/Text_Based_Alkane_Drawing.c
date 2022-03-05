@@ -73,11 +73,11 @@ Create_Text_Based_Alkane_Drawing
     memcpy (drawing->iupac_name, iupac_name, name_length);
 
     // "Zeichenflache" mit Leerzeichen fuellen (+ Terminatorsymbol)
-    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
-    {
-        memset(drawing->drawing [i], ' ', sizeof (char) * (TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1));
-        drawing->drawing [i][TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
-    }
+//    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
+//    {
+//        memset(drawing->drawing [i], ' ', sizeof (char) * (TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1));
+//        drawing->drawing [i][TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
+//    }
 
     drawing->state = TEXT_BASED_ALKANE_DRAWING_INITIALIZED_WITH_DATA;
 
@@ -144,23 +144,29 @@ Show_Text_Based_Alkane_Drawing
 {
     ASSERT_MSG(text_based_drawing != NULL, "drawing is NULL !");
 
-    printf("%s\n", text_based_drawing->iupac_name);
-    printf("+");
-    for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2 + 2; ++ i)
+    size_t longest_string = 0;
+    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
     {
-        printf("-");
+        if (strlen (text_based_drawing->drawing [i]) > longest_string)
+        {
+            longest_string = strlen (text_based_drawing->drawing [i]);
+        }
     }
-    printf("+\n");
+
+    printf("%s\n", text_based_drawing->iupac_name);
+    printf ("+");
+    PRINT_X_TIMES_SAME_CHAR('-', (longest_string == 0) ? 1 : longest_string)
+    puts ("+");
     for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
     {
-        printf("| %s |\n", text_based_drawing->drawing [i]);
+        if (strlen (text_based_drawing->drawing [i]) > 0)
+        {
+            printf("|%s|\n", text_based_drawing->drawing [i]);
+        }
     }
-    printf("+");
-    for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2 + 2; ++ i)
-    {
-        printf("-");
-    }
-    PUTS_FFLUSH("+");
+    printf ("+");
+    PRINT_X_TIMES_SAME_CHAR('-', (longest_string == 0) ? 1 : longest_string)
+    PUTS_FFLUSH ("+");
 
     return;
 }

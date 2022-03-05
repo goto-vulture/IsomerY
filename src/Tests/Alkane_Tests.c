@@ -956,19 +956,26 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
     // das Ergebnis richtig
     _Bool wrong_result_occured = false;
+    size_t first_wrong_result_string = SIZE_MAX;
     size_t first_non_empty_string = 0;
     for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2; ++ i)
     {
         // Leere Zeilen werden ignoriert
         if (strlen (result_drawing->drawing [i]) != 0)
         {
-            if (strncmp (expected_drawing [first_non_empty_string], result_drawing->drawing [i],
-                    strlen (expected_drawing [first_non_empty_string])) != 0)
+            if ((strncmp (expected_drawing [first_non_empty_string], result_drawing->drawing [i],
+                    strlen (expected_drawing [first_non_empty_string])) != 0))
             {
                 wrong_result_occured = true;
                 break;
             }
             ++ first_non_empty_string;
+        }
+        else if (strlen (expected_drawing [first_non_empty_string]) != strlen (result_drawing->drawing [i]))
+        {
+            wrong_result_occured = true;
+            first_wrong_result_string = i;
+            break;
         }
     }
 
@@ -980,11 +987,17 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     puts ("+");
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawing); ++ i)
     {
-        printf ("|%*s|\n", (int) longest_string, expected_drawing [i]);
+        printf ("|%s%*s|", expected_drawing [i], (int) (longest_string - strlen (expected_drawing [i])), "");
+        if (first_wrong_result_string == i)
+        {
+            printf (" <=");
+        }
+        puts ("");
     }
     printf ("+");
     PRINT_X_TIMES_SAME_CHAR('-', longest_string)
     puts ("+");
+
     puts ("Created:");
     Show_Text_Based_Alkane_Drawing (result_drawing);
     fflush (stdout);
