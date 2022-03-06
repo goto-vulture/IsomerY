@@ -105,7 +105,7 @@ extern "C"
  */
 #ifndef CLEAN_LINE
     #define CLEAN_LINE()                                                                                        \
-    printf ("\r"); for (unsigned char i = 0; i < 96; ++ i) { printf (" "); } printf ("\r"); fflush (stdout);
+    printf ("\r"); PRINT_X_TIMES_SAME_CHAR(' ', 96) fflush (stdout);
 #else
     #error "The macro \"CLEAN_LINE\" is already defined !"
 #endif /* CLEAN_LINE */

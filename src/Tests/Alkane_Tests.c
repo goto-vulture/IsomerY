@@ -27,6 +27,7 @@
 #include "IUPAC_Chain_Lexer.h"
 #include "../str2int.h"
 #include "../Drawings/Text_Based_Alkane_Drawing.h"
+#include "../Print_Tools.h"
 
 
 
@@ -934,24 +935,15 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     const char* const expected_drawing [] =
     {
          "C - C - C - C - C - C - C",
-         "            |",
-         "            C - C",
-         "            |",
-         "            C"
+         "            |            ",
+         "            C - C        ",
+         "            |            ",
+         "            C            "
     };
 
     // Textbasierte Zeichnung erzeugen
     struct Text_Based_Alkane_Drawing* result_drawing =
             Create_Text_Based_Alkane_Drawing (test_iupac_name, strlen (test_iupac_name));
-
-    size_t longest_string = 0;
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawing); ++ i)
-    {
-        if (strlen (expected_drawing[i]) > longest_string)
-        {
-            longest_string = strlen (expected_drawing [i]);
-        }
-    }
 
     // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
     // das Ergebnis richtig
@@ -982,21 +974,8 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     // Ausgabe der erwarteten Loesung und der erzeugten Loesung
     // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
     puts ("Expected result:");
-    printf ("+");
-    PRINT_X_TIMES_SAME_CHAR('-', longest_string)
-    puts ("+");
-    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawing); ++ i)
-    {
-        printf ("|%s%*s|", expected_drawing [i], (int) (longest_string - strlen (expected_drawing [i])), "");
-        if (first_wrong_result_string == i)
-        {
-            printf (" <=");
-        }
-        puts ("");
-    }
-    printf ("+");
-    PRINT_X_TIMES_SAME_CHAR('-', longest_string)
-    puts ("+");
+    Print_2D_String_Array(expected_drawing, COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]));
+    printf ("Error in drawing line: %zu\n\n", first_wrong_result_string);
 
     puts ("Created:");
     Show_Text_Based_Alkane_Drawing (result_drawing);
