@@ -105,7 +105,7 @@ extern "C"
  */
 #ifndef CLEAN_LINE
     #define CLEAN_LINE()                                                                                        \
-    printf ("\r"); for (unsigned char i = 0; i < 96; ++ i) { printf (" "); } printf ("\r"); fflush (stdout);
+    printf ("\r"); PRINT_X_TIMES_SAME_CHAR(' ', 96) fflush (stdout);
 #else
     #error "The macro \"CLEAN_LINE\" is already defined !"
 #endif /* CLEAN_LINE */
@@ -119,6 +119,32 @@ extern "C"
 #endif /* PRINT_NEWLINE */
 
 //---------------------------------------------------------------------------------------------------------------------
+
+#ifndef PRINT_X_TIMES_SAME_CHAR
+#define PRINT_X_TIMES_SAME_CHAR(character, times) \
+    for (size_t i = 0; i < times; ++ i) { printf ("%c", character); } fflush (stdout);
+#else
+    #error "The macro \"PRINT_X_TIMES_SAME_CHAR\" is already defined !"
+#endif /* PRINT_X_TIMES_SAME_CHAR */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Ein 2D-String-Array aud stdout ausgeben.
+ *
+ * Solch eine Funktionalitaet wird benoetigt, um Fehler bei der Erstellung von textbasierten Zeichnungen schneller zu
+ * finden.
+ *
+ * Asserts:
+ *      drawing != NULL
+ *      dim_1 > 0
+ *      dim_2 > 0
+ *
+ * @param[in] drawing 2D-String-Array
+ * @param[in] dim_1 Groesse der 1. Array Dimension (Anzahl an Zeichenketten)
+ * @param[in] dim_2 Groesse der 2. Array Dimension (Maximale Anzahl an Zeichen pro Zeichenkette)
+ */
+extern void Print_2D_String_Array (const char* const restrict drawing [], const size_t dim_1, const size_t dim_2);
 
 
 

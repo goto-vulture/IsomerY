@@ -199,6 +199,12 @@ CLI_PARAMETER_C = ./src/CLI_Parameter.c
 
 IUPAC_CHAIN_LEXER_H = ./src/Tests/IUPAC_Chain_Lexer.h
 IUPAC_CHAIN_LEXER_C = ./src/Tests/IUPAC_Chain_Lexer.c
+
+TEXT_BASED_ALKANE_DRAWING_H = ./src/Drawings/Text_Based_Alkane_Drawing.h
+TEXT_BASED_ALKANE_DRAWING_C = ./src/Drawings/Text_Based_Alkane_Drawing.c
+
+PRINT_TOOLS_H = ./src/Print_Tools.h
+PRINT_TOOLS_C = ./src/Print_Tools.c
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
 
 
@@ -221,11 +227,11 @@ endif
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o
+$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -301,6 +307,12 @@ CLI_Parameter.o: $(CLI_PARAMETER_C)
 
 IUPAC_Chain_Lexer.o: $(IUPAC_CHAIN_LEXER_C)
 	$(CC) $(CCFLAGS) -c $(IUPAC_CHAIN_LEXER_C)
+
+Text_Based_Alkane_Drawing.o: $(TEXT_BASED_ALKANE_DRAWING_C)
+	$(CC) $(CCFLAGS) -c $(TEXT_BASED_ALKANE_DRAWING_C)
+
+Print_Tools.o: $(PRINT_TOOLS_C)
+	$(CC) $(CCFLAGS) -c $(PRINT_TOOLS_C)
 ##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen
