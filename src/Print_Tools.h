@@ -129,6 +129,23 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Ein 2D-String-Array aud stdout ausgeben.
+ *
+ * Solch eine Funktionalitaet wird benoetigt, um Fehler bei der Erstellung von textbasierten Zeichnungen schneller zu
+ * finden.
+ *
+ * Asserts:
+ *      drawing != NULL
+ *      dim_1 > 0
+ *      dim_2 > 0
+ *
+ * @param[in] drawing 2D-String-Array
+ * @param[in] dim_1 Groesse der 1. Array Dimension (Anzahl an Zeichenketten)
+ * @param[in] dim_2 Groesse der 2. Array Dimension (Maximale Anzahl an Zeichen pro Zeichenkette)
+ */
+extern void Print_2D_String_Array (const char* const restrict drawing [], const size_t dim_1, const size_t dim_2);
+
 
 
 // ENDE C++-Kompablitaet herstellen
