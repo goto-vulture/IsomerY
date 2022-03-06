@@ -42,6 +42,11 @@ extern int GLOBAL_MAX_C_ATOMS_FOR_TESTS;
  */
 extern _Bool GLOBAL_SELECT_TEST_FUNCTION;
 
+/**
+ * @brief CLI-Parameter: Sollen alle Testfunktionen ausgefuehrt werden ?
+ */
+extern _Bool GLOBAL_RUN_ALL_TEST_FUNCTIONS;
+
 
 
 /**

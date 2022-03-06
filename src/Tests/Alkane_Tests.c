@@ -175,6 +175,7 @@ Execute_All_Alkane_Tests
     #error "The macro \"CLI_INPUT_USE_ALL_TESTFUNCTIONS\" is already defined !"
     #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
 
+    // ===== ===== BEGINN CLI-Parameter: Eine bestimmte Testfunktion nach einer Auswahl ausfuehren ===== =====
     // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
     if (GLOBAL_SELECT_TEST_FUNCTION /* == true */)
     {
@@ -188,7 +189,7 @@ Execute_All_Alkane_Tests
         }
         fflush(stdout);
 
-        // Einleseschleife
+        // ===== BEGINN Einleseschleife =====
         while (true)
         {
             int c = 0;
@@ -218,6 +219,7 @@ Execute_All_Alkane_Tests
             puts("Invalid input !");
             memset (input_buffer, '\0', sizeof(input_buffer));
         }
+        // ===== ENDE Einleseschleife =====
 
         PRINTF_FFLUSH("\nUsing the test function \"%s\"\n", test_functions [selected_test_function - 1].function_name);
 
@@ -236,12 +238,27 @@ Execute_All_Alkane_Tests
             }
         }
     }
+    // ===== ===== ENDE CLI-Parameter: Eine bestimmte Testfunktion nach einer Auswahl ausfuehren ===== =====
+
+    // ===== ===== BEGINN CLI-Parameter: Alle Testfunktionen ausfuehren ===== =====
+    if (GLOBAL_RUN_ALL_TEST_FUNCTIONS /* == true */)
+    {
+        // ALLE Testfunktionen nacheinander ausfuehren
+        for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
+        {
+            RUN_2(test_functions [i].test_function, test_functions [i].function_name);
+        }
+    }
+    // ===== ===== ENDE CLI-Parameter: Alle Testfunktionen ausfuehren ===== =====
+
+    // ===== ===== BEGINN CLI-Parameter: Konstitutionsisomere mit eingegebener Anzahl an C-Atomen erzeugen ===== =====
     // Testfunktion anhand der Anzahl an C-Atomen, die eingegeben worden sind, aufrufen
     if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
     {
         RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
                 test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
     }
+    // ===== ===== ENDE CLI-Parameter: Konstitutionsisomere mit eingegebener Anzahl an C-Atomen erzeugen ===== =====
 
     #ifdef CLI_INPUT_USE_ALL_TESTFUNCTIONS
     #undef CLI_INPUT_USE_ALL_TESTFUNCTIONS
