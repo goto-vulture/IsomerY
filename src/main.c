@@ -105,6 +105,7 @@
 #include "Beautiful.h"
 #include "argparse.h"
 #include "CLI_Parameter.h"
+#include "Drawings/Text_Based_Alkane_Drawing.h"
 
 
 
@@ -184,10 +185,11 @@ int main (const int argc, const char* argv [])
     Show_Program_Details ();
 
     // Einige Debug-Informationen ausgeben
-    printf ("Sizeof Alkane:                  %6zu byte\n", sizeof (struct Alkane));
-    printf ("Sizeof Alkane_Container:        %6zu byte\n", sizeof (struct Alkane_Container));
-    printf ("Sizeof Alkane_Branch:           %6zu byte\n", sizeof (struct Alkane_Branch));
-    printf ("Sizeof Alkane_Branch_Container: %6zu byte\n", sizeof (struct Alkane_Branch_Container));
+    printf ("Sizeof Alkane:                     %6zu byte\n", sizeof (struct Alkane));
+    printf ("Sizeof Alkane_Container:           %6zu byte\n", sizeof (struct Alkane_Container));
+    printf ("Sizeof Alkane_Branch:              %6zu byte\n", sizeof (struct Alkane_Branch));
+    printf ("Sizeof Alkane_Branch_Container:    %6zu byte\n", sizeof (struct Alkane_Branch_Container));
+    printf ("Sizeof Text_Based_Alkane_Drawing:  %6zu byte\n", sizeof (struct Text_Based_Alkane_Drawing));
     PRINT_NEWLINE PRINT_NEWLINE
 
     // Alle Alkan-Tests durchfuehren
