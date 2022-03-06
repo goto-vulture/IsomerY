@@ -120,12 +120,12 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
-#ifndef PRINT_X_TIMES_SAME_CHARACTER
+#ifndef PRINT_X_TIMES_SAME_CHAR
 #define PRINT_X_TIMES_SAME_CHAR(character, times) \
     for (size_t i = 0; i < times; ++ i) { printf ("%c", character); } fflush (stdout);
 #else
-    #error "The macro \"PRINT_X_TIMES_SAME_CHARACTER\" is already defined !"
-#endif /* PRINT_X_TIMES_SAME_CHARACTER */
+    #error "The macro \"PRINT_X_TIMES_SAME_CHAR\" is already defined !"
+#endif /* PRINT_X_TIMES_SAME_CHAR */
 
 //---------------------------------------------------------------------------------------------------------------------
 
