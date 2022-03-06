@@ -9,7 +9,6 @@
  * @author am1 / Gyps
  */
 
-
 #include "Beautiful.h"
 #include <stdio.h>
 #include "Print_Tools.h"

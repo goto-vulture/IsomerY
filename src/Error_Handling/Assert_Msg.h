@@ -45,13 +45,13 @@ extern "C"
  * Fehlermeldung vom ASSERT-Makro nicht in einer Zeile stehen.
  */
 #ifndef ASSERT_FMSG
-    #define ASSERT_FMSG(expr, format_string, ...)                       \
-    if (! (expr))                                                       \
-    {                                                                   \
-        fprintf (stderr, format_string, __VA_ARGS__);                   \
-        fputc ('\n', stderr);                                           \
-        fflush (stderr);                                                \
-        ASSERT_MSG(false, "See error message above !")                  \
+    #define ASSERT_FMSG(expr, format_string, ...)                                                                       \
+    if (! (expr))                                                                                                       \
+    {                                                                                                                   \
+        fprintf (stderr, format_string, __VA_ARGS__);                                                                   \
+        fputc ('\n', stderr);                                                                                           \
+        fflush (stderr);                                                                                                \
+        ASSERT_MSG(false, "See error message above !")                                                                  \
     }
 #else
     #error "The macro \"ASSERT_FMSG\" is already defined !"
@@ -67,12 +67,12 @@ extern "C"
  * weiss bei welcher Allokationsgroesse es Probleme gab.
  */
 #ifndef ASSERT_ALLOC
-    #define ASSERT_ALLOC(ptr, message, memory_size)                                 \
-    if (ptr == NULL)                                                                \
-    {                                                                               \
-        fprintf (stderr, "Try to allocate %zu bytes !\n", (size_t) memory_size);    \
-        fflush (stderr);                                                            \
-        ASSERT_MSG(false, message)                                                  \
+    #define ASSERT_ALLOC(ptr, message, memory_size)                                                                     \
+    if (ptr == NULL)                                                                                                    \
+    {                                                                                                                   \
+        fprintf (stderr, "Try to allocate %zu bytes !\n", (size_t) memory_size);                                        \
+        fflush (stderr);                                                                                                \
+        ASSERT_MSG(false, message)                                                                                      \
     }
 #else
     #error "The macro \"ASSERT_ALLOC\" is already defined !"

@@ -192,8 +192,6 @@ Delete_Path_Data
 
 
 
-
-
 // ENDE C++-Kompablitaet herstellen
 #ifdef __cplusplus
 }

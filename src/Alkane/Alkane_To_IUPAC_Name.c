@@ -15,10 +15,10 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Print_Tools.h"
 #include "../Misc.h"
+#include "../Tests/IUPAC_Chain_Lexer.h"
 #include "Alkane_Chain_To_IUPAC_Name.h"
 #include "Path_Data.h"
 #include "Path_Data_Container.h"
-#include "../Tests/IUPAC_Chain_Lexer.h"
 
 
 

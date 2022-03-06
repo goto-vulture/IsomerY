@@ -18,6 +18,8 @@
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 
+
+
 /**
  * @brief Konstante, um die Groesse des Arrays festzulegen. Der Wert ist ein Erfahrungswert. Selbst bei sehr komplexen
  * Molekuelen werden praktisch immer weniger als 10 Elemente verwendet.

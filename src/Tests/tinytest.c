@@ -14,8 +14,6 @@
 
 
 
-
-
 int tt_passes                       = 0;        // Anzahl an Tests, die erfolgreich durchgefuehrt wurden
 int tt_fails                        = 0;        // Anzahl an Tests, die fehlgeschlagen sind
 int tt_current_test_failed          = 0;        // Ist der akuelle Test fehlgeschlagen ?
@@ -27,7 +25,6 @@ int tt_current_line                 = 0;        // Aktuelle Zeile
 char tt_failed_function_names [32][128];        // Funktionsnamen, bei denen der Test fehlgeschlagen ist
 int tt_current_failed_function_name = 0;        // Aktuller Index fuer das Array, welches die Namen der fehlgeschlagenen
                                                 // Funktionen sichert
-
 
 
 //---------------------------------------------------------------------------------------------------------------------

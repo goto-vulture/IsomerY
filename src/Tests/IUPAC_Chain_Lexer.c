@@ -36,7 +36,6 @@
 
 
 
-
 /**
  * Rekursiv verwendete Zustaende des Lexers.
  */

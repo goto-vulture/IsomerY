@@ -100,12 +100,12 @@
 #include "Alkane/Alkane_Branch_Container.h"
 #include "Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "Tests/Alkane_Tests.h"
+#include "Drawings/Text_Based_Alkane_Drawing.h"
 #include "str2int.h"
 #include "Print_Tools.h"
 #include "Beautiful.h"
 #include "argparse.h"
 #include "CLI_Parameter.h"
-#include "Drawings/Text_Based_Alkane_Drawing.h"
 
 
 

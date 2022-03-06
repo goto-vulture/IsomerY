@@ -83,10 +83,10 @@ extern void Show_Dynamic_Memory_Status (void);
  * => Daher muessen zwe Zaehler pro realloc-Aufruf inkrementiert werden.
  */
 #ifndef REALLOC
-    #define REALLOC(number_of_elements, element_size)                                                                 \
-        realloc (number_of_elements, element_size);                                                                   \
-        ++ GLOBAL_malloc_calls;                                                                                       \
-        ++ GLOBAL_realloc_calls;                                                                                      \
+    #define REALLOC(number_of_elements, element_size)                                                                   \
+        realloc (number_of_elements, element_size);                                                                     \
+        ++ GLOBAL_malloc_calls;                                                                                         \
+        ++ GLOBAL_realloc_calls;                                                                                        \
         ++ GLOBAL_free_calls;
 #else
     #error "The macro \"REALLOC\" is already defined !"
@@ -104,12 +104,12 @@ extern void Show_Dynamic_Memory_Status (void);
  * Siehe: https://stackoverflow.com/questions/4190703/is-it-safe-to-delete-a-null-pointer
  */
 #ifndef FREE_AND_SET_TO_NULL
-    #define FREE_AND_SET_TO_NULL(pointer)                                                                             \
-        /* if (pointer != NULL) */                                                                                    \
-        {                                                                                                             \
-            free (pointer);                                                                                           \
-            pointer = NULL;                                                                                           \
-            ++ GLOBAL_free_calls;                                                                                     \
+    #define FREE_AND_SET_TO_NULL(pointer)                                                                               \
+        /* if (pointer != NULL) */                                                                                      \
+        {                                                                                                               \
+            free (pointer);                                                                                             \
+            pointer = NULL;                                                                                             \
+            ++ GLOBAL_free_calls;                                                                                       \
         }
 #else
     #error "The macro \"FREE_AND_SET_TO_NULL\" is already defined !"
@@ -124,8 +124,8 @@ extern void Show_Dynamic_Memory_Status (void);
  * wird sich der Compiler beschweren, und das zu Recht. ;)
  */
 #ifndef FREE_WITH_FUNCTION_AND_SET_TO_NULL
-    #define FREE_WITH_FUNCTION_AND_SET_TO_NULL(free_function, pointer)                                                \
-        free_function (pointer);                                                                                      \
+    #define FREE_WITH_FUNCTION_AND_SET_TO_NULL(free_function, pointer)                                                  \
+        free_function (pointer);                                                                                        \
         pointer = NULL;
 #else
     #error "The macro \"FREE_WITH_FUNCTION_AND_SET_TO_NULL\" is already defined !"
