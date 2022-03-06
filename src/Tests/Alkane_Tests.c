@@ -42,6 +42,25 @@
 #error "The macro \"MAX_LOOP_NESTING\" is already defined !"
 #endif /* MAX_LOOP_NESTING */
 
+// Makro, um aus dem Funktionsnamen automatisch die passende Zeichenkette zu generieren
+#ifndef CREATE_Test_Function_And_Their_Name
+#define CREATE_Test_Function_And_Their_Name(function) { (function), (#function) }
+#else
+#error "The macro \"CREATE_Test_Function_And_Their_Name\" is already defined !"
+#endif /* CREATE_Test_Function_And_Their_Name */
+
+// Makro, um alle Testfunktionen, die - mit Aussnahme der Testfunktion, die alle anderen Testfunktionen aufruft -
+// auszufuehren
+#ifndef CALL_ALL_TEST_FUNCTIONS
+#define CALL_ALL_TEST_FUNCTIONS(test_function_array)                                                                    \
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_function_array) - 1; ++ i)                                         \
+    {                                                                                                                   \
+        RUN_2(test_function_array [i].test_function, test_function_array [i].function_name);                            \
+    }
+#else
+#error "The macro \"CALL_ALL_TEST_FUNCTIONS\" is already defined !"
+#endif /* CALL_ALL_TEST_FUNCTIONS */
+
 
 
 /**
@@ -117,6 +136,8 @@ Execute_Creation_Test_With_Expected_Results
         const size_t number_of_expected_results                 // Anzahl an erwarteten Loesungen
 );
 
+
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -132,13 +153,6 @@ Execute_All_Alkane_Tests
         void (*test_function) (void);
         const char* const function_name;
     };
-
-    // Makro, um aus dem Funktionsnamen automatisch die passende Zeichenkette zu generieren
-    #ifndef CREATE_Test_Function_And_Their_Name
-    #define CREATE_Test_Function_And_Their_Name(function) { (function), (#function) }
-    #else
-    #error "The macro \"CREATE_Test_Function_And_Their_Name\" is already defined !"
-    #endif /* CREATE_Test_Function_And_Their_Name */
 
     // Alle Testfunktionen fuer die Alkanerzeugung
     struct Test_Function_And_Their_Name test_functions [] =
@@ -164,16 +178,6 @@ Execute_All_Alkane_Tests
 
             CREATE_Test_Function_And_Their_Name(TEST_Use_All_Testfunctions)
     };
-
-    #ifdef CREATE_Test_Function_And_Their_Name
-    #undef CREATE_Test_Function_And_Their_Name
-    #endif /* CREATE_Test_Function_And_Their_Name */
-
-    #ifndef CLI_INPUT_USE_ALL_TESTFUNCTIONS
-    #define CLI_INPUT_USE_ALL_TESTFUNCTIONS COUNT_ARRAY_ELEMENTS(test_functions)
-    #else
-    #error "The macro \"CLI_INPUT_USE_ALL_TESTFUNCTIONS\" is already defined !"
-    #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
 
     // ===== ===== BEGINN CLI-Parameter: Eine bestimmte Testfunktion nach einer Auswahl ausfuehren ===== =====
     // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
@@ -210,8 +214,7 @@ Execute_All_Alkane_Tests
             if (conversion_errno == STR2INT_SUCCESS)
             {
                 if ((selected_test_function > 0 && selected_test_function <=
-                        (long int) COUNT_ARRAY_ELEMENTS(test_functions)) ||
-                        selected_test_function == CLI_INPUT_USE_ALL_TESTFUNCTIONS)
+                        (long int) COUNT_ARRAY_ELEMENTS(test_functions)))
                 {
                     break;
                 }
@@ -224,7 +227,7 @@ Execute_All_Alkane_Tests
         PRINTF_FFLUSH("\nUsing the test function \"%s\"\n", test_functions [selected_test_function - 1].function_name);
 
         // Testfunktion aufrufen
-        if (selected_test_function != CLI_INPUT_USE_ALL_TESTFUNCTIONS)
+        if (selected_test_function != COUNT_ARRAY_ELEMENTS(test_functions))
         {
             RUN_2(test_functions [selected_test_function - 1].test_function,
                     test_functions [selected_test_function - 1].function_name);
@@ -232,11 +235,7 @@ Execute_All_Alkane_Tests
         else
         {
             // ALLE Testfunktionen nacheinander ausfuehren
-            for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions) - 1; ++ i)
-            // "- 1", damit nicht die Testfunktion, die alle anderen Testfunktionen aufruft, erneut aufzurufen
-            {
-                RUN_2(test_functions [i].test_function, test_functions [i].function_name);
-            }
+            CALL_ALL_TEST_FUNCTIONS(test_functions)
         }
     }
     // ===== ===== ENDE CLI-Parameter: Eine bestimmte Testfunktion nach einer Auswahl ausfuehren ===== =====
@@ -245,11 +244,7 @@ Execute_All_Alkane_Tests
     if (GLOBAL_RUN_ALL_TEST_FUNCTIONS /* == true */)
     {
         // ALLE Testfunktionen nacheinander ausfuehren
-        for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions) - 1; ++ i)
-        // "- 1", damit nicht die Testfunktion, die alle anderen Testfunktionen aufruft, erneut aufzurufen
-        {
-            RUN_2(test_functions [i].test_function, test_functions [i].function_name);
-        }
+        CALL_ALL_TEST_FUNCTIONS(test_functions)
     }
     // ===== ===== ENDE CLI-Parameter: Alle Testfunktionen ausfuehren ===== =====
 
@@ -261,10 +256,6 @@ Execute_All_Alkane_Tests
                 test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
     }
     // ===== ===== ENDE CLI-Parameter: Konstitutionsisomere mit eingegebener Anzahl an C-Atomen erzeugen ===== =====
-
-    #ifdef CLI_INPUT_USE_ALL_TESTFUNCTIONS
-    #undef CLI_INPUT_USE_ALL_TESTFUNCTIONS
-    #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
@@ -1559,3 +1550,7 @@ Execute_Creation_Test_With_Expected_Results
 #ifdef MAX_LOOP_NESTING
 #undef MAX_LOOP_NESTING
 #endif /* MAX_LOOP_NESTING */
+
+#ifdef CREATE_Test_Function_And_Their_Name
+#undef CREATE_Test_Function_And_Their_Name
+#endif /* CREATE_Test_Function_And_Their_Name */
