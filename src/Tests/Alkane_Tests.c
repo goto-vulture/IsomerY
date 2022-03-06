@@ -232,7 +232,8 @@ Execute_All_Alkane_Tests
         else
         {
             // ALLE Testfunktionen nacheinander ausfuehren
-            for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
+            for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions) - 1; ++ i)
+            // "- 1", damit nicht die Testfunktion, die alle anderen Testfunktionen aufruft, erneut aufzurufen
             {
                 RUN_2(test_functions [i].test_function, test_functions [i].function_name);
             }
@@ -244,7 +245,8 @@ Execute_All_Alkane_Tests
     if (GLOBAL_RUN_ALL_TEST_FUNCTIONS /* == true */)
     {
         // ALLE Testfunktionen nacheinander ausfuehren
-        for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
+        for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions) - 1; ++ i)
+        // "- 1", damit nicht die Testfunktion, die alle anderen Testfunktionen aufruft, erneut aufzurufen
         {
             RUN_2(test_functions [i].test_function, test_functions [i].function_name);
         }
