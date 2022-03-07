@@ -28,6 +28,7 @@
 #include "../str2int.h"
 #include "../Drawings/Text_Based_Alkane_Drawing.h"
 #include "../Print_Tools.h"
+#include "../String_Tools.h"
 
 
 
@@ -54,27 +55,6 @@ Compare_Alkane_Numbercodes
 (
         const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
         const unsigned char numbercode []               // Zahlencode mit denen das Alkan-Objekt verglichen wird
-);
-
-/**
- * Eine Zeichenkette kopieren, in der nur Kleinbuchstaben aus der Original-Zeichenkette vorkommen.
- */
-static void
-String_To_Lower
-(
-        const char* const restrict orig_string,     // Originale Zeichenkette, die konvertiert werden soll
-        char* const restrict to_lower_string,       // Zielspeicher fuer die konvertierte Zeichenkette
-        const size_t to_lower_string_size           // Groesse des Zielspeichers
-);
-
-/**
- * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
- */
-static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
-Compare_Strings_Case_Insensitive
-(
-        const char* const restrict string_1,            // 1. C-String
-        const char* const restrict string_2             // 2. C-String
 );
 
 /**
@@ -1026,73 +1006,6 @@ Compare_Alkane_Numbercodes
     }
 
     return true;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Eine Zeichenkette kopieren, in der nur Kleinbuchstaben aus der Original-Zeichenkette vorkommen.
- */
-static void
-String_To_Lower
-(
-        const char* const restrict orig_string,     // Originale Zeichenkette, die konvertiert werden soll
-        char* const restrict to_lower_string,       // Zielspeicher fuer die konvertierte Zeichenkette
-        const size_t to_lower_string_size           // Groesse des Zielspeichers
-)
-{
-    strncpy (to_lower_string, orig_string, to_lower_string_size);
-
-    for (size_t current_char = 0;
-            (current_char < strlen (orig_string)) && (current_char < to_lower_string_size);
-            ++ current_char)
-    {
-        // Alle Zeichen der Zeichenkette in Kleinbuchstaben umwandeln.
-        // Eine Ueberpruefung, ob das aktuelle Zeichen ein Grossbuchstabe ist, ist nicht notwendig, da tolower() diesen
-        // Test bereits durchfuehrt.
-        // if (isupper (orig_string [current_char]) /* == true */)
-            to_lower_string [current_char] = (char) tolower (orig_string [current_char]);
-    }
-
-    // Nullterminierung im Zielspeicher garantieren
-    to_lower_string [strlen (orig_string)] = '\0';
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
- */
-static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
-Compare_Strings_Case_Insensitive
-(
-        const char* const restrict string_1,            // 1. C-String
-        const char* const restrict string_2             // 2. C-String
-)
-{
-    // Wenn die Laenge der Zeichenketten nicht identisch sind, dann koennen sie - auch ohne Beachtung der Gross- und
-    // Keinschreibung - nicht gleich sein !
-    if (strlen (string_1) != strlen (string_2))
-    {
-        return -1;
-    }
-
-    char string_1_lowercase [255];
-    char string_2_lowercase [255];
-    memset (string_1_lowercase, '\0', sizeof (string_1_lowercase));
-    memset (string_2_lowercase, '\0', sizeof (string_2_lowercase));
-
-    // Alle alphabetischen Zeichen in Kleinbuchstaben konvertieren, damit spaeter ein Vergleich unabhaengig von der
-    // Gross- und Kleinschreibung stattfinden kann
-    String_To_Lower(string_1, string_1_lowercase, COUNT_ARRAY_ELEMENTS(string_1_lowercase));
-    String_To_Lower(string_2, string_2_lowercase, COUNT_ARRAY_ELEMENTS(string_2_lowercase));
-
-    // Vergleich mit den angepassten Zeichenketten durchfuehren
-    // Es gibt auch die Funktion "strncasecmp()" die vorzeichenlos Zeichenketten vergleicht. Diese ist aber leider eine
-    // GNU-Extension und daher nicht auf allen Systemen verfuegbar !
-    return strncmp (string_1_lowercase, string_2_lowercase, strlen (string_1_lowercase));
 }
 
 //---------------------------------------------------------------------------------------------------------------------

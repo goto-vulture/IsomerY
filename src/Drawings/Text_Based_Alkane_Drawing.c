@@ -13,19 +13,6 @@
 
 
 
-/**
- * Die Anzahl eines bestimmten Zeichens in einer Zeichenkette ermitteln und zurueckgeben.
- */
-static uint_fast8_t                             // Anzahl der gesuchten Zeichen in der Zeichenkette
-Count_Char_In_String
-(
-        const char* const restrict c_string,    // Zeichenkette, die durchsucht wird
-        const size_t string_length,             // Laenge der Zeichenkette
-        const char searched_char                // Zu suchendes Zeichen
-);
-
-
-
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -169,32 +156,6 @@ Show_Text_Based_Alkane_Drawing
     PUTS_FFLUSH ("+");
 
     return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Die Anzahl eines bestimmten Zeichens in einer Zeichenkette ermitteln und zurueckgeben.
- */
-static uint_fast8_t                             // Anzahl der gesuchten Zeichen in der Zeichenkette
-Count_Char_In_String
-(
-        const char* const restrict c_string,    // Zeichenkette, die durchsucht wird
-        const size_t string_length,             // Laenge der Zeichenkette
-        const char searched_char                // Zu suchendes Zeichen
-)
-{
-    uint_fast8_t result = 0;
-
-    for (size_t i = 0; i < string_length; ++ i)
-    {
-        if (c_string [i] == searched_char)
-        {
-            ++ result;
-        }
-    }
-
-    return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
