@@ -173,33 +173,13 @@ Show_Text_Based_Alkane_Drawing
 {
     ASSERT_MSG(text_based_drawing != NULL, "drawing is NULL !");
 
-    const uint_fast8_t line_number_print_size = 3;
-
-    size_t longest_string = 0;
+    const char* drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1];
     for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
     {
-        if (strlen (text_based_drawing->drawing [i]) > longest_string)
-        {
-            longest_string = strlen (text_based_drawing->drawing [i]);
-        }
+        drawing [i] = text_based_drawing->drawing [i];
     }
 
-    printf("%s\n", text_based_drawing->iupac_name);
-    PRINT_X_TIMES_SAME_CHAR(' ', line_number_print_size + 1u)
-    printf ("+");
-    PRINT_X_TIMES_SAME_CHAR('-', (longest_string == 0) ? 1 : longest_string)
-    puts ("+");
-    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
-    {
-        if (strlen (text_based_drawing->drawing [i]) > 0)
-        {
-            printf("%*zu |%s|\n", line_number_print_size, i + 1, text_based_drawing->drawing [i]);
-        }
-    }
-    PRINT_X_TIMES_SAME_CHAR(' ', line_number_print_size + 1u)
-    printf ("+");
-    PRINT_X_TIMES_SAME_CHAR('-', (longest_string == 0) ? 1 : longest_string)
-    PUTS_FFLUSH ("+");
+    Print_2D_String_Array(drawing, TEXT_BASED_ALKANE_DRAWING_DIM_1, TEXT_BASED_ALKANE_DRAWING_DIM_2);
 
     return;
 }
