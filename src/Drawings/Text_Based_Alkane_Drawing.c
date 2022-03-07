@@ -10,6 +10,7 @@
 #include "Text_Based_Alkane_Drawing.h"
 #include "../Tests/IUPAC_Chain_Lexer.h"
 #include "../Print_Tools.h"
+#include "../String_Tools.h"
 
 
 
@@ -21,6 +22,8 @@
  * Grundsaetziches Vorgehen:
  * - Aufspaltung des Namens an bestimmten Minuszeichnen mithilfe des Chain-Lexers, der urspruenglich fuer die
  *   Testfunktionen geschrieben wurde
+ *
+ * - Ermittlung der Laenge der Hauptkette
  *
  * - Ermittlung der tiefsten Verschachtelung
  *
@@ -68,10 +71,29 @@ Create_Text_Based_Alkane_Drawing
 
     drawing->state = TEXT_BASED_ALKANE_DRAWING_INITIALIZED_WITH_DATA;
 
-    // Name zerlegen
+    // => Schritt 1: Name zerlegen
     const struct IUPAC_Chain_Lexer_Result lexer_result = Create_Chain_Tokens (iupac_name);
+    const uint_fast8_t lexer_next_free_token = lexer_result.next_free_token;
 
-    // => Schritt 1: Ermittlung der tiefsten Verschachtelung
+    // => Schritt 2: Laenge der Hauptkette bestimmen
+    uint_fast8_t length_main_chain = 0;
+    for (uint_fast8_t i = 0; i < NUMBER_OF_ALKAN_WORDS; ++ i)
+    {
+        if (Compare_Strings_Case_Insensitive (lexer_result.result_tokens [lexer_next_free_token - 1],
+                ALKAN_WORDS_DE [i]) == 0)
+        {
+            length_main_chain = (uint_fast8_t) (i + 1u);
+            break;
+        }
+        if (Compare_Strings_Case_Insensitive (lexer_result.result_tokens [lexer_next_free_token - 1],
+                ALKAN_WORDS_EN [i]) == 0)
+        {
+            length_main_chain = (uint_fast8_t) (i + 1u);
+            break;
+        }
+    }
+
+    // => Schritt 3: Ermittlung der tiefsten Verschachtelung
     uint_fast8_t deepest_nesting = 0;
     for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
     {
@@ -83,6 +105,26 @@ Create_Text_Based_Alkane_Drawing
             deepest_nesting = char_occurence;
         }
     }
+
+    // => Schritt 4: Hauptkette zeichnen
+    char* const drawing_middle_line = drawing->drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2];
+    for (uint_fast8_t i = 0; i < length_main_chain; ++ i)
+    {
+        strncat (drawing_middle_line, "C", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
+
+        if ((i + 1) < length_main_chain)
+        {
+            strncat (drawing_middle_line, " ", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
+            for (uint_fast8_t i2 = 0; i2 < deepest_nesting; ++ i2)
+            {
+                strncat (drawing_middle_line, "-", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
+            }
+            strncat (drawing_middle_line, " ", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
+        }
+    }
+    // Nullterminierung garantieren
+    drawing_middle_line [TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
+
 
     return drawing;
 }
@@ -131,6 +173,8 @@ Show_Text_Based_Alkane_Drawing
 {
     ASSERT_MSG(text_based_drawing != NULL, "drawing is NULL !");
 
+    const uint_fast8_t line_number_print_size = 3;
+
     size_t longest_string = 0;
     for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
     {
@@ -141,16 +185,18 @@ Show_Text_Based_Alkane_Drawing
     }
 
     printf("%s\n", text_based_drawing->iupac_name);
+    PRINT_X_TIMES_SAME_CHAR(' ', line_number_print_size + 1u)
     printf ("+");
     PRINT_X_TIMES_SAME_CHAR('-', (longest_string == 0) ? 1 : longest_string)
     puts ("+");
-    for (int i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
+    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
     {
         if (strlen (text_based_drawing->drawing [i]) > 0)
         {
-            printf("|%s|\n", text_based_drawing->drawing [i]);
+            printf("%*zu |%s|\n", line_number_print_size, i + 1, text_based_drawing->drawing [i]);
         }
     }
+    PRINT_X_TIMES_SAME_CHAR(' ', line_number_print_size + 1u)
     printf ("+");
     PRINT_X_TIMES_SAME_CHAR('-', (longest_string == 0) ? 1 : longest_string)
     PUTS_FFLUSH ("+");

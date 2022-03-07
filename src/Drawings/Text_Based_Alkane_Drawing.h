@@ -169,6 +169,8 @@ struct Text_Based_Alkane_Drawing
  * - Aufspaltung des Namens an bestimmten Minuszeichnen mithilfe des Chain-Lexers, der urspruenglich fuer die
  *   Testfunktionen geschrieben wurde
  *
+ * - Ermittlung der Laenge der Hauptkette
+ *
  * - Ermittlung der tiefsten Verschachtelung
  *
  * - Zeichnung der Hauptkette in der mittleren Zeile (Anhand der tiefsten Verschachtelung wird entschieden wie gross
@@ -223,6 +225,7 @@ Show_Text_Based_Alkane_Drawing
 (
         const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
 );
+
 
 
 // ENDE C++-Kompablitaet herstellen
