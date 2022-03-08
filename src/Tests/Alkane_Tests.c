@@ -175,7 +175,9 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_Group_Compression),
 
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_1),
+
             CREATE_Test_Function_And_Their_Name(TEST_IUPAC_Chain_Lexer_1),
+            CREATE_Test_Function_And_Their_Name(TEST_IUPAC_Chain_Lexer_2),
 
             CREATE_Test_Function_And_Their_Name(TEST_Use_All_Testfunctions)
     };
@@ -1020,6 +1022,88 @@ extern void TEST_IUPAC_Chain_Lexer_1 (void)
          "2-Methyl",
          "4-(1,1-DiMethylEthyl)",
          "Heptan"
+    };
+
+    // Name aufspalten
+    const struct IUPAC_Chain_Lexer_Result lexer_result = Create_Chain_Tokens (test_name);
+
+    _Bool wrong_lexer_result_occured = false;
+    size_t first_wrong_result_string = SIZE_MAX;
+
+    if (COUNT_ARRAY_ELEMENTS(expected_lexer_result) != lexer_result.next_free_token)
+    {
+        wrong_lexer_result_occured = true;
+    }
+    else
+    {
+        for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_lexer_result); ++ i)
+        {
+            if (strncmp (expected_lexer_result [i], lexer_result.result_tokens [i],
+                    strlen (expected_lexer_result [i])) != 0)
+            {
+                wrong_lexer_result_occured = true;
+                first_wrong_result_string = i;
+                break;
+            }
+        }
+    }
+
+    puts ("Expected result:");
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_lexer_result); ++ i)
+    {
+        printf ("%2zu: %s\n", i + 1, expected_lexer_result [i]);
+    }
+    printf ("First error in drawing line: ");
+    if (first_wrong_result_string != SIZE_MAX)
+    {
+        printf ("%zu", first_wrong_result_string);
+    }
+    else
+    {
+        printf ("N/A");
+    }
+
+    puts ("\n\nCreated:");
+    for (size_t i = 0; i < lexer_result.next_free_token; ++ i)
+    {
+        printf ("%2zu: %s\n", i + 1, lexer_result.result_tokens [i]);
+    }
+    fflush (stdout);
+
+    // War der Test aller Zeichenketten erfolgreich ?
+    ASSERT_EQUALS (false, wrong_lexer_result_occured);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Den Lexer fuer die Aufspaltung des IUPAC-Namen testen.
+ *
+ * Der Lexer soll z.B. "2-Methyl-4-(1,1-DiMethylEthyl)Heptan" in folgende Fragmente aufspalten:
+ *
+ * - 2-Methyl
+ * - 4-(1,1-DiMethylEthyl)
+ * - Heptan
+ *
+ * Nun wird ein Name verwendet, der keinen realen Stoff beschreibt ! Es soll getestet werden, ob der Lexer auch bei
+ * groesseren Namen richtig arbeitet.
+ */
+extern void TEST_IUPAC_Chain_Lexer_2 (void)
+{
+    const char test_name [] = "5-Hexyl-4-Ethyl-4-(1-(1,1-DiMethylEthyl)Ethyl)-2-Methyl-4-(1,1-DiMethylEthyl)"
+            "-2,4-DiDecyl-Eicosan";
+
+    const char* const expected_lexer_result [] =
+    {
+         "5-Hexyl",
+         "4-Ethyl",
+         "4-(1-(1,1-DiMethylEthyl)Ethyl)",
+         "2-Methyl",
+         "4-(1,1-DiMethylEthyl)",
+         "2,4-DiDecyl",
+         "Eicosan"
     };
 
     // Name aufspalten

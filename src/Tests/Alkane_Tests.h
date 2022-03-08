@@ -241,6 +241,20 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void);
 extern void TEST_IUPAC_Chain_Lexer_1 (void);
 
 /**
+ * @brief Den Lexer fuer die Aufspaltung des IUPAC-Namen testen.
+ *
+ * Der Lexer soll z.B. "2-Methyl-4-(1,1-DiMethylEthyl)Heptan" in folgende Fragmente aufspalten:
+ *
+ * - 2-Methyl
+ * - 4-(1,1-DiMethylEthyl)
+ * - Heptan
+ *
+ * Nun wird ein Name verwendet, der keinen realen Stoff beschreibt ! Es soll getestet werden, ob der Lexer auch bei
+ * groesseren Namen richtig arbeitet.
+ */
+extern void TEST_IUPAC_Chain_Lexer_2 (void);
+
+/**
  * @brief Alle Testfunktionen ausfuehren.
  *
  * Die Funktionalitaet liegt nicht direkt im Koerper dieser Funktion. Vielmehr dient diese Funktion als eine Art
