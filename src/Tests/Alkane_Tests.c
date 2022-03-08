@@ -182,6 +182,9 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_Use_All_Testfunctions)
     };
 
+    // Positionen, wo bei der Uebersicht Newlines ausgegeben werden sollen. Dies dient fuer eine bessere Uebersicht
+    const uint_fast8_t newline_positions [] = { 14, 16, 18 };
+
     // ===== ===== BEGINN CLI-Parameter: Eine bestimmte Testfunktion nach einer Auswahl ausfuehren ===== =====
     // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
     if (GLOBAL_SELECT_TEST_FUNCTION /* == true */)
@@ -192,6 +195,11 @@ Execute_All_Alkane_Tests
         puts("===>>> Testfunctions available <<<===");
         for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
         {
+            // Newlines an passende Positionen ausgeben
+            for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(newline_positions); ++ i2)
+            {
+                if (newline_positions [i2] == i) { PRINT_NEWLINE; break; }
+            }
             printf ("%2zu: %s\n", i + 1, test_functions[i].function_name);
         }
         fflush(stdout);
