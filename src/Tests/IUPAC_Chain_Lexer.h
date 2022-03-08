@@ -54,6 +54,11 @@ struct IUPAC_Chain_Lexer_Result
      * @brief Aktuelles Zeichen im Original-String, welches verarbetet wird.
      */
     uint_fast8_t current_char;
+
+    /**
+     * @brief In welcher Tiefe befindet man sich ? Es sollen Ausdruecke mit Klammern auf oberster Ebene getrennt werden.
+     */
+    uint_fast8_t nesting_depth;
 };
 
 /**

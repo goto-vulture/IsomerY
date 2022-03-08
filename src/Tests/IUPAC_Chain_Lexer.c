@@ -73,7 +73,10 @@ static void Next_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data)
         lexer_data->next_free_token ++;
         End_Char_Found(lexer_data);
     }
-    else if (current_char == ')')
+    // Die schliessende Klammer ist nur dann ein sicheres Trennzeichen, wenn man sich auf der ersten Verschachtelungs-
+    // ebene befindet !
+    // Denn das Aufteilen des IUPAC-Namen soll auf oberster Ebene stattfinden !
+    else if (current_char == ')' && lexer_data->nesting_depth == 1)
     {
         Safe_Split_Char_Found(lexer_data);
     }
@@ -115,6 +118,7 @@ static void Safe_Split_Char_Found (struct IUPAC_Chain_Lexer_Result* const lexer_
     lexer_data->next_free_char_in_token = 0;
     lexer_data->current_char ++;
     lexer_data->next_free_token ++;
+    lexer_data->nesting_depth = 0;
 
     Next_Char(lexer_data);
 
@@ -128,8 +132,33 @@ static void Possible_Split_Char (struct IUPAC_Chain_Lexer_Result* const lexer_da
     const char current_char = lexer_data->orig_string [lexer_data->current_char];
     const char current_char_plus_1 = lexer_data->orig_string [lexer_data->current_char + 1];
 
+    // Enthaelt der uebrige String Ziffern oder ein Minuszeichen ?
+    // Wenn ja, dann kann das aktuelle Zeichen als Trennzeichen interpretiert werden.
+    // Diese Ueberpruefung ist notwendig, damit z.B. bei "...-1,2-DiMetyl-Decan" das letzte Minuszeichen als
+    // Trennzeichen verwendet wird, obwohl darauf KEINE Ziffer folgt !
+    _Bool remaining_string_contains_digits_or_sub_char = false;
+    for (size_t i = lexer_data->current_char + 1u; i < strlen (lexer_data->orig_string); ++ i)
+    {
+        if (isdigit (lexer_data->orig_string [i]) /* == true */ || lexer_data->orig_string [i] == '-')
+        {
+            remaining_string_contains_digits_or_sub_char = true;
+            break;
+        }
+    }
+
     // Das '-' wird NICHT in die Tokens uebernommen !
-    if (isdigit (current_char_plus_1))
+    if (isdigit (current_char_plus_1) /* == true */)
+    {
+        lexer_data->nesting_depth ++;
+        Split_Char_Confirmed(lexer_data);
+    }
+    // Wenn das aktuelle Fragment das letzte vor dem Alkanwort am Ende ist, dann muss ebenfalls das Minuszeichen als
+    // Trennzeichen interpretiert werden.
+    // => ...-1,2-DiMetyl-Decan
+    // Das Problem: Hierbei kann diese Situation nicht einfach durch das Anschauen des naechsten Zeichens geloest
+    // werden ! Es muss geschaut werden, ob der uebrige String Ziffern oder ein Minuszeichen enthaelt. Wenn dies der
+    // Fall ist, dann steht man NICHT direkt vor dem Alkanwort !
+    else if (! remaining_string_contains_digits_or_sub_char /* == false */)
     {
         Split_Char_Confirmed(lexer_data);
     }
