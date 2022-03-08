@@ -132,16 +132,17 @@ static void Possible_Split_Char (struct IUPAC_Chain_Lexer_Result* const lexer_da
     const char current_char = lexer_data->orig_string [lexer_data->current_char];
     const char current_char_plus_1 = lexer_data->orig_string [lexer_data->current_char + 1];
 
-    // Enthaelt der uebrige String Ziffern oder ein Minuszeichen ?
+    // Enthaelt der uebrige String Ziffern, schliessende runde Klammern oder ein Minuszeichen ?
     // Wenn ja, dann kann das aktuelle Zeichen als Trennzeichen interpretiert werden.
     // Diese Ueberpruefung ist notwendig, damit z.B. bei "...-1,2-DiMetyl-Decan" das letzte Minuszeichen als
     // Trennzeichen verwendet wird, obwohl darauf KEINE Ziffer folgt !
-    _Bool remaining_string_contains_digits_or_sub_char = false;
+    _Bool remaining_string_contains_digits_closing_brackets_or_sub_char = false;
     for (size_t i = lexer_data->current_char + 1u; i < strlen (lexer_data->orig_string); ++ i)
     {
-        if (isdigit (lexer_data->orig_string [i]) /* == true */ || lexer_data->orig_string [i] == '-')
+        if (isdigit (lexer_data->orig_string [i]) /* == true */ || lexer_data->orig_string [i] == '-'
+                || lexer_data->orig_string [i] == ')')
         {
-            remaining_string_contains_digits_or_sub_char = true;
+            remaining_string_contains_digits_closing_brackets_or_sub_char = true;
             break;
         }
     }
@@ -156,9 +157,9 @@ static void Possible_Split_Char (struct IUPAC_Chain_Lexer_Result* const lexer_da
     // Trennzeichen interpretiert werden.
     // => ...-1,2-DiMetyl-Decan
     // Das Problem: Hierbei kann diese Situation nicht einfach durch das Anschauen des naechsten Zeichens geloest
-    // werden ! Es muss geschaut werden, ob der uebrige String Ziffern oder ein Minuszeichen enthaelt. Wenn dies der
-    // Fall ist, dann steht man NICHT direkt vor dem Alkanwort !
-    else if (! remaining_string_contains_digits_or_sub_char /* == false */)
+    // werden ! Es muss geschaut werden, ob der uebrige String Ziffern, runde Klammern oder ein Minuszeichen enthaelt.
+    // Wenn dies der Fall ist, dann steht man NICHT direkt vor dem Alkanwort !
+    else if (! remaining_string_contains_digits_closing_brackets_or_sub_char /* == false */)
     {
         Split_Char_Confirmed(lexer_data);
     }
