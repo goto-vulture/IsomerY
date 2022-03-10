@@ -81,7 +81,7 @@ extern "C"
 
 
 
-extern void Parse_Alkane (const char* iupac_name, const size_t length);
+extern void Parse_Alkane (const char* const iupac_name, const size_t length);
 
 
 
