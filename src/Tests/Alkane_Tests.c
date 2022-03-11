@@ -141,6 +141,8 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_Group_Compression),
 
+            CREATE_Test_Function_And_Their_Name(TEST_Alkane_Lexer),
+
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_1),
 
             CREATE_Test_Function_And_Their_Name(TEST_Use_All_Testfunctions)
@@ -889,6 +891,91 @@ extern void TEST_Group_Compression (void)
     Delete_Alkane_Branch(branch_2);
     Delete_Alkane_Branch(branch_3);
     Delete_Alkane_Branch(branch_4);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Testen, ob der Alkan-Lexer die gewuenschen Ergebnisse erzeugt.
+ *
+ * So soll z.B. "4-(1-methylethyl)heptane" in folgende Tokens zerlegt werden:
+ * - "4"
+ * - "-"
+ * - "("
+ * - "1"
+ * - "-"
+ * - "methyl"
+ * - "ethyl"
+ * - ")"
+ * - "heptane"
+ */
+extern void TEST_Alkane_Lexer (void)
+{
+    // Testnamen
+    // Wichtig: Hier wird nur ueberprueft, ob der Lexer arbeitet. Sowohl der Autor als auch der Lexer ueberpruefen
+    //          nicht, ob die Namen semantisch richtig sind !
+    const char* iupac_names [] =
+    {
+        "4-(1-methylethyl)heptane",
+        "1,2,3-TriMethylDecan",
+        "1-(2-(3-methylethyl)propyl)Octane"
+    };
+
+    // Erwartete Ergebnisse vom ersten Alkannamen
+    const char* array_1 [] =
+    {
+        "4",
+        "-",
+        "(",
+        "1",
+        "-",
+        "methyl",
+        "ethyl",
+        ")",
+        "heptane",
+        NULL
+    };
+    // Erwartete Ergebnisse vom zweiten Alkannamen
+    const char* array_2 [] =
+    {
+        "1",
+        ",",
+        "2",
+        ",",
+        "3",
+        "-",
+        "Tri",
+        "Methyl",
+        "Decan",
+        NULL
+    };
+    // Erwartete Ergebnisse vom dritten Alkannamen
+    const char* array_3 [] =
+    {
+        "1",
+        "-",
+        "(",
+        "2",
+        "-",
+        "(",
+        "3",
+        "-",
+        "methyl",
+        "ethyl",
+        ")",
+        "propyl",
+        ")",
+        "octane",
+        NULL
+    };
+    const char** expected_tokens [] =
+    {
+        array_1,
+        array_2,
+        array_3
+    };
 
     return;
 }
