@@ -924,54 +924,57 @@ extern void TEST_Alkane_Lexer (void)
         "1-(2-(3-methylethyl)propyl)Octane"
     };
 
+    // Token und Typ des Tokens
+    struct Token_And_Token_Type { const char* token; enum Token_Type type; };
+
     // Erwartete Ergebnisse vom ersten Alkannamen
-    const char* array_1 [] =
+    const struct Token_And_Token_Type array_1 [] =
     {
-        "4",
-        "-",
-        "(",
-        "1",
-        "-",
-        "methyl",
-        "ethyl",
-        ")",
-        "heptane",
-        NULL
+            { "4",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "(",          TOKEN_TYPE_OPEN_BRACKET     },
+            { "1",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "methyl",     TOKEN_TYPE_ALKYL_WORD       },
+            { "ethyl",      TOKEN_TYPE_ALKYL_WORD       },
+            { ")",          TOKEN_TYPE_CLOSE_BRACKET    },
+            { "heptane",    TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,         TOKEN_TYPE_N_A              }
     };
     // Erwartete Ergebnisse vom zweiten Alkannamen
-    const char* array_2 [] =
+    const struct Token_And_Token_Type array_2 [] =
     {
-        "1",
-        ",",
-        "2",
-        ",",
-        "3",
-        "-",
-        "Tri",
-        "Methyl",
-        "Decan",
-        NULL
+            { "1",      TOKEN_TYPE_NUMBER       },
+            { ",",      TOKEN_TYPE_COMMA_CHAR   },
+            { "2",      TOKEN_TYPE_NUMBER       },
+            { ",",      TOKEN_TYPE_COMMA_CHAR   },
+            { "3",      TOKEN_TYPE_NUMBER       },
+            { "-",      TOKEN_TYPE_SUB_CHAR     },
+            { "Tri",    TOKEN_TYPE_NUMBER_WORD  },
+            { "Methyl", TOKEN_TYPE_ALKYL_WORD   },
+            { "Decan",  TOKEN_TYPE_ALKANE_WORD  },
+            { NULL,     TOKEN_TYPE_N_A          }
     };
     // Erwartete Ergebnisse vom dritten Alkannamen
-    const char* array_3 [] =
+    const struct Token_And_Token_Type array_3 [] =
     {
-        "1",
-        "-",
-        "(",
-        "2",
-        "-",
-        "(",
-        "3",
-        "-",
-        "methyl",
-        "ethyl",
-        ")",
-        "propyl",
-        ")",
-        "octane",
-        NULL
+            { "1",      TOKEN_TYPE_NUMBER           },
+            { "-",      TOKEN_TYPE_SUB_CHAR         },
+            { "(",      TOKEN_TYPE_OPEN_BRACKET     },
+            { "2",      TOKEN_TYPE_NUMBER           },
+            { "-",      TOKEN_TYPE_SUB_CHAR         },
+            { "(",      TOKEN_TYPE_OPEN_BRACKET     },
+            { "3",      TOKEN_TYPE_NUMBER           },
+            { "-",      TOKEN_TYPE_SUB_CHAR         },
+            { "methyl", TOKEN_TYPE_ALKYL_WORD       },
+            { "ethyl",  TOKEN_TYPE_ALKYL_WORD       },
+            { ")",      TOKEN_TYPE_CLOSE_BRACKET    },
+            { "propyl", TOKEN_TYPE_ALKYL_WORD       },
+            { ")",      TOKEN_TYPE_CLOSE_BRACKET    },
+            { "octane", TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,     TOKEN_TYPE_N_A              }
     };
-    const char** expected_tokens [] =
+    const struct Token_And_Token_Type* expected_tokens [] =
     {
         array_1,
         array_2,
@@ -986,8 +989,10 @@ extern void TEST_Alkane_Lexer (void)
 
         for (uint_fast8_t i2 = 0; i2 < lexer_data.next_free_token; ++ i2)
         {
-            ASSERT_MSG(expected_tokens [i][i2] != NULL, "expected token is NULL ! Lexer created not enough tokens !");
-            ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected_tokens [i][i2], lexer_data.result_tokens [i2]);
+            ASSERT_MSG(expected_tokens [i][i2].token != NULL, "expected token is NULL ! Lexer created not enough tokens !");
+
+            ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected_tokens [i][i2].token, lexer_data.result_tokens [i2]);
+            ASSERT_EQUALS(expected_tokens [i][i2].type, lexer_data.token_type [i2]);
         }
     }
 
