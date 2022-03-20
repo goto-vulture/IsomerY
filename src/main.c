@@ -101,6 +101,7 @@
 #include "Alkane/Alkane_Create_Constitutional_Isomer.h"
 #include "Tests/Alkane_Tests.h"
 #include "Drawings/Text_Based_Alkane_Drawing.h"
+#include "Tests/IUPAC_Chain_Lexer.h"
 #include "str2int.h"
 #include "Print_Tools.h"
 #include "Beautiful.h"
@@ -192,6 +193,7 @@ int main (const int argc, const char* argv [])
     printf ("Sizeof Alkane_Branch:              %6zu byte\n", sizeof (struct Alkane_Branch));
     printf ("Sizeof Alkane_Branch_Container:    %6zu byte\n", sizeof (struct Alkane_Branch_Container));
     printf ("Sizeof Text_Based_Alkane_Drawing:  %6zu byte\n", sizeof (struct Text_Based_Alkane_Drawing));
+    printf ("Sizeof IUPAC_Chain_Lexer_Result:   %6zu byte\n", sizeof (struct IUPAC_Chain_Lexer_Result));
     PRINT_NEWLINE PRINT_NEWLINE
 
     // Alle Alkan-Tests durchfuehren
