@@ -257,7 +257,7 @@ static enum Token_Type Type_Of_Token (const char* const token, const size_t leng
                     break;
                 }
             }
-}
+        }
     }
 
     return result;
