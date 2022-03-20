@@ -59,6 +59,7 @@ extern "C"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../String_Tools.h"
 
 
 
@@ -91,6 +92,16 @@ extern "C"
 #else
 #error "The macro \"ASSERT_STRING_EQUALS\" is already defined !"
 #endif /* ASSERT_STRING_EQUALS */
+
+/**
+ * @brief Assert fuer die Gleichheit von C-Strings ohne Beachtung der Gross- und Kleinschreibung.
+ */
+#ifndef ASSERT_STRING_CASE_INSENSITIVE_EQUALS
+#define ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected, actual) \
+    ASSERT((#actual), Compare_Strings_Case_Insensitive((expected),(actual)) == 0)
+#else
+#error "The macro \"ASSERT_STRING_CASE_INSENSITIVE_EQUALS\" is already defined !"
+#endif /* ASSERT_STRING_CASE_INSENSITIVE_EQUALS */
 
 /**
  * @brief Test-Funktion starten.
