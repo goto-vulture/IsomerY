@@ -42,22 +42,22 @@
  * - START
  *
  * Produktionsregeln:
- * START ->         alkan
- * START ->         BRANCH alkan
- * BRANCH ->        BRANCH_BEGIN NUMBER_WORD BRANCH_END
- * BRANCH ->        BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END
- * BRANCH_BEGIN ->  ZAHL minus
- * BRANCH_BEGIN ->  ZAHL komma minus
- * NUMBER_WORD ->   number_word
- * NUMBER_WORD ->   NULL
- * ZAHL ->          ziffer
- * ZAHL ->          ZAHL ziffer
- * KOMMA_ZAHL ->    komma ZAHL
- * KOMMA_ZAHL ->    komma ZAHL KOMMA_ZAHL
- * BRANCH_END ->    alkyl
- * NESTING ->       NESTING_BEGIN BRANCH NESTING_END
- * NESTING_BEGIN -> bopen
- * NESTING_END ->   bclose
+ * START            ->  alkan
+ * START            ->  BRANCH alkan
+ * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END
+ * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END
+ * BRANCH_BEGIN     ->  ZAHL minus
+ * BRANCH_BEGIN     ->  ZAHL KOMMA_ZAHL minus
+ * NUMBER_WORD      ->  number_word
+ * NUMBER_WORD      ->  NULL
+ * ZAHL             ->  ziffer
+ * ZAHL             ->  ZAHL ziffer
+ * KOMMA_ZAHL       ->  komma ZAHL
+ * KOMMA_ZAHL       ->  komma ZAHL KOMMA_ZAHL
+ * BRANCH_END       ->  alkyl
+ * NESTING          ->  NESTING_BEGIN BRANCH NESTING_END
+ * NESTING_BEGIN    ->  bopen
+ * NESTING_END      ->  bclose
  *
  * "BRANCH_END" und "NESTING_END" sind als Variablen nicht erforderlich. Es koennte direkt das Terminalsymbol verwendet
  * werden. Sie werden dennoch verwendet, damit man eine analoge Bezeichnung zu "BRANCH_BEGIN" und "NESTING_BEGIN" hat.
