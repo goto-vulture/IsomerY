@@ -4,8 +4,7 @@
  * Beschreibung der Grammatik (kontextfrei):
  *
  * Vokabular:
- * - ZAHL           := Zahl
- * - ziffer         := Ziffer
+ * - zahl           := Zahl
  * - komma          := Komma
  * - minus          := Minuszeichen
  *
@@ -29,7 +28,7 @@
  * - NESTING_END    := Ende einer Verschachtelung
  *
  * Terminalsymbole: (In den Klammern steht die Kurzform, die spaeter verwendet wird)
- * - ziffer         (z)
+ * - zahl           (z)
  * - komma          (k)
  * - minus          (m)
  * - bopen          (o)
@@ -46,14 +45,12 @@
  * START            (S)     ->  BRANCH alkan                                        (S  ->  B2 a)
  * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END                 (B2 ->  B1 W B3)
  * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose  (B2 ->  B1 W N2 B3 c)
- * BRANCH_BEGIN     (B1)    ->  ZAHL minus                                          (B1 ->  Z m)
- * BRANCH_BEGIN     (B1)    ->  ZAHL KOMMA_ZAHL minus                               (B1 ->  Z K m)
+ * BRANCH_BEGIN     (B1)    ->  zahl minus                                          (B1 ->  z m)
+ * BRANCH_BEGIN     (B1)    ->  zahl KOMMA_ZAHL minus                               (B1 ->  z K m)
  * NUMBER_WORD      (W)     ->  number_word                                         (W  ->  n)
  * NUMBER_WORD      (W)     ->  NULL                                                (W  ->  NULL) !!! Diese Regel steht der Vollstaendigkeit halber hier und hat (aktuell) keine Verwendung !!!
- * ZAHL             (Z)     ->  ziffer                                              (Z  ->  z)
- * ZAHL             (Z)     ->  ZAHL ziffer                                         (Z  ->  Z z)
- * KOMMA_ZAHL       (K)     ->  komma ZAHL                                          (K  ->  k Z)
- * KOMMA_ZAHL       (K)     ->  komma ZAHL KOMMA_ZAHL                               (K  ->  k Z K)
+ * KOMMA_ZAHL       (K)     ->  komma zahl                                          (K  ->  k z)
+ * KOMMA_ZAHL       (K)     ->  komma zahl KOMMA_ZAHL                               (K  ->  k z K)
  * BRANCH_END       (B3)    ->  alkyl                                               (B3 ->  y)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END      (N2 ->  N1 B1 N2 N3)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END              (N2 ->  N1 N1 N3)
@@ -82,15 +79,14 @@
  * 1. Schritt: Die Chomsky-Normalform bilden
  *      "Alkan-Grammatik" zusammengefasst:
  *      S   ->  a | B2 a
- *      B1  ->  Z m | Z K m
+ *      B1  ->  z m | z K m
  *      B2  ->  B1 W B3 | B1 W N2 B3 c
  *      B3  ->  y
  *      N1  ->  o
  *      N2  ->  N1 N1 N3 | N1 B1 N2 N3
  *      N3  ->  y
  *      W   ->  n
- *      Z   ->  z | Z z
- *      K   ->  k Z | k Z K
+ *      K   ->  k z | k z K
  *
  *
  * @date 10.03.2022
