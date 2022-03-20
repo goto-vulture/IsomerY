@@ -27,6 +27,7 @@
 #include "IUPAC_Chain_Lexer.h"
 #include "../str2int.h"
 #include "../Drawings/Text_Based_Alkane_Drawing.h"
+#include "../Drawings/Alkane_Parser.h"
 #include "../Print_Tools.h"
 #include "../String_Tools.h"
 
@@ -976,6 +977,19 @@ extern void TEST_Alkane_Lexer (void)
         array_2,
         array_3
     };
+
+    // Lexer-Test durchfuehren
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_tokens); ++ i)
+    {
+        const size_t name_length = strlen (iupac_names [i]);
+        const struct Alkane_Lexer lexer_data = Create_Alkane_Tokens (iupac_names [i], name_length);
+
+        for (uint_fast8_t i2 = 0; i2 < lexer_data.next_free_token; ++ i2)
+        {
+            ASSERT_MSG(expected_tokens [i][i2] != NULL, "expected token is NULL ! Lexer created not enough tokens !");
+            ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected_tokens [i][i2], lexer_data.result_tokens [i2]);
+        }
+    }
 
     return;
 }

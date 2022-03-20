@@ -7,7 +7,6 @@
 
 #include "Alkane_Parser.h"
 #include <ctype.h>
-#include "../Alkane/Alkane.h"
 #include "../str2int.h"
 #include "../String_Tools.h"
 
@@ -16,56 +15,13 @@
 
 
 /**
- * Was fuer ein Typ ist der erzeugte Token ?
- */
-enum Token_Type
-{
-    TOKEN_TYPE_N_A = 0,
-
-    TOKEN_TYPE_NUMBER,
-    TOKEN_TYPE_ALKYL_WORD,
-    TOKEN_TYPE_ALKANE_WORD,
-    TOKEN_TYPE_NUMBER_WORD,
-    TOKEN_TYPE_COMMA_CHAR,
-    TOKEN_TYPE_SUB_CHAR,
-    TOKEN_TYPE_OPEN_BRACKET,
-    TOKEN_TYPE_CLOSE_BRACKET
-};
-
-/**
- * Einfacher Lexer, um den IUPAC-Namen in passende Tokens zu zerlegen.
- */
-struct Alkane_Lexer
-{
-    // Die Groesse der 2. Dimension ist vorerst nur ein Platzhalterwert !
-    char result_tokens [MAX_NUMBER_OF_C_ATOMS][30];                 ///< Ergebnisse
-    uint_fast8_t next_free_token;                                   ///< Nachestes freies Token
-    /**
-     * @brief Naechstes freies Zeichen im akteullen Token.
-     */
-    uint_fast8_t next_free_char_in_token;
-
-    enum Token_Type token_type [MAX_NUMBER_OF_C_ATOMS];             ///< Art der Tokens
-
-    const char* alkane_name;                                        ///< Alkanname
-    size_t name_length;                                             ///< Laenge des Alkannamens
-    /**
-     * @brief Aktuelles Zeichen im Alkannamen, welches verarbetet wird.
-     */
-    uint_fast8_t current_char;
-    /**
-     * @brief Letztes Zeichen, welches bereits verarbeitet wurde.
-     */
-    uint_fast8_t last_char_used;
-};
-
-/**
  * Funktionen fuer den Alkane_Lexer.
  */
 static struct Alkane_Lexer Start_Lexer (const char* const iupac_name, const size_t length);
 static void Next_Char (struct Alkane_Lexer* const lexer_data);
 static void Split_Char_Found (struct Alkane_Lexer* const lexer_data);
 static void Alkyl_End_Found (struct Alkane_Lexer* const lexer_data);
+static void Number_Word_Found (struct Alkane_Lexer* const lexer_data);
 static void End_Char_Found (struct Alkane_Lexer* const lexer_data);
 
 static enum Token_Type Type_Of_Token (const char* const token, const size_t length);
@@ -80,6 +36,13 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
     // Erstellte Lexer-Daten fuer den Parser vorbereiten ...
 
     return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+extern struct Alkane_Lexer Create_Alkane_Tokens (const char* const iupac_name, const size_t length)
+{
+    return Start_Lexer (iupac_name, length);
 }
 
 //=====================================================================================================================
@@ -119,6 +82,16 @@ static void Next_Char (struct Alkane_Lexer* const lexer_data)
     {
         Alkyl_End_Found (lexer_data);
     }
+    // In manchen Faellen kommt es vor, dass ein Teil eines Alkanwortes als ein Zahlenwort interpretiert werden
+    // kann. Z.B. "heptane" -> Zahlenwort "hepta" enthalten
+    // Damit dies nicht passiert, wird fuer ein Zahlenwort vorausgesetzt, dass noch mind. 5 Zeichen uebrig sind
+    // 5, da das kuerzeste Alkanwort "Butan" 5 Zeichen lang ist
+    else if (Type_Of_Token (&(lexer_data->alkane_name [lexer_data->last_char_used]),
+            (lexer_data->current_char - lexer_data->last_char_used)) == TOKEN_TYPE_NUMBER_WORD &&
+            (lexer_data->name_length - lexer_data->current_char >= 5))
+    {
+        Number_Word_Found (lexer_data);
+    }
     else
     {
         lexer_data->current_char ++;
@@ -138,6 +111,7 @@ static void Split_Char_Found (struct Alkane_Lexer* const lexer_data)
     const enum Token_Type split_token_type = Type_Of_Token(&(lexer_data->alkane_name [lexer_data->current_char]),
             1);
 
+    // Fuer Ziffern bzw. Zahlen
     if (token_type != TOKEN_TYPE_OPEN_BRACKET && token_type != TOKEN_TYPE_CLOSE_BRACKET &&
             token_type != TOKEN_TYPE_SUB_CHAR && token_type != TOKEN_TYPE_COMMA_CHAR && token_type != TOKEN_TYPE_N_A)
     {
@@ -164,7 +138,16 @@ static void Split_Char_Found (struct Alkane_Lexer* const lexer_data)
 static void Alkyl_End_Found (struct Alkane_Lexer* const lexer_data)
 {
     Copy_Token_To_Lexer_Data (lexer_data);
+    Next_Char (lexer_data);
 
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Number_Word_Found (struct Alkane_Lexer* const lexer_data)
+{
+    Copy_Token_To_Lexer_Data (lexer_data);
     Next_Char (lexer_data);
 
     return;
@@ -175,7 +158,6 @@ static void Alkyl_End_Found (struct Alkane_Lexer* const lexer_data)
 static void End_Char_Found (struct Alkane_Lexer* const lexer_data)
 {
     Copy_Token_To_Lexer_Data (lexer_data);
-
     lexer_data->alkane_name = NULL;
 
     return;
@@ -259,6 +241,18 @@ static enum Token_Type Type_Of_Token (const char* const token, const size_t leng
                 }
             }
         }
+        if (result == TOKEN_TYPE_N_A)
+        {
+            // Ist das Token ein Zahlen-Wort ?
+            for (uint_fast8_t i = 0; i < NUMBER_OF_NUMBER_WORDS; ++ i)
+            {
+                if (Compare_Strings_Case_Insensitive (token_with_null, NUMBER_WORDS [i]) == 0)
+                {
+                    result = TOKEN_TYPE_NUMBER_WORD;
+                    break;
+                }
+            }
+}
     }
 
     return result;
@@ -277,8 +271,8 @@ static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data)
     lexer_data->token_type [lexer_data->next_free_token] = token_type;
     lexer_data->next_free_token ++;
 
-    lexer_data->current_char ++;
     lexer_data->last_char_used = lexer_data->current_char;
+    lexer_data->current_char ++;
 
     return;
 }

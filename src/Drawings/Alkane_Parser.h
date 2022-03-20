@@ -78,10 +78,58 @@ extern "C"
 
 
 #include <stddef.h>
+#include "../Alkane/Alkane.h"
+
+
+
+/**
+ * Was fuer ein Typ ist der erzeugte Token ?
+ */
+enum Token_Type
+{
+    TOKEN_TYPE_N_A = 0,
+
+    TOKEN_TYPE_NUMBER,
+    TOKEN_TYPE_ALKYL_WORD,
+    TOKEN_TYPE_ALKANE_WORD,
+    TOKEN_TYPE_NUMBER_WORD,
+    TOKEN_TYPE_COMMA_CHAR,
+    TOKEN_TYPE_SUB_CHAR,
+    TOKEN_TYPE_OPEN_BRACKET,
+    TOKEN_TYPE_CLOSE_BRACKET
+};
+
+/**
+ * Einfacher Lexer, um den IUPAC-Namen in passende Tokens zu zerlegen.
+ */
+struct Alkane_Lexer
+{
+    // Die Groesse der 2. Dimension ist vorerst nur ein Platzhalterwert !
+    char result_tokens [MAX_NUMBER_OF_C_ATOMS][30];                 ///< Ergebnisse
+    uint_fast8_t next_free_token;                                   ///< Nachestes freies Token
+    /**
+     * @brief Naechstes freies Zeichen im akteullen Token.
+     */
+    uint_fast8_t next_free_char_in_token;
+
+    enum Token_Type token_type [MAX_NUMBER_OF_C_ATOMS];             ///< Art der Tokens
+
+    const char* alkane_name;                                        ///< Alkanname
+    size_t name_length;                                             ///< Laenge des Alkannamens
+    /**
+     * @brief Aktuelles Zeichen im Alkannamen, welches verarbetet wird.
+     */
+    uint_fast8_t current_char;
+    /**
+     * @brief Letztes Zeichen, welches bereits verarbeitet wurde.
+     */
+    uint_fast8_t last_char_used;
+};
 
 
 
 extern void Parse_Alkane (const char* const iupac_name, const size_t length);
+extern struct Alkane_Lexer Create_Alkane_Tokens (const char* const iupac_name, const size_t length);
 
 
 
