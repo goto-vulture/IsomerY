@@ -20,6 +20,8 @@
 static struct Alkane_Lexer Start_Lexer (const char* const iupac_name, const size_t length);
 static void Next_Char (struct Alkane_Lexer* const lexer_data);
 static void Split_Char_Found (struct Alkane_Lexer* const lexer_data);
+// "Alkyl_End_Found" und "Number_Word_Found" sind vom Code identisch. Dennoch gibt es diese beiden Funktionen, um die
+// Klassifizierungen der neuen Tokens per Funktion durchfuehren zu koennen
 static void Alkyl_End_Found (struct Alkane_Lexer* const lexer_data);
 static void Number_Word_Found (struct Alkane_Lexer* const lexer_data);
 static void End_Char_Found (struct Alkane_Lexer* const lexer_data);
@@ -115,6 +117,9 @@ static void Split_Char_Found (struct Alkane_Lexer* const lexer_data)
     if (token_type != TOKEN_TYPE_OPEN_BRACKET && token_type != TOKEN_TYPE_CLOSE_BRACKET &&
             token_type != TOKEN_TYPE_SUB_CHAR && token_type != TOKEN_TYPE_COMMA_CHAR && token_type != TOKEN_TYPE_N_A)
     {
+        // Copy_Token_To_Lexer_Data (lexer_data);
+        // Kann NICHT verwendet werden, da diese Funktion ebenfalls "current_char" und "last_char_used" anpasst. Diese
+        // Anpassungen sind normalerweise auch notwendig; nur hier nicht ! -> Keine Verwendung dieser Funktion.
         strncpy ((char*) &(lexer_data->result_tokens [lexer_data->next_free_token]),
                 &(lexer_data->alkane_name [lexer_data->last_char_used]), token_length);
         lexer_data->token_type [lexer_data->next_free_token] = token_type;
