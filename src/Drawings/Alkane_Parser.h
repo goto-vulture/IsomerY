@@ -28,40 +28,60 @@
  * - NESTING_BEGIN  := Beginn einr Verschachtelung
  * - NESTING_END    := Ende einer Verschachtelung
  *
- * Terminalsymbole:
- * - ziffer
- * - komma
- * - minus
- * - bopen
- * - bclose
- * - alkyl
- * - alkan
- * - number_word
+ * Terminalsymbole: (In den Klammern steht die Kurzform, die spaeter verwendet wird)
+ * - ziffer         (z)
+ * - komma          (k)
+ * - minus          (m)
+ * - bopen          (o)
+ * - bclose         (c)
+ * - alkyl          (y)
+ * - alkan          (a)
+ * - number_word    (n)
  *
  * Startsymbol:
- * - START
+ * - START          (S)
  *
- * Produktionsregeln:
- * START            ->  alkan
- * START            ->  BRANCH alkan
- * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END
- * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose
- * BRANCH_BEGIN     ->  ZAHL minus
- * BRANCH_BEGIN     ->  ZAHL KOMMA_ZAHL minus
- * NUMBER_WORD      ->  number_word
- * NUMBER_WORD      ->  NULL
- * ZAHL             ->  ziffer
- * ZAHL             ->  ZAHL ziffer
- * KOMMA_ZAHL       ->  komma ZAHL
- * KOMMA_ZAHL       ->  komma ZAHL KOMMA_ZAHL
- * BRANCH_END       ->  alkyl
- * NESTING          ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END
- * NESTING          ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END
- * NESTING_BEGIN    ->  bopen
- * NESTING_END      ->  alkyl
+ * Produktionsregeln: (In den Klammern steht die Kurzform, die spaeter verwendet wird)
+ * START            (S)     ->  alkan                                               (S  ->  a)
+ * START            (S)     ->  BRANCH alkan                                        (S  ->  B2 a)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END                 (B2 ->  B1 W B3)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose  (B2 ->  B1 W N2 B3 c)
+ * BRANCH_BEGIN     (B1)    ->  ZAHL minus                                          (B1 ->  Z m)
+ * BRANCH_BEGIN     (B1)    ->  ZAHL KOMMA_ZAHL minus                               (B1 ->  Z K m)
+ * NUMBER_WORD      (W)     ->  number_word                                         (W  ->  n)
+ * NUMBER_WORD      (W)     ->  NULL                                                (W  ->  NULL)
+ * ZAHL             (Z)     ->  ziffer                                              (Z  ->  z)
+ * ZAHL             (Z)     ->  ZAHL ziffer                                         (Z  ->  Z z)
+ * KOMMA_ZAHL       (K)     ->  komma ZAHL                                          (K  ->  k Z)
+ * KOMMA_ZAHL       (K)     ->  komma ZAHL KOMMA_ZAHL                               (K  ->  k Z K)
+ * BRANCH_END       (B3)    ->  alkyl                                               (B3 ->  y)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END      (N2 ->  N1 B1 N2 N3)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END              (N2 ->  N1 N1 N3)
+ * NESTING_BEGIN    (N1)    ->  bopen                                               (N1 ->  o)
+ * NESTING_END      (N3)    ->  alkyl                                               (N3 ->  y)
  *
  * "BRANCH_END" und "NESTING_END" sind als Variablen nicht erforderlich. Es koennte direkt das Terminalsymbol verwendet
  * werden. Sie werden dennoch verwendet, damit man eine analoge Bezeichnung zu "BRANCH_BEGIN" und "NESTING_BEGIN" hat.
+ *
+ *
+ *
+ * Damit das Wortproblem - also ob ein Wort von dieser Grammatik erzeugt werden kann - fuer diese Grammatik strukturiert
+ * geloest werden kann, wird der sog. Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus) verwendet. Dieser erledigt das
+ * Problem mit einer Laufzeit von O(n^3).
+ *
+ * Das enorme Problem bei diesem Algorithms: Die Grammatik muss in die sog. Chomsky-Normalform ueberfuehrt werden, damit
+ * der Algorithmus ueberhaupt funktioniert.
+ *
+ * In dieser Normalform duerfen die Produktionsregeln nur eine der beiden Formen haben:
+ * S -> AB      (Auf der rechten Seite GEANU ZWEI Nichtterminale)
+ * S -> a       (Auf der rechten Seite GENAU EIN Terminal)
+ *
+ * Spoiler: Grammatiken in der Chomsky-Normalform sehen im Normalfall enorm schmandig aus. Unserer Grammatik wird es
+ * wohl auch so ergehen ...
+ *
+ * 1. Schritt: Die Chomsky-Normalform bilden
+ *
+ *
  *
  * @date 10.03.2022
  * @author am1
