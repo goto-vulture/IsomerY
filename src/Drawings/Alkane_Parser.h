@@ -80,7 +80,17 @@
  * wohl auch so ergehen ...
  *
  * 1. Schritt: Die Chomsky-Normalform bilden
- *
+ *      "Alkan-Grammatik" zusammengefasst:
+ *      S   ->  a | B2 a
+ *      B1  ->  Z m | Z K m
+ *      B2  ->  B1 W B3 | B1 W N2 B3 c
+ *      B3  ->  y
+ *      N1  ->  o
+ *      N2  ->  N1 N1 N3 | N1 B1 N2 N3
+ *      N3  ->  y
+ *      W   ->  n
+ *      Z   ->  z | Z z
+ *      K   ->  k Z | k Z K
  *
  *
  * @date 10.03.2022
