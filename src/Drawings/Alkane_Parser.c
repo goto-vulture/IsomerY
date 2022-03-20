@@ -68,6 +68,7 @@ static struct Alkane_Lexer Start_Lexer (const char* const iupac_name, const size
 static void Next_Char (struct Alkane_Lexer* const lexer_data)
 {
     const char current_char = lexer_data->alkane_name [lexer_data->current_char];
+    const size_t current_token_size = (size_t) (lexer_data->current_char - lexer_data->last_char_used);
 
     // Alle Zeichen verarbeitet
     if (current_char == '\0')
@@ -80,7 +81,7 @@ static void Next_Char (struct Alkane_Lexer* const lexer_data)
         Split_Char_Found (lexer_data);
     }
     else if (Type_Of_Token (&(lexer_data->alkane_name [lexer_data->last_char_used]),
-            (lexer_data->current_char - lexer_data->last_char_used)) == TOKEN_TYPE_ALKYL_WORD)
+            current_token_size) == TOKEN_TYPE_ALKYL_WORD)
     {
         Alkyl_End_Found (lexer_data);
     }
@@ -89,7 +90,7 @@ static void Next_Char (struct Alkane_Lexer* const lexer_data)
     // Damit dies nicht passiert, wird fuer ein Zahlenwort vorausgesetzt, dass noch mind. 5 Zeichen uebrig sind
     // 5, da das kuerzeste Alkanwort "Butan" 5 Zeichen lang ist
     else if (Type_Of_Token (&(lexer_data->alkane_name [lexer_data->last_char_used]),
-            (lexer_data->current_char - lexer_data->last_char_used)) == TOKEN_TYPE_NUMBER_WORD &&
+            current_token_size) == TOKEN_TYPE_NUMBER_WORD &&
             (lexer_data->name_length - lexer_data->current_char >= 5))
     {
         Number_Word_Found (lexer_data);
