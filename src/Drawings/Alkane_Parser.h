@@ -45,7 +45,7 @@
  * START            ->  alkan
  * START            ->  BRANCH alkan
  * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END
- * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END
+ * BRANCH           ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose
  * BRANCH_BEGIN     ->  ZAHL minus
  * BRANCH_BEGIN     ->  ZAHL KOMMA_ZAHL minus
  * NUMBER_WORD      ->  number_word
@@ -55,9 +55,10 @@
  * KOMMA_ZAHL       ->  komma ZAHL
  * KOMMA_ZAHL       ->  komma ZAHL KOMMA_ZAHL
  * BRANCH_END       ->  alkyl
- * NESTING          ->  NESTING_BEGIN BRANCH NESTING_END
+ * NESTING          ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END
+ * NESTING          ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END
  * NESTING_BEGIN    ->  bopen
- * NESTING_END      ->  bclose
+ * NESTING_END      ->  alkyl
  *
  * "BRANCH_END" und "NESTING_END" sind als Variablen nicht erforderlich. Es koennte direkt das Terminalsymbol verwendet
  * werden. Sie werden dennoch verwendet, damit man eine analoge Bezeichnung zu "BRANCH_BEGIN" und "NESTING_BEGIN" hat.
