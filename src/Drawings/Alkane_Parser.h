@@ -49,7 +49,7 @@
  * BRANCH_BEGIN     (B1)    ->  ZAHL minus                                          (B1 ->  Z m)
  * BRANCH_BEGIN     (B1)    ->  ZAHL KOMMA_ZAHL minus                               (B1 ->  Z K m)
  * NUMBER_WORD      (W)     ->  number_word                                         (W  ->  n)
- * NUMBER_WORD      (W)     ->  NULL                                                (W  ->  NULL)
+ * NUMBER_WORD      (W)     ->  NULL                                                (W  ->  NULL) !!! Diese Regel steht der Vollstaendigkeit halber hier und hat (aktuell) keine Verwendung !!!
  * ZAHL             (Z)     ->  ziffer                                              (Z  ->  z)
  * ZAHL             (Z)     ->  ZAHL ziffer                                         (Z  ->  Z z)
  * KOMMA_ZAHL       (K)     ->  komma ZAHL                                          (K  ->  k Z)
