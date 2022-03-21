@@ -1,6 +1,18 @@
 /**
  * @file Alkane_Parser.h
  *
+ * @brief Der Alkan-Parser dient dazu, dass IUPAC-Namen von Alkanen auf ihre Gueltigkeit ueberprueft werden. Dabei
+ * werden die Namen NICHT auf ihre inhaltliche Gueltigkeit ueberprueft; nur auf ihre formale Gueltigkeit.
+ *
+ * Beispiel: 1-(2-(3-methylethyl)propyl)Octane
+ * Formal ist dieser Name gueltig. Allerdings nicht inhaltlich. "...(3-methylethyl)..." An der 3. Position befindet sich
+ * eine Methylabzweigung - Und zwar bezogen auf eine uebergeordnete Ethylabzweigung.
+ * Dies ist natuerlich Schwachsinn.
+ *
+ * Die Beurteilung, ob ein Name auch inhaltlich gueltig ist, kann nur beantwortet werden, wenn bereits die formale
+ * Gueltigkeit ueberprueft wurde. Daher kann der Parser bei Bedarf auch auf die inhaltlichen Tests erweitert werden.
+ *
+ *
  * Beschreibung der Grammatik (kontextfrei):
  *
  * Vokabular:
