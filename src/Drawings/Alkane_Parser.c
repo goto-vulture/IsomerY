@@ -9,8 +9,7 @@
 #include <ctype.h>
 #include "../str2int.h"
 #include "../String_Tools.h"
-
-
+#include "../Misc.h"
 
 
 
@@ -28,6 +27,8 @@ static void End_Char_Found (struct Alkane_Lexer* const lexer_data);
 
 static enum Token_Type Type_Of_Token (const char* const token, const size_t length);
 static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data);
+
+// static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type token_type);
 
 //=====================================================================================================================
 
@@ -127,6 +128,46 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
 
     // Damit eine Ueberpruefung des vom Lexers erzeugte Liste an Token-Typen, muessen die enum Token_Type-Objekte nach
     // enum Terminalsymbol konvertiert werden !
+    // Dafuer gibt es die Konvertierungsfunktion "Token_Type_To_Terminalsymbol"
+
+    _Bool P [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS][COUNT_ARRAY_ELEMENTS(rules)];
+    memset (P, '\0', sizeof (P));
+    // const size_t n = lexer_data.next_free_token;
+
+    for (size_t s = 0; s < lexer_data.next_free_token; ++ s)
+    {
+        for (size_t v = 0; v < COUNT_ARRAY_ELEMENTS(rules); ++ v)
+        {
+            if (rules [v].terminal_dest != NO_TERMINALSYMBOL)
+            {
+                P [1][s][v] = true;
+            }
+        }
+    }
+
+    for (size_t l = 1; l < lexer_data.next_free_token; ++ l)
+    {
+        for (size_t s = 0; s < (lexer_data.next_free_token - l + 1); ++ s)
+        {
+            for (size_t p = 0; p < (l - 1); ++ p)
+            {
+                if (rules [p].non_terminal_dest_1 != NO_NONTERMINALSYMBOL &&
+                        rules [p].non_terminal_dest_2 != NO_NONTERMINALSYMBOL)
+                {
+                    if (P [p][s][rules [p].non_terminal_dest_1] == true &&
+                            P [l - p][s + p][rules [p].non_terminal_dest_2] == true)
+                    {
+                        P [l][s][rules [p].source] = true;
+                    }
+                }
+            }
+        }
+    }
+
+    if (P [lexer_data.next_free_token][0][0] == true)
+    {
+        printf ("%s is in the grammer.\n", lexer_data.alkane_name);
+    }
 
     return;
 }
@@ -373,5 +414,48 @@ static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data)
 
     return;
 }
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/*static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type token_type)
+{
+    enum Terminalsymbol result = NO_TERMINALSYMBOL;
+
+    switch (token_type)
+    {
+    case TOKEN_TYPE_N_A:
+        result = NO_TERMINALSYMBOL;
+        break;
+    case TOKEN_TYPE_NUMBER:
+        result = z;
+        break;
+    case TOKEN_TYPE_ALKYL_WORD:
+        result = y;
+        break;
+    case TOKEN_TYPE_ALKANE_WORD:
+        result = a;
+        break;
+    case TOKEN_TYPE_NUMBER_WORD:
+        result = n;
+        break;
+    case TOKEN_TYPE_COMMA_CHAR:
+        result = k;
+        break;
+    case TOKEN_TYPE_SUB_CHAR:
+        result = m;
+        break;
+    case TOKEN_TYPE_OPEN_BRACKET:
+        result = o;
+        break;
+    case TOKEN_TYPE_CLOSE_BRACKET:
+        result = c;
+        break;
+    default:
+        // Die Ausfuehrung des Default-Paths ist hier immer ein Fehler !
+        ASSERT_MSG(false, "Switch-Case default path executed !")
+    }
+
+    return result;
+}*/
 
 //---------------------------------------------------------------------------------------------------------------------
