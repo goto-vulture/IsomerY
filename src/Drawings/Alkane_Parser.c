@@ -35,7 +35,98 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
 {
     const struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
 
-    // Erstellte Lexer-Daten fuer den Parser vorbereiten ...
+    // Den eigentlichen Parsing-Vorgang durchfuehren und das Wortproblem mittels der Lexer-Daten loesen
+    // Verwendeter Algorithmus: Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus)
+    /* Die Chomsky-Normalform:
+     *      B3  ->  y
+     *      N1  ->  o
+     *      N3  ->  y
+     *      W   ->  n
+     *
+     *      Z   ->  z
+     *      M   ->  m
+     *      K2  ->  k
+     *      C   ->  c
+     *      A   ->  a
+     *
+     *      S   ->  a | B2 A
+     *
+     *      B1  ->  Z X1
+     *      X1  ->  K M
+     *      B2  ->  B1 X2
+     *      X2  ->  W B3
+     *      B2  ->  B1 X3
+     *      X3  ->  W X4
+     *      X4  ->  N2 X5
+     *      X5  ->  B3 C
+     *      N2  ->  N1 X6
+     *      X6  ->  B1 N3
+     *      N2  ->  N1 X7
+     *      X7  ->  B1 X8
+     *      X8  ->  N2 N3
+     *      K   ->  K2 X9
+     *      X9  ->  Z K
+     */
+    // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
+    enum Nonterminalsymbol
+    {
+        NO_NONTERMINALSYMBOL = 0,
+        B3, N1, N3, W,
+        Z, M, K2, C, A,
+        S,
+        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9
+    };
+    // Konstanten fuer die Terminale. Gleiche Bezeichnung wie im Kommentarblock
+    enum Terminalsymbol
+    {
+        NO_TERMINALSYMBOL = 0,
+        y, o, n, z, m, k, c, a
+    };
+    struct Production_Rule
+    {
+        enum Nonterminalsymbol source;                  // Linke Seite
+        enum Terminalsymbol terminal_dest;              // Terminalsymbol auf der rechten Seite
+                                                        // ODER
+        enum Nonterminalsymbol non_terminal_dest_1;     // 1. Nichtterminalsymbol und
+        enum Nonterminalsymbol non_terminal_dest_2;     // 2. Nichtterminalsymbol auf der rechten Seite
+    };
+
+    // Alle Produktionsregeln
+    struct Production_Rule rules [] =
+    {
+        { S,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { S,    NO_TERMINALSYMBOL,  B2,                     A                    },
+
+        { B3,   y,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { N1,   o,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { N3,   y,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { W,    n,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+
+        { Z,    z,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { M,    m,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { K2,   k,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { C,    c,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { A,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+
+        { B1,   NO_TERMINALSYMBOL,  Z,                      X1                   },
+        { X1,   NO_TERMINALSYMBOL,  K,                      M                    },
+        { B2,   NO_TERMINALSYMBOL,  B1,                     X2                   },
+        { X2,   NO_TERMINALSYMBOL,  W,                      B3                   },
+        { B2,   NO_TERMINALSYMBOL,  B1,                     X3                   },
+        { X3,   NO_TERMINALSYMBOL,  W,                      X4                   },
+        { X4,   NO_TERMINALSYMBOL,  N2,                     X5                   },
+        { X5,   NO_TERMINALSYMBOL,  B3,                     C                    },
+        { N2,   NO_TERMINALSYMBOL,  N1,                     X6                   },
+        { X6,   NO_TERMINALSYMBOL,  B1,                     N3                   },
+        { N2,   NO_TERMINALSYMBOL,  N1,                     X7                   },
+        { X7,   NO_TERMINALSYMBOL,  B1,                     X8                   },
+        { X8,   NO_TERMINALSYMBOL,  N2,                     N3                   },
+        { K,    NO_TERMINALSYMBOL,  K2,                     X9                   },
+        { X9,   NO_TERMINALSYMBOL,  Z,                      K                    }
+    };
+
+    // Damit eine Ueberpruefung des vom Lexers erzeugte Liste an Token-Typen, muessen die enum Token_Type-Objekte nach
+    // enum Terminalsymbol konvertiert werden !
 
     return;
 }
