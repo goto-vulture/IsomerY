@@ -243,11 +243,11 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
     // !!! Alle drei Dimensonen: 1 Indexierung !!!
     if (P [count_tokens][1][1] == true)
     {
-        PRINTF_FFLUSH("%s is in the grammer. (%zu)\n", lexer_data.alkane_name, true_writes);
+        PRINTF_FFLUSH("%-50s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
     else
     {
-        PRINTF_FFLUSH("%s is NOT in the grammer. (%zu)\n", lexer_data.alkane_name, true_writes);
+        PRINTF_FFLUSH("%-50s is NOT in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
 
     return;
