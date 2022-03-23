@@ -49,42 +49,39 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
     // Den eigentlichen Parsing-Vorgang durchfuehren und das Wortproblem mittels der Lexer-Daten loesen
     // Verwendeter Algorithmus: Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus)
     /* Die Chomsky-Normalform:
-     *      S   ->  a
-     *      S   ->  B2 A
-     *
-     *      B3  ->  y
-     *      N1  ->  o
-     *      N3  ->  y
-     *      W   ->  n
-     *
-     *      Z   ->  z
-     *      M   ->  m
-     *      K2  ->  k
-     *      C   ->  c
-     *      A   ->  a
-     *
-     *      B1  ->  Z M
-     *      B1  ->  Z X1
-     *      X1  ->  K M
-     *      B2  ->  B1 X2
-     *      X2  ->  W B3
-     *      B2  ->  B1 X3
-     *      X3  ->  W X4
-     *      X4  ->  N2 X5
-     *      X5  ->  B3 C
-     *      B2  ->  B1 B3
-     *      N2  ->  N1 X6
-     *      X6  ->  B1 N3
-     *      N2  ->  N1 X7
-     *      X7  ->  B1 X8
-     *      X8  ->  N2 X12
-     *      X12 ->  N3 C
-     *      K   ->  K2 X9
-     *      K   ->  K2 Z
-     *      X9  ->  Z K
-     *      B2  ->  B1 X10
-     *      X10 ->  N2 X11
-     *      X11 ->  B3 C
+        S   ->  B2 A
+        S   ->  a
+        B3  ->  y
+        N1  ->  o
+        N3  ->  y
+        W   ->  n
+        Z   ->  z
+        M   ->  m
+        K2  ->  k
+        C   ->  c
+        A   ->  a
+        B1  ->  Z M
+        B1  ->  Z X1
+        X1  ->  K M
+        B2  ->  B1 X2
+        X2  ->  W B3
+        B2  ->  B1 X3
+        X3  ->  W X4
+        X4  ->  N2 X5
+        X5  ->  B3 C
+        B2  ->  B1 B3
+        N2  ->  N1 X6
+        X6  ->  B1 N3
+        N2  ->  N1 X7
+        X7  ->  B1 X8
+        X8  ->  N2 X12
+        X12 ->  N3 C
+        K   ->  K2 X9
+        K   ->  K2 Z
+        X9  ->  Z K
+        B2  ->  B1 X10
+        X10 ->  N2 X11
+        X11 ->  B3 C
      */
     // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
     enum Nonterminalsymbol
@@ -148,13 +145,20 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
     };
 
     // !!! Alle drei Dimensonen: 1 Indexierung !!!
+    // 1. Dimension:    Zeile
+    // 2. Dimension:    Spalte
+    // 3. Dimension:    Menge an Regeln, die fuer die Erzeugung des bzw. der Token verwendet werden koennen
+    //                  Hier ist eine Menge erforderlich, da durchaus mehrere Regeln fuer die Erzeugung verwendet werden
+    //                  koennen. Alle Regeln muessen fuer den weiteren Verlauf gesichert werden !
     _Bool P [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS][COUNT_ARRAY_ELEMENTS(rules)];
     memset (P, '\0', sizeof (P));
     size_t true_writes = 0;
-    // const size_t n = lexer_data.next_free_token;
 
+    // Pseudocode des CYK-Algorithmus
+    // Siehe: https://en.wikipedia.org/wiki/CYK_algorithm#As_pseudocode
+    // Demo als Hilfe fuer die Implementierung: https://martinlaz.github.io/demos/cky.html
     /*
-     *  let the input be a string I consisting of n characters: a1 ... an.
+        let the input be a string I consisting of n characters: a1 ... an.
         let the grammar contain r nonterminal symbols R1 ... Rr, with start symbol R1.
         let P[n,n,r] be an array of booleans. Initialize all elements of P to false.
 
@@ -176,6 +180,8 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
 
     const size_t count_tokens = lexer_data.next_free_token; // Entspricht dem n im Pseudocode
 
+    // Alle Produktionsregeln finden, die das richtige Termialsymbol erzeugen
+    // Dies funktioniert nur fuer die 1. Zeile !
     for (size_t s = 0; s < count_tokens; ++ s)
     {
         for (size_t v = 0; v < COUNT_ARRAY_ELEMENTS(rules); ++ v)
@@ -189,19 +195,31 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
         }
     }
 
+    // ===== BEGINN Die drei Schleifen, die direkt im Pseudocode stehen =====
     for (size_t l = 2; l <= count_tokens; ++ l)
     {
         for (size_t s = 1; s <= (count_tokens - l + 1); ++ s)
         {
             for (size_t p = 1; p <= (l - 1); ++ p)
             {
+            // ===== ENDE Die drei Schleifen, die direkt im Pseudocode stehen =====
+
                 // PRINTF_FFLUSH("(%zu, %zu) ", p, l - p);
+                // ===== BEGINN Alle moeglichen Kombinationen zweier Produktionsregeln bilden =====
                 for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(rules); ++ i)
                 {
                     for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(rules); ++ i2)
                     {
+                    // ===== ENDE Alle moeglichen Kombinationen zweier Produktionsregeln bilden =====
+
+                        // Erinnerung 3. Dimension: Menge an Regeln, die fuer die Erzeugung des bzw. der Token verwendet
+                        //                          werden koennen
+                        // Gibt es bei der 3. Dimension eine Kombination, wo beide Tokens verwendet werden ?
                         if (P [p][s][i + 1] == true && P [l - p][s + p][i2 + 1] == true)
                         {
+                            // Wenn ja: Alle Produktionsregeln durchgehen, um welche zu finden, wo die beiden
+                            // Nichtterminalsymbole auf der rechten Seite der linken Nichtterminalsymbole von den beiden
+                            // Produktionsregeln, die durch die Kombination gefunden wurden, entsprechen
                             for (size_t i3 = 0; i3 < COUNT_ARRAY_ELEMENTS(rules); ++ i3)
                             {
                                 if (rules [i].source == rules [i3].non_terminal_dest_1 &&
@@ -213,6 +231,7 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
                                 }
                             }
                         }
+
                     }
                 }
 

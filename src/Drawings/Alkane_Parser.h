@@ -77,8 +77,10 @@
  *
  *
  * Damit das Wortproblem - also ob ein Wort von dieser Grammatik erzeugt werden kann - fuer diese Grammatik strukturiert
- * geloest werden kann, wird der sog. Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus) verwendet. Dieser erledigt das
- * Problem mit einer Laufzeit von O(n^3).
+ * geloest werden kann, wird der sog. Cocke-Younger-Kasami-Algorithmus (CYK bzw. CKY-Algorithmus) verwendet. Dieser
+ * erledigt das Problem mit einer Laufzeit von O(n^3).
+ *
+ * Demo als Hilfe fuer die Implementierung des CYK-Algorithmus; https://martinlaz.github.io/demos/cky.html
  *
  * Das enorme Problem bei diesem Algorithms: Die Grammatik muss in die sog. Chomsky-Normalform ueberfuehrt werden, damit
  * der Algorithmus ueberhaupt funktioniert.
@@ -138,44 +140,40 @@
  *      X11 ->  B3 C
  *
  *      => BEGINN Die komplette Chomsky-Normalform <=
- *      S   ->  a
- *      S   ->  B2 A
- *
- *      B3  ->  y
- *      N1  ->  o
- *      N3  ->  y
- *      W   ->  n
- *
- *      Z   ->  z
- *      M   ->  m
- *      K2  ->  k
- *      C   ->  c
- *      A   ->  a
- *
- *      B1  ->  Z M
- *      B1  ->  Z X1
- *      X1  ->  K M
- *      B2  ->  B1 X2
- *      X2  ->  W B3
- *      B2  ->  B1 X3
- *      X3  ->  W X4
- *      X4  ->  N2 X5
- *      X5  ->  B3 C
- *      B2  ->  B1 B3
- *      N2  ->  N1 X6
- *      X6  ->  B1 N3
- *      N2  ->  N1 X7
- *      X7  ->  B1 X8
- *      X8  ->  N2 X12
- *      X12 ->  N3 C
- *      K   ->  K2 X9
- *      K   ->  K2 Z
- *      X9  ->  Z K
- *      B2  ->  B1 X10
- *      X10 ->  N2 X11
- *      X11 ->  B3 C
+        S   ->  B2 A
+        S   ->  a
+        B3  ->  y
+        N1  ->  o
+        N3  ->  y
+        W   ->  n
+        Z   ->  z
+        M   ->  m
+        K2  ->  k
+        C   ->  c
+        A   ->  a
+        B1  ->  Z M
+        B1  ->  Z X1
+        X1  ->  K M
+        B2  ->  B1 X2
+        X2  ->  W B3
+        B2  ->  B1 X3
+        X3  ->  W X4
+        X4  ->  N2 X5
+        X5  ->  B3 C
+        B2  ->  B1 B3
+        N2  ->  N1 X6
+        X6  ->  B1 N3
+        N2  ->  N1 X7
+        X7  ->  B1 X8
+        X8  ->  N2 X12
+        X12 ->  N3 C
+        K   ->  K2 X9
+        K   ->  K2 Z
+        X9  ->  Z K
+        B2  ->  B1 X10
+        X10 ->  N2 X11
+        X11 ->  B3 C
  *      => ENDE Die komplette  Chomsky-Normalform <=
- *
  *
  * @date 10.03.2022
  * @author am1
