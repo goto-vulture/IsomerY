@@ -150,7 +150,7 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
     // 3. Dimension:    Menge an Regeln, die fuer die Erzeugung des bzw. der Token verwendet werden koennen
     //                  Hier ist eine Menge erforderlich, da durchaus mehrere Regeln fuer die Erzeugung verwendet werden
     //                  koennen. Alle Regeln muessen fuer den weiteren Verlauf gesichert werden !
-    _Bool P [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS][COUNT_ARRAY_ELEMENTS(rules)];
+    _Bool P [MAX_NUMBER_OF_C_ATOMS + 1][MAX_NUMBER_OF_C_ATOMS + 1][COUNT_ARRAY_ELEMENTS(rules) + 1];
     memset (P, '\0', sizeof (P));
     size_t true_writes = 0;
 
