@@ -1006,7 +1006,6 @@ extern void TEST_Alkane_Lexer (void)
         for (uint_fast8_t i2 = 0; i2 < lexer_data.next_free_token; ++ i2)
         {
             ASSERT_MSG(expected_tokens [i][i2].token != NULL, "expected token is NULL ! Lexer created not enough tokens !");
-
             ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected_tokens [i][i2].token, lexer_data.result_tokens [i2]);
             ASSERT_EQUALS(expected_tokens [i][i2].type, lexer_data.token_type [i2]);
         }
@@ -1037,7 +1036,10 @@ extern void TEST_Alkane_Parser (void)
 
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(iupac_names); ++ i)
     {
-        Parse_Alkane (iupac_names [i], strlen (iupac_names [i]));
+        if (! Parse_Alkane (iupac_names [i], strlen (iupac_names [i])) /* == false */)
+        {
+            wrong_results ++;
+        }
     }
 
     ASSERT_EQUALS(0, wrong_results);
