@@ -241,7 +241,7 @@ struct Alkane_Lexer
 
 
 
-extern void Parse_Alkane (const char* const iupac_name, const size_t length);
+extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length);
 extern struct Alkane_Lexer Create_Alkane_Tokens (const char* const iupac_name, const size_t length);
 
 

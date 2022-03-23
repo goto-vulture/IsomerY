@@ -42,7 +42,7 @@ static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type t
 
 //=====================================================================================================================
 
-extern void Parse_Alkane (const char* const iupac_name, const size_t length)
+extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
 {
     struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
 
@@ -239,9 +239,10 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
         }
     }
 
+    _Bool return_value = (P [count_tokens][1][1] /* == true */) ? true : false;
 
     // !!! Alle drei Dimensonen: 1 Indexierung !!!
-    if (P [count_tokens][1][1] == true)
+    if (P [count_tokens][1][1] /* == true */)
     {
         PRINTF_FFLUSH("%-50s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
@@ -250,7 +251,7 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
         PRINTF_FFLUSH("%-50s is NOT in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
 
-    return;
+    return return_value;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
