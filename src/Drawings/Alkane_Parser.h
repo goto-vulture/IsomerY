@@ -57,6 +57,8 @@
  * START            (S)     ->  BRANCH alkan                                        (S  ->  B2 a)
  * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END                 (B2 ->  B1 W B3)
  * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose  (B2 ->  B1 W N2 B3 c)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN BRANCH_END                             (B2 ->  B1 B3) ! Dient dazu, wenn das Zahlenwort leer ist !
+ * BRANCH           (B2)    ->  BRANCH_BEGIN NESTING BRANCH_END bclose              (B2 ->  B1 N2 B3 c) ! Dient dazu, wenn das Zahlenwort leer ist !
  * BRANCH_BEGIN     (B1)    ->  zahl minus                                          (B1 ->  z m)
  * BRANCH_BEGIN     (B1)    ->  zahl KOMMA_ZAHL minus                               (B1 ->  z K m)
  * NUMBER_WORD      (W)     ->  number_word                                         (W  ->  n)
@@ -64,7 +66,7 @@
  * KOMMA_ZAHL       (K)     ->  komma zahl                                          (K  ->  k z)
  * KOMMA_ZAHL       (K)     ->  komma zahl KOMMA_ZAHL                               (K  ->  k z K)
  * BRANCH_END       (B3)    ->  alkyl                                               (B3 ->  y)
- * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END      (N2 ->  N1 B1 N2 N3)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END bclose     (N2 ->  N1 B1 N2 N3 c)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END              (N2 ->  N1 B1 N3)
  * NESTING_BEGIN    (N1)    ->  bopen                                               (N1 ->  o)
  * NESTING_END      (N3)    ->  alkyl                                               (N3 ->  y)
@@ -92,10 +94,10 @@
  *      "Alkan-Grammatik" zusammengefasst:
  *      S   ->  a | B2 a
  *      B1  ->  z m | z K m
- *      B2  ->  B1 W B3 | B1 W N2 B3 c
+ *      B2  ->  B1 W B3 | B1 W N2 B3 c | B1 B3 | B1 W N2 B3 c
  *      B3  ->  y
  *      N1  ->  o
- *      N2  ->  N1 B1 N3 | N1 B1 N2 N3
+ *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 c
  *      N3  ->  y
  *      W   ->  n
  *      K   ->  k z | k z K
@@ -110,7 +112,8 @@
  *      Anwenden der neuen Nichtterminale:
  *      S   ->  a | B2 A
  *      B1  ->  Z M | Z K M
- *      B2  ->  B1 W B3 | B1 W N2 B3 C
+ *      B2  ->  B1 W B3 | B1 W N2 B3 C | B1 B3 | B1 N2 B3 C
+ *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 C
  *      K   ->  K2 Z | K2 Z K
  *
  *      Zu lange Regeln verkuerzen:
@@ -126,11 +129,18 @@
  *      X6  ->  B1 N3
  *      N2  ->  N1 X7
  *      X7  ->  B1 X8
- *      X8  ->  N2 N3
+ *      X8  ->  N2 X12
+ *      X12 ->  N3 C
  *      K   ->  K2 X9
  *      X9  ->  Z K
+ *      B2  ->  B1 X10
+ *      X10 ->  N2 X11
+ *      X11 ->  B3 C
  *
- *      => BEGINN Die Chomsky-Normalform <=
+ *      => BEGINN Die komplette Chomsky-Normalform <=
+ *      S   ->  a
+ *      S   ->  B2 A
+ *
  *      B3  ->  y
  *      N1  ->  o
  *      N3  ->  y
@@ -142,8 +152,7 @@
  *      C   ->  c
  *      A   ->  a
  *
- *      S   ->  a | B2 A
- *
+ *      B1  ->  Z M
  *      B1  ->  Z X1
  *      X1  ->  K M
  *      B2  ->  B1 X2
@@ -152,14 +161,20 @@
  *      X3  ->  W X4
  *      X4  ->  N2 X5
  *      X5  ->  B3 C
+ *      B2  ->  B1 B3
  *      N2  ->  N1 X6
  *      X6  ->  B1 N3
  *      N2  ->  N1 X7
  *      X7  ->  B1 X8
- *      X8  ->  N2 N3
+ *      X8  ->  N2 X12
+ *      X12 ->  N3 C
  *      K   ->  K2 X9
+ *      K   ->  K2 Z
  *      X9  ->  Z K
- *      => ENDE Die Chomsky-Normalform <=
+ *      B2  ->  B1 X10
+ *      X10 ->  N2 X11
+ *      X11 ->  B3 C
+ *      => ENDE Die komplette  Chomsky-Normalform <=
  *
  *
  * @date 10.03.2022

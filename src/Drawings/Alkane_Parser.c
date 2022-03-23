@@ -10,7 +10,17 @@
 #include "../str2int.h"
 #include "../String_Tools.h"
 #include "../Misc.h"
+#include "../Print_Tools.h"
 
+
+
+// Konstanten fuer die Terminale. Gleiche Bezeichnung wie im Kommentarblock
+enum Terminalsymbol
+{
+    NO_TERMINALSYMBOL = -1,
+    y = 0,
+    o, n, z, m, k, c, a
+};
 
 
 /**
@@ -28,17 +38,20 @@ static void End_Char_Found (struct Alkane_Lexer* const lexer_data);
 static enum Token_Type Type_Of_Token (const char* const token, const size_t length);
 static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data);
 
-// static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type token_type);
+static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type token_type);
 
 //=====================================================================================================================
 
 extern void Parse_Alkane (const char* const iupac_name, const size_t length)
 {
-    const struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
+    struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
 
     // Den eigentlichen Parsing-Vorgang durchfuehren und das Wortproblem mittels der Lexer-Daten loesen
     // Verwendeter Algorithmus: Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus)
     /* Die Chomsky-Normalform:
+     *      S   ->  a
+     *      S   ->  B2 A
+     *
      *      B3  ->  y
      *      N1  ->  o
      *      N3  ->  y
@@ -50,8 +63,7 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
      *      C   ->  c
      *      A   ->  a
      *
-     *      S   ->  a | B2 A
-     *
+     *      B1  ->  Z M
      *      B1  ->  Z X1
      *      X1  ->  K M
      *      B2  ->  B1 X2
@@ -60,29 +72,31 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
      *      X3  ->  W X4
      *      X4  ->  N2 X5
      *      X5  ->  B3 C
+     *      B2  ->  B1 B3
      *      N2  ->  N1 X6
      *      X6  ->  B1 N3
      *      N2  ->  N1 X7
      *      X7  ->  B1 X8
-     *      X8  ->  N2 N3
+     *      X8  ->  N2 X12
+     *      X12 ->  N3 C
      *      K   ->  K2 X9
+     *      K   ->  K2 Z
      *      X9  ->  Z K
+     *      B2  ->  B1 X10
+     *      X10 ->  N2 X11
+     *      X11 ->  B3 C
      */
     // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
     enum Nonterminalsymbol
     {
-        NO_NONTERMINALSYMBOL = 0,
+        NO_NONTERMINALSYMBOL = -1,
+        S = 0,
         B3, N1, N3, W,
         Z, M, K2, C, A,
-        S,
-        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9
+
+        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12
     };
-    // Konstanten fuer die Terminale. Gleiche Bezeichnung wie im Kommentarblock
-    enum Terminalsymbol
-    {
-        NO_TERMINALSYMBOL = 0,
-        y, o, n, z, m, k, c, a
-    };
+
     struct Production_Rule
     {
         enum Nonterminalsymbol source;                  // Linke Seite
@@ -95,8 +109,8 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
     // Alle Produktionsregeln
     struct Production_Rule rules [] =
     {
-        { S,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { S,    NO_TERMINALSYMBOL,  B2,                     A                    },
+        { S,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
 
         { B3,   y,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { N1,   o,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
@@ -109,6 +123,7 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
         { C,    c,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { A,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
 
+        { B1,   NO_TERMINALSYMBOL,  Z,                      M                    },
         { B1,   NO_TERMINALSYMBOL,  Z,                      X1                   },
         { X1,   NO_TERMINALSYMBOL,  K,                      M                    },
         { B2,   NO_TERMINALSYMBOL,  B1,                     X2                   },
@@ -117,56 +132,103 @@ extern void Parse_Alkane (const char* const iupac_name, const size_t length)
         { X3,   NO_TERMINALSYMBOL,  W,                      X4                   },
         { X4,   NO_TERMINALSYMBOL,  N2,                     X5                   },
         { X5,   NO_TERMINALSYMBOL,  B3,                     C                    },
+        { B2,   NO_TERMINALSYMBOL,  B1,                     B3                   },
         { N2,   NO_TERMINALSYMBOL,  N1,                     X6                   },
         { X6,   NO_TERMINALSYMBOL,  B1,                     N3                   },
         { N2,   NO_TERMINALSYMBOL,  N1,                     X7                   },
         { X7,   NO_TERMINALSYMBOL,  B1,                     X8                   },
-        { X8,   NO_TERMINALSYMBOL,  N2,                     N3                   },
+        { X8,   NO_TERMINALSYMBOL,  N2,                     X12                  },
+        { X12,  NO_TERMINALSYMBOL,  N3,                     C                    },
         { K,    NO_TERMINALSYMBOL,  K2,                     X9                   },
-        { X9,   NO_TERMINALSYMBOL,  Z,                      K                    }
+        { K,    NO_TERMINALSYMBOL,  K2,                     Z                    },
+        { X9,   NO_TERMINALSYMBOL,  Z,                      K                    },
+        { B2,   NO_TERMINALSYMBOL,  B1,                     X10                  },
+        { X10,  NO_TERMINALSYMBOL,  N2,                     X11                  },
+        { X11,  NO_TERMINALSYMBOL,  B3,                     C                    }
     };
 
-    // Damit eine Ueberpruefung des vom Lexers erzeugte Liste an Token-Typen, muessen die enum Token_Type-Objekte nach
-    // enum Terminalsymbol konvertiert werden !
-    // Dafuer gibt es die Konvertierungsfunktion "Token_Type_To_Terminalsymbol"
-
+    // !!! Alle drei Dimensonen: 1 Indexierung !!!
     _Bool P [MAX_NUMBER_OF_C_ATOMS][MAX_NUMBER_OF_C_ATOMS][COUNT_ARRAY_ELEMENTS(rules)];
     memset (P, '\0', sizeof (P));
+    size_t true_writes = 0;
     // const size_t n = lexer_data.next_free_token;
 
-    for (size_t s = 0; s < lexer_data.next_free_token; ++ s)
+    /*
+     *  let the input be a string I consisting of n characters: a1 ... an.
+        let the grammar contain r nonterminal symbols R1 ... Rr, with start symbol R1.
+        let P[n,n,r] be an array of booleans. Initialize all elements of P to false.
+
+        for each s = 1 to n
+            for each unit production Rv -> as
+                set P[1,s,v] = true
+
+        for each l = 2 to n -- Length of span
+            for each s = 1 to n-l+1 -- Start of span
+                for each p = 1 to l-1 -- Partition of span
+                    for each production Ra    -> Rb Rc
+                        if P[p,s,b] and P[l-p,s+p,c] then set P[l,s,a] = true
+
+        if P[n,1,1] is true then
+            I is member of language
+        else
+            I is not member of language
+     */
+
+    const size_t count_tokens = lexer_data.next_free_token; // Entspricht dem n im Pseudocode
+
+    for (size_t s = 0; s < count_tokens; ++ s)
     {
         for (size_t v = 0; v < COUNT_ARRAY_ELEMENTS(rules); ++ v)
         {
-            if (rules [v].terminal_dest != NO_TERMINALSYMBOL)
+            if (rules [v].terminal_dest != NO_TERMINALSYMBOL &&
+                    rules [v].terminal_dest == Token_Type_To_Terminalsymbol(lexer_data.token_type [s]))
             {
-                P [1][s][v] = true;
+                P [1][s + 1][v + 1] = true;
+                ++ true_writes;
             }
         }
     }
 
-    for (size_t l = 1; l < lexer_data.next_free_token; ++ l)
+    for (size_t l = 2; l <= count_tokens; ++ l)
     {
-        for (size_t s = 0; s < (lexer_data.next_free_token - l + 1); ++ s)
+        for (size_t s = 1; s <= (count_tokens - l + 1); ++ s)
         {
-            for (size_t p = 0; p < (l - 1); ++ p)
+            for (size_t p = 1; p <= (l - 1); ++ p)
             {
-                if (rules [p].non_terminal_dest_1 != NO_NONTERMINALSYMBOL &&
-                        rules [p].non_terminal_dest_2 != NO_NONTERMINALSYMBOL)
+                // PRINTF_FFLUSH("(%zu, %zu) ", p, l - p);
+                for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(rules); ++ i)
                 {
-                    if (P [p][s][rules [p].non_terminal_dest_1] == true &&
-                            P [l - p][s + p][rules [p].non_terminal_dest_2] == true)
+                    for (size_t i2 = 0; i2 < COUNT_ARRAY_ELEMENTS(rules); ++ i2)
                     {
-                        P [l][s][rules [p].source] = true;
+                        if (P [p][s][i + 1] == true && P [l - p][s + p][i2 + 1] == true)
+                        {
+                            for (size_t i3 = 0; i3 < COUNT_ARRAY_ELEMENTS(rules); ++ i3)
+                            {
+                                if (rules [i].source == rules [i3].non_terminal_dest_1 &&
+                                        rules [i2].source == rules [i3].non_terminal_dest_2)
+                                {
+                                    P [l][s][i3 + 1] = true;
+                                    // PRINTF_FFLUSH("\n>%zu, %zu, %zu<\n", l, s, i3 + 1);
+                                    ++ true_writes;
+                                }
+                            }
+                        }
                     }
                 }
+
             }
         }
     }
 
-    if (P [lexer_data.next_free_token][0][0] == true)
+
+    // !!! Alle drei Dimensonen: 1 Indexierung !!!
+    if (P [count_tokens][1][1] == true)
     {
-        printf ("%s is in the grammer.\n", lexer_data.alkane_name);
+        PRINTF_FFLUSH("%s is in the grammer. (%zu)\n", lexer_data.alkane_name, true_writes);
+    }
+    else
+    {
+        PRINTF_FFLUSH("%s is NOT in the grammer. (%zu)\n", lexer_data.alkane_name, true_writes);
     }
 
     return;
@@ -296,7 +358,6 @@ static void Number_Word_Found (struct Alkane_Lexer* const lexer_data)
 static void End_Char_Found (struct Alkane_Lexer* const lexer_data)
 {
     Copy_Token_To_Lexer_Data (lexer_data);
-    lexer_data->alkane_name = NULL;
 
     return;
 }
@@ -417,7 +478,14 @@ static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-/*static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type token_type)
+/**
+ * @brief Token-Typ (enum Variable) zum passenden Terminalsymbol-Typ konvertieren (ebenfalls eine enum Variable).
+ *
+ * Damit eine Ueberpruefung des vom Lexers erzeugte Liste an Token-Typen, muessen die enum Token_Type-Objekte nach
+ * enum Terminalsymbol konvertiert werden !
+ * Dafuer gibt es die Konvertierungsfunktion "Token_Type_To_Terminalsymbol"
+ */
+static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type token_type)
 {
     enum Terminalsymbol result = NO_TERMINALSYMBOL;
 
@@ -456,6 +524,6 @@ static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data)
     }
 
     return result;
-}*/
+}
 
 //---------------------------------------------------------------------------------------------------------------------
