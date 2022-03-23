@@ -143,6 +143,7 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_Group_Compression),
 
             CREATE_Test_Function_And_Their_Name(TEST_Alkane_Lexer),
+            CREATE_Test_Function_And_Their_Name(TEST_Alkane_Parser),
 
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_1),
 
@@ -1010,6 +1011,36 @@ extern void TEST_Alkane_Lexer (void)
             ASSERT_EQUALS(expected_tokens [i][i2].type, lexer_data.token_type [i2]);
         }
     }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Testen, ob der Alkan-Parser seine Aufgaben richtig erledigt.
+ *
+ * Im Hintergrund wird der Alkan-Lexer verwendet. Dieser erzeugt die Tokens, die dann vom Parser ueberprueft werden.
+ * Die Tests in dieser Testfunktion beziehen sich alleine auf die des Parsers. Wenn Fehler beim Lexer auftauchen, dann
+ * koennen diese von den daraus resultierenden Fehlern des Parsers nicht unterschieden werden. Daher gibt es auch eine
+ * eigene Testfunktion fuer den Lexer (TEST_Alkane_Lexer).
+ */
+extern void TEST_Alkane_Parser (void)
+{
+    // Als Testnamen werden die erwarteten Ergebnisse bei der Bildung der Konstitutionsisomere verwendet
+    const char* iupac_names [] =
+    {
+            #include "./Expected_Results/Alkane/Decane.txt"
+    };
+
+    size_t wrong_results = 0;
+
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(iupac_names); ++ i)
+    {
+        Parse_Alkane (iupac_names [i], strlen (iupac_names [i]));
+    }
+
+    ASSERT_EQUALS(0, wrong_results);
 
     return;
 }
