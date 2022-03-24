@@ -55,47 +55,48 @@ Parse_Alkane
     // Den eigentlichen Parsing-Vorgang durchfuehren und das Wortproblem mittels der Lexer-Daten loesen
     // Verwendeter Algorithmus: Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus)
     /* Die Chomsky-Normalform:
-        S   ->  B2 A
-        S   ->  a
-        S   ->  G A
-        B3  ->  y
-        N1  ->  o
-        N3  ->  y
-        W   ->  n
-        Z   ->  z
-        M   ->  m
-        K2  ->  k
-        C   ->  c
-        A   ->  a
-        Y   ->  y
-        G   ->  g
-        B1  ->  Z M
-        B1  ->  Z X1
-        X1  ->  K M
-        B2  ->  B1 X2
-        X2  ->  W B3
-        B2  ->  B1 X3
-        X3  ->  W X4
-        X4  ->  N2 X5
-        X5  ->  B3 C
-        B2  ->  B1 B3
-        N2  ->  N1 X6
-        X6  ->  B1 N3
-        N2  ->  N1 X7
-        X7  ->  B1 X8
-        X8  ->  N2 X12
-        X12 ->  N3 C
-        K   ->  K2 X9
-        K   ->  K2 Z
-        X9  ->  Z K
-        B2  ->  B1 X10
-        X10 ->  N2 X11
-        X11 ->  B3 C
-        B3  ->  Y X13
-        X13 ->  M B2
-        N2  ->  N1 X14
-        X14 ->  B1 X15
-        X15 ->  W N3
+     * Direkt kopier- und einfuegbar auf: https://martinlaz.github.io/demos/cky.html
+S   ->  B2 A
+S   ->  a
+S   ->  G A
+B3  ->  y
+N1  ->  o
+N3  ->  y
+W   ->  n
+Z   ->  z
+M   ->  m
+K2  ->  k
+C   ->  c
+A   ->  a
+Y   ->  y
+G   ->  g
+B1  ->  Z M
+B1  ->  Z X1
+X1  ->  K M
+B2  ->  B1 X2
+X2  ->  W B3
+B2  ->  B1 X3
+X3  ->  W X4
+X4  ->  N2 X5
+X5  ->  B3 C
+B2  ->  B1 B3
+N2  ->  N1 X6
+X6  ->  B1 N3
+N2  ->  N1 X7
+X7  ->  B1 X8
+X8  ->  N2 X12
+X12 ->  N3 C
+K   ->  K2 X9
+K   ->  K2 Z
+X9  ->  Z K
+B2  ->  B1 X10
+X10 ->  N2 X11
+X11 ->  B3 C
+B3  ->  Y X13
+X13 ->  M B2
+N2  ->  N1 X14
+X14 ->  B1 X15
+X15 ->  W N3
      */
     // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
     enum Nonterminalsymbol
