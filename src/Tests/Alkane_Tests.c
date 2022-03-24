@@ -921,10 +921,10 @@ extern void TEST_Alkane_Lexer (void)
     const char* iupac_names [] =
     {
         "4-(1-methylethyl)heptane",
-        "1,2,3-TriMethylDecan",
+        "1,2,3-TriMethylDecane",
         "1-(2-(3-methylethyl)propyl)Octane",
-        "3-Ethyl-3-methylheptan",
-        "3-Ethyl-2,3,4-trimethylpentan"
+        "3-Ethyl-3-methylheptane",
+        "3-Ethyl-2,3,4-trimethylpentane"
     };
 
     // Token und Typ des Tokens
@@ -955,7 +955,7 @@ extern void TEST_Alkane_Lexer (void)
             { "-",      TOKEN_TYPE_SUB_CHAR     },
             { "Tri",    TOKEN_TYPE_NUMBER_WORD  },
             { "Methyl", TOKEN_TYPE_ALKYL_WORD   },
-            { "Decan",  TOKEN_TYPE_ALKANE_WORD  },
+            { "Decane", TOKEN_TYPE_ALKANE_WORD  },
             { NULL,     TOKEN_TYPE_N_A          }
     };
     // Erwartete Ergebnisse vom dritten Alkannamen
