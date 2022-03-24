@@ -424,7 +424,7 @@ static void Straight_Chain_Token_Found (struct Alkane_Lexer* const lexer_data)
     lexer_data->token_type [lexer_data->next_free_token] = token_type;
     lexer_data->next_free_token ++;
 
-    lexer_data->current_char += 2;
+    lexer_data->current_char = (uint_fast8_t) (lexer_data->current_char + 2);
     lexer_data->last_char_used = lexer_data->current_char;
     Next_Char (lexer_data);
 
