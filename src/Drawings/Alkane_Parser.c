@@ -60,6 +60,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         K2  ->  k
         C   ->  c
         A   ->  a
+        Y   ->  y
         B1  ->  Z M
         B1  ->  Z X1
         X1  ->  K M
@@ -82,6 +83,8 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         B2  ->  B1 X10
         X10 ->  N2 X11
         X11 ->  B3 C
+        B3  ->  Y X13
+        X13 ->  M B2
      */
     // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
     enum Nonterminalsymbol
@@ -89,9 +92,9 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         NO_NONTERMINALSYMBOL = -1,
         S = 0,
         B3, N1, N3, W,
-        Z, M, K2, C, A,
+        Z, M, K2, C, A, Y,
 
-        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12
+        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12, X13
     };
 
     struct Production_Rule
@@ -119,6 +122,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         { K2,   k,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { C,    c,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { A,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { Y,    y,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
 
         { B1,   NO_TERMINALSYMBOL,  Z,                      M                    },
         { B1,   NO_TERMINALSYMBOL,  Z,                      X1                   },
@@ -141,7 +145,9 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         { X9,   NO_TERMINALSYMBOL,  Z,                      K                    },
         { B2,   NO_TERMINALSYMBOL,  B1,                     X10                  },
         { X10,  NO_TERMINALSYMBOL,  N2,                     X11                  },
-        { X11,  NO_TERMINALSYMBOL,  B3,                     C                    }
+        { X11,  NO_TERMINALSYMBOL,  B3,                     C                    },
+        { B3,   NO_TERMINALSYMBOL,  Y,                      X13                  },
+        { X13,  NO_TERMINALSYMBOL,  M,                      B2                   }
     };
 
     // !!! Alle drei Dimensonen: 1 Indexierung !!!

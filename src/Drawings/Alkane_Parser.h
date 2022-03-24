@@ -66,6 +66,7 @@
  * KOMMA_ZAHL       (K)     ->  komma zahl                                          (K  ->  k z)
  * KOMMA_ZAHL       (K)     ->  komma zahl KOMMA_ZAHL                               (K  ->  k z K)
  * BRANCH_END       (B3)    ->  alkyl                                               (B3 ->  y)
+ * BRANCH_END       (B3)    ->  alkyl minus BRANCH                                  (B3 ->  y m B2)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END bclose     (N2 ->  N1 B1 N2 N3 c)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END              (N2 ->  N1 B1 N3)
  * NESTING_BEGIN    (N1)    ->  bopen                                               (N1 ->  o)
@@ -97,7 +98,7 @@
  *      S   ->  a | B2 a
  *      B1  ->  z m | z K m
  *      B2  ->  B1 W B3 | B1 W N2 B3 c | B1 B3 | B1 W N2 B3 c
- *      B3  ->  y
+ *      B3  ->  y | y m B2
  *      N1  ->  o
  *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 c
  *      N3  ->  y
@@ -110,11 +111,13 @@
  *      K2  ->  k
  *      C   ->  c
  *      A   ->  a
+ *      Y   ->  y
  *
  *      Anwenden der neuen Nichtterminale:
  *      S   ->  a | B2 A
  *      B1  ->  Z M | Z K M
  *      B2  ->  B1 W B3 | B1 W N2 B3 C | B1 B3 | B1 N2 B3 C
+ *      B3  ->  y | y M B2
  *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 C
  *      K   ->  K2 Z | K2 Z K
  *
@@ -151,6 +154,7 @@
         K2  ->  k
         C   ->  c
         A   ->  a
+        Y   ->  y
         B1  ->  Z M
         B1  ->  Z X1
         X1  ->  K M
@@ -173,6 +177,8 @@
         B2  ->  B1 X10
         X10 ->  N2 X11
         X11 ->  B3 C
+        B3  ->  Y X13
+        X13 ->  M B2
  *      => ENDE Die komplette  Chomsky-Normalform <=
  *
  * @date 10.03.2022
