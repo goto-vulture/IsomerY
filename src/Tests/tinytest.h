@@ -88,11 +88,12 @@ extern "C"
  * @brief Assert fuer die Gleichheit von C-Strings.
  */
 #ifndef ASSERT_STRING_EQUALS
-#define ASSERT_STRING_EQUALS(expected, actual)                                                          \
-    if (strcmp((expected),(actual)) != 0)                                                               \
-        { PRINTF_FFLUSH("Compare \"%s\" (expected) and \"%s\" (actual).\n", (expected), (actual)); }    \
-    else                                                                                                \
-        { ASSERT((#actual), strcmp((expected),(actual)) == 0); }
+#define ASSERT_STRING_EQUALS(expected, actual)                                                      \
+    if (strcmp((expected),(actual)) != 0)                                                           \
+    {                                                                                               \
+        PRINTF_FFLUSH("Compare \"%s\" (expected) and \"%s\" (actual).\n", (expected), (actual));    \
+        ASSERT((#actual), strcmp((expected),(actual)) == 0);                                        \
+    }
 #else
 #error "The macro \"ASSERT_STRING_EQUALS\" is already defined !"
 #endif /* ASSERT_STRING_EQUALS */
@@ -101,11 +102,12 @@ extern "C"
  * @brief Assert fuer die Gleichheit von C-Strings ohne Beachtung der Gross- und Kleinschreibung.
  */
 #ifndef ASSERT_STRING_CASE_INSENSITIVE_EQUALS
-#define ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected, actual)                                                         \
-    if (Compare_Strings_Case_Insensitive((expected),(actual)) != 0)                                                     \
-        { PRINTF_FFLUSH("Compare \"%s\" (expected) and \"%s\" (actual) case insensitive.\n", (expected), (actual)); }   \
-    else                                                                                                                \
-        { ASSERT((#actual), Compare_Strings_Case_Insensitive((expected),(actual)) == 0); }
+#define ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected, actual)                                                     \
+    if (Compare_Strings_Case_Insensitive((expected),(actual)) != 0)                                                 \
+    {                                                                                                               \
+        PRINTF_FFLUSH("Compare \"%s\" (expected) and \"%s\" (actual) case insensitive.\n", (expected), (actual));   \
+        ASSERT((#actual), Compare_Strings_Case_Insensitive((expected),(actual)) == 0);                              \
+    }
 #else
 #error "The macro \"ASSERT_STRING_CASE_INSENSITIVE_EQUALS\" is already defined !"
 #endif /* ASSERT_STRING_CASE_INSENSITIVE_EQUALS */
