@@ -55,26 +55,27 @@
  * - START          (S)
  *
  * Produktionsregeln: (In den Klammern steht die Kurzform, die spaeter verwendet wird)
- * START            (S)     ->  alkan                                               (S  ->  a)
- * START            (S)     ->  gerade_kette alkan                                  (S  ->  g a)
- * START            (S)     ->  BRANCH alkan                                        (S  ->  B2 a)
- * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END                 (B2 ->  B1 W B3)
- * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose  (B2 ->  B1 W N2 B3 c)
- * BRANCH           (B2)    ->  BRANCH_BEGIN BRANCH_END                             (B2 ->  B1 B3) ! Dient dazu, wenn das Zahlenwort leer ist !
- * BRANCH           (B2)    ->  BRANCH_BEGIN NESTING BRANCH_END bclose              (B2 ->  B1 N2 B3 c) ! Dient dazu, wenn das Zahlenwort leer ist !
- * BRANCH_BEGIN     (B1)    ->  zahl minus                                          (B1 ->  z m)
- * BRANCH_BEGIN     (B1)    ->  zahl KOMMA_ZAHL minus                               (B1 ->  z K m)
- * NUMBER_WORD      (W)     ->  number_word                                         (W  ->  n)
- * NUMBER_WORD      (W)     ->  NULL                                                (W  ->  NULL) !!! Diese Regel steht der Vollstaendigkeit halber hier und hat (aktuell) keine Verwendung !!!
- * KOMMA_ZAHL       (K)     ->  komma zahl                                          (K  ->  k z)
- * KOMMA_ZAHL       (K)     ->  komma zahl KOMMA_ZAHL                               (K  ->  k z K)
- * BRANCH_END       (B3)    ->  alkyl                                               (B3 ->  y)
- * BRANCH_END       (B3)    ->  alkyl minus BRANCH                                  (B3 ->  y m B2)
- * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END bclose     (N2 ->  N1 B1 N2 N3 c)
- * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END              (N2 ->  N1 B1 N3)
- * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NUMBER_WORD NESTING_END              (N2 ->  N1 B1 W N3)
- * NESTING_BEGIN    (N1)    ->  bopen                                               (N1 ->  o)
- * NESTING_END      (N3)    ->  alkyl                                               (N3 ->  y)
+ * START            (S)     ->  alkan                                                   (S  ->  a)
+ * START            (S)     ->  gerade_kette alkan                                      (S  ->  g a)
+ * START            (S)     ->  BRANCH alkan                                            (S  ->  B2 a)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END                     (B2 ->  B1 W B3)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose      (B2 ->  B1 W N2 B3 c)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN BRANCH_END                                 (B2 ->  B1 B3)
+ * BRANCH           (B2)    ->  BRANCH_BEGIN NESTING BRANCH_END bclose                  (B2 ->  B1 N2 B3 c)
+ * BRANCH_BEGIN     (B1)    ->  zahl minus                                              (B1 ->  z m)
+ * BRANCH_BEGIN     (B1)    ->  zahl KOMMA_ZAHL minus                                   (B1 ->  z K m)
+ * NUMBER_WORD      (W)     ->  number_word                                             (W  ->  n)
+ * => ! Diese Regel steht der Vollstaendigkeit halber hier und hat (aktuell) keine Verwendung (wegen Epsilon-Regel) ! <=
+ * NUMBER_WORD      (W)     ->  NULL                                                    (W  ->  NULL)
+ * KOMMA_ZAHL       (K)     ->  komma zahl                                              (K  ->  k z)
+ * KOMMA_ZAHL       (K)     ->  komma zahl KOMMA_ZAHL                                   (K  ->  k z K)
+ * BRANCH_END       (B3)    ->  alkyl                                                   (B3 ->  y)
+ * BRANCH_END       (B3)    ->  alkyl minus BRANCH                                      (B3 ->  y m B2)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END bclose   (N2 ->  N1 B1 N2 N3 c)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END                  (N2 ->  N1 B1 N3)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NUMBER_WORD NESTING_END      (N2 ->  N1 B1 W N3)
+ * NESTING_BEGIN    (N1)    ->  bopen                                                   (N1 ->  o)
+ * NESTING_END      (N3)    ->  alkyl                                                   (N3 ->  y)
  *
  * "BRANCH_END" und "NESTING_END" sind als Variablen nicht erforderlich. Es koennte direkt das Terminalsymbol verwendet
  * werden. Sie werden dennoch verwendet, damit man eine analoge Bezeichnung zu "BRANCH_BEGIN" und "NESTING_BEGIN" hat.
