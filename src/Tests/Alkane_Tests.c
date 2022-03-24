@@ -1041,6 +1041,11 @@ extern void TEST_Alkane_Parser (void)
             wrong_results ++;
         }
     }
+    if (wrong_results != 0)
+    {
+        PRINTF_FFLUSH("\nWrong parser results ! Got %zu times false from %zu test names.\n\n", wrong_results,
+                COUNT_ARRAY_ELEMENTS(iupac_names))
+    }
 
     ASSERT_EQUALS(0, wrong_results);
 
