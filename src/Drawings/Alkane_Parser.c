@@ -43,7 +43,12 @@ static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type t
 
 //=====================================================================================================================
 
-extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
+extern _Bool                            // Befindet sich das Objekt in der Grammatik eines gueltigen Alkans ?
+Parse_Alkane
+(
+        const char* const iupac_name,   // Alkanname
+        const size_t length             // Laenge des Alkannamen
+)
 {
     struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
 
@@ -285,7 +290,12 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-extern struct Alkane_Lexer Create_Alkane_Tokens (const char* const iupac_name, const size_t length)
+extern struct Alkane_Lexer              // Daten des Lexers
+Create_Alkane_Tokens
+(
+        const char* const iupac_name,   // Alkanname
+        const size_t length             // Laenge des Alkannamen
+)
 {
     return Start_Lexer (iupac_name, length);
 }

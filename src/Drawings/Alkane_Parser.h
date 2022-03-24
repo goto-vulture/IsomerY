@@ -259,7 +259,25 @@ struct Alkane_Lexer
 
 
 
+/**
+ * @brief Uebergebenen Alkannamen parsen und ermitteln, ob dieser Name ein gueltiges Alkan darstellt. Dabei werden die
+ * Namen NICHT auf ihre inhaltliche Gueltigkeit ueberprueft sondern nur auf ihre formale Gueltigkeit.
+ *
+ * @param[in] Alkanname
+ * @param[in] Laenge des Alkannamens
+ *
+ * @return Ergebnisobjekt des Lexers
+ */
 extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length);
+
+/**
+ * @brief Den Alkan-Lexer an einem uebergebenen Alkan starten und das Ergebnisobjekt zurueckgeben.
+ *
+ * @param[in] Alkanname
+ * @param[in] Laenge des Alkannamens
+ *
+ * @return Ergebnisobjekt des Lexers
+ */
 extern struct Alkane_Lexer Create_Alkane_Tokens (const char* const iupac_name, const size_t length);
 
 
