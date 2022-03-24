@@ -88,6 +88,9 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         X11 ->  B3 C
         B3  ->  Y X13
         X13 ->  M B2
+        N2  ->  N1 X14
+        X14 ->  B1 X15
+        X15 ->  W N3
      */
     // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
     enum Nonterminalsymbol
@@ -97,7 +100,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         B3, N1, N3, W,
         Z, M, K2, C, A, Y, G,
 
-        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12, X13
+        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12, X13, X14, X15
     };
 
     struct Production_Rule
@@ -152,7 +155,10 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         { X10,  NO_TERMINALSYMBOL,  N2,                     X11                  },
         { X11,  NO_TERMINALSYMBOL,  B3,                     C                    },
         { B3,   NO_TERMINALSYMBOL,  Y,                      X13                  },
-        { X13,  NO_TERMINALSYMBOL,  M,                      B2                   }
+        { X13,  NO_TERMINALSYMBOL,  M,                      B2                   },
+        { N2,   NO_TERMINALSYMBOL,  N1,                     X14                  },
+        { X14,  NO_TERMINALSYMBOL,  B1,                     X15                  },
+        { X15,  NO_TERMINALSYMBOL,  W,                      N3                   }
     };
 
     // Alle Indexe, die als linkes Nichtterminalsymbol das Startsymbol haben -> Also alle Start-Regeln

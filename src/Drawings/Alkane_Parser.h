@@ -72,6 +72,7 @@
  * BRANCH_END       (B3)    ->  alkyl minus BRANCH                                  (B3 ->  y m B2)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING NESTING_END bclose     (N2 ->  N1 B1 N2 N3 c)
  * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NESTING_END              (N2 ->  N1 B1 N3)
+ * NESTING          (N2)    ->  NESTING_BEGIN BRANCH_BEGIN NUMBER_WORD NESTING_END              (N2 ->  N1 B1 W N3)
  * NESTING_BEGIN    (N1)    ->  bopen                                               (N1 ->  o)
  * NESTING_END      (N3)    ->  alkyl                                               (N3 ->  y)
  *
@@ -103,7 +104,7 @@
  *      B2  ->  B1 W B3 | B1 W N2 B3 c | B1 B3 | B1 W N2 B3 c
  *      B3  ->  y | y m B2
  *      N1  ->  o
- *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 c
+ *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 c | N1 B1 W N3
  *      N3  ->  y
  *      W   ->  n
  *      K   ->  k z | k z K
@@ -122,7 +123,7 @@
  *      B1  ->  Z M | Z K M
  *      B2  ->  B1 W B3 | B1 W N2 B3 C | B1 B3 | B1 N2 B3 C
  *      B3  ->  y | y M B2
- *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 C
+ *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 C | N1 B1 W N3
  *      K   ->  K2 Z | K2 Z K
  *
  *      Zu lange Regeln verkuerzen:
@@ -185,6 +186,9 @@
         X11 ->  B3 C
         B3  ->  Y X13
         X13 ->  M B2
+        N2  ->  N1 X14
+        X14 ->  B1 X15
+        X15 ->  W N3
  *      => ENDE Die komplette  Chomsky-Normalform <=
  *
  * @date 10.03.2022
