@@ -19,6 +19,7 @@
  * - zahl           := Zahl
  * - komma          := Komma
  * - minus          := Minuszeichen
+ * - gerade_kette   := "n-" (Anzeige, dass es sich um eine gerade Kette handelt)
  *
  * - bopen          := Geoeffnete runde Klammer
  * - bclose         := Geschlossene runde Klammer
@@ -48,12 +49,14 @@
  * - alkyl          (y)
  * - alkan          (a)
  * - number_word    (n)
+ * - gerade_kette   (g)
  *
  * Startsymbol:
  * - START          (S)
  *
  * Produktionsregeln: (In den Klammern steht die Kurzform, die spaeter verwendet wird)
  * START            (S)     ->  alkan                                               (S  ->  a)
+ * START            (S)     ->  gerade_kette alkan                                  (S  ->  g a)
  * START            (S)     ->  BRANCH alkan                                        (S  ->  B2 a)
  * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD BRANCH_END                 (B2 ->  B1 W B3)
  * BRANCH           (B2)    ->  BRANCH_BEGIN NUMBER_WORD NESTING BRANCH_END bclose  (B2 ->  B1 W N2 B3 c)
@@ -95,7 +98,7 @@
  *
  * 1. Schritt: Die Chomsky-Normalform bilden
  *      "Alkan-Grammatik" zusammengefasst:
- *      S   ->  a | B2 a
+ *      S   ->  a | B2 a | g a
  *      B1  ->  z m | z K m
  *      B2  ->  B1 W B3 | B1 W N2 B3 c | B1 B3 | B1 W N2 B3 c
  *      B3  ->  y | y m B2
@@ -112,9 +115,10 @@
  *      C   ->  c
  *      A   ->  a
  *      Y   ->  y
+ *      G   ->  g
  *
  *      Anwenden der neuen Nichtterminale:
- *      S   ->  a | B2 A
+ *      S   ->  a | B2 A | G A
  *      B1  ->  Z M | Z K M
  *      B2  ->  B1 W B3 | B1 W N2 B3 C | B1 B3 | B1 N2 B3 C
  *      B3  ->  y | y M B2
@@ -145,6 +149,7 @@
  *      => BEGINN Die komplette Chomsky-Normalform <=
         S   ->  B2 A
         S   ->  a
+        S   ->  G A
         B3  ->  y
         N1  ->  o
         N3  ->  y
@@ -155,6 +160,7 @@
         C   ->  c
         A   ->  a
         Y   ->  y
+        G   ->  g
         B1  ->  Z M
         B1  ->  Z X1
         X1  ->  K M
@@ -215,7 +221,8 @@ enum Token_Type
     TOKEN_TYPE_COMMA_CHAR,
     TOKEN_TYPE_SUB_CHAR,
     TOKEN_TYPE_OPEN_BRACKET,
-    TOKEN_TYPE_CLOSE_BRACKET
+    TOKEN_TYPE_CLOSE_BRACKET,
+    TOKEN_TYPE_STRAIGHT_CHAIN
 };
 
 /**

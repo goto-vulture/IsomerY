@@ -19,7 +19,7 @@ enum Terminalsymbol
 {
     NO_TERMINALSYMBOL = -1,
     y = 0,
-    o, n, z, m, k, c, a
+    o, n, z, m, k, c, a, g
 };
 
 
@@ -34,6 +34,7 @@ static void Split_Char_Found (struct Alkane_Lexer* const lexer_data);
 static void Alkyl_End_Found (struct Alkane_Lexer* const lexer_data);
 static void Number_Word_Found (struct Alkane_Lexer* const lexer_data);
 static void End_Char_Found (struct Alkane_Lexer* const lexer_data);
+static void Straight_Chain_Token_Found (struct Alkane_Lexer* const lexer_data);
 
 static enum Token_Type Type_Of_Token (const char* const token, const size_t length);
 static void Copy_Token_To_Lexer_Data (struct Alkane_Lexer* const lexer_data);
@@ -51,6 +52,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
     /* Die Chomsky-Normalform:
         S   ->  B2 A
         S   ->  a
+        S   ->  G A
         B3  ->  y
         N1  ->  o
         N3  ->  y
@@ -61,6 +63,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         C   ->  c
         A   ->  a
         Y   ->  y
+        G   ->  g
         B1  ->  Z M
         B1  ->  Z X1
         X1  ->  K M
@@ -92,7 +95,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         NO_NONTERMINALSYMBOL = -1,
         S = 0,
         B3, N1, N3, W,
-        Z, M, K2, C, A, Y,
+        Z, M, K2, C, A, Y, G,
 
         B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12, X13
     };
@@ -110,6 +113,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
     struct Production_Rule rules [] =
     {
         { S,    NO_TERMINALSYMBOL,  B2,                     A                    },
+        { S,    NO_TERMINALSYMBOL,  G,                      A                    },
         { S,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
 
         { B3,   y,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
@@ -123,6 +127,7 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         { C,    c,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { A,    a,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
         { Y,    y,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
+        { G,    g,                  NO_NONTERMINALSYMBOL,   NO_NONTERMINALSYMBOL },
 
         { B1,   NO_TERMINALSYMBOL,  Z,                      M                    },
         { B1,   NO_TERMINALSYMBOL,  Z,                      X1                   },
@@ -149,6 +154,9 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         { B3,   NO_TERMINALSYMBOL,  Y,                      X13                  },
         { X13,  NO_TERMINALSYMBOL,  M,                      B2                   }
     };
+
+    // Alle Indexe, die als linkes Nichtterminalsymbol das Startsymbol haben -> Also alle Start-Regeln
+    const uint_fast8_t production_start_rules [] = { 0, 1, 2 };
 
     // !!! Alle drei Dimensonen: 1 Indexierung !!!
     // 1. Dimension:    Zeile
@@ -245,10 +253,19 @@ extern _Bool Parse_Alkane (const char* const iupac_name, const size_t length)
         }
     }
 
-    _Bool return_value = (P [count_tokens][1][1] /* == true */) ? true : false;
+    _Bool return_value = false;
+    // Wurde eine Start-Regel verwendet ? Wenn ja, dann laesst sich das Objekt durch die Grammatik erzeugen
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(production_start_rules); ++ i)
+    {
+        // !!! Alle drei Dimensonen: 1 Indexierung !!!
+        if (P [count_tokens][1][production_start_rules [i] + 1] /* == true */)
+        {
+            return_value = true;
+            break;
+        }
+    }
 
-    // !!! Alle drei Dimensonen: 1 Indexierung !!!
-    if (P [count_tokens][1][1] /* == true */)
+    if (return_value /* == true */)
     {
         PRINTF_FFLUSH("%-50s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
@@ -294,6 +311,12 @@ static void Next_Char (struct Alkane_Lexer* const lexer_data)
     if (current_char == '\0')
     {
         End_Char_Found (lexer_data);
+    }
+    // Das 1. Token kann ein "n-" sein, wenn es eine gerade Kette ist (Allerdings ist dieses Token optionial)
+    else if (lexer_data->next_free_token == 0 && (lexer_data->name_length - lexer_data->current_char >= 2) &&
+            strncmp (&(lexer_data->alkane_name [lexer_data->current_char]), "n-", strlen ("n-")) == 0)
+    {
+        Straight_Chain_Token_Found(lexer_data);
     }
     // Aktuelles Zeichen ein Trennzeichen ?
     else if (current_char == ',' || current_char == '-' || current_char == '(' || current_char == ')')
@@ -390,6 +413,26 @@ static void End_Char_Found (struct Alkane_Lexer* const lexer_data)
 
 //---------------------------------------------------------------------------------------------------------------------
 
+static void Straight_Chain_Token_Found (struct Alkane_Lexer* const lexer_data)
+{
+    const enum Token_Type token_type = Type_Of_Token (&(lexer_data->alkane_name [lexer_data->last_char_used]),
+            strlen("n-"));
+
+    strncpy ((char*) &(lexer_data->result_tokens [lexer_data->next_free_token]),
+            &(lexer_data->alkane_name [lexer_data->last_char_used]), strlen ("n-"));
+
+    lexer_data->token_type [lexer_data->next_free_token] = token_type;
+    lexer_data->next_free_token ++;
+
+    lexer_data->current_char += 2;
+    lexer_data->last_char_used = lexer_data->current_char;
+    Next_Char (lexer_data);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
 static enum Token_Type Type_Of_Token (const char* const token, const size_t length)
 {
     enum Token_Type result = TOKEN_TYPE_N_A;
@@ -478,6 +521,13 @@ static enum Token_Type Type_Of_Token (const char* const token, const size_t leng
                 }
             }
         }
+        if (result == TOKEN_TYPE_N_A)
+        {
+            if (strncmp (token, "n-", strlen ("n-")) == 0)
+            {
+                result = TOKEN_TYPE_STRAIGHT_CHAIN;
+            }
+        }
     }
 
     return result;
@@ -543,6 +593,9 @@ static enum Terminalsymbol Token_Type_To_Terminalsymbol (const enum Token_Type t
         break;
     case TOKEN_TYPE_CLOSE_BRACKET:
         result = c;
+        break;
+    case TOKEN_TYPE_STRAIGHT_CHAIN:
+        result = g;
         break;
     default:
         // Die Ausfuehrung des Default-Paths ist hier immer ein Fehler !
