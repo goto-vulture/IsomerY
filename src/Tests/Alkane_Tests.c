@@ -984,7 +984,6 @@ extern void TEST_Alkane_Lexer (void)
             { "-",          TOKEN_TYPE_SUB_CHAR     },
             { "3",          TOKEN_TYPE_NUMBER       },
             { "-",          TOKEN_TYPE_SUB_CHAR     },
-            { "3",          TOKEN_TYPE_NUMBER       },
             { "methyl",     TOKEN_TYPE_ALKYL_WORD   },
             { "heptane",    TOKEN_TYPE_ALKANE_WORD  },
             { NULL,         TOKEN_TYPE_N_A          }
