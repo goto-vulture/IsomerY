@@ -925,7 +925,8 @@ extern void TEST_Alkane_Lexer (void)
         "1-(2-(3-methylethyl)propyl)Octane",
         "3-Ethyl-3-methylheptane",
         "3-Ethyl-2,3,4-trimethylpentane",
-        "n-Decane"
+        "n-Decane",
+        "4-(1,1-DiMethylEthyl)Heptane"
     };
 
     // Token und Typ des Tokens
@@ -1013,6 +1014,23 @@ extern void TEST_Alkane_Lexer (void)
             { "Decane", TOKEN_TYPE_ALKANE_WORD      },
             { NULL,     TOKEN_TYPE_N_A              }
     };
+    // 4-(1,1-DiMethylEthyl)Heptan
+    const struct Token_And_Token_Type array_7 [] =
+    {
+            { "4",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "(",          TOKEN_TYPE_OPEN_BRACKET     },
+            { "1",          TOKEN_TYPE_NUMBER           },
+            { ",",          TOKEN_TYPE_COMMA_CHAR       },
+            { "1",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "Di",         TOKEN_TYPE_NUMBER_WORD      },
+            { "Methyl",     TOKEN_TYPE_ALKYL_WORD       },
+            { "Ethyl",      TOKEN_TYPE_ALKYL_WORD       },
+            { ")",          TOKEN_TYPE_CLOSE_BRACKET    },
+            { "heptane",    TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,         TOKEN_TYPE_N_A              }
+    };
     const struct Token_And_Token_Type* expected_tokens [] =
     {
         array_1,
@@ -1020,7 +1038,8 @@ extern void TEST_Alkane_Lexer (void)
         array_3,
         array_4,
         array_5,
-        array_6
+        array_6,
+        array_7
     };
 
     // Lexer-Test durchfuehren
