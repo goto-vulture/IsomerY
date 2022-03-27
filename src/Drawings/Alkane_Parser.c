@@ -77,8 +77,7 @@ B2  ->  B1 X2
 X2  ->  W B3
 B2  ->  B1 X3
 X3  ->  W X4
-X4  ->  N2 X5
-X5  ->  B3 C
+X4  ->  N2 B3
 B2  ->  B1 B3
 N2  ->  N1 X6
 X6  ->  B1 N3
@@ -90,13 +89,16 @@ K   ->  K2 X9
 K   ->  K2 Z
 X9  ->  Z K
 B2  ->  B1 X10
-X10 ->  N2 X11
-X11 ->  B3 C
+X10 ->  N2 B3
 B3  ->  Y X13
 X13 ->  M B2
 N2  ->  N1 X14
 X14 ->  B1 X15
 X15 ->  W N3
+B3  ->  Y X16
+X16 ->  C X17
+X17 ->  M B2
+B3  ->  Y C
      */
     // Konstanten fuer die Nichtterminale. Gleiche Bezeichnung wie im Kommentarblock
     enum Nonterminalsymbol
@@ -106,7 +108,7 @@ X15 ->  W N3
         B3, N1, N3, W,
         Z, M, K2, C, A, Y, G,
 
-        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12, X13, X14, X15
+        B1, X1, B2, X2, X3, X4, X5, N2, X6, X7, X8, K, X9, X10, X11, X12, X13, X14, X15, X16, X17
     };
 
     struct Production_Rule
@@ -145,8 +147,7 @@ X15 ->  W N3
         { X2,   NO_TERMINALSYMBOL,  W,                      B3                   },
         { B2,   NO_TERMINALSYMBOL,  B1,                     X3                   },
         { X3,   NO_TERMINALSYMBOL,  W,                      X4                   },
-        { X4,   NO_TERMINALSYMBOL,  N2,                     X5                   },
-        { X5,   NO_TERMINALSYMBOL,  B3,                     C                    },
+        { X4,   NO_TERMINALSYMBOL,  N2,                     B3                   },
         { B2,   NO_TERMINALSYMBOL,  B1,                     B3                   },
         { N2,   NO_TERMINALSYMBOL,  N1,                     X6                   },
         { X6,   NO_TERMINALSYMBOL,  B1,                     N3                   },
@@ -158,13 +159,16 @@ X15 ->  W N3
         { K,    NO_TERMINALSYMBOL,  K2,                     Z                    },
         { X9,   NO_TERMINALSYMBOL,  Z,                      K                    },
         { B2,   NO_TERMINALSYMBOL,  B1,                     X10                  },
-        { X10,  NO_TERMINALSYMBOL,  N2,                     X11                  },
-        { X11,  NO_TERMINALSYMBOL,  B3,                     C                    },
+        { X10,  NO_TERMINALSYMBOL,  N2,                     B3                   },
         { B3,   NO_TERMINALSYMBOL,  Y,                      X13                  },
         { X13,  NO_TERMINALSYMBOL,  M,                      B2                   },
         { N2,   NO_TERMINALSYMBOL,  N1,                     X14                  },
         { X14,  NO_TERMINALSYMBOL,  B1,                     X15                  },
-        { X15,  NO_TERMINALSYMBOL,  W,                      N3                   }
+        { X15,  NO_TERMINALSYMBOL,  W,                      N3                   },
+        { B3 ,  NO_TERMINALSYMBOL,  Y,                      X16                  },
+        { X16,  NO_TERMINALSYMBOL,  C,                      X17                  },
+        { X17,  NO_TERMINALSYMBOL,  M,                      B2                   },
+        { B3,   NO_TERMINALSYMBOL,  Y,                      C                    }
     };
 
     // Alle Indexe, die als linkes Nichtterminalsymbol das Startsymbol haben -> Also alle Start-Regeln

@@ -1075,6 +1075,10 @@ extern void TEST_Alkane_Parser (void)
     const char* iupac_names [] =
     {
             #include "./Expected_Results/Alkane/Tetradecane.txt"
+            //"3,4-bis(1-methylethyl)-2,5-Dimethylhexan" // <- Prefixe, die Gruppen zusammenfassen, werden aktuell noch
+                                                         // nicht richtig verarbeitet. Solche Prefixe werden durch den
+                                                         // Lexer einfach uebersprungen. Aber auch der Parser besitzt
+                                                         // noch keine passenden Regeln fuer diese Prefixe !
     };
 
     size_t wrong_results = 0;
