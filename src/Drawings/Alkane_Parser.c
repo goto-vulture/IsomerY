@@ -279,11 +279,11 @@ X15 ->  W N3
 
     if (return_value /* == true */)
     {
-        PRINTF_FFLUSH("%-50s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
+        PRINTF_FFLUSH("%-60s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
     else
     {
-        PRINTF_FFLUSH("%-50s is NOT in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
+        PRINTF_FFLUSH("%-60s is NOT in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
     }
 
     return return_value;
