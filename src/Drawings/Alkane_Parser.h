@@ -125,7 +125,7 @@
  *      S   ->  a | B2 A | G A
  *      B1  ->  Z M | Z K M
  *      B2  ->  B1 W B3 | B1 W N2 B3 | B1 B3 | B1 N2 B3
- *      B3  ->  y | y M B2 | Y C M B2 | Y C
+ *      B3  ->  Y | Y M B2 | Y C M B2 | Y C
  *      N2  ->  N1 B1 N3 | N1 B1 N2 N3 C | N1 B1 W N3
  *      K   ->  K2 Z | K2 Z K
  *
