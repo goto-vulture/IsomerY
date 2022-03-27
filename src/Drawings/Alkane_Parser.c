@@ -351,8 +351,10 @@ static void Next_Char (struct Alkane_Lexer* const lexer_data)
     // 5, da das kuerzeste Alkanwort "Butan" 5 Zeichen lang ist
     else if (Type_Of_Token (&(lexer_data->alkane_name [lexer_data->last_char_used]),
             current_token_size) == TOKEN_TYPE_NUMBER_WORD &&
-            (lexer_data->name_length - lexer_data->current_char >= 5))
-    {
+            (lexer_data->name_length - lexer_data->current_char > 5))   // ">" fuer mind. 5 Zeichen, da immer rueck-
+    {                                                                   // wirkend geprueft wird. "current_char" bein-
+                                                                        // haltet also das erste Zeichen NACH dem
+                                                                        // Zahlenwort !
         Number_Word_Found (lexer_data);
     }
     else
