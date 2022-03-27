@@ -1074,7 +1074,7 @@ extern void TEST_Alkane_Parser (void)
     // Als Testnamen werden die erwarteten Ergebnisse bei der Bildung der Konstitutionsisomere verwendet
     const char* iupac_names [] =
     {
-            #include "./Expected_Results/Alkane/Decane.txt"
+            #include "./Expected_Results/Alkane/Tetradecane.txt"
     };
 
     size_t wrong_results = 0;
