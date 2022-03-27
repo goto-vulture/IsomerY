@@ -1,0 +1,5 @@
+### Hier stehen einige Hilfsmittel, die immer mal wieder gebraucht werden konnen ###
+
+# Alle git Branches vom entfernten Repository clonen
+# Nachteil: Fuer jeden pull-Versuch muss das Passwort eingegeben. Also Anzahl an Branches-Mal ...
+for abranch in $(git branch -a | grep -v HEAD | grep remotes | sed "s/remotes\/origin\///g"); do git checkout $abranch && git pull; done
