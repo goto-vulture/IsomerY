@@ -517,27 +517,14 @@ static enum Token_Type Type_Of_Token (const char* const token, const size_t leng
 
         // Ist der Token eine Zahl ? Ausprobieren durch eine str -> int Konvertierung
         long int str2int_out = 0;
-        if (str2int (&str2int_out, token_with_null, 10) == STR2INT_SUCCESS)
+        if (str2int (&str2int_out, token_with_null, 10) == STR2INT_SUCCESS) // Zahlen-Test
         {
             result = TOKEN_TYPE_NUMBER;
         }
         if (result == TOKEN_TYPE_N_A)
         {
-            // Ist es ein Alkan-Wort ? (Getestet wird sowohl in Deutsch als auch in Englisch)
-            for (uint_fast8_t i = 0; i < NUMBER_OF_ALKAN_WORDS; ++ i)
-            {
-                if (Compare_Strings_Case_Insensitive (token_with_null, ALKAN_WORDS_DE [i]) == 0 ||
-                        Compare_Strings_Case_Insensitive (token_with_null, ALKAN_WORDS_EN [i]) == 0)
-                {
-                    result = TOKEN_TYPE_ALKANE_WORD;
-                    break;
-                }
-            }
-        }
-        if (result == TOKEN_TYPE_N_A)
-        {
             // Ist das Token ein Alkyl-Wort ?
-            for (uint_fast8_t i = 0; i < NUMBER_OF_ALKYL_WORDS; ++ i)
+            for (uint_fast8_t i = 0; i < NUMBER_OF_ALKYL_WORDS; ++ i) // Alkyl-Test
             {
                 if (Compare_Strings_Case_Insensitive (token_with_null, ALKYL_WORDS [i]) == 0)
                 {
@@ -549,7 +536,7 @@ static enum Token_Type Type_Of_Token (const char* const token, const size_t leng
         if (result == TOKEN_TYPE_N_A)
         {
             // Ist das Token ein Zahlen-Wort ?
-            for (uint_fast8_t i = 0; i < NUMBER_OF_NUMBER_WORDS; ++ i)
+            for (uint_fast8_t i = 0; i < NUMBER_OF_NUMBER_WORDS; ++ i) // Zahlenwort-Test
             {
                 if (Compare_Strings_Case_Insensitive (token_with_null, NUMBER_WORDS [i]) == 0)
                 {
@@ -560,7 +547,20 @@ static enum Token_Type Type_Of_Token (const char* const token, const size_t leng
         }
         if (result == TOKEN_TYPE_N_A)
         {
-            if (strncmp (token, "n-", strlen ("n-")) == 0)
+            // Ist es ein Alkan-Wort ? (Getestet wird sowohl in Deutsch als auch in Englisch)
+            for (uint_fast8_t i = 0; i < NUMBER_OF_ALKAN_WORDS; ++ i) // Alkan-Test
+            {
+                if (Compare_Strings_Case_Insensitive (token_with_null, ALKAN_WORDS_DE [i]) == 0 ||
+                        Compare_Strings_Case_Insensitive (token_with_null, ALKAN_WORDS_EN [i]) == 0)
+                {
+                    result = TOKEN_TYPE_ALKANE_WORD;
+                    break;
+                }
+            }
+        }
+        if (result == TOKEN_TYPE_N_A)
+        {
+            if (strncmp (token, "n-", strlen ("n-")) == 0) // Gerade Kette-Test
             {
                 result = TOKEN_TYPE_STRAIGHT_CHAIN;
             }
