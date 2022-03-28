@@ -42,6 +42,15 @@ extern int GLOBAL_MAX_C_ATOMS_FOR_TESTS;
  */
 extern _Bool GLOBAL_SELECT_TEST_FUNCTION;
 
+/**
+ * @brief CLI_Parameter: Eine bestimmte Testfunktion aufrufen, wobei der Index der Testfunktion ueber diesen
+ * CLI-Parameter festgelegt wird.
+ *
+ * Vorteil im Vergleich zur Variante, wo man die Testfunktion waehrend der Ausfuehrung auswaehlen muss: Das Testen kann
+ * direkt ohne Umwege erfolgen.
+ */
+extern int GLOBAL_RUN_TEST_FUNCTION_INDEX;
+
 
 
 /**

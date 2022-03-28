@@ -31,6 +31,8 @@ int GLOBAL_MAX_C_ATOMS_FOR_TESTS = 0;
 
 _Bool GLOBAL_SELECT_TEST_FUNCTION = false;
 
+int GLOBAL_RUN_TEST_FUNCTION_INDEX = -1;
+
 
 
 //---------------------------------------------------------------------------------------------------------------------

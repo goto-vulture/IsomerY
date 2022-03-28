@@ -227,6 +227,11 @@ Execute_All_Alkane_Tests
         RUN_2(test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].test_function,
                 test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
     }
+    if (GLOBAL_RUN_TEST_FUNCTION_INDEX != -1)
+    {
+        RUN_2(test_functions [GLOBAL_RUN_TEST_FUNCTION_INDEX - 1].test_function,
+                test_functions [GLOBAL_RUN_TEST_FUNCTION_INDEX - 1].function_name);
+    }
 
     #ifdef CLI_INPUT_USE_ALL_TESTFUNCTIONS
     #undef CLI_INPUT_USE_ALL_TESTFUNCTIONS

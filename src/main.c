@@ -140,6 +140,8 @@ int main (const int argc, const char* argv [])
             OPT_GROUP("Debug- / Testfunktionen"),
             OPT_BOOLEAN('t', "test_function", &GLOBAL_SELECT_TEST_FUNCTION,
                     "Auflistung aller Testfunktionen und Auswahl einer Funktion", NULL, 0, 0),
+            OPT_INTEGER('r', "run_test_function", &GLOBAL_RUN_TEST_FUNCTION_INDEX,
+                    "Index der Testfunktion, die direkt nach Programmstart ausgefuehrt werden soll", NULL, 0, 0),
 
             OPT_END()
     };
