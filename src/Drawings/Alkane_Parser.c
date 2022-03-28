@@ -50,7 +50,7 @@ Parse_Alkane
         const size_t length             // Laenge des Alkannamen
 )
 {
-    struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
+    const struct Alkane_Lexer lexer_data = Start_Lexer (iupac_name, length);
 
     // Den eigentlichen Parsing-Vorgang durchfuehren und das Wortproblem mittels der Lexer-Daten loesen
     // Verwendeter Algorithmus: Cocke-Younger-Kasami-Algorithmus (CYK-Algorithmus)
@@ -121,7 +121,7 @@ B3  ->  Y C
     };
 
     // Alle Produktionsregeln
-    struct Production_Rule rules [] =
+    const struct Production_Rule rules [] =
     {
         { S,    NO_TERMINALSYMBOL,  B2,                     A                    },
         { S,    NO_TERMINALSYMBOL,  G,                      A                    },
