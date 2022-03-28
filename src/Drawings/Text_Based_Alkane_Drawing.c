@@ -11,6 +11,7 @@
 #include "../Tests/IUPAC_Chain_Lexer.h"
 #include "../Print_Tools.h"
 #include "../String_Tools.h"
+#include "../Drawings/Alkane_Parser.h"
 
 
 
@@ -54,7 +55,8 @@ Create_Text_Based_Alkane_Drawing
     ASSERT_MSG(name_length > 0,                     "name_length is 0 !");
     ASSERT_FMSG(name_length <= IUPAC_NAME_LENGTH,   "name_lenght is invalid ! Valid range: %u - %u.",
             1u, IUPAC_NAME_LENGTH)
-
+    ASSERT_FMSG(Parse_Alkane(iupac_name, name_length) /* == true */,
+                                                     "\"%s\" is not a valid alkane name !", iupac_name)
 
     struct Text_Based_Alkane_Drawing* drawing = CALLOC(1, sizeof (struct Text_Based_Alkane_Drawing));
     ASSERT_ALLOC(drawing, "Cannot allocate an Text_Based_Alkane_Drawing object !",
