@@ -27,6 +27,7 @@
 #include "IUPAC_Chain_Lexer.h"
 #include "../str2int.h"
 #include "../Drawings/Text_Based_Alkane_Drawing.h"
+#include "../Drawings/Alkane_Parser.h"
 #include "../Print_Tools.h"
 #include "../String_Tools.h"
 
@@ -140,6 +141,9 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tridecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_Group_Compression),
+
+            CREATE_Test_Function_And_Their_Name(TEST_Alkane_Lexer),
+            CREATE_Test_Function_And_Their_Name(TEST_Alkane_Parser),
 
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_1),
 
@@ -889,6 +893,210 @@ extern void TEST_Group_Compression (void)
     Delete_Alkane_Branch(branch_2);
     Delete_Alkane_Branch(branch_3);
     Delete_Alkane_Branch(branch_4);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Testen, ob der Alkan-Lexer die gewuenschen Ergebnisse erzeugt.
+ *
+ * So soll z.B. "4-(1-methylethyl)heptane" in folgende Tokens zerlegt werden:
+ * - "4"
+ * - "-"
+ * - "("
+ * - "1"
+ * - "-"
+ * - "methyl"
+ * - "ethyl"
+ * - ")"
+ * - "heptane"
+ */
+extern void TEST_Alkane_Lexer (void)
+{
+    // Testnamen
+    // Wichtig: Hier wird nur ueberprueft, ob der Lexer arbeitet. Sowohl der Autor als auch der Lexer ueberpruefen
+    //          nicht, ob die Namen semantisch richtig sind !
+    const char* iupac_names [] =
+    {
+        "4-(1-methylethyl)heptane",
+        "1,2,3-TriMethylDecane",
+        "1-(2-(3-methylethyl)propyl)Octane",
+        "3-Ethyl-3-methylheptane",
+        "3-Ethyl-2,3,4-trimethylpentane",
+        "n-Decane",
+        "4-(1,1-DiMethylEthyl)Heptane"
+    };
+
+    // Token und Typ des Tokens
+    struct Token_And_Token_Type { const char* token; enum Token_Type type; };
+
+    // Erwartete Ergebnisse vom ersten Alkannamen
+    const struct Token_And_Token_Type array_1 [] =
+    {
+            { "4",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "(",          TOKEN_TYPE_OPEN_BRACKET     },
+            { "1",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "methyl",     TOKEN_TYPE_ALKYL_WORD       },
+            { "ethyl",      TOKEN_TYPE_ALKYL_WORD       },
+            { ")",          TOKEN_TYPE_CLOSE_BRACKET    },
+            { "heptane",    TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,         TOKEN_TYPE_N_A              }
+    };
+    // Erwartete Ergebnisse vom zweiten Alkannamen
+    const struct Token_And_Token_Type array_2 [] =
+    {
+            { "1",      TOKEN_TYPE_NUMBER       },
+            { ",",      TOKEN_TYPE_COMMA_CHAR   },
+            { "2",      TOKEN_TYPE_NUMBER       },
+            { ",",      TOKEN_TYPE_COMMA_CHAR   },
+            { "3",      TOKEN_TYPE_NUMBER       },
+            { "-",      TOKEN_TYPE_SUB_CHAR     },
+            { "Tri",    TOKEN_TYPE_NUMBER_WORD  },
+            { "Methyl", TOKEN_TYPE_ALKYL_WORD   },
+            { "Decane", TOKEN_TYPE_ALKANE_WORD  },
+            { NULL,     TOKEN_TYPE_N_A          }
+    };
+    // Erwartete Ergebnisse vom dritten Alkannamen
+    const struct Token_And_Token_Type array_3 [] =
+    {
+            { "1",      TOKEN_TYPE_NUMBER           },
+            { "-",      TOKEN_TYPE_SUB_CHAR         },
+            { "(",      TOKEN_TYPE_OPEN_BRACKET     },
+            { "2",      TOKEN_TYPE_NUMBER           },
+            { "-",      TOKEN_TYPE_SUB_CHAR         },
+            { "(",      TOKEN_TYPE_OPEN_BRACKET     },
+            { "3",      TOKEN_TYPE_NUMBER           },
+            { "-",      TOKEN_TYPE_SUB_CHAR         },
+            { "methyl", TOKEN_TYPE_ALKYL_WORD       },
+            { "ethyl",  TOKEN_TYPE_ALKYL_WORD       },
+            { ")",      TOKEN_TYPE_CLOSE_BRACKET    },
+            { "propyl", TOKEN_TYPE_ALKYL_WORD       },
+            { ")",      TOKEN_TYPE_CLOSE_BRACKET    },
+            { "octane", TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,     TOKEN_TYPE_N_A              }
+    };
+    const struct Token_And_Token_Type array_4 [] =
+    {
+            { "3",          TOKEN_TYPE_NUMBER       },
+            { "-",          TOKEN_TYPE_SUB_CHAR     },
+            { "Ethyl",      TOKEN_TYPE_ALKYL_WORD   },
+            { "-",          TOKEN_TYPE_SUB_CHAR     },
+            { "3",          TOKEN_TYPE_NUMBER       },
+            { "-",          TOKEN_TYPE_SUB_CHAR     },
+            { "methyl",     TOKEN_TYPE_ALKYL_WORD   },
+            { "heptane",    TOKEN_TYPE_ALKANE_WORD  },
+            { NULL,         TOKEN_TYPE_N_A          }
+    };
+    const struct Token_And_Token_Type array_5 [] =
+    {
+            { "3",          TOKEN_TYPE_NUMBER       },
+            { "-",          TOKEN_TYPE_SUB_CHAR     },
+            { "Ethyl",      TOKEN_TYPE_ALKYL_WORD   },
+            { "-",          TOKEN_TYPE_SUB_CHAR     },
+            { "2",          TOKEN_TYPE_NUMBER       },
+            { ",",          TOKEN_TYPE_COMMA_CHAR   },
+            { "3",          TOKEN_TYPE_NUMBER       },
+            { ",",          TOKEN_TYPE_COMMA_CHAR   },
+            { "4",          TOKEN_TYPE_NUMBER       },
+            { "-",          TOKEN_TYPE_SUB_CHAR     },
+            { "Tri",        TOKEN_TYPE_NUMBER_WORD  },
+            { "methyl",     TOKEN_TYPE_ALKYL_WORD   },
+            { "pentane",    TOKEN_TYPE_ALKANE_WORD  },
+            { NULL,         TOKEN_TYPE_N_A          }
+    };
+    const struct Token_And_Token_Type array_6 [] =
+    {
+            { "n-",     TOKEN_TYPE_STRAIGHT_CHAIN   },
+            { "Decane", TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,     TOKEN_TYPE_N_A              }
+    };
+    // 4-(1,1-DiMethylEthyl)Heptan
+    const struct Token_And_Token_Type array_7 [] =
+    {
+            { "4",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "(",          TOKEN_TYPE_OPEN_BRACKET     },
+            { "1",          TOKEN_TYPE_NUMBER           },
+            { ",",          TOKEN_TYPE_COMMA_CHAR       },
+            { "1",          TOKEN_TYPE_NUMBER           },
+            { "-",          TOKEN_TYPE_SUB_CHAR         },
+            { "Di",         TOKEN_TYPE_NUMBER_WORD      },
+            { "Methyl",     TOKEN_TYPE_ALKYL_WORD       },
+            { "Ethyl",      TOKEN_TYPE_ALKYL_WORD       },
+            { ")",          TOKEN_TYPE_CLOSE_BRACKET    },
+            { "heptane",    TOKEN_TYPE_ALKANE_WORD      },
+            { NULL,         TOKEN_TYPE_N_A              }
+    };
+    const struct Token_And_Token_Type* expected_tokens [] =
+    {
+        array_1,
+        array_2,
+        array_3,
+        array_4,
+        array_5,
+        array_6,
+        array_7
+    };
+
+    // Lexer-Test durchfuehren
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_tokens); ++ i)
+    {
+        const size_t name_length = strlen (iupac_names [i]);
+        const struct Alkane_Lexer lexer_data = Create_Alkane_Tokens (iupac_names [i], name_length);
+
+        for (uint_fast8_t i2 = 0; i2 < lexer_data.next_free_token; ++ i2)
+        {
+            ASSERT_MSG(expected_tokens [i][i2].token != NULL, "expected token is NULL ! Lexer created not enough tokens !");
+            ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected_tokens [i][i2].token, lexer_data.result_tokens [i2]);
+            ASSERT_EQUALS(expected_tokens [i][i2].type, lexer_data.token_type [i2]);
+        }
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Testen, ob der Alkan-Parser seine Aufgaben richtig erledigt.
+ *
+ * Im Hintergrund wird der Alkan-Lexer verwendet. Dieser erzeugt die Tokens, die dann vom Parser ueberprueft werden.
+ * Die Tests in dieser Testfunktion beziehen sich alleine auf die des Parsers. Wenn Fehler beim Lexer auftauchen, dann
+ * koennen diese von den daraus resultierenden Fehlern des Parsers nicht unterschieden werden. Daher gibt es auch eine
+ * eigene Testfunktion fuer den Lexer (TEST_Alkane_Lexer).
+ */
+extern void TEST_Alkane_Parser (void)
+{
+    // Als Testnamen werden die erwarteten Ergebnisse bei der Bildung der Konstitutionsisomere verwendet
+    const char* iupac_names [] =
+    {
+            #include "./Expected_Results/Alkane/Tetradecane.txt"
+            //"3,4-bis(1-methylethyl)-2,5-Dimethylhexan" // <- Prefixe, die Gruppen zusammenfassen, werden aktuell noch
+                                                         // nicht richtig verarbeitet. Solche Prefixe werden durch den
+                                                         // Lexer einfach uebersprungen. Aber auch der Parser besitzt
+                                                         // noch keine passenden Regeln fuer diese Prefixe !
+    };
+
+    size_t wrong_results = 0;
+
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(iupac_names); ++ i)
+    {
+        if (! Parse_Alkane (iupac_names [i], strlen (iupac_names [i])) /* == false */)
+        {
+            wrong_results ++;
+        }
+    }
+    if (wrong_results != 0)
+    {
+        PRINTF_FFLUSH("\nWrong parser results ! Got %zu times false from %zu test names.\n\n", wrong_results,
+                COUNT_ARRAY_ELEMENTS(iupac_names))
+    }
+
+    ASSERT_EQUALS(0, wrong_results);
 
     return;
 }

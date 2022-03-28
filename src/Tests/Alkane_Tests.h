@@ -215,6 +215,32 @@ extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void);
 extern void TEST_Group_Compression (void);
 
 /**
+ * @brief Testen, ob der Alkan-Lexer die gewuenschen Ergebnisse erzeugt.
+ *
+ * So soll z.B. "4-(1-methylethyl)heptane" in folgende Tokens zerlegt werden:
+ * - "4"
+ * - "-"
+ * - "("
+ * - "1"
+ * - "-"
+ * - "methyl"
+ * - "ethyl"
+ * - ")"
+ * - "heptane"
+ */
+extern void TEST_Alkane_Lexer (void);
+
+/**
+ * @brief Testen, ob der Alkan-Parser seine Aufgaben richtig erledigt.
+ *
+ * Im Hintergrund wird der Alkan-Lexer verwendet. Dieser erzeugt die Tokens, die dann vom Parser ueberprueft werden.
+ * Die Tests in dieser Testfunktion beziehen sich alleine auf die des Parsers. Wenn Fehler beim Lexer auftauchen, dann
+ * koennen diese von den daraus resultierenden Fehlern des Parsers nicht unterschieden werden. Daher gibt es auch eine
+ * eigene Testfunktion fuer den Lexer (TEST_Alkane_Lexer).
+ */
+extern void TEST_Alkane_Parser (void);
+
+/**
  * @brief Das textbasierte Zeichnen eines Alkans testen. Erster Zeichnungstest.
  *
  * Es soll "4-(1-methylethyl)heptane" gezeichnet werden.

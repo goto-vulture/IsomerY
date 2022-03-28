@@ -208,6 +208,9 @@ PRINT_TOOLS_C = ./src/Print_Tools.c
 
 STRING_TOOLS_H = ./src/String_Tools.h
 STRING_TOOLS_C = ./src/String_Tools.c
+
+ALKANE_PARSER_H = ./src/Drawings/Alkane_Parser.h
+ALKANE_PARSER_C = ./src/Drawings/Alkane_Parser.c
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
 
 
@@ -230,11 +233,11 @@ endif
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o
+$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -319,6 +322,9 @@ Print_Tools.o: $(PRINT_TOOLS_C)
 
 String_Tools.o: $(STRING_TOOLS_C)
 	$(CC) $(CCFLAGS) -c $(STRING_TOOLS_C)
+
+Alkane_Parser.o: $(ALKANE_PARSER_C)
+	$(CC) $(CCFLAGS) -c $(ALKANE_PARSER_C)
 ##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen
