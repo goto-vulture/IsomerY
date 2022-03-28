@@ -96,6 +96,11 @@ Create_Text_Based_Alkane_Drawing
     }
 
     // => Schritt 3: Ermittlung der tiefsten Verschachtelung
+    // Beschreibung zum verwendeten Lexer:
+    //      "Einfacher Lexer, um IUPAC-Namen an den Grenzen der Ketten (OHNE Beachtung von Verschachtelungen) zu
+    //       trennen."
+    // D.h., dass sich die tiefste Verschachtelung bestimmen laesst indem die hoechste Anzahl an oeffnenden oder
+    // schliessenden Klammern in den Tokens verwendet wird.
     uint_fast8_t deepest_nesting = 0;
     for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
     {
