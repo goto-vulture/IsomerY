@@ -182,7 +182,9 @@ B3  ->  Y C
     //                  koennen. Alle Regeln muessen fuer den weiteren Verlauf gesichert werden !
     _Bool P [MAX_NUMBER_OF_C_ATOMS + 1][MAX_NUMBER_OF_C_ATOMS + 1][COUNT_ARRAY_ELEMENTS(rules) + 1];
     memset (P, '\0', sizeof (P));
+#ifdef DEBUG_BUILD
     size_t true_writes = 0;
+#endif /* DEBUG_BUILD */
 
     // Pseudocode des CYK-Algorithmus
     // Siehe: https://en.wikipedia.org/wiki/CYK_algorithm#As_pseudocode
@@ -220,7 +222,9 @@ B3  ->  Y C
                     rules [v].terminal_dest == Token_Type_To_Terminalsymbol(lexer_data.token_type [s]))
             {
                 P [1][s + 1][v + 1] = true;
+#ifdef DEBUG_BUILD
                 ++ true_writes;
+#endif /* DEBUG_BUILD */
             }
         }
     }
@@ -257,7 +261,9 @@ B3  ->  Y C
                                 {
                                     P [l][s][i3 + 1] = true;
                                     // PRINTF_FFLUSH("\n>%zu, %zu, %zu<\n", l, s, i3 + 1);
+#ifdef DEBUG_BUILD
                                     ++ true_writes;
+#endif /* DEBUG_BUILD */
                                 }
                             }
                         }
@@ -283,11 +289,19 @@ B3  ->  Y C
 
     if (return_value /* == true */)
     {
+#ifdef DEBUG_BUILD
         PRINTF_FFLUSH("%-60s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
+#else
+        PRINTF_FFLUSH("%-60s     is in the grammer.\n", lexer_data.alkane_name);
+#endif /* DEBUG_BUILD */
     }
     else
     {
+#ifdef DEBUG_BUILD
         PRINTF_FFLUSH("%-60s is NOT in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
+#else
+        PRINTF_FFLUSH("%-60s is NOT in the grammer.\n", lexer_data.alkane_name);
+#endif /* DEBUG_BUILD */
     }
 
     return return_value;
