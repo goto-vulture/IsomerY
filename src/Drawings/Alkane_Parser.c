@@ -183,7 +183,7 @@ B3  ->  Y C
     _Bool P [MAX_NUMBER_OF_C_ATOMS + 1][MAX_NUMBER_OF_C_ATOMS + 1][COUNT_ARRAY_ELEMENTS(rules) + 1];
     memset (P, '\0', sizeof (P));
 #ifdef DEBUG_BUILD
-    size_t true_writes = 0;
+    uint_fast8_t true_writes = 0;
 #endif /* DEBUG_BUILD */
 
     // Pseudocode des CYK-Algorithmus
@@ -290,7 +290,7 @@ B3  ->  Y C
     if (return_value /* == true */)
     {
 #ifdef DEBUG_BUILD
-        PRINTF_FFLUSH("%-60s     is in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
+        PRINTF_FFLUSH("%-60s     is in the grammer. (%3" PRIuFAST8 ")\n", lexer_data.alkane_name, true_writes);
 #else
         PRINTF_FFLUSH("%-60s     is in the grammer.\n", lexer_data.alkane_name);
 #endif /* DEBUG_BUILD */
@@ -298,7 +298,7 @@ B3  ->  Y C
     else
     {
 #ifdef DEBUG_BUILD
-        PRINTF_FFLUSH("%-60s is NOT in the grammer. (%3zu)\n", lexer_data.alkane_name, true_writes);
+        PRINTF_FFLUSH("%-60s is NOT in the grammer. (%3" PRIuFAST8 ")\n", lexer_data.alkane_name, true_writes);
 #else
         PRINTF_FFLUSH("%-60s is NOT in the grammer.\n", lexer_data.alkane_name);
 #endif /* DEBUG_BUILD */
