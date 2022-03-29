@@ -120,3 +120,31 @@ Count_Char_In_String
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Uebergebenes Zeichen X-Mal an die uebergebene Zeichenkette anhaengen. Die Funktion geht davon aus, dass genug
+ * Speicher in der Zeichenkette fuer die Operation vorhanden ist.
+ *
+ * @param[in] str Zeichenkette, an der die Zeichen angehaengt werden
+ * @param[in] character Zeichen, welches angehaengt werden soll
+ * @param[in] times Wie oft wird das Zeichen angehaengt
+ */
+extern void
+Append_X_Times_Char
+(
+        char* const str,
+        const char character,
+        const size_t times
+)
+{
+    const char one_size_string [2] = { character, '\0' };
+
+    for (size_t i = 0; i < times; ++ i)
+    {
+        strncat (str, one_size_string, 1);
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
