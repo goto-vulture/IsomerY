@@ -256,6 +256,26 @@ extern void TEST_Alkane_Parser (void);
 extern void TEST_Text_Based_Alkane_Drawing_1 (void);
 
 /**
+ * @brief Das textbasierte Zeichnen eines Alkans testen. Weiterer Zeichnungstest mit Namen ohne Verschachtelung.
+ *
+ * Es soll "3,3,4-Triethyl-2,4-dimethylhexan" gezeichnet werden. Bewusst die Wahl, wo die gleichen Positionen von
+ * verschiedenen Asttypen verwendet werden. Hier Position 4
+ *
+ * Das Ergebnis soll etwa so aussehen:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Text_Based_Alkane_Drawing_2 (void);
+
+/**
  * @brief Alle Testfunktionen ausfuehren.
  *
  * Die Funktionalitaet liegt nicht direkt im Koerper dieser Funktion. Vielmehr dient diese Funktion als eine Art
