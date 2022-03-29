@@ -64,74 +64,75 @@ Create_Text_Based_Alkane_Drawing
 
     memcpy (drawing->iupac_name, iupac_name, name_length);
 
-    // "Zeichenflache" mit Leerzeichen fuellen (+ Terminatorsymbol)
-//    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
-//    {
-//        memset(drawing->drawing [i], ' ', sizeof (char) * (TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1));
-//        drawing->drawing [i][TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
-//    }
-
     drawing->state = TEXT_BASED_ALKANE_DRAWING_INITIALIZED_WITH_DATA;
 
     // => Schritt 1: Name zerlegen
-    const struct IUPAC_Chain_Lexer_Result lexer_result = Create_Chain_Tokens (iupac_name);
-    const uint_fast8_t lexer_next_free_token = lexer_result.next_free_token;
+    const struct Alkane_Lexer lexer_data = Create_Alkane_Tokens (iupac_name, name_length);
 
     // => Schritt 2: Laenge der Hauptkette bestimmen
-    uint_fast8_t length_main_chain = 0;
-    for (uint_fast8_t i = 0; i < NUMBER_OF_ALKAN_WORDS; ++ i)
+    uint_fast8_t main_chain_length = 0;
+
+    for (uint_fast8_t i = 0; i < lexer_data.next_free_token; ++ i)
     {
-        if (Compare_Strings_Case_Insensitive (lexer_result.result_tokens [lexer_next_free_token - 1],
-                ALKAN_WORDS_DE [i]) == 0)
+        if (lexer_data.token_type [i] == TOKEN_TYPE_ALKANE_WORD)
         {
-            length_main_chain = (uint_fast8_t) (i + 1u);
-            break;
-        }
-        if (Compare_Strings_Case_Insensitive (lexer_result.result_tokens [lexer_next_free_token - 1],
-                ALKAN_WORDS_EN [i]) == 0)
-        {
-            length_main_chain = (uint_fast8_t) (i + 1u);
+            for (uint_fast8_t i2 = 0; i2 < NUMBER_OF_ALKAN_WORDS; ++ i2)
+            {
+                // Wo stimmt der Token mit einem Alkannamen ueberein ?
+                if (Compare_Strings_Case_Insensitive (lexer_data.result_tokens [i], ALKAN_WORDS_DE [i2]) == 0 ||
+                        Compare_Strings_Case_Insensitive (lexer_data.result_tokens [i], ALKAN_WORDS_EN [i2]) == 0)
+                {
+                    main_chain_length = (uint_fast8_t) (i2 + 1);
+                    break;
+                }
+            }
             break;
         }
     }
 
     // => Schritt 3: Ermittlung der tiefsten Verschachtelung
-    // Beschreibung zum verwendeten Lexer:
-    //      "Einfacher Lexer, um IUPAC-Namen an den Grenzen der Ketten (OHNE Beachtung von Verschachtelungen) zu
-    //       trennen."
-    // D.h., dass sich die tiefste Verschachtelung bestimmen laesst indem die hoechste Anzahl an oeffnenden oder
-    // schliessenden Klammern in den Tokens verwendet wird.
     uint_fast8_t deepest_nesting = 0;
-    for (uint_fast8_t i = 0; i < lexer_result.next_free_token; ++ i)
+    uint_fast8_t branch_opened_bracket = 0;
+    for (uint_fast8_t i = 0; i < lexer_data.next_free_token; ++ i)
     {
-        const uint_fast8_t char_occurence =
-                Count_Char_In_String (lexer_result.result_tokens [i], TEXT_BASED_ALKANE_DRAWING_DIM_2, '(');
-
-        if (char_occurence > deepest_nesting)
+        if (lexer_data.token_type [i] == TOKEN_TYPE_OPEN_BRACKET)
         {
-            deepest_nesting = char_occurence;
+            ++ branch_opened_bracket;
+            // Ist die aktuelle Tiefe der Verschachtelung groesser als die bisher bekannte ?
+            if (branch_opened_bracket > deepest_nesting)
+            {
+                deepest_nesting = branch_opened_bracket;
+            }
+        }
+        else if (lexer_data.token_type [i] == TOKEN_TYPE_CLOSE_BRACKET)
+        {
+            -- branch_opened_bracket;
         }
     }
 
     // => Schritt 4: Hauptkette zeichnen
     char* const drawing_middle_line = drawing->drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2];
-    for (uint_fast8_t i = 0; i < length_main_chain; ++ i)
-    {
-        strncat (drawing_middle_line, "C", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
+    size_t middle_line_size_left = TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1;
 
-        if ((i + 1) < length_main_chain)
+    for (uint_fast8_t i = 0; i < main_chain_length; ++ i)
+    {
+        strncat (drawing_middle_line, "C", middle_line_size_left);
+        middle_line_size_left -= strlen ("C");
+        if ((i + 1) < main_chain_length)
         {
-            strncat (drawing_middle_line, " ", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
-            for (uint_fast8_t i2 = 0; i2 < deepest_nesting; ++ i2)
-            {
-                strncat (drawing_middle_line, "-", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
-            }
-            strncat (drawing_middle_line, " ", TEXT_BASED_ALKANE_DRAWING_DIM_2 - strlen (drawing_middle_line) - 1);
+            strncat (drawing_middle_line, " ", middle_line_size_left);
+            middle_line_size_left -= strlen (" ");
+            // Anzahl an Minuszeichen anhand der maximalen Verschachtelungstiefe ausrichten, um keine Platzprobleme bei
+            // der Zeichnung der Unterketten zu bekommen
+            Append_X_Times_Char (drawing_middle_line, '-', (deepest_nesting == 0) ? 1 : deepest_nesting);
+            middle_line_size_left -= (size_t) (deepest_nesting + 1);
+            strncat (drawing_middle_line, " ", middle_line_size_left);
+            middle_line_size_left -= strlen (" ");
         }
     }
+
     // Nullterminierung garantieren
     drawing_middle_line [TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
-
 
     return drawing;
 }
