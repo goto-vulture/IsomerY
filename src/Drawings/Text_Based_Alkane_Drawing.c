@@ -192,3 +192,54 @@ Show_Text_Based_Alkane_Drawing
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Die textbasierte Zeichnung auf stdout ausgegeben. OHNE Zeilen am Anfang und am Ende, die nur aus Leerzeichen
+ * bestehen.
+ *
+ * Asserts:
+ *          text_based_drawing != NULL
+ *
+ * @param[in] Text_Based_Alkane_Drawing, wovon die Zeichenflache ausgegeben wird
+ */
+extern void
+Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines
+(
+        const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
+)
+{
+    ASSERT_MSG(text_based_drawing != NULL, "drawing is NULL !");
+
+    const char* drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1];
+    uint_fast8_t drawing_index = 0;
+    _Bool first_non_empty_line_found = false;
+    // Alle leeren Zeilen entfernen
+    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
+    {
+        const uint_fast8_t spaces_in_line =
+                Count_Char_In_String (text_based_drawing->drawing [i], TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1, ' ');
+
+        // Leere Zeile gefunden ?
+        if (spaces_in_line == strlen (text_based_drawing->drawing [i]))
+        {
+            if (! first_non_empty_line_found /* == false */)
+            {
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        first_non_empty_line_found = true;
+        drawing [drawing_index] = text_based_drawing->drawing [i];
+        ++ drawing_index;
+    }
+
+    Print_2D_String_Array(drawing, drawing_index, TEXT_BASED_ALKANE_DRAWING_DIM_2);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------

@@ -226,6 +226,21 @@ Show_Text_Based_Alkane_Drawing
         const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
 );
 
+/**
+ * @brief Die textbasierte Zeichnung auf stdout ausgegeben. OHNE Zeilen am Anfang und am Ende, die nur aus Leerzeichen
+ * bestehen.
+ *
+ * Asserts:
+ *          text_based_drawing != NULL
+ *
+ * @param[in] Text_Based_Alkane_Drawing, wovon die Zeichenflache ausgegeben wird
+ */
+extern void
+Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines
+(
+        const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
+);
+
 
 
 // ENDE C++-Kompablitaet herstellen
