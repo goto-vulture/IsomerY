@@ -1172,7 +1172,7 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     printf ("Error in drawing line: %zu\n\n", first_wrong_result_string);
 
     puts ("Created:");
-    Show_Text_Based_Alkane_Drawing (result_drawing);
+    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (result_drawing);
     fflush (stdout);
 
     // War der Test aller Zeichenketten erfolgreich ?
@@ -1258,7 +1258,7 @@ extern void TEST_Text_Based_Alkane_Drawing_2 (void)
     printf ("Error in drawing line: %zu\n\n", first_wrong_result_string);
 
     puts ("Created:");
-    Show_Text_Based_Alkane_Drawing (result_drawing);
+    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (result_drawing);
     fflush (stdout);
 
     // War der Test aller Zeichenketten erfolgreich ?
