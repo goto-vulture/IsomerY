@@ -141,7 +141,7 @@ Append_X_Times_Char
 
     for (size_t i = 0; i < times; ++ i)
     {
-        strncat (str, one_size_string, 1);
+        strncat (str, one_size_string, COUNT_ARRAY_ELEMENTS(one_size_string));
     }
 
     return;
