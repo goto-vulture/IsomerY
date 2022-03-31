@@ -132,13 +132,46 @@ Create_Text_Based_Alkane_Drawing
     }
 
     // => Schritt 5: Nebenketten zeichnen
-    // Hier gibt es grundsaetzlich zwei verschiedene Situationen, die betrachtet werden muessen:
+    // Hier gibt es grundsaetzlich zwei verschiedene Situationen, die betrachtet werden muessen. Zu Beginn muessen alle
+    // Nebenketten auf oberster Ebene ermittelt werden
     //  1.
     //  Ein Ast besitzt KEINE weitere Verschachtelung. (Z.B.: 2,3,4-TriMethyl)
     //  Das Ende eines solchen Astes wird erkannt, wenn ein Alkanwort gefunden wurde oder wenn ein Minuszeichen
-    //  auftritt, nachdem ein neues noch nicht gezeichnetes Alkylwort entdeckt wurde
+    //  auftritt und man sich gleichzeitig auf oberster Ebene befindet
     //  2.
-    //  ...
+    //  Ein Ast beendet (alle) seine Verschachtelungen. (Z.B.: ...(2-MethylEthyl)...
+    //  oder ...(2-(3-MethylEthyl)Propyl)...
+
+    // Die Indexe sind wiefolgt zu verstehen: Hinter dem X.ten Token beginnt die naechste Nebenkette auf oberster Ebene
+    uint_fast8_t branch_end [MAX_NUMBER_OF_C_ATOMS];
+    memset (branch_end, '\0', sizeof (branch_end));
+    uint_fast8_t next_free_branch_end = 0;
+    uint_fast8_t current_nesting_depth = 0;
+
+    for (uint_fast8_t i = 0; i < lexer_data.next_free_token; ++ i)
+    {
+        if (lexer_data.token_type [i] == TOKEN_TYPE_OPEN_BRACKET)
+        {
+            ++ current_nesting_depth;
+        }
+        else if (lexer_data.token_type [i] == TOKEN_TYPE_CLOSE_BRACKET)
+        {
+            -- current_nesting_depth;
+            // 2. Situation eingetreten (Siehe Beschreibung weiter oben) =
+            if (current_nesting_depth == 0)
+            {
+                branch_end [next_free_branch_end] = i;
+                ++ next_free_branch_end;
+            }
+        }
+        // 1. Situation eingetreten (Siehe Beschreibung weiter oben) =
+        else if ((current_nesting_depth == 0 && lexer_data.token_type [i] == TOKEN_TYPE_ALKYL_WORD) ||
+                (lexer_data.token_type [i + 1] == TOKEN_TYPE_ALKANE_WORD))
+        {
+            branch_end [next_free_branch_end] = i;
+            ++ next_free_branch_end;
+        }
+    }
 
     // Nullterminierung garantieren
     drawing_middle_line [TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
