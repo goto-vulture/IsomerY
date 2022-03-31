@@ -131,6 +131,15 @@ Create_Text_Based_Alkane_Drawing
         }
     }
 
+    // => Schritt 5: Nebenketten zeichnen
+    // Hier gibt es grundsaetzlich zwei verschiedene Situationen, die betrachtet werden muessen:
+    //  1.
+    //  Ein Ast besitzt KEINE weitere Verschachtelung. (Z.B.: 2,3,4-TriMethyl)
+    //  Das Ende eines solchen Astes wird erkannt, wenn ein Alkanwort gefunden wurde oder wenn ein Minuszeichen
+    //  auftritt, nachdem ein neues noch nicht gezeichnetes Alkylwort entdeckt wurde
+    //  2.
+    //  ...
+
     // Nullterminierung garantieren
     drawing_middle_line [TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
 
