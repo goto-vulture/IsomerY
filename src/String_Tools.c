@@ -148,3 +148,32 @@ Append_X_Times_Char
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Besteht die Zeile nur aus Terminal- bzw Nullsymbolen ?
+ *
+ * @param[in] str Zeichenkette, die kontrolliert wird
+ * @param[in] length Laenge der Zeichenkette
+ */
+extern _Bool
+Contain_String_Only_Null_Symbols
+(
+        const char* const str,
+        const size_t length
+)
+{
+    _Bool result = true;
+
+    for (size_t i = 0; i < length; ++ i)
+    {
+        if (str [i] != '\0')
+        {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------

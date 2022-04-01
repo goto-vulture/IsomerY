@@ -20,6 +20,7 @@ extern "C"
 
 #include <stddef.h>
 #include <inttypes.h>
+#include <stdbool.h>
 
 
 
@@ -81,6 +82,19 @@ Append_X_Times_Char
         char* const str,
         const char character,
         const size_t times
+);
+
+/**
+ * @brief Besteht die Zeile nur aus Terminal- bzw Nullsymbolen ?
+ *
+ * @param[in] str Zeichenkette, die kontrolliert wird
+ * @param[in] length Laenge der Zeichenkette
+ */
+extern _Bool
+Contain_String_Only_Null_Symbols
+(
+        const char* const str,
+        const size_t length
 );
 
 
