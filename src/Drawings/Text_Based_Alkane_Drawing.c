@@ -12,6 +12,50 @@
 #include "../Print_Tools.h"
 #include "../String_Tools.h"
 #include "../Drawings/Alkane_Parser.h"
+#include "../str2int.h"
+#include "../Misc.h"
+
+
+
+enum Direction
+{
+    N, E, S, W
+};
+
+
+
+static uint_fast8_t Get_Length_From_Alkane_Token
+(
+        const char* const token
+);
+static uint_fast8_t Get_Length_From_Alkyl_Token
+(
+        const char* const token
+);
+static uint_fast8_t Count_Branch_Tokens_In_Partition
+(
+        const enum Token_Type* const token_types,
+        const uint_fast8_t start,
+        const uint_fast8_t end
+);
+static void Draw_Branch
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        int_fast32_t pos_x,
+        int_fast32_t pos_y,
+        const enum Direction direction,
+        const uint_fast8_t num_c_atoms,
+        const uint_fast8_t distance
+);
+static void Make_Line_Drawable
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const int_fast32_t line
+);
+static void Adjust_Drawing_For_Terminal
+(
+        struct Text_Based_Alkane_Drawing* const drawing
+);
 
 
 
@@ -76,16 +120,7 @@ Create_Text_Based_Alkane_Drawing
     {
         if (lexer_data.token_type [i] == TOKEN_TYPE_ALKANE_WORD)
         {
-            for (uint_fast8_t i2 = 0; i2 < NUMBER_OF_ALKAN_WORDS; ++ i2)
-            {
-                // Wo stimmt der Token mit einem Alkannamen ueberein ?
-                if (Compare_Strings_Case_Insensitive (lexer_data.result_tokens [i], ALKAN_WORDS_DE [i2]) == 0 ||
-                        Compare_Strings_Case_Insensitive (lexer_data.result_tokens [i], ALKAN_WORDS_EN [i2]) == 0)
-                {
-                    main_chain_length = (uint_fast8_t) (i2 + 1);
-                    break;
-                }
-            }
+            main_chain_length = Get_Length_From_Alkane_Token (lexer_data.result_tokens [i]);
             break;
         }
     }
@@ -173,8 +208,53 @@ Create_Text_Based_Alkane_Drawing
         }
     }
 
-    // Nullterminierung garantieren
-    drawing_middle_line [TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1] = '\0';
+
+    current_nesting_depth = 0;
+    for (uint_fast8_t i = 0; i < next_free_branch_end; ++ i)
+    {
+        // "+ 2", da sowohl das Alkyl-Token als auch das Minus nach dem Alkyl-Token ignoriert werden muss
+        uint_fast8_t i2 = (i == 0) ? 0 : (uint_fast8_t) (branch_end [i - 1] + 2);
+
+        if (Count_Branch_Tokens_In_Partition (lexer_data.token_type, i2, branch_end [i]) == 0)
+        {
+            const uint_fast8_t alkyl_length =
+                    Get_Length_From_Alkyl_Token(lexer_data.result_tokens [branch_end [i]]);
+
+            while (i2 < branch_end [i] &&
+                    (lexer_data.token_type [i2] == TOKEN_TYPE_NUMBER ||
+                    lexer_data.token_type [i2] == TOKEN_TYPE_COMMA_CHAR))
+            {
+                if (lexer_data.token_type [i2] == TOKEN_TYPE_NUMBER)
+                {
+                    long int position = 0;
+                    str2int (&position, lexer_data.result_tokens [i2], 10);
+
+                    // Kette zeichnen
+                    const int_fast32_t pos_x = TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2;
+                    int_fast32_t pos_y = 0;
+                    if (position > 0)
+                    {
+                        // + 2 fuer die Leerzeichen zwischen dem Minuszeichen !
+                        pos_y = position + ((position - 1) * ((deepest_nesting == 0) ? (1 + 2) : (deepest_nesting + 2)));
+                        pos_y -= 1; // 0-Indexierung
+                    }
+
+                    // Wenn unterhalb des C-Atoms noch Platz ist -> verwenden (S)
+                    // Ansonsten ueberhalb des C-Atoms den Platz verwenden (N)
+                    const enum Direction draw_direction = (drawing->drawing [pos_x + 1][pos_y] == '\0'
+                            || drawing->drawing [pos_x + 1][pos_y] == ' ') ? S : N;
+
+                    // Ast zeichnen
+                    Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length,
+                            (deepest_nesting == 0) ? 1 : deepest_nesting);
+                }
+
+                ++ i2;
+            }
+        }
+    }
+
+    Adjust_Drawing_For_Terminal (drawing);
 
     return drawing;
 }
@@ -281,6 +361,197 @@ Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines
     }
 
     Print_2D_String_Array(drawing, drawing_index, TEXT_BASED_ALKANE_DRAWING_DIM_2);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static uint_fast8_t Get_Length_From_Alkane_Token
+(
+        const char* const token
+)
+{
+    uint_fast8_t alkane_length = 0;
+
+    for (uint_fast8_t i2 = 0; i2 < NUMBER_OF_ALKAN_WORDS; ++ i2)
+    {
+        // Wo stimmt der Token mit einem Alkannamen ueberein ?
+        if (Compare_Strings_Case_Insensitive (token, ALKAN_WORDS_DE [i2]) == 0 ||
+                Compare_Strings_Case_Insensitive (token, ALKAN_WORDS_EN [i2]) == 0)
+        {
+            alkane_length = (uint_fast8_t) (i2 + 1);
+            break;
+        }
+    }
+
+    return alkane_length;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static uint_fast8_t Get_Length_From_Alkyl_Token
+(
+        const char* const token
+)
+{
+    uint_fast8_t alkyl_length = 0;
+
+    for (uint_fast8_t i2 = 0; i2 < NUMBER_OF_ALKAN_WORDS; ++ i2)
+    {
+        // Wo stimmt der Token mit einem Alkannamen ueberein ?
+        if (Compare_Strings_Case_Insensitive (token, ALKYL_WORDS [i2]) == 0)
+        {
+            alkyl_length = (uint_fast8_t) (i2 + 1);
+            break;
+        }
+    }
+
+    return alkyl_length;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static uint_fast8_t Count_Branch_Tokens_In_Partition
+(
+        const enum Token_Type* const token_types,
+        const uint_fast8_t start,
+        const uint_fast8_t end
+)
+{
+    uint_fast8_t count_branch_tokens = 0;
+
+    for (uint_fast8_t i = start; i < end; ++ i)
+    {
+        if (token_types [i] == TOKEN_TYPE_OPEN_BRACKET || token_types [i] == TOKEN_TYPE_OPEN_BRACKET)
+        {
+            ++ count_branch_tokens;
+        }
+    }
+
+    return count_branch_tokens;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Draw_Branch
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        int_fast32_t pos_x,
+        int_fast32_t pos_y,
+        const enum Direction direction,
+        const uint_fast8_t num_c_atoms,
+        const uint_fast8_t distance
+)
+{
+    int_fast8_t pos_x_change = 0;
+    int_fast8_t pos_y_change = 0;
+    char draw_char = '\0';
+
+    switch (direction)
+    {
+    case N:
+        pos_x_change = -1;
+        draw_char = '|';
+        break;
+    case E:
+        pos_y_change = +1;
+        draw_char = '-';
+        break;
+    case S:
+        pos_x_change = +1;
+        draw_char = '|';
+        break;
+    case W:
+        pos_y_change = -1;
+        draw_char = '-';
+        break;
+    default:
+        // Die Ausfuehrung des Default-Paths ist hier immer ein Fehler !
+        ASSERT_MSG(false, "Switch-Case default path executed !")
+    }
+
+    for (uint_fast8_t i = 0; i < num_c_atoms; ++ i)
+    {
+        for (uint_fast8_t i2 = 0; i2 < distance; ++ i2)
+        {
+            pos_x += pos_x_change;
+            pos_y += pos_y_change;
+            Make_Line_Drawable (drawing, pos_x);
+            drawing->drawing [pos_x][pos_y] = draw_char;
+        }
+        pos_x += pos_x_change;
+        pos_y += pos_y_change;
+        Make_Line_Drawable (drawing, pos_x);
+        drawing->drawing [pos_x][pos_y] = 'C';
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Wenn die Zeile nur aus Terminatorsymbolen besteht - was der Fall nach der Initialisierung ist - dann wird die Zeile
+ * komplett mit Leerzeichen gefuellt, damit diese auf der Konsole ausgegeben werden kann
+ */
+static void Make_Line_Drawable
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const int_fast32_t line
+)
+{
+    // Alle Zeilen haben die gleiche Laenge
+    // COUNT_ARRAY_ELEMENTS arbeitet mit sizeof, sodass die Operation bereits zur Kompilierungszeit durchfuehrbar sein
+    // muss !
+    const size_t line_length = COUNT_ARRAY_ELEMENTS(drawing->drawing [0]);
+
+    if (Contain_String_Only_Null_Symbols (drawing->drawing [line], line_length) /* == true */)
+    {
+        memset (drawing->drawing [line], ' ', line_length - 1); // "- 1" !
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Adjust_Drawing_For_Terminal
+(
+        struct Text_Based_Alkane_Drawing* const drawing
+)
+{
+    const size_t number_of_lines = COUNT_ARRAY_ELEMENTS(drawing->drawing);
+    const size_t line_length = COUNT_ARRAY_ELEMENTS(drawing->drawing [0]);
+
+    // Laengste Zeichenkette in der Zeichnung ermitteln
+    size_t longest_line = 0;
+
+    for (size_t i = 0; i < number_of_lines; ++ i)
+    {
+        // Mit der Laenge sind die Anzahl an Zeichen gemeint, bis nur noch Leerzeichen in der Zeichenkette sind
+        size_t current_length = line_length - 1;
+        for (size_t i2 = line_length - 2; i2 > 0; -- i2)
+        {
+            if (drawing->drawing [i][i2] == ' ' || drawing->drawing [i][i2] == '\0')
+            {
+                -- current_length;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (current_length > longest_line)
+        {
+            longest_line = current_length;
+        }
+    }
+    for (size_t i = 0; i < number_of_lines; ++ i)
+    {
+        memset (&drawing->drawing [i][longest_line], '\0', line_length - longest_line);
+    }
 
     return;
 }
