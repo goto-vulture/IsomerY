@@ -17,6 +17,9 @@
 
 
 
+/**
+ * Konstanten fuer die Richtung in Zeichenoperationen.
+ */
 enum Direction
 {
     N, E, S, W
@@ -24,20 +27,35 @@ enum Direction
 
 
 
+/**
+ * Anzahl von C-Atomen eines Alkan-Strings ermitteln.
+ */
 static uint_fast8_t Get_Length_From_Alkane_Token
 (
         const char* const token
 );
+
+/**
+ * Anzahl von C-Atomen eines Alkyl-Strings ermitteln.
+ */
 static uint_fast8_t Get_Length_From_Alkyl_Token
 (
         const char* const token
 );
+
+/**
+ * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben.
+ */
 static uint_fast8_t Count_Branch_Tokens_In_Partition
 (
         const enum Token_Type* const token_types,
         const uint_fast8_t start,
         const uint_fast8_t end
 );
+
+/**
+ * Einen Ast in die Zeichnung hinzufuegen.
+ */
 static void Draw_Branch
 (
         struct Text_Based_Alkane_Drawing* const drawing,
@@ -47,17 +65,60 @@ static void Draw_Branch
         const uint_fast8_t num_c_atoms,
         const uint_fast8_t distance
 );
+
+/**
+ * Zeilen zeichenbar machen, indem die gesamte Zeile mit Leerzeichen ueberschrieben wird. Dadurch werden die
+ * Terminalsymbole - die nach der Initialisierung standardmaessing vorhanden sind - ueberschrieben.
+ *
+ * Dies ist insbesondere dann notwendig, wenn Zeichen mittig in einer Zeichenkette hinzugefuegt werden. Ohne Anpassung
+ * wird die Zeile nur bis zum ersten Terminalsymbol ausgegeben.
+ */
 static void Make_Line_Drawable
 (
         struct Text_Based_Alkane_Drawing* const drawing,
         const int_fast32_t line
 );
+
+/**
+ * Zeichnung fuer die Ausgabe auf das Terminal anpassen.
+ *
+ * Das Ziel ist, dass Leerzeichen, die sich hinter dem letzten richtig verwendeten Zeichen befinden, mit
+ * Terminalsymbolen ueberschrieben werden. Dadurch wird die Ausgabe der Zeichnung uebersichtlicher dargestellt.
+ *
+ * Beispiel:
+ *
+ * Die Zeichnung
+ *
+ *    +--------------------------------------------------+
+ *  1 |        C                                         |
+ *  2 |        |                                         |
+ *  3 |        C   C                                     |
+ *  4 |        |   |                                     |
+ *  5 |C - C - C - C - C - C                             |
+ *  6 |    |   |   |                                     |
+ *  7 |    C   C   C                                     |
+ *  8 |        |   |                                     |
+ *  9 |        C   C                                     |
+ *    +--------------------------------------------------+
+ *
+ * wird zu:
+ *
+ *    +---------------------+
+ *  1 |        C            |
+ *  2 |        |            |
+ *  3 |        C   C        |
+ *  4 |        |   |        |
+ *  5 |C - C - C - C - C - C|
+ *  6 |    |   |   |        |
+ *  7 |    C   C   C        |
+ *  8 |        |   |        |
+ *  9 |        C   C        |
+ *    +---------------------+
+ */
 static void Adjust_Drawing_For_Terminal
 (
         struct Text_Based_Alkane_Drawing* const drawing
 );
-
-
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -367,6 +428,9 @@ Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Anzahl von C-Atomen eines Alkan-Strings ermitteln.
+ */
 static uint_fast8_t Get_Length_From_Alkane_Token
 (
         const char* const token
@@ -390,6 +454,9 @@ static uint_fast8_t Get_Length_From_Alkane_Token
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Anzahl von C-Atomen eines Alkyl-Strings ermitteln.
+ */
 static uint_fast8_t Get_Length_From_Alkyl_Token
 (
         const char* const token
@@ -412,6 +479,9 @@ static uint_fast8_t Get_Length_From_Alkyl_Token
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben.
+ */
 static uint_fast8_t Count_Branch_Tokens_In_Partition
 (
         const enum Token_Type* const token_types,
@@ -434,6 +504,9 @@ static uint_fast8_t Count_Branch_Tokens_In_Partition
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Einen Ast in die Zeichnung hinzufuegen.
+ */
 static void Draw_Branch
 (
         struct Text_Based_Alkane_Drawing* const drawing,
@@ -492,8 +565,11 @@ static void Draw_Branch
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Wenn die Zeile nur aus Terminatorsymbolen besteht - was der Fall nach der Initialisierung ist - dann wird die Zeile
- * komplett mit Leerzeichen gefuellt, damit diese auf der Konsole ausgegeben werden kann
+ * Zeilen zeichenbar machen, indem die gesamte Zeile mit Leerzeichen ueberschrieben wird. Dadurch werden die
+ * Terminalsymbole - die nach der Initialisierung standardmaessing vorhanden sind - ueberschrieben.
+ *
+ * Dies ist insbesondere dann notwendig, wenn Zeichen mittig in einer Zeichenkette hinzugefuegt werden. Ohne Anpassung
+ * wird die Zeile nur bis zum ersten Terminalsymbol ausgegeben.
  */
 static void Make_Line_Drawable
 (
@@ -516,6 +592,42 @@ static void Make_Line_Drawable
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Zeichnung fuer die Ausgabe auf das Terminal anpassen.
+ *
+ * Das Ziel ist, dass Leerzeichen, die sich hinter dem letzten richtig verwendeten Zeichen befinden, mit
+ * Terminalsymbolen ueberschrieben werden. Dadurch wird die Ausgabe der Zeichnung uebersichtlicher dargestellt.
+ *
+ * Beispiel:
+ *
+ * Die Zeichnung
+ *
+ *    +--------------------------------------------------+
+ *  1 |        C                                         |
+ *  2 |        |                                         |
+ *  3 |        C   C                                     |
+ *  4 |        |   |                                     |
+ *  5 |C - C - C - C - C - C                             |
+ *  6 |    |   |   |                                     |
+ *  7 |    C   C   C                                     |
+ *  8 |        |   |                                     |
+ *  9 |        C   C                                     |
+ *    +--------------------------------------------------+
+ *
+ * wird zu:
+ *
+ *    +---------------------+
+ *  1 |        C            |
+ *  2 |        |            |
+ *  3 |        C   C        |
+ *  4 |        |   |        |
+ *  5 |C - C - C - C - C - C|
+ *  6 |    |   |   |        |
+ *  7 |    C   C   C        |
+ *  8 |        |   |        |
+ *  9 |        C   C        |
+ *    +---------------------+
+ */
 static void Adjust_Drawing_For_Terminal
 (
         struct Text_Based_Alkane_Drawing* const drawing
