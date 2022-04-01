@@ -99,6 +99,20 @@ Execute_Creation_Test_With_Expected_Results
         const size_t number_of_expected_results                 // Anzahl an erwarteten Loesungen
 );
 
+/**
+ * Erwartete textbasierte Zeichnung mit einer erzeugten Zeichnung vergleichen.
+ */
+static _Bool
+Compare_Expected_Drawing_With_Created_Drawing
+(
+        const char* const* restrict expected_drawing,                               // Erwartete textbasierte Zeichnung
+        const struct Text_Based_Alkane_Drawing* const restrict created_drawing,     // Erzeugte textbasierte Zeichnung
+        const size_t expected_drawing_dim_1,                                        // 1. Dimension erwartetes Ergebnis
+        const size_t expected_drawing_dim_2,                                        // 2. Dimension erwartetes Ergebnis
+        const size_t created_drawing_dim_1,                                         // 1. Dimension erzeugtes Ergebnis
+        const size_t created_drawing_dim_2                                          // 2. Dimension erzeugtes Ergebnis
+);
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -1139,44 +1153,13 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     struct Text_Based_Alkane_Drawing* result_drawing =
             Create_Text_Based_Alkane_Drawing (test_iupac_name, strlen (test_iupac_name));
 
-    // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
-    // das Ergebnis richtig
-    _Bool wrong_result_occured = false;
-    size_t first_wrong_result_string = SIZE_MAX;
-    size_t first_non_empty_string = 0;
-    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2; ++ i)
-    {
-        // Leere Zeilen werden ignoriert
-        if (strlen (result_drawing->drawing [i]) != 0)
-        {
-            if ((strncmp (expected_drawing [first_non_empty_string], result_drawing->drawing [i],
-                    strlen (expected_drawing [first_non_empty_string])) != 0))
-            {
-                wrong_result_occured = true;
-                break;
-            }
-            ++ first_non_empty_string;
-        }
-        else if (strlen (expected_drawing [first_non_empty_string]) != strlen (result_drawing->drawing [i]))
-        {
-            wrong_result_occured = true;
-            first_wrong_result_string = i;
-            break;
-        }
-    }
-
-    // Ausgabe der erwarteten Loesung und der erzeugten Loesung
-    // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
-    puts ("Expected result:");
-    Print_2D_String_Array(expected_drawing, COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]));
-    printf ("Error in drawing line: %zu\n\n", first_wrong_result_string);
-
-    puts ("Created:");
-    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (result_drawing);
-    fflush (stdout);
+    const _Bool wrong_result_created =
+            Compare_Expected_Drawing_With_Created_Drawing (expected_drawing, result_drawing,
+                    COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]),
+                    TEXT_BASED_ALKANE_DRAWING_DIM_1, TEXT_BASED_ALKANE_DRAWING_DIM_2);
 
     // War der Test aller Zeichenketten erfolgreich ?
-    ASSERT_EQUALS (false, wrong_result_occured);
+    ASSERT_EQUALS (false, wrong_result_created);
 
     Delete_Text_Based_Alkane_Drawing (result_drawing);
     result_drawing = NULL;
@@ -1227,42 +1210,13 @@ extern void TEST_Text_Based_Alkane_Drawing_2 (void)
 
     // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
     // das Ergebnis richtig
-    _Bool wrong_result_occured = false;
-    size_t first_wrong_result_string = SIZE_MAX;
-    size_t first_non_empty_string = 0;
-    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2; ++ i)
-    {
-        // Leere Zeilen werden ignoriert
-        if (strlen (result_drawing->drawing [i]) != 0)
-        {
-            if ((strncmp (expected_drawing [first_non_empty_string], result_drawing->drawing [i],
-                    strlen (expected_drawing [first_non_empty_string])) != 0))
-            {
-                wrong_result_occured = true;
-                break;
-            }
-            ++ first_non_empty_string;
-        }
-        else if (strlen (expected_drawing [first_non_empty_string]) != strlen (result_drawing->drawing [i]))
-        {
-            wrong_result_occured = true;
-            first_wrong_result_string = i;
-            break;
-        }
-    }
-
-    // Ausgabe der erwarteten Loesung und der erzeugten Loesung
-    // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
-    puts ("Expected result:");
-    Print_2D_String_Array(expected_drawing, COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]));
-    printf ("Error in drawing line: %zu\n\n", first_wrong_result_string);
-
-    puts ("Created:");
-    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (result_drawing);
-    fflush (stdout);
+    const _Bool wrong_result_created =
+            Compare_Expected_Drawing_With_Created_Drawing (expected_drawing, result_drawing,
+                    COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]),
+                    TEXT_BASED_ALKANE_DRAWING_DIM_1, TEXT_BASED_ALKANE_DRAWING_DIM_2);
 
     // War der Test aller Zeichenketten erfolgreich ?
-    ASSERT_EQUALS (false, wrong_result_occured);
+    ASSERT_EQUALS (false, wrong_result_created);
 
     Delete_Text_Based_Alkane_Drawing (result_drawing);
     result_drawing = NULL;
@@ -1741,6 +1695,76 @@ Execute_Creation_Test_With_Expected_Results
     ASSERT_EQUALS(0, count_unused_expected_results);
 
     return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Erwartete textbasierte Zeichnung mit einer erzeugten Zeichnung vergleichen.
+ */
+static _Bool
+Compare_Expected_Drawing_With_Created_Drawing
+(
+        const char* const* restrict expected_drawing,                               // Erwartete textbasierte Zeichnung
+        const struct Text_Based_Alkane_Drawing* const restrict created_drawing,     // Erzeugte textbasierte Zeichnung
+        const size_t expected_drawing_dim_1,                                        // 1. Dimension erwartetes Ergebnis
+        const size_t expected_drawing_dim_2,                                        // 2. Dimension erwartetes Ergebnis
+        const size_t created_drawing_dim_1,                                         // 1. Dimension erzeugtes Ergebnis
+        const size_t created_drawing_dim_2                                          // 2. Dimension erzeugtes Ergebnis
+)
+{
+    // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
+    // das Ergebnis richtig
+    _Bool wrong_result_occured                  = false;
+    size_t first_wrong_result_string            = SIZE_MAX;
+    size_t first_wrong_result_char_in_string    = SIZE_MAX;
+    // Offset, damit beim Text_Based_Alkane_Drawing die richtige Zeile verwendet wird
+    size_t line_index_offset                    = SIZE_MAX;
+
+    for (size_t i = 0; i < created_drawing_dim_1; ++ i)
+    {
+        // Leere Zeilen werden ignoriert
+        if (Contain_String_Only_Null_Symbols(created_drawing->drawing [i], created_drawing_dim_2)) { continue; }
+
+        if (line_index_offset == SIZE_MAX)
+        {
+            line_index_offset = i;
+        }
+        // Zeichen fuer Zeichen das erwartete Ergebnis mit dem erzeugten Ergebnis vergleichen
+        for (size_t i2 = 0; i2 < expected_drawing_dim_1; ++ i2)
+        {
+            for (size_t i3 = 0; i3 < expected_drawing_dim_2; ++ i3)
+            {
+                if (expected_drawing [i2][i3] != created_drawing->drawing [i2 + line_index_offset][i3])
+                {
+                    first_wrong_result_string           = i2;
+                    first_wrong_result_char_in_string   = i3;
+                    wrong_result_occured                = true;
+                    break;
+                }
+            }
+            if (wrong_result_occured /* == true */) { break; }
+        }
+        if (wrong_result_occured /* == true */) { break; }
+    }
+
+    // Ausgabe der erwarteten Loesung und der erzeugten Loesung
+    // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
+    puts ("Expected result:");
+    Print_2D_String_Array(expected_drawing, expected_drawing_dim_1, expected_drawing_dim_2);
+    if (wrong_result_occured /* == true */)
+    {
+        printf ("Error in (%zu, %zu). ", first_wrong_result_string + 1, first_wrong_result_char_in_string + 1);
+        printf ("Expected '%c'; Got '%c'\n\n",
+                expected_drawing [first_wrong_result_string][first_wrong_result_char_in_string],
+                created_drawing->drawing [first_wrong_result_string + line_index_offset][first_wrong_result_char_in_string]);
+    }
+
+    puts ("Created:");
+    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (created_drawing);
+    fflush (stdout);
+
+    return wrong_result_occured;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
