@@ -22,6 +22,8 @@
  */
 enum Direction
 {
+    N_A,
+
     N, E, S, W
 };
 
@@ -44,6 +46,16 @@ static uint_fast8_t Get_Length_From_Alkyl_Token
 );
 
 /**
+ * Maximale Verschachtelungstiefe im angegebenen Intervall bestimmen.
+ */
+static uint_fast8_t Determine_Deepest_Nesting_In_Token_Partition
+(
+        const enum Token_Type* const token_types,
+        const uint_fast8_t start,
+        const uint_fast8_t end
+);
+
+/**
  * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben.
  */
 static uint_fast8_t Count_Branch_Tokens_In_Partition
@@ -51,6 +63,62 @@ static uint_fast8_t Count_Branch_Tokens_In_Partition
         const enum Token_Type* const token_types,
         const uint_fast8_t start,
         const uint_fast8_t end
+);
+
+/**
+ * Die Startposition fuer Zeichenvorgaenge bestimmen.
+ */
+static void Calculate_Start_Position
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const long int number_token_as_int,
+        const uint_fast8_t deepest_nesting,
+        const enum Direction last_direction,
+        const int_fast32_t last_pos_x,
+        const int_fast32_t last_pos_y,
+        int_fast32_t* out_pos_x,
+        int_fast32_t* out_pos_y
+);
+
+/**
+ * Die Richtung der naechsten Zeichnung bestimmen.
+ */
+static enum Direction Calculate_Direction
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const enum Direction last_direction,
+        const int_fast32_t pos_x,
+        const int_fast32_t pos_y
+);
+
+static void Start_Drawing_Branch
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const long int position,
+        const uint_fast8_t current_nesting_depth,
+        const uint_fast8_t deepest_nesting,
+        const uint_fast8_t alkyl_length,
+
+        enum Direction* const last_direction,
+        int_fast32_t* const last_first_drawn_c_atom_x_pos,
+        int_fast32_t* const last_first_drawn_c_atom_y_pos
+);
+
+/**
+ * Eine Verschachtelungstiefe tiefer gehen und die Aeste zeichnen.
+ */
+static void Go_Deeper_Drawing
+(
+        const struct Alkane_Lexer* const lexer_data,
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const uint_fast8_t current_token,
+        const uint_fast8_t current_nesting_depth,
+        const uint_fast8_t deepest_nesting,
+        const uint_fast8_t end_token,
+
+        enum Direction* const last_direction,
+        int_fast32_t* const last_first_drawn_c_atom_x_pos,
+        int_fast32_t* const last_first_drawn_c_atom_y_pos
 );
 
 /**
@@ -187,24 +255,8 @@ Create_Text_Based_Alkane_Drawing
     }
 
     // => Schritt 3: Ermittlung der tiefsten Verschachtelung
-    uint_fast8_t deepest_nesting = 0;
-    uint_fast8_t branch_opened_bracket = 0;
-    for (uint_fast8_t i = 0; i < lexer_data.next_free_token; ++ i)
-    {
-        if (lexer_data.token_type [i] == TOKEN_TYPE_OPEN_BRACKET)
-        {
-            ++ branch_opened_bracket;
-            // Ist die aktuelle Tiefe der Verschachtelung groesser als die bisher bekannte ?
-            if (branch_opened_bracket > deepest_nesting)
-            {
-                deepest_nesting = branch_opened_bracket;
-            }
-        }
-        else if (lexer_data.token_type [i] == TOKEN_TYPE_CLOSE_BRACKET)
-        {
-            -- branch_opened_bracket;
-        }
-    }
+    const uint_fast8_t deepest_nesting =
+            Determine_Deepest_Nesting_In_Token_Partition (lexer_data.token_type, 0, lexer_data.next_free_token);
 
     // => Schritt 4: Hauptkette zeichnen
     char* const drawing_middle_line = drawing->drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2];
@@ -236,7 +288,7 @@ Create_Text_Based_Alkane_Drawing
     //  auftritt und man sich gleichzeitig auf oberster Ebene befindet
     //  2.
     //  Ein Ast beendet (alle) seine Verschachtelungen. (Z.B.: ...(2-MethylEthyl)...
-    //  oder ...(2-(3-MethylEthyl)Propyl)...
+    //  oder ...5-(2-(2,2-DiMethylEthyl)Propyl)...
 
     // Die Indexe sind wiefolgt zu verstehen: Hinter dem X.ten Token beginnt die naechste Nebenkette auf oberster Ebene
     uint_fast8_t branch_end [MAX_NUMBER_OF_C_ATOMS];
@@ -269,17 +321,16 @@ Create_Text_Based_Alkane_Drawing
         }
     }
 
-
-    current_nesting_depth = 0;
     for (uint_fast8_t i = 0; i < next_free_branch_end; ++ i)
     {
         // "+ 2", da sowohl das Alkyl-Token als auch das Minus nach dem Alkyl-Token ignoriert werden muss
         uint_fast8_t i2 = (i == 0) ? 0 : (uint_fast8_t) (branch_end [i - 1] + 2);
 
+        // Wenn der Ast keine Verschachtelungen beinhaltet und nur eine gerade Kette ist
         if (Count_Branch_Tokens_In_Partition (lexer_data.token_type, i2, branch_end [i]) == 0)
         {
             const uint_fast8_t alkyl_length =
-                    Get_Length_From_Alkyl_Token(lexer_data.result_tokens [branch_end [i]]);
+                    Get_Length_From_Alkyl_Token (lexer_data.result_tokens [branch_end [i]]);
 
             while (i2 < branch_end [i] &&
                     (lexer_data.token_type [i2] == TOKEN_TYPE_NUMBER ||
@@ -290,20 +341,10 @@ Create_Text_Based_Alkane_Drawing
                     long int position = 0;
                     str2int (&position, lexer_data.result_tokens [i2], 10);
 
-                    // Kette zeichnen
-                    const int_fast32_t pos_x = TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2;
-                    int_fast32_t pos_y = 0;
-                    if (position > 0)
-                    {
-                        // + 2 fuer die Leerzeichen zwischen dem Minuszeichen !
-                        pos_y = position + ((position - 1) * ((deepest_nesting == 0) ? (1 + 2) : (deepest_nesting + 2)));
-                        pos_y -= 1; // 0-Indexierung
-                    }
-
-                    // Wenn unterhalb des C-Atoms noch Platz ist -> verwenden (S)
-                    // Ansonsten ueberhalb des C-Atoms den Platz verwenden (N)
-                    const enum Direction draw_direction = (drawing->drawing [pos_x + 1][pos_y] == '\0'
-                            || drawing->drawing [pos_x + 1][pos_y] == ' ') ? S : N;
+                    int_fast32_t pos_x = -1;
+                    int_fast32_t pos_y = -1;
+                    Calculate_Start_Position (drawing, position, deepest_nesting, N_A, -1, -1, &pos_x, &pos_y);
+                    const enum Direction draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
 
                     // Ast zeichnen
                     Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length,
@@ -311,6 +352,51 @@ Create_Text_Based_Alkane_Drawing
                 }
 
                 ++ i2;
+            }
+        }
+        // Wenn der Ast Verschachtelungen beinhaltet und nicht komplett gerade ist
+        else
+        {
+            const uint_fast8_t max_nesting_depth_in_branch =
+                    Determine_Deepest_Nesting_In_Token_Partition (lexer_data.token_type, i2, branch_end [i]);
+            current_nesting_depth                       = 0;
+            enum Direction last_draw_direction          = N_A;
+            int_fast32_t last_first_drawn_c_atom_x_pos  = -1;
+            int_fast32_t last_first_drawn_c_atom_y_pos  = -1;
+
+            for (uint_fast8_t current_token = i2; current_token < branch_end [i]; ++ current_token)
+            {
+                if (lexer_data.token_type [current_token] == TOKEN_TYPE_OPEN_BRACKET)
+                {
+                    ++ current_nesting_depth;
+                    Go_Deeper_Drawing (&lexer_data, drawing, current_token, current_nesting_depth, deepest_nesting,
+                            branch_end [i],
+                            &last_draw_direction, &last_first_drawn_c_atom_x_pos, &last_first_drawn_c_atom_y_pos);
+
+                    // Innerster Ast gefunden ?
+                    if (current_nesting_depth == max_nesting_depth_in_branch)
+                    {
+                        const uint_fast8_t alkyl_length =
+                                Get_Length_From_Alkyl_Token (lexer_data.result_tokens [branch_end [i] - 2]);
+
+                        for (uint_fast8_t end = current_token; end < branch_end [i]; ++ end)
+                        {
+                            if (lexer_data.token_type [end] == TOKEN_TYPE_NUMBER)
+                            {
+                                long int position = 0;
+                                str2int (&position, lexer_data.result_tokens [end], 10);
+
+                                Start_Drawing_Branch
+                                (
+                                        drawing, position, current_nesting_depth, deepest_nesting, alkyl_length,
+                                        &last_draw_direction, &last_first_drawn_c_atom_x_pos,
+                                        &last_first_drawn_c_atom_y_pos
+                                );
+                            }
+
+                        }
+                    }
+                }
             }
         }
     }
@@ -480,6 +566,40 @@ static uint_fast8_t Get_Length_From_Alkyl_Token
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Maximale Verschachtelungstiefe im angegebenen Intervall bestimmen.
+ */
+static uint_fast8_t Determine_Deepest_Nesting_In_Token_Partition
+(
+        const enum Token_Type* const token_types,
+        const uint_fast8_t start,
+        const uint_fast8_t end
+)
+{
+    uint_fast8_t deepest_nesting = 0;
+    uint_fast8_t branch_opened_bracket = 0;
+    for (uint_fast8_t i = start; i < end; ++ i)
+    {
+        if (token_types [i] == TOKEN_TYPE_OPEN_BRACKET)
+        {
+            ++ branch_opened_bracket;
+            // Ist die aktuelle Tiefe der Verschachtelung groesser als die bisher bekannte ?
+            if (branch_opened_bracket > deepest_nesting)
+            {
+                deepest_nesting = branch_opened_bracket;
+            }
+        }
+        else if (token_types [i] == TOKEN_TYPE_CLOSE_BRACKET)
+        {
+            -- branch_opened_bracket;
+        }
+    }
+
+    return deepest_nesting;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben.
  */
 static uint_fast8_t Count_Branch_Tokens_In_Partition
@@ -500,6 +620,243 @@ static uint_fast8_t Count_Branch_Tokens_In_Partition
     }
 
     return count_branch_tokens;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Die Startposition fuer Zeichenvorgaenge bestimmen.
+ */
+static void Calculate_Start_Position
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const long int number_token_as_int,
+        const uint_fast8_t deepest_nesting,
+        const enum Direction last_direction,
+        const int_fast32_t last_pos_x,
+        const int_fast32_t last_pos_y,
+        int_fast32_t* out_pos_x,
+        int_fast32_t* out_pos_y
+)
+{
+    // Wenn es bisher noch keine Zeichnung - ausser der Hauptkette - gab
+    if (last_direction == N_A && last_pos_x == -1 && last_pos_y == -1)
+    {
+        *out_pos_x = TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2;
+        *out_pos_y = number_token_as_int;
+        // + 2 fuer die Leerzeichen zwischen dem Minuszeichen !
+        *out_pos_y += (number_token_as_int - 1) * ((deepest_nesting == 0) ? (1 + 2) : (deepest_nesting + 2));
+        *out_pos_y -= 1; // 0-Indexierung
+    }
+    else
+    {
+        // Anhand der Positionsangabe, die sich auf die Unterkette bezieht, das C-Atom, wo das aktuelle
+        // Fragment angebracht wird, ermitteln
+        *out_pos_x = last_pos_x;
+        *out_pos_y = last_pos_y;
+        long int viewed_c_atom = 0;
+
+        while (viewed_c_atom != number_token_as_int)
+        {
+            int_fast8_t pos_x_change = 0;
+            int_fast8_t pos_y_change = 0;
+            switch (last_direction)
+            {
+            case N:
+                pos_x_change = -1;
+                break;
+            case E:
+                pos_y_change = +1;
+                break;
+            case S:
+                pos_x_change = +1;
+                break;
+            case W:
+                pos_y_change = -1;
+                break;
+            case N_A:
+                ASSERT_MSG(false, "Default direction (N_A) used in switch case !")
+                break;
+            default:
+                // Die Ausfuehrung des Default-Paths ist hier immer ein Fehler !
+                ASSERT_MSG(false, "Switch-Case default path executed !")
+            }
+            *out_pos_x += pos_x_change;
+            *out_pos_y += pos_y_change;
+
+            if (drawing->drawing [*out_pos_x][*out_pos_y] == 'C')
+            {
+                ++ viewed_c_atom;
+            }
+        }
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Die Richtung der naechsten Zeichnung bestimmen.
+ */
+static enum Direction Calculate_Direction
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const enum Direction last_direction,
+        const int_fast32_t pos_x,
+        const int_fast32_t pos_y
+)
+{
+    enum Direction result = N_A;
+
+    if (last_direction == N_A)
+    {
+        // Wenn unterhalb des C-Atoms noch Platz ist -> verwenden (S)
+        // Ansonsten oberhalb des C-Atoms den Platz verwenden (N)
+        result = (drawing->drawing [pos_x + 1][pos_y] == '\0' || drawing->drawing [pos_x + 1][pos_y] == ' ') ? S : N;
+    }
+    else
+    {
+        switch (last_direction)
+        {
+        case N:
+        case S:
+            result = (drawing->drawing [pos_x][pos_y + 1] == ' ') ? E : W;
+            break;
+        case E:
+        case W:
+            result = (drawing->drawing [pos_x + 1][pos_y + 1] == ' ') ? S : N;
+            break;
+        case N_A:
+            ASSERT_MSG(false, "Default direction (N_A) used in switch case !")
+            break;
+        default:
+            // Die Ausfuehrung des Default-Paths ist hier immer ein Fehler !
+            ASSERT_MSG(false, "Switch-Case default path executed !")
+        }
+    }
+
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Start_Drawing_Branch
+(
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const long int position,
+        const uint_fast8_t current_nesting_depth,
+        const uint_fast8_t deepest_nesting,
+        const uint_fast8_t alkyl_length,
+
+        enum Direction* const last_direction,
+        int_fast32_t* const last_first_drawn_c_atom_x_pos,
+        int_fast32_t* const last_first_drawn_c_atom_y_pos
+)
+{
+    const uint_fast8_t distance_between_c_atoms = (uint_fast8_t) (deepest_nesting - current_nesting_depth + 1);
+
+    int_fast32_t pos_x              = -1;
+    int_fast32_t pos_y              = -1;
+    enum Direction draw_direction   = N_A;
+
+    // Uebergabezeiger werden das erste Mal verwendet
+    if (*last_direction == N_A)
+    {
+        Calculate_Start_Position (drawing, position, deepest_nesting, N_A, -1, -1, &pos_x, &pos_y);
+        draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
+    }
+    else
+    {
+        Calculate_Start_Position (drawing, position, deepest_nesting, *last_direction, *last_first_drawn_c_atom_x_pos,
+                *last_first_drawn_c_atom_y_pos, &pos_x, &pos_y);
+        draw_direction = Calculate_Direction (drawing, *last_direction, pos_x, pos_y);
+    }
+
+    Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length, distance_between_c_atoms);
+
+    *last_direction = draw_direction;
+    *last_first_drawn_c_atom_x_pos = pos_x;
+    *last_first_drawn_c_atom_y_pos = pos_y;
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Eine Verschachtelungstiefe tiefer gehen und die Aeste zeichnen.
+ */
+static void Go_Deeper_Drawing
+(
+        const struct Alkane_Lexer* const lexer_data,
+        struct Text_Based_Alkane_Drawing* const drawing,
+        const uint_fast8_t current_token,
+        const uint_fast8_t current_nesting_depth,
+        const uint_fast8_t deepest_nesting,
+        const uint_fast8_t end_token,
+
+        enum Direction* const last_direction,
+        int_fast32_t* const last_first_drawn_c_atom_x_pos,
+        int_fast32_t* const last_first_drawn_c_atom_y_pos
+)
+{
+    uint_fast8_t close_brackets_found = 0;
+
+    for (uint_fast8_t current_token_reversed = (uint_fast8_t) (end_token - 1); current_token_reversed >= current_token;
+            ++ current_token_reversed)
+    {
+        if (lexer_data->token_type [current_token_reversed] == TOKEN_TYPE_CLOSE_BRACKET)
+        {
+            ++ close_brackets_found;
+
+            // Passendes Alkyl-Token gefunden ?
+            if (current_nesting_depth == close_brackets_found)
+            {
+                // "- 1", da das passende Alkyl-Token immer vor der zugehoerigen schliessenden Klammer
+                // ist
+                const uint_fast8_t alkyl_length =
+                        Get_Length_From_Alkyl_Token (lexer_data->result_tokens [current_token_reversed - 1]);
+                long int position = 0;
+                str2int (&position, lexer_data->result_tokens [current_token - 2], 10);
+
+                Start_Drawing_Branch
+                (
+                        drawing, position, current_nesting_depth, deepest_nesting, alkyl_length,
+                        last_direction, last_first_drawn_c_atom_x_pos, last_first_drawn_c_atom_y_pos
+                );
+
+                /*const uint_fast8_t distance_between_c_atoms = deepest_nesting - current_nesting_depth + 1;
+
+                long int position               = 0;
+                int_fast32_t pos_x              = -1;
+                int_fast32_t pos_y              = -1;
+                enum Direction draw_direction   = N_A;
+                str2int (&position, lexer_data->result_tokens [current_token - 2], 10);
+
+                // Uebergabezeiger werden das erste Mal verwendet
+                if (*last_direction == N_A)
+                {
+                    Calculate_Start_Position (drawing, position, deepest_nesting, N_A, -1, -1, &pos_x, &pos_y);
+                    draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
+                }
+                else
+                {
+                    Calculate_Start_Position (drawing, position, deepest_nesting, *last_direction, *last_first_drawn_c_atom_x_pos,
+                            *last_first_drawn_c_atom_y_pos, &pos_x, &pos_y);
+                    draw_direction = Calculate_Direction (drawing, *last_direction, pos_x, pos_y);
+                }
+
+                Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length, distance_between_c_atoms);
+
+                *last_direction = draw_direction;
+                *last_first_drawn_c_atom_x_pos = pos_x;
+                *last_first_drawn_c_atom_y_pos = pos_y;*/
+            }
+        }
+    }
+
+    return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -538,6 +895,9 @@ static void Draw_Branch
     case W:
         pos_y_change = -1;
         draw_char = '-';
+        break;
+    case N_A:
+        ASSERT_MSG(false, "Default direction (N_A) used in switch case !")
         break;
     default:
         // Die Ausfuehrung des Default-Paths ist hier immer ein Fehler !
