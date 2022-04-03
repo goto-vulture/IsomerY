@@ -254,12 +254,15 @@ Create_Text_Based_Alkane_Drawing
             sizeof (struct Text_Based_Alkane_Drawing));
 
     memcpy (drawing->iupac_name, iupac_name, name_length);
-
     drawing->state = TEXT_BASED_ALKANE_DRAWING_INITIALIZED_WITH_DATA;
 
+
+    // ===== ===== ===== BEGINN Schritt 1: Name zerlegen ===== ===== =====
     // => Schritt 1: Name zerlegen
     const struct Alkane_Lexer lexer_data = Create_Alkane_Tokens (iupac_name, name_length);
+    // ===== ===== ===== ENDE Schritt 1: Name zerlegen ===== ===== =====
 
+    // ===== ===== ===== BEGINN Schritt 2: Laenge der Hauptkette bestimmen ===== ===== =====
     // => Schritt 2: Laenge der Hauptkette bestimmen
     uint_fast8_t main_chain_length = 0;
 
@@ -271,11 +274,15 @@ Create_Text_Based_Alkane_Drawing
             break;
         }
     }
+    // ===== ===== ===== ENDE Schritt 2: Laenge der Hauptkette bestimmen ===== ===== =====
 
+    // ===== ===== ===== BEGINN Schritt 3: Ermittlung der tiefsten Verschachtelung ===== ===== =====
     // => Schritt 3: Ermittlung der tiefsten Verschachtelung
     const uint_fast8_t deepest_nesting =
             Determine_Deepest_Nesting_In_Token_Partition (lexer_data.token_type, 0, lexer_data.next_free_token);
+    // ===== ===== ===== ENDE Schritt 3: Ermittlung der tiefsten Verschachtelung ===== ===== =====
 
+    // ===== ===== ===== BEGINN Schritt 4: Hauptkette zeichnen ===== ===== =====
     // => Schritt 4: Hauptkette zeichnen
     char* const drawing_middle_line = drawing->drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2];
     size_t middle_line_size_left = TEXT_BASED_ALKANE_DRAWING_DIM_2 - 1;
@@ -296,7 +303,9 @@ Create_Text_Based_Alkane_Drawing
             middle_line_size_left -= strlen (" ");
         }
     }
+    // ===== ===== ===== ENDE Schritt 4: Hauptkette zeichnen ===== ===== =====
 
+    // ===== ===== ===== BEGINN Schritt 5: Nebenketten zeichnen ===== ===== =====
     // => Schritt 5: Nebenketten zeichnen
     // Hier gibt es grundsaetzlich zwei verschiedene Situationen, die betrachtet werden muessen. Zu Beginn muessen alle
     // Nebenketten auf oberster Ebene ermittelt werden
@@ -381,6 +390,7 @@ Create_Text_Based_Alkane_Drawing
             current_nesting_depth                       = 0;
             struct Last_Data last_data = Create_Empty_Last_Data ();
 
+            // ===== BEGINN Alle Tokens des aktuellen Asts durchlaufen =====
             for (uint_fast8_t current_token = i2; current_token < branch_end [i]; ++ current_token)
             {
                 if (lexer_data.token_type [current_token] == TOKEN_TYPE_OPEN_BRACKET)
@@ -392,9 +402,12 @@ Create_Text_Based_Alkane_Drawing
                     // Innerster Ast gefunden ?
                     if (current_nesting_depth == max_nesting_depth_in_branch)
                     {
+                        // "- 2", um an das Alkyl-Token zu kommen
+                        // "... Ethyl)Decan" Von "Decan" auf "Ethyl" wechseln
                         const uint_fast8_t alkyl_length =
                                 Get_Length_From_Alkyl_Token (lexer_data.result_tokens [branch_end [i] - 2]);
 
+                        // Schleife verwenden, da die innerste Abzweigung durchaus aus mehreren Fragmenten bestehen kann
                         for (uint_fast8_t end = current_token; end < branch_end [i]; ++ end)
                         {
                             if (lexer_data.token_type [end] == TOKEN_TYPE_NUMBER)
@@ -408,13 +421,14 @@ Create_Text_Based_Alkane_Drawing
                                         &last_data
                                 );
                             }
-
                         }
                     }
                 }
             }
+            // ===== ENDE Alle Tokens des aktuellen Asts durchlaufen =====
         }
     }
+    // ===== ===== ===== ENDE Schritt 5: Nebenketten zeichnen ===== ===== =====
 
     Adjust_Drawing_For_Terminal (drawing);
 
