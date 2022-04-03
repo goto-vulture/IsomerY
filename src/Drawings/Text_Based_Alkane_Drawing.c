@@ -395,16 +395,12 @@ Create_Text_Based_Alkane_Drawing
                 {
                     long int position = 0;
                     str2int (&position, lexer_data.result_tokens [i2], 10);
-                    const struct Last_Data empty_last_data = Create_Empty_Last_Data ();
+                    struct Last_Data empty_last_data = Create_Empty_Last_Data ();
 
-                    int_fast32_t pos_x = -1;
-                    int_fast32_t pos_y = -1;
-                    Calculate_Start_Position (drawing, position, deepest_nesting, &pos_x, &pos_y, &empty_last_data);
-                    const enum Direction draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
-
-                    // Ast zeichnen
-                    Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length,
-                            (deepest_nesting == 0) ? 1 : deepest_nesting);
+                    Start_Drawing_Branch
+                    (
+                            drawing, position, current_nesting_depth, deepest_nesting, alkyl_length, &empty_last_data
+                    );
                 }
 
                 ++ i2;
@@ -899,33 +895,6 @@ Go_Deeper_Drawing
                 (
                         drawing, position, current_nesting_depth, deepest_nesting, alkyl_length, last_data
                 );
-
-                /*const uint_fast8_t distance_between_c_atoms = deepest_nesting - current_nesting_depth + 1;
-
-                long int position               = 0;
-                int_fast32_t pos_x              = -1;
-                int_fast32_t pos_y              = -1;
-                enum Direction draw_direction   = N_A;
-                str2int (&position, lexer_data->result_tokens [current_token - 2], 10);
-
-                // Uebergabezeiger werden das erste Mal verwendet
-                if (*last_direction == N_A)
-                {
-                    Calculate_Start_Position (drawing, position, deepest_nesting, N_A, -1, -1, &pos_x, &pos_y);
-                    draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
-                }
-                else
-                {
-                    Calculate_Start_Position (drawing, position, deepest_nesting, *last_direction, *last_first_drawn_c_atom_x_pos,
-                            *last_first_drawn_c_atom_y_pos, &pos_x, &pos_y);
-                    draw_direction = Calculate_Direction (drawing, *last_direction, pos_x, pos_y);
-                }
-
-                Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length, distance_between_c_atoms);
-
-                *last_direction = draw_direction;
-                *last_first_drawn_c_atom_x_pos = pos_x;
-                *last_first_drawn_c_atom_y_pos = pos_y;*/
             }
         }
     }
