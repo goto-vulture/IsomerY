@@ -1101,6 +1101,9 @@ Adjust_Drawing_For_Terminal
     for (size_t i = 0; i < number_of_lines; ++ i)
     {
         memset (&drawing->drawing [i][longest_line], '\0', line_length - longest_line);
+
+        // Garantierte Nullterminierung jeder Zeichenkette
+        drawing->drawing [i][line_length - 1] = '\0';
     }
 
     return;
