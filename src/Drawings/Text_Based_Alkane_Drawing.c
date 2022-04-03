@@ -27,6 +27,29 @@ enum Direction
     N, E, S, W
 };
 
+/**
+ * Position und Zeichenrichtung, die beim letzten Zeichenvorgang verwendet wurden.
+ */
+struct Last_Data
+{
+    enum Direction last_direction;
+    int_fast32_t last_first_drawn_c_atom_x_pos;
+    int_fast32_t last_first_drawn_c_atom_y_pos;
+};
+
+static struct Last_Data Create_Empty_Last_Data (void);
+static struct Last_Data Create_Empty_Last_Data (void)
+{
+    const struct Last_Data empty_last_data =
+    {
+            .last_direction = N_A,
+            .last_first_drawn_c_atom_x_pos = -1,
+            .last_first_drawn_c_atom_y_pos = -1
+    };
+
+    return empty_last_data;
+}
+
 
 
 /**
@@ -73,11 +96,10 @@ static void Calculate_Start_Position
         struct Text_Based_Alkane_Drawing* const drawing,
         const long int number_token_as_int,
         const uint_fast8_t deepest_nesting,
-        const enum Direction last_direction,
-        const int_fast32_t last_pos_x,
-        const int_fast32_t last_pos_y,
         int_fast32_t* out_pos_x,
-        int_fast32_t* out_pos_y
+        int_fast32_t* out_pos_y,
+
+        const struct Last_Data* const last_data
 );
 
 /**
@@ -99,9 +121,7 @@ static void Start_Drawing_Branch
         const uint_fast8_t deepest_nesting,
         const uint_fast8_t alkyl_length,
 
-        enum Direction* const last_direction,
-        int_fast32_t* const last_first_drawn_c_atom_x_pos,
-        int_fast32_t* const last_first_drawn_c_atom_y_pos
+        struct Last_Data* const last_data
 );
 
 /**
@@ -116,9 +136,7 @@ static void Go_Deeper_Drawing
         const uint_fast8_t deepest_nesting,
         const uint_fast8_t end_token,
 
-        enum Direction* const last_direction,
-        int_fast32_t* const last_first_drawn_c_atom_x_pos,
-        int_fast32_t* const last_first_drawn_c_atom_y_pos
+        struct Last_Data* const last_data
 );
 
 /**
@@ -340,10 +358,11 @@ Create_Text_Based_Alkane_Drawing
                 {
                     long int position = 0;
                     str2int (&position, lexer_data.result_tokens [i2], 10);
+                    const struct Last_Data empty_last_data = Create_Empty_Last_Data ();
 
                     int_fast32_t pos_x = -1;
                     int_fast32_t pos_y = -1;
-                    Calculate_Start_Position (drawing, position, deepest_nesting, N_A, -1, -1, &pos_x, &pos_y);
+                    Calculate_Start_Position (drawing, position, deepest_nesting, &pos_x, &pos_y, &empty_last_data);
                     const enum Direction draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
 
                     // Ast zeichnen
@@ -360,9 +379,7 @@ Create_Text_Based_Alkane_Drawing
             const uint_fast8_t max_nesting_depth_in_branch =
                     Determine_Deepest_Nesting_In_Token_Partition (lexer_data.token_type, i2, branch_end [i]);
             current_nesting_depth                       = 0;
-            enum Direction last_draw_direction          = N_A;
-            int_fast32_t last_first_drawn_c_atom_x_pos  = -1;
-            int_fast32_t last_first_drawn_c_atom_y_pos  = -1;
+            struct Last_Data last_data = Create_Empty_Last_Data ();
 
             for (uint_fast8_t current_token = i2; current_token < branch_end [i]; ++ current_token)
             {
@@ -370,8 +387,7 @@ Create_Text_Based_Alkane_Drawing
                 {
                     ++ current_nesting_depth;
                     Go_Deeper_Drawing (&lexer_data, drawing, current_token, current_nesting_depth, deepest_nesting,
-                            branch_end [i],
-                            &last_draw_direction, &last_first_drawn_c_atom_x_pos, &last_first_drawn_c_atom_y_pos);
+                            branch_end [i], &last_data);
 
                     // Innerster Ast gefunden ?
                     if (current_nesting_depth == max_nesting_depth_in_branch)
@@ -389,8 +405,7 @@ Create_Text_Based_Alkane_Drawing
                                 Start_Drawing_Branch
                                 (
                                         drawing, position, current_nesting_depth, deepest_nesting, alkyl_length,
-                                        &last_draw_direction, &last_first_drawn_c_atom_x_pos,
-                                        &last_first_drawn_c_atom_y_pos
+                                        &last_data
                                 );
                             }
 
@@ -632,15 +647,15 @@ static void Calculate_Start_Position
         struct Text_Based_Alkane_Drawing* const drawing,
         const long int number_token_as_int,
         const uint_fast8_t deepest_nesting,
-        const enum Direction last_direction,
-        const int_fast32_t last_pos_x,
-        const int_fast32_t last_pos_y,
         int_fast32_t* out_pos_x,
-        int_fast32_t* out_pos_y
+        int_fast32_t* out_pos_y,
+
+        const struct Last_Data* const last_data
 )
 {
     // Wenn es bisher noch keine Zeichnung - ausser der Hauptkette - gab
-    if (last_direction == N_A && last_pos_x == -1 && last_pos_y == -1)
+    if (last_data->last_direction == N_A && last_data->last_first_drawn_c_atom_x_pos == -1 &&
+            last_data->last_first_drawn_c_atom_y_pos == -1)
     {
         *out_pos_x = TEXT_BASED_ALKANE_DRAWING_DIM_1 / 2;
         *out_pos_y = number_token_as_int;
@@ -652,15 +667,15 @@ static void Calculate_Start_Position
     {
         // Anhand der Positionsangabe, die sich auf die Unterkette bezieht, das C-Atom, wo das aktuelle
         // Fragment angebracht wird, ermitteln
-        *out_pos_x = last_pos_x;
-        *out_pos_y = last_pos_y;
+        *out_pos_x = last_data->last_first_drawn_c_atom_x_pos;
+        *out_pos_y = last_data->last_first_drawn_c_atom_y_pos;
         long int viewed_c_atom = 0;
 
         while (viewed_c_atom != number_token_as_int)
         {
             int_fast8_t pos_x_change = 0;
             int_fast8_t pos_y_change = 0;
-            switch (last_direction)
+            switch (last_data->last_direction)
             {
             case N:
                 pos_x_change = -1;
@@ -749,9 +764,7 @@ static void Start_Drawing_Branch
         const uint_fast8_t deepest_nesting,
         const uint_fast8_t alkyl_length,
 
-        enum Direction* const last_direction,
-        int_fast32_t* const last_first_drawn_c_atom_x_pos,
-        int_fast32_t* const last_first_drawn_c_atom_y_pos
+        struct Last_Data* const last_data
 )
 {
     const uint_fast8_t distance_between_c_atoms = (uint_fast8_t) (deepest_nesting - current_nesting_depth + 1);
@@ -761,23 +774,24 @@ static void Start_Drawing_Branch
     enum Direction draw_direction   = N_A;
 
     // Uebergabezeiger werden das erste Mal verwendet
-    if (*last_direction == N_A)
+    if (last_data->last_direction == N_A)
     {
-        Calculate_Start_Position (drawing, position, deepest_nesting, N_A, -1, -1, &pos_x, &pos_y);
+        const struct Last_Data empty_last_data = Create_Empty_Last_Data ();
+
+        Calculate_Start_Position (drawing, position, deepest_nesting, &pos_x, &pos_y, &empty_last_data);
         draw_direction = Calculate_Direction (drawing, N_A, pos_x, pos_y);
     }
     else
     {
-        Calculate_Start_Position (drawing, position, deepest_nesting, *last_direction, *last_first_drawn_c_atom_x_pos,
-                *last_first_drawn_c_atom_y_pos, &pos_x, &pos_y);
-        draw_direction = Calculate_Direction (drawing, *last_direction, pos_x, pos_y);
+        Calculate_Start_Position (drawing, position, deepest_nesting, &pos_x, &pos_y, last_data);
+        draw_direction = Calculate_Direction (drawing, last_data->last_direction, pos_x, pos_y);
     }
 
     Draw_Branch (drawing, pos_x, pos_y, draw_direction, alkyl_length, distance_between_c_atoms);
 
-    *last_direction = draw_direction;
-    *last_first_drawn_c_atom_x_pos = pos_x;
-    *last_first_drawn_c_atom_y_pos = pos_y;
+    last_data->last_direction = draw_direction;
+    last_data->last_first_drawn_c_atom_x_pos = pos_x;
+    last_data->last_first_drawn_c_atom_y_pos = pos_y;
 
     return;
 }
@@ -796,9 +810,7 @@ static void Go_Deeper_Drawing
         const uint_fast8_t deepest_nesting,
         const uint_fast8_t end_token,
 
-        enum Direction* const last_direction,
-        int_fast32_t* const last_first_drawn_c_atom_x_pos,
-        int_fast32_t* const last_first_drawn_c_atom_y_pos
+        struct Last_Data* const last_data
 )
 {
     uint_fast8_t close_brackets_found = 0;
@@ -822,8 +834,7 @@ static void Go_Deeper_Drawing
 
                 Start_Drawing_Branch
                 (
-                        drawing, position, current_nesting_depth, deepest_nesting, alkyl_length,
-                        last_direction, last_first_drawn_c_atom_x_pos, last_first_drawn_c_atom_y_pos
+                        drawing, position, current_nesting_depth, deepest_nesting, alkyl_length, last_data
                 );
 
                 /*const uint_fast8_t distance_between_c_atoms = deepest_nesting - current_nesting_depth + 1;
