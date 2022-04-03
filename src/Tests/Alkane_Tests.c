@@ -1138,7 +1138,7 @@ extern void TEST_Alkane_Parser (void)
  */
 extern void TEST_Text_Based_Alkane_Drawing_1 (void)
 {
-    const char test_iupac_name [] = "4-(1-methylethyl)heptane";
+    const char test_iupac_name [] = "4-(1-methylethyl)heptane"; //"4-(1-(1-methylpropyl)butyl)decane";
 
     const char* const expected_drawing [] =
     {
@@ -1189,9 +1189,14 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
  */
 extern void TEST_Text_Based_Alkane_Drawing_2 (void)
 {
-    const char test_iupac_name [] = "3,3,4-Triethyl-2,4-dimethylhexan";
+    const char* iupac_names [] =
+    {
+            "3,3,4-Triethyl-2,4-dimethylhexan",
+            "2,2,3,3,4,4,5,5-OctaMethylDecan",
+            "4,4-DiEthyl-2,2,3,3,5,5,6,6-OctaMethylHeptan"
+    };
 
-    const char* const expected_drawing [] =
+    const char* const array_1 [] =
     {
          "        C            ",
          "        |            ",
@@ -1203,23 +1208,65 @@ extern void TEST_Text_Based_Alkane_Drawing_2 (void)
          "        |   |        ",
          "        C   C        "
     };
+    const char* const array_2 [] =
+    {
+         "    C   C   C   C                    ",
+         "    |   |   |   |                    ",
+         "C - C - C - C - C - C - C - C - C - C",
+         "    |   |   |   |                    ",
+         "    C   C   C   C                    "
+    };
+    const char* const array_3 [] =
+    {
+         "            C            ",
+         "            |            ",
+         "    C   C   C   C   C    ",
+         "    |   |   |   |   |    ",
+         "C - C - C - C - C - C - C",
+         "    |   |   |   |   |    ",
+         "    C   C   C   C   C    ",
+         "            |            ",
+         "            C            "
+    };
 
-    // Textbasierte Zeichnung erzeugen
-    struct Text_Based_Alkane_Drawing* result_drawing =
-            Create_Text_Based_Alkane_Drawing (test_iupac_name, strlen (test_iupac_name));
+    const char* const* expected_drawings [] =
+    {
+            array_1,
+            array_2,
+            array_3
+    };
 
-    // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
-    // das Ergebnis richtig
-    const _Bool wrong_result_created =
-            Compare_Expected_Drawing_With_Created_Drawing (expected_drawing, result_drawing,
-                    COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]),
-                    TEXT_BASED_ALKANE_DRAWING_DIM_1, TEXT_BASED_ALKANE_DRAWING_DIM_2);
+    const size_t drawing_sizes [] =
+    {
+            COUNT_ARRAY_ELEMENTS(array_1),
+            COUNT_ARRAY_ELEMENTS(array_2),
+            COUNT_ARRAY_ELEMENTS(array_3)
+    };
 
-    // War der Test aller Zeichenketten erfolgreich ?
-    ASSERT_EQUALS (false, wrong_result_created);
+    _Bool at_least_one_wrong_result_created = false;
+    // Alle textbasierte Zeichnung erzeugen
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawings); ++ i)
+    {
+        // Textbasierte Zeichnung erzeugen
+        struct Text_Based_Alkane_Drawing* result_drawing =
+                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]));
 
-    Delete_Text_Based_Alkane_Drawing (result_drawing);
-    result_drawing = NULL;
+        // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile miteinander verglichen
+        const _Bool wrong_result_created = Compare_Expected_Drawing_With_Created_Drawing (expected_drawings [i],
+                result_drawing, drawing_sizes [i], strlen (expected_drawings [i][0]),TEXT_BASED_ALKANE_DRAWING_DIM_1,
+                TEXT_BASED_ALKANE_DRAWING_DIM_2);
+
+        if (wrong_result_created /* == true */)
+        {
+            at_least_one_wrong_result_created = true;
+        }
+
+        Delete_Text_Based_Alkane_Drawing (result_drawing);
+        result_drawing = NULL;
+    }
+
+    // War der Test aller Zeichnungen erfolgreich ?
+    ASSERT_EQUALS (false, at_least_one_wrong_result_created);
 
     return;
 }
