@@ -440,10 +440,37 @@ Create_Text_Based_Alkane_Drawing
                                 long int position = 0;
                                 str2int (&position, lexer_data.result_tokens [end], 10);
 
+                                // In der tiefsten Verschachtelung des aktuellen Astes duerfen die letzten Positions-
+                                // und Richtungsinformationen NICHT mehr aktuallisiert werden ! Wenn dies doch
+                                // geschieht, dann wird das letzte C-Atom als vorherige Unterkette verwendet, was
+                                // natuerlich falsch ist. Schlecht beschrieben; daher ein Beispiel, dann wird's
+                                // deutlich was ich meine:
+                                //
+                                // 4-(1,1-Dimethylethyl)heptane
+                                //
+                                // OHNE Deaktivierung der Aktuallisierung
+                                //    +-------------------------+
+                                //  1 |C - C - C - C - C - C - C|
+                                //  2 |            |            |
+                                //  3 |            C-C          |
+                                //  4 |            | |          |
+                                //  5 |            C C          |
+                                //    +-------------------------+
+                                //
+                                // MIT Deaktivierung der Aktuallisierung
+                                //    +-------------------------+
+                                //  1 |C - C - C - C - C - C - C|
+                                //  2 |            |            |
+                                //  3 |          C-C-C          |
+                                //  4 |            |            |
+                                //  5 |            C            |
+                                //    +-------------------------+
+                                struct Last_Data copy_of_last_data = last_data;
+
                                 Start_Drawing_Branch
                                 (
                                         drawing, position, current_nesting_depth, deepest_nesting, alkyl_length,
-                                        &last_data
+                                        &copy_of_last_data
                                 );
                             }
                         }
