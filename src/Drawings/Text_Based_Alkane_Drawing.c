@@ -103,15 +103,16 @@ Count_Branch_Tokens_In_Partition
 static void
 Calculate_Start_Position
 (
-        struct Text_Based_Alkane_Drawing* const drawing,    // Drawing-Objekt
-        const long int number_token_as_int,                 // Positionstoken bereits zum Integer konvertiert
-        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
-                                                            // ist
-        int_fast32_t* out_pos_x,                            // Ausgabeposition X
-        int_fast32_t* out_pos_y,                            // Ausgabeposition Y
+        struct Text_Based_Alkane_Drawing* const restrict drawing,   // Drawing-Objekt
+        const long int number_token_as_int,                         // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t deepest_nesting,                         // Tiefste Verschachtelung, die im gesamten Isomer
+                                                                    // moeglich ist
+        int_fast32_t* const restrict out_pos_x,                     // Ausgabeposition X
+        int_fast32_t* const restrict out_pos_y,                     // Ausgabeposition Y
 
-        const struct Last_Data* const last_data             // Last-Data (wird benoetigt, wenn die Startposition an
-                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
+        const struct Last_Data* const last_data                     // Last-Data (wird benoetigt, wenn die Startposition
+                                                                    // an einer gezeichneten Verschachtelung bestimmt
+                                                                    // werden muss)
 );
 
 /**
@@ -133,16 +134,16 @@ Calculate_Direction
 static void
 Start_Drawing_Branch
 (
-        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
-        const long int position,                            // Positionstoken bereits zum Integer konvertiert
-        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstiefe
-        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
-                                                            // ist
-        const uint_fast8_t alkyl_length,                    // Laenge (Anzahl an C-Atomen) des Alkyl-Token
+        struct Text_Based_Alkane_Drawing* const restrict drawing,   // Zeichnungs-Objekt
+        const long int position,                                    // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t current_nesting_depth,                   // Aktuelle Verschachtelungstiefe
+        const uint_fast8_t deepest_nesting,                         // Tiefste Verschachtelung, die im gesamten Isomer
+                                                                    // moeglich ist
+        const uint_fast8_t alkyl_length,                            // Laenge (Anzahl an C-Atomen) des Alkyl-Token
 
-        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
-                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
-                                                            // Verwendung in einer Unterfunktion
+        struct Last_Data* const restrict last_data                  // Last-Data (wird benoetigt, wenn die Startposition
+                                                                    // an einer gezeichneten Verschachtelung bestimmt
+                                                                    // werden muss) Verwendung in einer Unterfunktion
 );
 
 /**
@@ -151,17 +152,17 @@ Start_Drawing_Branch
 static void
 Go_Deeper_Drawing
 (
-        const struct Alkane_Lexer* const lexer_data,        // Lexer-Daten
-        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
-        const uint_fast8_t current_token,                   // Aktuelles Token
-        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstife
-        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
-                                                            // ist
-        const uint_fast8_t end_token,                       // Letztes Token des aktuellen Astes
+        const struct Alkane_Lexer* const restrict lexer_data,       // Lexer-Daten
+        struct Text_Based_Alkane_Drawing* const restrict drawing,   // Zeichnungs-Objekt
+        const uint_fast8_t current_token,                           // Aktuelles Token
+        const uint_fast8_t current_nesting_depth,                   // Aktuelle Verschachtelungstife
+        const uint_fast8_t deepest_nesting,                         // Tiefste Verschachtelung, die im gesamten Isomer
+                                                                    // moeglich ist
+        const uint_fast8_t end_token,                               // Letztes Token des aktuellen Astes
 
-        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
-                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
-                                                            // Verwendung in einer Unterfunktion
+        struct Last_Data* const restrict last_data                  // Last-Data (wird benoetigt, wenn die Startposition
+                                                                    // an einer gezeichneten Verschachtelung bestimmt
+                                                                    // werden muss) Verwendung in einer Unterfunktion
 );
 
 /**
@@ -688,15 +689,16 @@ Count_Branch_Tokens_In_Partition
 static void
 Calculate_Start_Position
 (
-        struct Text_Based_Alkane_Drawing* const drawing,    // Drawing-Objekt
-        const long int number_token_as_int,                 // Positionstoken bereits zum Integer konvertiert
-        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
-                                                            // ist
-        int_fast32_t* out_pos_x,                            // Ausgabeposition X
-        int_fast32_t* out_pos_y,                            // Ausgabeposition Y
+        struct Text_Based_Alkane_Drawing* const restrict drawing,   // Drawing-Objekt
+        const long int number_token_as_int,                         // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t deepest_nesting,                         // Tiefste Verschachtelung, die im gesamten Isomer
+                                                                    // moeglich ist
+        int_fast32_t* const restrict out_pos_x,                     // Ausgabeposition X
+        int_fast32_t* const restrict out_pos_y,                     // Ausgabeposition Y
 
-        const struct Last_Data* const last_data             // Last-Data (wird benoetigt, wenn die Startposition an
-                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
+        const struct Last_Data* const last_data                     // Last-Data (wird benoetigt, wenn die Startposition
+                                                                    // an einer gezeichneten Verschachtelung bestimmt
+                                                                    // werden muss)
 )
 {
     // Wenn es bisher noch keine Zeichnung - ausser der Hauptkette - gab
@@ -810,16 +812,16 @@ Calculate_Direction
 static void
 Start_Drawing_Branch
 (
-        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
-        const long int position,                            // Positionstoken bereits zum Integer konvertiert
-        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstiefe
-        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
-                                                            // ist
-        const uint_fast8_t alkyl_length,                    // Laenge (Anzahl an C-Atomen) des Alkyl-Token
+        struct Text_Based_Alkane_Drawing* const restrict drawing,   // Zeichnungs-Objekt
+        const long int position,                                    // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t current_nesting_depth,                   // Aktuelle Verschachtelungstiefe
+        const uint_fast8_t deepest_nesting,                         // Tiefste Verschachtelung, die im gesamten Isomer
+                                                                    // moeglich ist
+        const uint_fast8_t alkyl_length,                            // Laenge (Anzahl an C-Atomen) des Alkyl-Token
 
-        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
-                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
-                                                            // Verwendung in einer Unterfunktion
+        struct Last_Data* const restrict last_data                  // Last-Data (wird benoetigt, wenn die Startposition
+                                                                    // an einer gezeichneten Verschachtelung bestimmt
+                                                                    // werden muss) Verwendung in einer Unterfunktion
 )
 {
     const uint_fast8_t distance_between_c_atoms = (uint_fast8_t) (deepest_nesting - current_nesting_depth + 1);
@@ -859,17 +861,17 @@ Start_Drawing_Branch
 static void
 Go_Deeper_Drawing
 (
-        const struct Alkane_Lexer* const lexer_data,        // Lexer-Daten
-        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
-        const uint_fast8_t current_token,                   // Aktuelles Token
-        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstife
-        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
-                                                            // ist
-        const uint_fast8_t end_token,                       // Letztes Token des aktuellen Astes
+        const struct Alkane_Lexer* const restrict lexer_data,       // Lexer-Daten
+        struct Text_Based_Alkane_Drawing* const restrict drawing,   // Zeichnungs-Objekt
+        const uint_fast8_t current_token,                           // Aktuelles Token
+        const uint_fast8_t current_nesting_depth,                   // Aktuelle Verschachtelungstife
+        const uint_fast8_t deepest_nesting,                         // Tiefste Verschachtelung, die im gesamten Isomer
+                                                                    // moeglich ist
+        const uint_fast8_t end_token,                               // Letztes Token des aktuellen Astes
 
-        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
-                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
-                                                            // Verwendung in einer Unterfunktion
+        struct Last_Data* const restrict last_data                  // Last-Data (wird benoetigt, wenn die Startposition
+                                                                    // an einer gezeichneten Verschachtelung bestimmt
+                                                                    // werden muss) Verwendung in einer Unterfunktion
 )
 {
     uint_fast8_t close_brackets_found = 0;
