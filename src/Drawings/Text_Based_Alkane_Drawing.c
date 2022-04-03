@@ -32,11 +32,15 @@ enum Direction
  */
 struct Last_Data
 {
-    enum Direction last_direction;
-    int_fast32_t last_first_drawn_c_atom_x_pos;
-    int_fast32_t last_first_drawn_c_atom_y_pos;
+    enum Direction last_direction;                  // Letzte verwendete Zeichenrichtung
+    int_fast32_t last_first_drawn_c_atom_x_pos;     // Letzte verwendete X Position des ersten gezeichneten C-Atoms
+    int_fast32_t last_first_drawn_c_atom_y_pos;     // Letzte verwendete Y Position des ersten gezeichneten C-Atoms
 };
 
+/**
+ * Ein Leeres Last_Data-Objekt erzeugen. Als Variablenwerte werden Platzhalterwerte verwendet, die eine Nichtverwendung
+ * anzeigen.
+ */
 static struct Last_Data Create_Empty_Last_Data (void);
 static struct Last_Data Create_Empty_Last_Data (void)
 {
@@ -55,101 +59,123 @@ static struct Last_Data Create_Empty_Last_Data (void)
 /**
  * Anzahl von C-Atomen eines Alkan-Strings ermitteln.
  */
-static uint_fast8_t Get_Length_From_Alkane_Token
+static uint_fast8_t                 // Laege des Eingabetokens (Anzahl an C-Atomen)
+Get_Length_From_Alkane_Token
 (
-        const char* const token
+        const char* const token     // Eingabetoken
 );
 
 /**
  * Anzahl von C-Atomen eines Alkyl-Strings ermitteln.
  */
-static uint_fast8_t Get_Length_From_Alkyl_Token
+static uint_fast8_t
+Get_Length_From_Alkyl_Token         // Laenge des Eingabetoken (Anzahl an C-Atomen)
 (
-        const char* const token
+        const char* const token     // Eingabetoken
 );
 
 /**
  * Maximale Verschachtelungstiefe im angegebenen Intervall bestimmen.
  */
-static uint_fast8_t Determine_Deepest_Nesting_In_Token_Partition
+static uint_fast8_t                                 // Maximale Verschachtelungstiefe im angegebenen Tokenintervall
+Determine_Deepest_Nesting_In_Token_Partition
 (
-        const enum Token_Type* const token_types,
-        const uint_fast8_t start,
-        const uint_fast8_t end
+        const enum Token_Type* const token_types,   // Token-Typen
+        const uint_fast8_t start,                   // Startindex
+        const uint_fast8_t end                      // Endindex
 );
 
 /**
- * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben.
+ * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben. Sowohl oeffnende und
+ * schliessende Klammern werden gezaehlt.
  */
-static uint_fast8_t Count_Branch_Tokens_In_Partition
+static uint_fast8_t                                 // Anzahl an Branch-Tokens (Oeffnende und chliessende Klammern)
+Count_Branch_Tokens_In_Partition
 (
-        const enum Token_Type* const token_types,
-        const uint_fast8_t start,
-        const uint_fast8_t end
+        const enum Token_Type* const token_types,   // Token-Typen
+        const uint_fast8_t start,                   // Startindex
+        const uint_fast8_t end                      // Endindex
 );
 
 /**
  * Die Startposition fuer Zeichenvorgaenge bestimmen.
  */
-static void Calculate_Start_Position
+static void
+Calculate_Start_Position
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const long int number_token_as_int,
-        const uint_fast8_t deepest_nesting,
-        int_fast32_t* out_pos_x,
-        int_fast32_t* out_pos_y,
+        struct Text_Based_Alkane_Drawing* const drawing,    // Drawing-Objekt
+        const long int number_token_as_int,                 // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
+                                                            // ist
+        int_fast32_t* out_pos_x,                            // Ausgabeposition X
+        int_fast32_t* out_pos_y,                            // Ausgabeposition Y
 
-        const struct Last_Data* const last_data
+        const struct Last_Data* const last_data             // Last-Data (wird benoetigt, wenn die Startposition an
+                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
 );
 
 /**
  * Die Richtung der naechsten Zeichnung bestimmen.
  */
-static enum Direction Calculate_Direction
+static enum Direction                                       // Ermittelte Zeichenrichtung
+Calculate_Direction
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const enum Direction last_direction,
-        const int_fast32_t pos_x,
-        const int_fast32_t pos_y
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const enum Direction last_direction,                // Die letzte verwendete Zeichenrichtung
+        const int_fast32_t pos_x,                           // Position X, von wo die Zeichenrichtung bestimmt wird
+        const int_fast32_t pos_y                            // Position Y, von wo die Zeichenrichtung bestimmt wird
 );
 
-static void Start_Drawing_Branch
+/**
+ * Alle notwendigen Informationen, die fuer das Zeichnen eines Astes notwendig sind, bestimmen und dann den Ast
+ * zeichnen.
+ */
+static void
+Start_Drawing_Branch
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const long int position,
-        const uint_fast8_t current_nesting_depth,
-        const uint_fast8_t deepest_nesting,
-        const uint_fast8_t alkyl_length,
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const long int position,                            // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstiefe
+        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
+                                                            // ist
+        const uint_fast8_t alkyl_length,                    // Laenge (Anzahl an C-Atomen) des Alkyl-Token
 
-        struct Last_Data* const last_data
+        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
+                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
+                                                            // Verwendung in einer Unterfunktion
 );
 
 /**
  * Eine Verschachtelungstiefe tiefer gehen und die Aeste zeichnen.
  */
-static void Go_Deeper_Drawing
+static void
+Go_Deeper_Drawing
 (
-        const struct Alkane_Lexer* const lexer_data,
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const uint_fast8_t current_token,
-        const uint_fast8_t current_nesting_depth,
-        const uint_fast8_t deepest_nesting,
-        const uint_fast8_t end_token,
+        const struct Alkane_Lexer* const lexer_data,        // Lexer-Daten
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const uint_fast8_t current_token,                   // Aktuelles Token
+        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstife
+        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
+                                                            // ist
+        const uint_fast8_t end_token,                       // Letztes Token des aktuellen Astes
 
-        struct Last_Data* const last_data
+        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
+                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
+                                                            // Verwendung in einer Unterfunktion
 );
 
 /**
  * Einen Ast in die Zeichnung hinzufuegen.
  */
-static void Draw_Branch
+static void
+Draw_Branch
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        int_fast32_t pos_x,
-        int_fast32_t pos_y,
-        const enum Direction direction,
-        const uint_fast8_t num_c_atoms,
-        const uint_fast8_t distance
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        int_fast32_t pos_x,                                 // Startposition X fuer das Zeichnen
+        int_fast32_t pos_y,                                 // Startposition Y fuer das Zeichnen
+        const enum Direction direction,                     // Zeichnungsrichtung
+        const uint_fast8_t num_c_atoms,                     // Anzahl an C-Atomen
+        const uint_fast8_t distance                         // Distanz (Anzahl an Zeichen zwischen jedem C-Atom)
 );
 
 /**
@@ -159,10 +185,11 @@ static void Draw_Branch
  * Dies ist insbesondere dann notwendig, wenn Zeichen mittig in einer Zeichenkette hinzugefuegt werden. Ohne Anpassung
  * wird die Zeile nur bis zum ersten Terminalsymbol ausgegeben.
  */
-static void Make_Line_Drawable
+static void
+Make_Line_Drawable
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const int_fast32_t line
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const int_fast32_t line                             // Zeile, die zeichenbar (ausgebbar) gemacht wird
 );
 
 /**
@@ -201,9 +228,10 @@ static void Make_Line_Drawable
  *  9 |        C   C        |
  *    +---------------------+
  */
-static void Adjust_Drawing_For_Terminal
+static void
+Adjust_Drawing_For_Terminal
 (
-        struct Text_Based_Alkane_Drawing* const drawing
+        struct Text_Based_Alkane_Drawing* const drawing     // Zeichnungs-Objekt
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -546,9 +574,10 @@ Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines
 /**
  * Anzahl von C-Atomen eines Alkan-Strings ermitteln.
  */
-static uint_fast8_t Get_Length_From_Alkane_Token
+static uint_fast8_t                 // Laege des Eingabetokens (Anzahl an C-Atomen)
+Get_Length_From_Alkane_Token
 (
-        const char* const token
+        const char* const token     // Eingabetoken
 )
 {
     uint_fast8_t alkane_length = 0;
@@ -572,9 +601,10 @@ static uint_fast8_t Get_Length_From_Alkane_Token
 /**
  * Anzahl von C-Atomen eines Alkyl-Strings ermitteln.
  */
-static uint_fast8_t Get_Length_From_Alkyl_Token
+static uint_fast8_t
+Get_Length_From_Alkyl_Token         // Laenge des Eingabetoken (Anzahl an C-Atomen)
 (
-        const char* const token
+        const char* const token     // Eingabetoken
 )
 {
     uint_fast8_t alkyl_length = 0;
@@ -597,11 +627,12 @@ static uint_fast8_t Get_Length_From_Alkyl_Token
 /**
  * Maximale Verschachtelungstiefe im angegebenen Intervall bestimmen.
  */
-static uint_fast8_t Determine_Deepest_Nesting_In_Token_Partition
+static uint_fast8_t                                 // Maximale Verschachtelungstiefe im angegebenen Tokenintervall
+Determine_Deepest_Nesting_In_Token_Partition
 (
-        const enum Token_Type* const token_types,
-        const uint_fast8_t start,
-        const uint_fast8_t end
+        const enum Token_Type* const token_types,   // Token-Typen
+        const uint_fast8_t start,                   // Startindex
+        const uint_fast8_t end                      // Endindex
 )
 {
     uint_fast8_t deepest_nesting = 0;
@@ -629,13 +660,15 @@ static uint_fast8_t Determine_Deepest_Nesting_In_Token_Partition
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
- * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben.
+ * Branch Tokens in einem Array mit einer unteren und oberen Grenze zaehlen und zurueckgeben. Sowohl oeffnende und
+ * schliessende Klammern werden gezaehlt.
  */
-static uint_fast8_t Count_Branch_Tokens_In_Partition
+static uint_fast8_t                                 // Anzahl an Branch-Tokens (Oeffnende und chliessende Klammern)
+Count_Branch_Tokens_In_Partition
 (
-        const enum Token_Type* const token_types,
-        const uint_fast8_t start,
-        const uint_fast8_t end
+        const enum Token_Type* const token_types,   // Token-Typen
+        const uint_fast8_t start,                   // Startindex
+        const uint_fast8_t end                      // Endindex
 )
 {
     uint_fast8_t count_branch_tokens = 0;
@@ -656,15 +689,18 @@ static uint_fast8_t Count_Branch_Tokens_In_Partition
 /**
  * Die Startposition fuer Zeichenvorgaenge bestimmen.
  */
-static void Calculate_Start_Position
+static void
+Calculate_Start_Position
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const long int number_token_as_int,
-        const uint_fast8_t deepest_nesting,
-        int_fast32_t* out_pos_x,
-        int_fast32_t* out_pos_y,
+        struct Text_Based_Alkane_Drawing* const drawing,    // Drawing-Objekt
+        const long int number_token_as_int,                 // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
+                                                            // ist
+        int_fast32_t* out_pos_x,                            // Ausgabeposition X
+        int_fast32_t* out_pos_y,                            // Ausgabeposition Y
 
-        const struct Last_Data* const last_data
+        const struct Last_Data* const last_data             // Last-Data (wird benoetigt, wenn die Startposition an
+                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
 )
 {
     // Wenn es bisher noch keine Zeichnung - ausser der Hauptkette - gab
@@ -728,12 +764,13 @@ static void Calculate_Start_Position
 /**
  * Die Richtung der naechsten Zeichnung bestimmen.
  */
-static enum Direction Calculate_Direction
+static enum Direction                                       // Ermittelte Zeichenrichtung
+Calculate_Direction
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const enum Direction last_direction,
-        const int_fast32_t pos_x,
-        const int_fast32_t pos_y
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const enum Direction last_direction,                // Die letzte verwendete Zeichenrichtung
+        const int_fast32_t pos_x,                           // Position X, von wo die Zeichenrichtung bestimmt wird
+        const int_fast32_t pos_y                            // Position Y, von wo die Zeichenrichtung bestimmt wird
 )
 {
     enum Direction result = N_A;
@@ -770,15 +807,23 @@ static enum Direction Calculate_Direction
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Start_Drawing_Branch
+/**
+ * Alle notwendigen Informationen, die fuer das Zeichnen eines Astes notwendig sind, bestimmen und dann den Ast
+ * zeichnen.
+ */
+static void
+Start_Drawing_Branch
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const long int position,
-        const uint_fast8_t current_nesting_depth,
-        const uint_fast8_t deepest_nesting,
-        const uint_fast8_t alkyl_length,
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const long int position,                            // Positionstoken bereits zum Integer konvertiert
+        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstiefe
+        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
+                                                            // ist
+        const uint_fast8_t alkyl_length,                    // Laenge (Anzahl an C-Atomen) des Alkyl-Token
 
-        struct Last_Data* const last_data
+        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
+                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
+                                                            // Verwendung in einer Unterfunktion
 )
 {
     const uint_fast8_t distance_between_c_atoms = (uint_fast8_t) (deepest_nesting - current_nesting_depth + 1);
@@ -815,16 +860,20 @@ static void Start_Drawing_Branch
 /**
  * Eine Verschachtelungstiefe tiefer gehen und die Aeste zeichnen.
  */
-static void Go_Deeper_Drawing
+static void
+Go_Deeper_Drawing
 (
-        const struct Alkane_Lexer* const lexer_data,
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const uint_fast8_t current_token,
-        const uint_fast8_t current_nesting_depth,
-        const uint_fast8_t deepest_nesting,
-        const uint_fast8_t end_token,
+        const struct Alkane_Lexer* const lexer_data,        // Lexer-Daten
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const uint_fast8_t current_token,                   // Aktuelles Token
+        const uint_fast8_t current_nesting_depth,           // Aktuelle Verschachtelungstife
+        const uint_fast8_t deepest_nesting,                 // Tiefste Verschachtelung, die im gesamten Isomer moeglich
+                                                            // ist
+        const uint_fast8_t end_token,                       // Letztes Token des aktuellen Astes
 
-        struct Last_Data* const last_data
+        struct Last_Data* const last_data                   // Last-Data (wird benoetigt, wenn die Startposition an
+                                                            // einer gezeichneten Verschachtelung bestimmt werden muss)
+                                                            // Verwendung in einer Unterfunktion
 )
 {
     uint_fast8_t close_brackets_found = 0;
@@ -889,14 +938,15 @@ static void Go_Deeper_Drawing
 /**
  * Einen Ast in die Zeichnung hinzufuegen.
  */
-static void Draw_Branch
+static void
+Draw_Branch
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        int_fast32_t pos_x,
-        int_fast32_t pos_y,
-        const enum Direction direction,
-        const uint_fast8_t num_c_atoms,
-        const uint_fast8_t distance
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        int_fast32_t pos_x,                                 // Startposition X fuer das Zeichnen
+        int_fast32_t pos_y,                                 // Startposition Y fuer das Zeichnen
+        const enum Direction direction,                     // Zeichnungsrichtung
+        const uint_fast8_t num_c_atoms,                     // Anzahl an C-Atomen
+        const uint_fast8_t distance                         // Distanz (Anzahl an Zeichen zwischen jedem C-Atom)
 )
 {
     int_fast8_t pos_x_change = 0;
@@ -956,10 +1006,11 @@ static void Draw_Branch
  * Dies ist insbesondere dann notwendig, wenn Zeichen mittig in einer Zeichenkette hinzugefuegt werden. Ohne Anpassung
  * wird die Zeile nur bis zum ersten Terminalsymbol ausgegeben.
  */
-static void Make_Line_Drawable
+static void
+Make_Line_Drawable
 (
-        struct Text_Based_Alkane_Drawing* const drawing,
-        const int_fast32_t line
+        struct Text_Based_Alkane_Drawing* const drawing,    // Zeichnungs-Objekt
+        const int_fast32_t line                             // Zeile, die zeichenbar (ausgebbar) gemacht wird
 )
 {
     // Alle Zeilen haben die gleiche Laenge
@@ -1013,9 +1064,10 @@ static void Make_Line_Drawable
  *  9 |        C   C        |
  *    +---------------------+
  */
-static void Adjust_Drawing_For_Terminal
+static void
+Adjust_Drawing_For_Terminal
 (
-        struct Text_Based_Alkane_Drawing* const drawing
+        struct Text_Based_Alkane_Drawing* const drawing     // Zeichnungs-Objekt
 )
 {
     const size_t number_of_lines = COUNT_ARRAY_ELEMENTS(drawing->drawing);
