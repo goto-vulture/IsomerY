@@ -430,7 +430,7 @@ Create_Text_Based_Alkane_Drawing
                         // "- 2", um an das Alkyl-Token zu kommen
                         // "... Ethyl)Decan" Von "Decan" auf "Ethyl" wechseln
                         const uint_fast8_t alkyl_length =
-                                Get_Length_From_Alkyl_Token (lexer_data.result_tokens [branch_end [i] - 2]);
+                                Get_Length_From_Alkyl_Token (lexer_data.result_tokens [branch_end [i] - (2 * max_nesting_depth_in_branch)]);
 
                         // Schleife verwenden, da die innerste Abzweigung durchaus aus mehreren Fragmenten bestehen kann
                         for (uint_fast8_t end = current_token; end < branch_end [i]; ++ end)
@@ -901,10 +901,13 @@ Go_Deeper_Drawing
                                                                     // werden muss) Verwendung in einer Unterfunktion
 )
 {
+    const uint_fast8_t deepest_nesting_in_partition =
+            Determine_Deepest_Nesting_In_Token_Partition (lexer_data->token_type, current_token, end_token);
+    const uint_fast8_t start_index = (uint_fast8_t) (deepest_nesting_in_partition == 1 ? end_token: (end_token - 1));
     uint_fast8_t close_brackets_found = 0;
 
-    for (uint_fast8_t current_token_reversed = (uint_fast8_t) (end_token - 1); current_token_reversed >= current_token;
-            ++ current_token_reversed)
+    for (uint_fast8_t current_token_reversed = start_index; current_token_reversed >= current_token;
+            -- current_token_reversed)
     {
         if (lexer_data->token_type [current_token_reversed] == TOKEN_TYPE_CLOSE_BRACKET)
         {
