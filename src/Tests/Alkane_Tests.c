@@ -48,6 +48,18 @@
 
 
 /**
+ * Einlesefunktion fuer die Auswahl der Testfunktion.
+ */
+static long int                                         // Durchgefuehrte Eingabe
+Get_Terminal_Input
+(
+    const size_t num_testfunctions,                     // Anzahl an Testfunktionen (wird fuer die Eingabeueberpruefung
+                                                        // benoetigt)
+    const long int cli_input_use_all_testfunctions      // Konstante die den Wert anzeigt, der fuer die Ausfuehrung
+                                                        // ALLER Testfunktionen verwendet wird
+);
+
+/**
  * Vergleichen eines Zahlencodes eines Akans mit einem vorgegebenen Ergebnis.
  */
 static _Bool                                            // true, falls der komplette Zahlencode uebereinstimmt;
@@ -178,9 +190,6 @@ Execute_All_Alkane_Tests
     // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
     if (GLOBAL_SELECT_TEST_FUNCTION /* == true */)
     {
-        char input_buffer [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
-        long int selected_test_function = 0;
-
         puts("===>>> Testfunctions available <<<===");
         for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
         {
@@ -188,36 +197,8 @@ Execute_All_Alkane_Tests
         }
         fflush(stdout);
 
-        // Einleseschleife
-        while (true)
-        {
-            int c = 0;
-            printf ("(1 - %zu) => ", COUNT_ARRAY_ELEMENTS((test_functions)));
-            const int char_read = scanf ("%9s", input_buffer);
-            if (char_read == EOF)
-            {
-                puts("Got EOF ! Retry ...");
-                memset (input_buffer, '\0', sizeof(input_buffer));
-            }
-
-            // Idee von: https://stackoverflow.com/questions/28297306/how-to-limit-input-length-with-scanf
-            while ((c = fgetc(stdin)) != '\n' && c != EOF); /* Flush stdin */
-
-            // Ist die Eingabe ueberhaupt ein Integer?
-            const enum str2int_errno conversion_errno = str2int(&selected_test_function, input_buffer, 10);
-
-            if (conversion_errno == STR2INT_SUCCESS)
-            {
-                if ((selected_test_function > 0 && selected_test_function <=
-                        (long int) COUNT_ARRAY_ELEMENTS(test_functions)) ||
-                        selected_test_function == CLI_INPUT_USE_ALL_TESTFUNCTIONS)
-                {
-                    break;
-                }
-            }
-            puts("Invalid input !");
-            memset (input_buffer, '\0', sizeof(input_buffer));
-        }
+        const long int selected_test_function = Get_Terminal_Input (COUNT_ARRAY_ELEMENTS(test_functions),
+                CLI_INPUT_USE_ALL_TESTFUNCTIONS);
 
         PRINTF_FFLUSH("\nUsing the test function \"%s\"\n", test_functions [selected_test_function - 1].function_name);
 
@@ -236,6 +217,7 @@ Execute_All_Alkane_Tests
             }
         }
     }
+
     // Testfunktion anhand der Anzahl an C-Atomen, die eingegeben worden sind, aufrufen
     if (GLOBAL_MAX_C_ATOMS_FOR_TESTS != 0)
     {
@@ -1283,6 +1265,53 @@ extern void TEST_Text_Based_Alkane_Drawing_2 (void)
 extern inline void TEST_Use_All_Testfunctions (void)
 {
     return;
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Einlesefunktion fuer die Auswahl der Testfunktion.
+ */
+static long int Get_Terminal_Input
+(
+    const size_t num_testfunctions,
+    const long int cli_input_use_all_testfunctions
+)
+{
+    char input_buffer [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+    long int selected_test_function = -1;
+
+    // Einleseschleife
+    while (true)
+    {
+        int c = 0;
+        printf ("(1 - %zu) => ", num_testfunctions);
+        const int char_read = scanf ("%9s", input_buffer);
+        if (char_read == EOF)
+        {
+            puts("Got EOF ! Retry ...");
+            memset (input_buffer, '\0', sizeof(input_buffer));
+        }
+
+        // Idee von: https://stackoverflow.com/questions/28297306/how-to-limit-input-length-with-scanf
+        while ((c = fgetc(stdin)) != '\n' && c != EOF); /* Flush stdin */
+
+        // Ist die Eingabe ueberhaupt ein Integer?
+        const enum str2int_errno conversion_errno = str2int(&selected_test_function, input_buffer, 10);
+
+        if (conversion_errno == STR2INT_SUCCESS)
+        {
+            if ((selected_test_function > 0 && selected_test_function <= (long int) num_testfunctions) ||
+                    (selected_test_function == cli_input_use_all_testfunctions))
+            {
+                break;
+            }
+        }
+        puts("Invalid input !");
+        memset (input_buffer, '\0', sizeof(input_buffer));
+    }
+
+    return selected_test_function;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
