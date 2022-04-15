@@ -1,0 +1,70 @@
+const char* iupac_names [] =
+{
+        "4-(1-methylethyl)heptane",                                 // Einfache Verschachtelung
+        "4-(1-(1-methylpropyl)butyl)decane",                        // Zweifache Verschachtelung
+        "4-(1-(1-(1-methylethyl)propyl)butyl)decane",               // Dreifache Verschachtelung
+        "4-(1-(1-(1-methylethyl)propyl)butyl)-3,3-DiEthyldecane"    // Dreifache Verschachtelung
+};
+
+const char* const array_1 [] =
+{
+     "C - C - C - C - C - C - C",
+     "            |            ",
+     "            C - C        ",
+     "            |            ",
+     "            C            "
+};
+const char* const array_2 [] =
+{
+     "C - C - C - C - C - C - C - C - C - C",
+     "            |                        ",
+     "            C - C - C - C            ",
+     "            |   |                    ",
+     "            C   C                    ",
+     "            |                        ",
+     "            C                        ",
+     "            |                        ",
+     "            C                        "
+};
+const char* const array_3 [] =
+{
+     "C - C - C - C - C - C - C - C - C - C",
+     "            |                        ",
+     "            C - C - C - C            ",
+     "            |   |                    ",
+     "            C   C - C                ",
+     "            |   |                    ",
+     "            C   C                    ",
+     "            |                        ",
+     "            C                        "
+};
+const char* const array_4 [] =
+{
+     "        C                            ",
+     "        |                            ",
+     "        C                            ",
+     "        |                            ",
+     "C - C - C - C - C - C - C - C - C - C",
+     "        |   |                        ",
+     "        C   C - C - C - C            ",
+     "        |   |   |                    ",
+     "        C   C   C - C                ",
+     "            |   |                    ",
+     "            C   C                    ",
+     "            |                        ",
+     "            C                        "
+};
+const char* const* expected_drawings [] =
+{
+        array_1,
+        array_2,
+        array_3,
+        array_4
+};
+const size_t drawing_sizes [] =
+{
+        COUNT_ARRAY_ELEMENTS(array_1),
+        COUNT_ARRAY_ELEMENTS(array_2),
+        COUNT_ARRAY_ELEMENTS(array_3),
+        COUNT_ARRAY_ELEMENTS(array_4)
+};
