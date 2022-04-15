@@ -910,12 +910,10 @@ Go_Deeper_Drawing
                                                                     // werden muss) Verwendung in einer Unterfunktion
 )
 {
-    const uint_fast8_t deepest_nesting_in_partition =
-            Determine_Deepest_Nesting_In_Token_Partition (lexer_data->token_type, current_token, end_token);
-    const uint_fast8_t start_index = (uint_fast8_t) (deepest_nesting_in_partition == 1 ? end_token: (end_token - 1));
     uint_fast8_t close_brackets_found = 0;
 
-    for (uint_fast8_t current_token_reversed = start_index; current_token_reversed >= current_token;
+    // Von hinten die Tokens durchgehen
+    for (uint_fast8_t current_token_reversed = end_token; current_token_reversed >= current_token;
             -- current_token_reversed)
     {
         if (lexer_data->token_type [current_token_reversed] == TOKEN_TYPE_CLOSE_BRACKET)
