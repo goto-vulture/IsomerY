@@ -37,7 +37,7 @@ extern "C"
  * @brief Groesse der Textzeichnung 2. Dimension.
  */
 #ifndef TEXT_BASED_ALKANE_DRAWING_DIM_2
-#define TEXT_BASED_ALKANE_DRAWING_DIM_2 50
+#define TEXT_BASED_ALKANE_DRAWING_DIM_2 75
 #else
 #error "The macro \"TEXT_BASED_ALKANE_DRAWING_DIM_2\" is already defined !"
 #endif /* TEXT_BASED_ALKANE_DRAWING_DIM_2 */
