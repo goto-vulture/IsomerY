@@ -1122,8 +1122,9 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
 {
     const char* iupac_names [] =
     {
-            "4-(1-methylethyl)heptane",
-            "4-(1-(1-methylpropyl)butyl)decane"
+            "4-(1-methylethyl)heptane",                     // Einfache Verschachtelung
+            "4-(1-(1-methylpropyl)butyl)decane",            // Zweifache Verschachtelung
+            "4-(1-(1-(1-methylethyl)propyl)butyl)decane"    // Dreifache Verschachtelung
     };
 
     const char* const array_1 [] =
@@ -1146,15 +1147,29 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
          "            |                        ",
          "            C                        "
     };
+    const char* const array_3 [] =
+    {
+         "C - C - C - C - C - C - C - C - C - C",
+         "            |                        ",
+         "            C - C - C - C            ",
+         "            |   |                    ",
+         "            C   C - C                ",
+         "            |   |                    ",
+         "            C   C                    ",
+         "            |                        ",
+         "            C                        "
+    };
     const char* const* expected_drawings [] =
     {
             array_1,
-            array_2
+            array_2,
+            array_3
     };
     const size_t drawing_sizes [] =
     {
             COUNT_ARRAY_ELEMENTS(array_1),
-            COUNT_ARRAY_ELEMENTS(array_2)
+            COUNT_ARRAY_ELEMENTS(array_2),
+            COUNT_ARRAY_ELEMENTS(array_3)
     };
 
     _Bool at_least_one_wrong_result_created = false;
