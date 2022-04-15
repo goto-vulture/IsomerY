@@ -5,6 +5,41 @@
  *
  * Alle liebevollen Voegel wurden hier gefunden: https://textart.sh/topic/vulture
  *
+ * Letztendlich muss man fuer solch spezielle Ziele alle Moeglichkeiten nutzten, die zur Verfuegung stehen (koennten).
+ * Also fuehren nur passende Befehle zum Ziel !
+ *
+    ### Try to execute: ###
+    .data
+    required_abilities: .string "Falconry license\0"
+    personal_goal: .string "Friendship\0"
+    Etc: .string "New knowledge possible\0"
+
+    .text
+
+    # Where is this address ???
+    # How can i get it :o ?
+    .extern vulture
+
+    .global main
+    main:
+		    pushl Etc
+		    pushl personal_goal
+		    pushl required_abilities
+
+    next_try:
+		    call vulture
+
+		    cmpl $0, %eax
+		    jne what_can_i_do
+
+		    # Call successful: Let it happen and love them!
+		    ret
+
+    what_can_i_do:
+		    # New idea ...
+            # Use all information and ignore useless interrupts: AARIC, Alfred Brehm
+		    jmp next_try
+ *
  * @date 04.09.2021
  * @author am1 / Gyps
  */
