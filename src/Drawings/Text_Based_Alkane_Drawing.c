@@ -398,10 +398,13 @@ Create_Text_Based_Alkane_Drawing
                     str2int (&position, lexer_data.result_tokens [i2], 10);
                     struct Last_Data empty_last_data = Create_Empty_Last_Data ();
 
+                    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (drawing);
                     Start_Drawing_Branch
                     (
                             drawing, position, current_nesting_depth, deepest_nesting, alkyl_length, &empty_last_data
                     );
+                    printf("line %d ->\n", __LINE__);
+                    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (drawing);
                 }
 
                 ++ i2;
@@ -421,8 +424,11 @@ Create_Text_Based_Alkane_Drawing
                 if (lexer_data.token_type [current_token] == TOKEN_TYPE_OPEN_BRACKET)
                 {
                     ++ current_nesting_depth;
+                    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (drawing);
                     Go_Deeper_Drawing (&lexer_data, drawing, current_token, current_nesting_depth, deepest_nesting,
                             branch_end [i], &last_data);
+                    printf("line %d ->\n", __LINE__);
+                    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (drawing);
 
                     // Innerster Ast gefunden ?
                     if (current_nesting_depth == max_nesting_depth_in_branch)
@@ -467,11 +473,14 @@ Create_Text_Based_Alkane_Drawing
                                 //    +-------------------------+
                                 struct Last_Data copy_of_last_data = last_data;
 
+                                Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (drawing);
                                 Start_Drawing_Branch
                                 (
                                         drawing, position, current_nesting_depth, deepest_nesting, alkyl_length,
                                         &copy_of_last_data
                                 );
+                                printf("line %d ->\n", __LINE__);
+                                Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (drawing);
                             }
                         }
                     }
