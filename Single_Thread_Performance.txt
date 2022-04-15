@@ -6,3 +6,4 @@ AMD Athlon 5350 APU:                      702
 Intel Atom D510 @ 1.66GHz (fuer N450):    292
 AMD FX-8320E Eight-Core:                1.409
 Intel Core i5-3320M @ 2.60GHz:          1.616
+Intel Core i7-2700K @ 3.50GHz:          1.785
