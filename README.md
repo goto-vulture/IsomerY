@@ -1,6 +1,6 @@
 # IsomerY
 
-## DE
+## DE (See english translation below)
 
 ### Einleitung
 
@@ -33,8 +33,6 @@ Beim Butan sehen die verschiedenen Eigenschaften so aus:<br>
 |:--------:|:-----------------:|:---------------:|
 | n-Butan  |      −138,3       |      −0,5       |
 | Isobutan |      −159,42      |      −11,7      |
-|          |                   |                 |
-
 
 Beim Butan gibt es nur ein Konstitutionsisomer. Es ist aber sofort einleuchtend, dass bei zusaetzlichen C-Atomen es
 immer mehr Moeglichkeiten gibt. So sind bei 10 C-Atomen (Decan) bereits 75 Konstitutionsisomere (theoretisch) moeglich.
@@ -105,10 +103,10 @@ Tatsächlich gibt es viele andere Isomertypen, die ebenfalls eine praktische Rel
 
 ### Pläne für die Zukunft
 
+* Erzeugung der Grafiken (1. Schritt: XPM-Bilder)
 * Ausweitung auf weitere Stoffgruppen (Alkene, Alkiene)
 * Implementierung einer GUI (vorzugsweise ressourcenarme Varianten wie FLTK)
 * Vervollständigung der Doxygen Dokumentation
-* Übersetzung dieser Readme-Datei nach Englisch
 * Übersetzung der Doxygen-Texte nach Englisch
 * Übersetzung der wichtigsten Kommentare im Quelltext nach Englisch (auch viele, die nichts mit Doxygen zu tun haben)
 
@@ -141,4 +139,111 @@ Um die Programmierung auf das Wesentliche zu beschränken, besitzt das Programm 
 
 ## EN
 
-Will be inserted in the future ...
+### Einleitung
+
+This programm creates the structural isomer (with their IUPAC names) from alkanes by given number of C-atoms.
+
+The structual isomer describes the effect, that by equal chemical formula different structural formula exists. One example: butane.
+<!-- Wird leider nicht innerhalb eines Absatzes richtig dargestellt :( $C_{4} H_{10}$ -->
+
+In the default case this molecule will be drawn as straight chain (ASCII drawing):
+
+    C - C - C - C
+
+No one forbits C-atoms, that they only be allowed to create a straight chains. Branches are possible (also a ASCII drawing):
+
+    C - C - C
+        |
+        C
+
+This is more than a gimmick. The butane has with branches different physical properties comapred to the straight chain butane.
+[Wikipedia describes this in a understandable way:](https://en.wikipedia.org/wiki/Isomerism#Structural_isomers)
+
+> Isomers do not necessarily share similar chemical or physical properties.
+
+Therefore this topic has a  certain importance.
+
+For the butane the different attributs look like this:<br>
+
+|           | Melting point (°C) | Boiling point (°C) |
+|:---------:|:------------------:|:------------------:|
+| n-butane  |      −138,3        |        −0,5        |
+| Isobutane |      −159,42       |        −11,7       |
+
+For the butane only one structual isomer exists. It is obvious, that with more c atoms many more possibilities exists. Therefore for 10 c atoms (Decane) already 75 structual isomer (theoretical) possible.
+
+---
+
+### A list of possible structual isomer by given numer of c atoms:<br>
+
+| Number of c atoms  |    Number of structual isomer    |
+|:------------------:|:--------------------------------:|
+|         1          |                1                 |
+|         2          |                1                 |
+|         3          |                1                 |
+|         4          |                2                 |
+|         5          |                3                 |
+|         6          |                5                 |
+|         7          |                9                 |
+|         8          |                18                |This will be 
+|         9          |                35                |
+|         10         |                75                |
+|         11         |                159               |
+|         12         |                355               |
+|         13         |                802               |
+|         14         |                1.858             |
+|         15         |                4.347             |
+|         16         |                10.359            |
+|         17         |                24.894            |
+|         18         |                60.523            |
+|         19         |                148.284           |
+|         20         |                366.319           |
+|         ...        |                ...               |
+
+There is no simple formula, that calculates the number of structual isomer by given number of c atoms. This is happily no problem, because the theoretical number up to 100 c atoms is already known.
+
+[See table of theoretical possible alkanes](https://en.wikipedia.org/wiki/Alkane#Table_of_alkanes)
+
+In fact many other isomer types exsits, with relevant in practice. In this project the focus is *for now* on the structual isomer.
+
+---
+
+### Used technologies
+
+* C11 with the standard library
+* make buildsystem
+* Doxygen for the documentation
+* Of course git for versions management ;)
+
+---
+
+### Ideas for the future
+
+* Picture creation (First step: XPM pictures)
+* Extention to other isomer types (Alkane, Alkine)
+* Implementation of a GUI (lightweight technologies like FLTK)
+* Completion of the doxygen documentation
+* Translation of the dozygen comments to english
+* Translation of the most important comments in the souce code to english
+
+---
+
+### The goal of the program
+
+The program is to be creating all structual isomers with die IUPAC name by giving the number of c atoms. In addition simple ASCII "pictures" and real picture files (XPM) are to be created.
+
+It depends on the success in the development, if the program will be extend to other isomer types. What and why? That will be shown ...
+
+Current (25.03.2022) this program is in the prae, prae, prae-phase. The development will be continued, if I have enough time.<br>
+
+---
+
+### Limitations
+
+To limit the program to the main features, there are some restrictions, they might be removed in the future.
+
+* The calculation is limited to 40 c atoms. The effect is, that are less dynamic memory is necessary, because the upper limit is already known while compilation.
+* Current the program have only the implementation for creating ASCII and XPM pictures. The reason: both can be created without external libraries.
+* The program has no GUI. This will be changed in the future. Bit without high priority.
+
+---
