@@ -24,6 +24,10 @@
  * Auch hier ein Beispiel:
  * CREATE_CONTAINER(struct Path_Data*, Path_Data)
  *
+ * ! HINWEIS !
+ * Aktuell funktioniert der Container nur fuer Zeiger ! Primitive Elemente und Co. funktionieren leider noch nicht :(
+ * Das kommt vielleicht noch :3
+ *
  * @date 16.01.2022
  * @author am1
  */
