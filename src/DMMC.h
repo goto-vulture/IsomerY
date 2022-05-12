@@ -9,6 +9,21 @@
  * Dabei wird ein Makroparameter fuer den Typ, der im Container gespeichert werden soll, verwendet. Dies entspricht
  * einem sehr rudimentaeren Template-Konzept wie in C++.
  *
+ * Anwendungsbeispiel:
+ * Container fuer Path_Data Strukturen
+ *
+ * Path_Data.h sowie Path_Data.c anlegen
+ * In der Header-Datei (Path_Data.h)
+ * - Struktur erzeugen, welches ein Objekt darstellt das im Container abgelegt werden soll
+ * - CREATE_CONTAINER_H(Strukturname + *, Name ohne "struct")
+ * Ein Beispiel:
+ * - CREATE_CONTAINER_H(struct Path_Data*, Path_Data)
+ *
+ * In der Implementierungsdatei (Path_Data.c)
+ * - Aufruf des Makros CREATE_CONTAINER(Strukturname + *, Name ohne "struct")
+ * Auch hier ein Beispiel:
+ * CREATE_CONTAINER(struct Path_Data*, Path_Data)
+ *
  * @date 16.01.2022
  * @author am1
  */
