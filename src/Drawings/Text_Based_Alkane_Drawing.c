@@ -1083,9 +1083,20 @@ Adjust_Drawing_For_Terminal
 
     // Laengste Zeichenkette in der Zeichnung ermitteln
     size_t longest_line = 0;
+    size_t latest_line = 0;
+    _Bool first_line_with_data_found = false;
 
     for (size_t i = 0; i < number_of_lines; ++ i)
     {
+        if (strlen (drawing->drawing [i]) != 0 && ! first_line_with_data_found /* == false */)
+        {
+            first_line_with_data_found = true;
+        }
+        else if (strlen (drawing->drawing [i]) != 0)
+        {
+            latest_line = i;
+        }
+
         // Mit der Laenge sind die Anzahl an Zeichen gemeint, bis nur noch Leerzeichen in der Zeichenkette sind
         size_t current_length = line_length - 1;
         for (size_t i2 = line_length - 2; i2 > 0; -- i2)
@@ -1112,6 +1123,25 @@ Adjust_Drawing_For_Terminal
         // Garantierte Nullterminierung jeder Zeichenkette
         drawing->drawing [i][line_length - 1] = '\0';
     }
+
+    // Speicher so verschieben, sodass die Zeichnung in der ersten Zeile beginnt (Dies vereinfacht weitere Operationen
+    // beim Export der Grafik)
+    size_t first_used_line = 0;
+    for (size_t i = 0; i < latest_line; ++ i)
+    {
+        if (strlen (drawing->drawing [i]) != 0)
+        {
+            first_used_line = i;
+            break;
+        }
+    }
+    for (size_t i = first_used_line; i < latest_line + 1; ++ i)
+    {
+        memcpy (drawing->drawing [i - first_used_line], drawing->drawing [i], line_length);
+    }
+
+    drawing->max_dim_1_used = latest_line - first_used_line + 1;
+    drawing->max_dim_2_used = longest_line;
 
     return;
 }
