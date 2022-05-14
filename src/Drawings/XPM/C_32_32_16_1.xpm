@@ -41,7 +41,7 @@ static char * C_32_32_16_1_xpm[] = {
 "    GGGGH                 C     ",
 "    GGGGG                BGL    ",
 "    HGGGGI               GGG    ",
-"     GGGGGEO             GGGL    ",
+"     GGGGGEO             GGGL   ",
 "     LGGGGG            GGGG     ",
 "      GGGGGGO        BGGGG      ",
 "       GGGGGGGHBEEAIGGGGG       ",
