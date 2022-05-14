@@ -26,7 +26,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-const static char* XPM_COLOR_LIST [] =
+static const char* XPM_COLOR_LIST [] =
 {
     " 	g #FFFFFF",
     "A	g #CCCCCC",
