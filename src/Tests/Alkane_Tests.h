@@ -276,6 +276,26 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void);
 extern void TEST_Text_Based_Alkane_Drawing_2 (void);
 
 /**
+ * @brief Diese Testfunktion ueberprueft, ob das Erstellen einer textbasierten Zeichnung und deren Export als XPM Datei
+ * funktioniert.
+ *
+ * Als Teststruktur wird "3,3,4-Triethyl-2,4-dimethylhexan" verwendet.
+ *
+ * Textbasierte Zeichnung:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void);
+
+/**
  * @brief Alle Testfunktionen ausfuehren.
  *
  * Die Funktionalitaet liegt nicht direkt im Koerper dieser Funktion. Vielmehr dient diese Funktion als eine Art

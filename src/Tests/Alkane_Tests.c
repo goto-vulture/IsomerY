@@ -30,6 +30,7 @@
 #include "../Drawings/Alkane_Parser.h"
 #include "../Print_Tools.h"
 #include "../String_Tools.h"
+#include "../Drawings/To_XPM.h"
 
 
 
@@ -173,6 +174,7 @@ Execute_All_Alkane_Tests
 
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_1),
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_2),
+            CREATE_Test_Function_And_Their_Name(TEST_Convert_Text_Based_Alane_Drawing_To_XPM),
 
             CREATE_Test_Function_And_Their_Name(TEST_Use_All_Testfunctions)
     };
@@ -1073,6 +1075,44 @@ extern void TEST_Text_Based_Alkane_Drawing_2 (void)
 
     // War der Test aller Zeichnungen erfolgreich ?
     ASSERT_EQUALS (false, at_least_one_wrong_result_created);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Diese Testfunktion ueberprueft, ob das Erstellen einer textbasierten Zeichnung und deren Export als XPM Datei
+ * funktioniert.
+ *
+ * Als Teststruktur wird "3,3,4-Triethyl-2,4-dimethylhexan" verwendet.
+ *
+ * Textbasierte Zeichnung:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
+{
+    const char* iupac_name = "3,3,4-Triethyl-2,4-dimethylhexan";
+
+    // Textbasierte Zeichnung erzeugen
+    struct Text_Based_Alkane_Drawing* result_drawing =
+            Create_Text_Based_Alkane_Drawing (iupac_name, strlen (iupac_name));
+
+    // Textbasierte Zeichnung exportieren
+    Export_Text_Based_Drawing_To_XPM(result_drawing,
+            EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
+
+    Delete_Text_Based_Alkane_Drawing (result_drawing);
+    result_drawing = NULL;
 
     return;
 }
