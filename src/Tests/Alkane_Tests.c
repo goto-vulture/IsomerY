@@ -1107,6 +1107,10 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
     struct Text_Based_Alkane_Drawing* result_drawing =
             Create_Text_Based_Alkane_Drawing (iupac_name, strlen (iupac_name));
 
+    puts("Export image:");
+    Show_Text_Based_Alkane_Drawing(result_drawing);
+    PUTS_FFLUSH("");
+
     // Textbasierte Zeichnung exportieren
     Export_Text_Based_Drawing_To_XPM(result_drawing,
             EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
