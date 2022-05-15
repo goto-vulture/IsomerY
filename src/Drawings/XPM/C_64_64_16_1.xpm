@@ -1,6 +1,6 @@
 /* XPM */
 // Source before the convertion to XPM: CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=40796
-static char* C_64_64_16_1xpm[] = {
+static const char* C_64_64_16_1xpm[] = {
 "64 64 16 1",
 " 	g #FFFFFF",
 "A	g #CCCCCC",

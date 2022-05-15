@@ -1,5 +1,5 @@
 /* XPM */
-static char * Hyphen_Angle_90_32_32_11_1_xpm[] = {
+static const char * Hyphen_Angle_90_32_32_11_1_xpm[] = {
 "32 32 11 1",
 " 	c #FFFFFF",
 "f	c #FDFDFD",

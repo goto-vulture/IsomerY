@@ -1,5 +1,5 @@
 /* XPM */
-static char * Hyphen_32_32_7_1_xpm[] = {
+static const char * Hyphen_32_32_7_1_xpm[] = {
 "32 32 7 1",
 " 	c #FFFFFF",
 "f	c #FDFDFD",

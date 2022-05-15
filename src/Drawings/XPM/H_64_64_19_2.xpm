@@ -1,6 +1,6 @@
 /* XPM */
 // Source before the convertion to XPM: Von nd - Eigenes Werk (rendered using: Corel PhotoPaint, Bitstreat-Font Della Robbia), CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=40802
-static char* H_64_64_19_2xpm[] = {
+static const char* H_64_64_19_2xpm[] = {
 "64 64 19 2",
 "  	g #FFFFFF",
 "2.	g #000000",
