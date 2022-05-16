@@ -541,12 +541,13 @@ Show_Text_Based_Alkane_Drawing
     ASSERT_MSG(text_based_drawing != NULL, "drawing is NULL !");
 
     const char* drawing [TEXT_BASED_ALKANE_DRAWING_DIM_1];
-    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_1; ++ i)
+    SET_POINTER_ARRAY_TO_NULL(drawing, COUNT_ARRAY_ELEMENTS(drawing))
+    for (size_t i = 0; i < text_based_drawing->max_dim_1_used; ++ i)
     {
         drawing [i] = text_based_drawing->drawing [i];
     }
 
-    Print_2D_String_Array(drawing, TEXT_BASED_ALKANE_DRAWING_DIM_1, TEXT_BASED_ALKANE_DRAWING_DIM_2);
+    Print_2D_String_Array(drawing, text_based_drawing->max_dim_1_used, text_based_drawing->max_dim_2_used);
 
     return;
 }
@@ -1138,10 +1139,11 @@ Adjust_Drawing_For_Terminal
     for (size_t i = first_used_line; i < latest_line + 1; ++ i)
     {
         memcpy (drawing->drawing [i - first_used_line], drawing->drawing [i], line_length);
+        memset (drawing->drawing [i], '\0', line_length);
     }
 
-    drawing->max_dim_1_used = latest_line - first_used_line + 1;
-    drawing->max_dim_2_used = longest_line;
+    drawing->max_dim_1_used = (uint_fast8_t) (latest_line - first_used_line + 1);
+    drawing->max_dim_2_used = (uint_fast8_t) longest_line;
 
     return;
 }
