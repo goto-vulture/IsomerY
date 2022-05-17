@@ -303,9 +303,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     printf ("Bytes written: %8zu\n", bytes_written);
     fflush(stdout);
 
-    fclose (result_file);
-    result_file = NULL;
-
+    FCLOSE_AND_SET_TO_NULL(result_file);
     FREE_AND_SET_TO_NULL(export_buffer);
     // ===== ===== ===== ENDE Fertiges XPM-Bild vom Speicher in die Datei schreiben ===== ===== =====
 
