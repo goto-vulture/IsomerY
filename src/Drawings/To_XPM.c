@@ -198,6 +198,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     // Allgemeine Informationen sammelbar machen
     size_t bytes_written = 0;
     size_t lines_written = 1; // Nur die Nutzdaten, keine Farbinformationen etc. !
+    size_t longest_written_line = 0;
 
     // Header der XPM Datei
     char xpm_header [100];
@@ -252,6 +253,10 @@ extern void Export_Text_Based_Drawing_To_XPM
         printf (">\"%s\"<\n", output_data [i]);
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
         bytes_written += write_return;
+        if (write_return > longest_written_line)
+        {
+            longest_written_line = write_return;
+        }
 
         if ((i + 1) < x_length)
         {
@@ -280,6 +285,8 @@ extern void Export_Text_Based_Drawing_To_XPM
     bytes_written += write_return;
 
     printf ("Lines written: %zu\n", lines_written);
+    printf ("Longest line:  %zu\n", longest_written_line);
+    printf ("Color list:    %zu\n", COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST));
     printf ("Bytes written: %zu\n", bytes_written);
 
     fclose (result_file);
