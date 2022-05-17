@@ -217,8 +217,10 @@ extern void Export_Text_Based_Drawing_To_XPM
     Create_XPM_Header
     (
         output_file_name,
+        y_length - 1,   // JA erst y, da es um die Laenge der einzelnen Zeichen geht
+                        // - 1, da y_length die Groesse des zu allokierenden Speichers beschreibt -> Terminatorsymbol
+                        // enthalten
         x_length,
-        y_length,
         COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST),
         1,
         xpm_header,
