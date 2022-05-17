@@ -31,6 +31,8 @@
 #include "../Drawings/XPM/Hyphen_Angle_90_64_64_13_1.xpm"
 #include "../Drawings/XPM/Hyphen_Angle_90_64_64_13_2.xpm"
 
+#include "XPM/XPM_Color_List.h"
+
 
 
 struct char_char_array_tuple
@@ -175,17 +177,65 @@ extern void Export_Text_Based_Drawing_To_XPM
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
 
+    // Header der XPM Datei
+    char xpm_header [100];
+    memset(xpm_header, '\0', sizeof(xpm_header));
+    Create_XPM_Header
+    (
+        input->iupac_name,
+        x_length,
+        y_length,
+        COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST),
+        1,
+        xpm_header,
+        COUNT_ARRAY_ELEMENTS(xpm_header) - 1
+    );
+
+    size_t write_return = 0;
+    write_return = fwrite(xpm_header, sizeof (char), strlen(xpm_header), result_file);
+    ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+
+    // Farbliste erzeugen
+    char xpm_color_list [1000];
+    memset(xpm_color_list, '\0', sizeof(xpm_color_list));
+    Create_XPM_Color_List
+    (
+        xpm_color_list,
+        COUNT_ARRAY_ELEMENTS(xpm_color_list) - 1
+    );
+    write_return = fwrite(xpm_color_list, sizeof (char), strlen(xpm_color_list), result_file);
+    ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+
     // Zeile fuer Zeile die Datei erzeugen
     for (uint_fast32_t i = 0; i < x_length; ++ i)
     {
-        size_t write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
+        write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
         write_return = fwrite (output_data [i], sizeof (char), y_length - 1, result_file);
         printf (">\"%s\"<\n", output_data [i]);
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
-        write_return = fwrite ("\"\n", sizeof (char), strlen("\"\n"), result_file);
+        if ((i + 1) < x_length)
+        {
+            write_return = fwrite ("\",\n", sizeof (char), strlen("\",\n"), result_file);
+        }
+        else
+        {
+            write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
+        }
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
     }
+
+    // Footer der XPM-Datei
+    char xpm_footer [10];
+    memset(xpm_footer, '\0', sizeof(xpm_footer));
+    Create_XPM_Footer
+    (
+        xpm_footer,
+        COUNT_ARRAY_ELEMENTS(xpm_footer) - 1
+    );
+
+    write_return = fwrite(xpm_footer, sizeof (char), strlen (xpm_footer), result_file);
+    ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
 
     fclose (result_file);
     result_file = NULL;
