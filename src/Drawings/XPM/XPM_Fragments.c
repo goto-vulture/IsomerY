@@ -80,7 +80,7 @@ Create_XPM_Header
     snprintf(output_memory, output_memory_size - 1,
             "/* XPM */\n"
             "static char * %s[] = {\n"
-            "%" PRIuFAST32 " %" PRIuFAST32 " %" PRIuFAST8 " %" PRIuFAST8 "\n",
+            "\"%" PRIuFAST32 " %" PRIuFAST32 " %" PRIuFAST8 " %" PRIuFAST8 "\",\n",
             picture_name, picture_width, picture_height, picture_colors, char_per_pixel);
     output_memory[output_memory_size - 1] = '\0';
 
@@ -121,7 +121,7 @@ Create_XPM_Color_List
     // Die komplette Farbliste aus der Headerdatei "XPM_Color_List." in den Ausgabespeicher schreiben
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST); ++ i)
     {
-        const int necessary_char = snprintf(output_memory, output_memory_size - 1, "%s\n", XPM_COLOR_LIST [i]);
+        const int necessary_char = snprintf(output_memory, output_memory_size - 1, "\"%s\",\n", XPM_COLOR_LIST [i]);
         output_memory[output_memory_size - 1] = '\0';
 
         // Wenn nicht genug Speicher fuer den kompletten String ist, wird an dieser Stelle die Verarbeitung abgebrochen
