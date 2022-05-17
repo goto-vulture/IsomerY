@@ -169,13 +169,17 @@ extern void Export_Text_Based_Drawing_To_XPM
         output_data_y_cursor = 0;
     }
 
-    // Fertiges XPM-Bild vom Speicher in die Datei schreiben
+    // ===== ===== ===== BEGINN Fertiges XPM-Bild vom Speicher in die Datei schreiben ===== ===== =====
     char output_file_name [IUPAC_NAME_LENGTH + strlen (".xpm")];
     memset (output_file_name, '\0', sizeof(output_file_name));
     strncat (output_file_name, input->iupac_name, IUPAC_NAME_LENGTH);
     strncat (output_file_name, ".xpm", IUPAC_NAME_LENGTH - strlen (output_file_name));
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
+
+    // Allgemeine Informationen sammelbar machen
+    size_t bytes_written = 0;
+    size_t lines_written = 1; // Nur die Nutzdaten, keine Farbinformationen etc. !
 
     // Header der XPM Datei
     char xpm_header [100];
@@ -194,6 +198,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     size_t write_return = 0;
     write_return = fwrite(xpm_header, sizeof (char), strlen(xpm_header), result_file);
     ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+    bytes_written += write_return;
 
     // Farbliste erzeugen
     char xpm_color_list [1000];
@@ -205,24 +210,31 @@ extern void Export_Text_Based_Drawing_To_XPM
     );
     write_return = fwrite(xpm_color_list, sizeof (char), strlen(xpm_color_list), result_file);
     ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+    bytes_written += write_return;
 
     // Zeile fuer Zeile die Datei erzeugen
     for (uint_fast32_t i = 0; i < x_length; ++ i)
     {
         write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+        bytes_written += write_return;
+
         write_return = fwrite (output_data [i], sizeof (char), y_length - 1, result_file);
         printf (">\"%s\"<\n", output_data [i]);
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+        bytes_written += write_return;
+
         if ((i + 1) < x_length)
         {
             write_return = fwrite ("\",\n", sizeof (char), strlen("\",\n"), result_file);
+            lines_written ++;
         }
         else
         {
             write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
         }
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+        bytes_written += write_return;
     }
 
     // Footer der XPM-Datei
@@ -236,9 +248,14 @@ extern void Export_Text_Based_Drawing_To_XPM
 
     write_return = fwrite(xpm_footer, sizeof (char), strlen (xpm_footer), result_file);
     ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+    bytes_written += write_return;
+
+    printf ("Lines written: %zu\n", lines_written);
+    printf ("Bytes written: %zu\n", bytes_written);
 
     fclose (result_file);
     result_file = NULL;
+    // ===== ===== ===== ENDE Fertiges XPM-Bild vom Speicher in die Datei schreiben ===== ===== =====
 
     for (uint_fast32_t i = 0; i < x_length; ++ i)
     {
