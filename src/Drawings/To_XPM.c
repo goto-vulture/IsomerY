@@ -15,21 +15,21 @@
 #include "../str2int.h"
 
 // Alle XPM-Bilder, die fuer die Erzeugung zur Verfuegung stehen
-#include "../Drawings/XPM/C_32_32_16_1.xpm"
-#include "../Drawings/XPM/C_64_64_16_1.xpm"
-#include "../Drawings/XPM/C_64_64_16_2.xpm"
+#include "XPM/C_32_32_16_1.xpm"
+#include "XPM/C_64_64_16_1.xpm"
+#include "XPM/C_64_64_16_2.xpm"
 
-#include "../Drawings/XPM/H_32_32_10_1.xpm"
-#include "../Drawings/XPM/H_64_64_19_1.xpm"
-#include "../Drawings/XPM/H_64_64_19_2.xpm"
+#include "XPM/H_32_32_10_1.xpm"
+#include "XPM/H_64_64_19_1.xpm"
+#include "XPM/H_64_64_19_2.xpm"
 
-#include "../Drawings/XPM/Hyphen_32_32_7_1.xpm"
-#include "../Drawings/XPM/Hyphen_64_64_13_1.xpm"
-#include "../Drawings/XPM/Hyphen_64_64_13_2.xpm"
+#include "XPM/Hyphen_32_32_7_1.xpm"
+#include "XPM/Hyphen_64_64_13_1.xpm"
+#include "XPM/Hyphen_64_64_13_2.xpm"
 
-#include "../Drawings/XPM/Hyphen_Angle_90_32_32_11_1.xpm"
-#include "../Drawings/XPM/Hyphen_Angle_90_64_64_13_1.xpm"
-#include "../Drawings/XPM/Hyphen_Angle_90_64_64_13_2.xpm"
+#include "XPM/Hyphen_Angle_90_32_32_11_1.xpm"
+#include "XPM/Hyphen_Angle_90_64_64_13_1.xpm"
+#include "XPM/Hyphen_Angle_90_64_64_13_2.xpm"
 
 #include "XPM/XPM_Color_List.h"
 
