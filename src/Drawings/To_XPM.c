@@ -309,6 +309,10 @@ Draw_Char_In_XPM
         conversion_result = str2int(&number_of_colors, number_of_colors_c_str, 10);
         ASSERT_FMSG(conversion_result == STR2INT_SUCCESS, "Cannot convert \"%s\" to int ! (number of colors)",
                 number_of_colors_c_str);
+
+        ASSERT_FMSG(line_length > 0, "line_length is a negative number (%lu) !", line_length);
+        ASSERT_FMSG(number_of_lines > 0, "number_of_lines is a negative number (%lu) !", number_of_lines);
+        ASSERT_FMSG(number_of_colors > 0, "number_of_colors is a negative number (%lu) !", number_of_colors);
         // ===== ===== ===== ENDE Informationen ermitteln ===== ===== =====
 
         // Alle Nutzdaten aus dem XPM-Array kopieren
@@ -316,7 +320,7 @@ Draw_Char_In_XPM
         {
             PRINTF_FFLUSH("\"%s\"\n", tuple [tuple_index].xpm_array_name [i]);
             memcpy(&(output_data[*x_cursor][*y_cursor]), tuple [tuple_index].xpm_array_name [i],
-                    line_length);
+                    (size_t) line_length);
             PRINTF_FFLUSH("\"%s\"\n", output_data[*x_cursor]);
             *x_cursor += 1;
         }
