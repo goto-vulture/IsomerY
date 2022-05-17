@@ -35,6 +35,14 @@
 
 
 
+#ifndef EXPORT_FILE_BUFFER_SIZE
+#define EXPORT_FILE_BUFFER_SIZE 100000
+#else
+#error "The marco \"EXPORT_FILE_BUFFER_SIZE\" is already defined !"
+#endif /* EXPORT_FILE_BUFFER_SIZE */
+
+
+
 struct char_char_array_tuple
 {
     char c;
@@ -199,8 +207,17 @@ extern void Export_Text_Based_Drawing_To_XPM
     printf("Used IUPAC name:  %s\n", input->iupac_name);
     printf("Export file name: %s\n", output_file_name);
     fflush(stdout);
+
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
+
+    // Puffer fuer die Ausgabedatei
+    char* export_buffer = (char*) CALLOC(EXPORT_FILE_BUFFER_SIZE, sizeof (char));
+    ASSERT_ALLOC(export_buffer, "Cannot create the file buffer for exporting !",
+            EXPORT_FILE_BUFFER_SIZE * sizeof (char));
+    const int setvbuf_result = setvbuf(result_file, export_buffer, _IOFBF, EXPORT_FILE_BUFFER_SIZE * sizeof (char));
+    ASSERT_FMSG(setvbuf_result == 0, "Cannot use a user defined buffer for the file export. Used buffer size: %zu bytes",
+            (size_t) EXPORT_FILE_BUFFER_SIZE * sizeof (char));
 
     // Allgemeine Informationen sammelbar machen
     size_t bytes_written = 0;
@@ -290,6 +307,8 @@ extern void Export_Text_Based_Drawing_To_XPM
 
     fclose (result_file);
     result_file = NULL;
+
+    FREE_AND_SET_TO_NULL(export_buffer);
     // ===== ===== ===== ENDE Fertiges XPM-Bild vom Speicher in die Datei schreiben ===== ===== =====
 
     for (uint_fast32_t i = 0; i < x_length; ++ i)
