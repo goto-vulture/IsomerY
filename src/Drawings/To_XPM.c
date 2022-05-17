@@ -170,10 +170,10 @@ extern void Export_Text_Based_Drawing_To_XPM
     }
 
     // Fertiges XPM-Bild vom Speicher in die Datei schreiben
-    char output_file_name [IUPAC_NAME_LENGTH + strlen (".txt")];
+    char output_file_name [IUPAC_NAME_LENGTH + strlen (".xpm")];
     memset (output_file_name, '\0', sizeof(output_file_name));
     strncat (output_file_name, input->iupac_name, IUPAC_NAME_LENGTH);
-    strncat (output_file_name, ".txt", IUPAC_NAME_LENGTH - strlen (output_file_name));
+    strncat (output_file_name, ".xpm", IUPAC_NAME_LENGTH - strlen (output_file_name));
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
 
