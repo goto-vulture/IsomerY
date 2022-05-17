@@ -130,10 +130,11 @@ extern void Export_Text_Based_Drawing_To_XPM
     const uint_fast32_t x_length = (uint_fast32_t) (input->max_dim_1_used * char_size); /* Kein + 1 notwendig (aeussere Dimension !) */
     const uint_fast32_t y_length = (uint_fast32_t) (input->max_dim_2_used * char_size + 1);
 
-    printf("Export file name: %s\n", input->iupac_name);
-    printf("Original dimensions (x, y): %" PRIuFAST8 ", %" PRIuFAST8 "\n", input->max_dim_1_used,
-            input->max_dim_2_used);
-    PRINTF_FFLUSH("Export XPM file dimensions (x, y): %" PRIuFAST32 ", %" PRIuFAST32 "\n", x_length, y_length);
+    printf("Export IUPAC name: %s\n", input->iupac_name);
+    printf("Original dimensions (width, height): %" PRIuFAST8 ", %" PRIuFAST8 "\n", input->max_dim_2_used,
+            input->max_dim_1_used);
+    PRINTF_FFLUSH("Export XPM file dimensions (width, height): %" PRIuFAST32 ", %" PRIuFAST32 "\n",
+            y_length - 1, x_length);
 
     // Aeussere Dimension
     char** output_data = (char**) CALLOC(x_length, sizeof (char*));
@@ -171,27 +172,31 @@ extern void Export_Text_Based_Drawing_To_XPM
 
     // ===== ===== ===== BEGINN Fertiges XPM-Bild vom Speicher in die Datei schreiben ===== ===== =====
     char output_file_name [IUPAC_NAME_LENGTH + strlen (".xpm")];
+    char output_array_name [IUPAC_NAME_LENGTH + strlen (".xpm")];
     memset (output_file_name, '\0', sizeof(output_file_name));
+    memset (output_array_name, '\0', sizeof(output_array_name));
     strncat (output_file_name, input->iupac_name, IUPAC_NAME_LENGTH);
     strncat (output_file_name, ".xpm", IUPAC_NAME_LENGTH - strlen (output_file_name));
+    strncat (output_array_name, input->iupac_name, IUPAC_NAME_LENGTH);
 
     // Name konvertieren -> Kommata und Minuszeichen mit Unterstriche ersetzen
-    for (size_t i = 0; i < strlen(output_file_name); ++ i)
+    for (size_t i = 0; i < strlen(output_array_name); ++ i)
     {
-        if (output_file_name [i] == '-' || output_file_name [i] == ',')
+        if (output_array_name [i] == '-' || output_array_name [i] == ',')
         {
-            output_file_name [i] = '_';
+            output_array_name [i] = '_';
         }
     }
     // Wenn das erste Zeichen eine Ziffer ist, dann muss ein Unterstrich vorangestellt werden, damit der Name des
     // Arrays in der XPM-Datei ein gueltiger Variablenname wird
-    if (isdigit(output_file_name[0]) /* == true */)
+    if (isdigit(output_array_name[0]) /* == true */)
     {
         // Den kompletten Namen um ein Zeichen nach hinten verschieben, damit der Unterstrich vorangestellt werden kann
-        memmove(&(output_file_name [1]), output_file_name, strlen (output_file_name));
-        output_file_name [0] = '_';
+        memmove(&(output_array_name [1]), output_array_name, strlen (output_array_name));
+        output_array_name [0] = '_';
     }
 
+    printf ("Export file name: %s\n", output_file_name);
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
 
@@ -203,20 +208,9 @@ extern void Export_Text_Based_Drawing_To_XPM
     // Header der XPM Datei
     char xpm_header [100];
     memset(xpm_header, '\0', sizeof(xpm_header));
-    // Die letzten vier Bytes des Namen entfernen, damit ".xpm" nicht im Arraynamen vorhanden ist
-    if (strlen (output_file_name) > strlen (".xpm"))
-    {
-        if (strncmp(&(output_file_name [strlen (output_file_name) - strlen (".xpm")]), ".xpm", strlen (".xpm")) == 0)
-        {
-            for (size_t i = 0; i < strlen (".xpm"); ++ i)
-            {
-                output_file_name [strlen (output_file_name) - 1] = '\0';
-            }
-        }
-    }
     Create_XPM_Header
     (
-        output_file_name,
+        output_array_name,
         y_length - 1,   // JA erst y, da es um die Laenge der einzelnen Zeichen geht
                         // - 1, da y_length die Groesse des zu allokierenden Speichers beschreibt -> Terminatorsymbol
                         // enthalten
