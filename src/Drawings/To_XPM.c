@@ -252,7 +252,7 @@ extern void Export_Text_Based_Drawing_To_XPM
         bytes_written += write_return;
 
         write_return = fwrite (output_data [i], sizeof (char), y_length - 1, result_file);
-        printf (">\"%s\"<\n", output_data [i]);
+        // printf (">\"%s\"<\n", output_data [i]);
         ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
         bytes_written += write_return;
         if (write_return > longest_written_line)
@@ -423,10 +423,10 @@ Draw_Char_In_XPM
         // Alle Nutzdaten aus dem XPM-Array kopieren
         for (long int i = number_of_colors + 1; i < (number_of_colors + number_of_lines + 1); ++ i)
         {
-            PRINTF_FFLUSH("\"%s\"\n", tuple [tuple_index].xpm_array_name [i]);
+            // PRINTF_FFLUSH("\"%s\"\n", tuple [tuple_index].xpm_array_name [i]);
             memcpy(&(output_data[*x_cursor][*y_cursor]), tuple [tuple_index].xpm_array_name [i],
                     (size_t) line_length);
-            PRINTF_FFLUSH("\"%s\"\n", output_data[*x_cursor]);
+            // PRINTF_FFLUSH("\"%s\"\n", output_data[*x_cursor]);
             *x_cursor += 1;
         }
     }
