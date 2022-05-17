@@ -130,11 +130,11 @@ extern void Export_Text_Based_Drawing_To_XPM
     const uint_fast32_t x_length = (uint_fast32_t) (input->max_dim_1_used * char_size); /* Kein + 1 notwendig (aeussere Dimension !) */
     const uint_fast32_t y_length = (uint_fast32_t) (input->max_dim_2_used * char_size + 1);
 
-    printf("Export IUPAC name: %s\n", input->iupac_name);
-    printf("Original dimensions (width, height): %" PRIuFAST8 ", %" PRIuFAST8 "\n", input->max_dim_2_used,
-            input->max_dim_1_used);
-    PRINTF_FFLUSH("Export XPM file dimensions (width, height): %" PRIuFAST32 ", %" PRIuFAST32 "\n",
+    printf("Original dimensions (width, height):                %5" PRIuFAST8 ", %5" PRIuFAST8 "\n",
+            input->max_dim_2_used, input->max_dim_1_used);
+    printf("Export XPM file dimensions (width, height):         %5" PRIuFAST32 ", %5" PRIuFAST32 "\n",
             y_length - 1, x_length);
+    fflush(stdout);
 
     // Aeussere Dimension
     char** output_data = (char**) CALLOC(x_length, sizeof (char*));
@@ -196,7 +196,9 @@ extern void Export_Text_Based_Drawing_To_XPM
         output_array_name [0] = '_';
     }
 
-    printf ("Export file name: %s\n", output_file_name);
+    printf("Used IUPAC name:  %s\n", input->iupac_name);
+    printf("Export file name: %s\n", output_file_name);
+    fflush(stdout);
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
 
@@ -280,10 +282,11 @@ extern void Export_Text_Based_Drawing_To_XPM
     ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
     bytes_written += write_return;
 
-    printf ("Lines written: %zu\n", lines_written);
-    printf ("Longest line:  %zu\n", longest_written_line);
-    printf ("Color list:    %zu\n", COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST));
-    printf ("Bytes written: %zu\n", bytes_written);
+    printf ("Lines written: %8zu\n", lines_written);
+    printf ("Longest line:  %8zu\n", longest_written_line);
+    printf ("Color list:    %8zu\n", COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST));
+    printf ("Bytes written: %8zu\n", bytes_written);
+    fflush(stdout);
 
     fclose (result_file);
     result_file = NULL;
