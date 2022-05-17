@@ -174,6 +174,24 @@ extern void Export_Text_Based_Drawing_To_XPM
     memset (output_file_name, '\0', sizeof(output_file_name));
     strncat (output_file_name, input->iupac_name, IUPAC_NAME_LENGTH);
     strncat (output_file_name, ".xpm", IUPAC_NAME_LENGTH - strlen (output_file_name));
+
+    // Name konvertieren -> Kommata und Minuszeichen mit Unterstriche ersetzen
+    for (size_t i = 0; i < strlen(output_file_name); ++ i)
+    {
+        if (output_file_name [i] == '-' || output_file_name [i] == ',')
+        {
+            output_file_name [i] = '_';
+        }
+    }
+    // Wenn das erste Zeichen eine Ziffer ist, dann muss ein Unterstrich vorangestellt werden, damit der Name des
+    // Arrays in der XPM-Datei ein gueltiger Variablenname wird
+    if (isdigit(output_file_name[0]) /* == true */)
+    {
+        // Den kompletten Namen um ein Zeichen nach hinten verschieben, damit der Unterstrich vorangestellt werden kann
+        memmove(&(output_file_name [1]), output_file_name, strlen (output_file_name));
+        output_file_name [0] = '_';
+    }
+
     FILE* result_file = fopen (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
 
@@ -184,9 +202,20 @@ extern void Export_Text_Based_Drawing_To_XPM
     // Header der XPM Datei
     char xpm_header [100];
     memset(xpm_header, '\0', sizeof(xpm_header));
+    // Die letzten vier Bytes des Namen entfernen, damit ".xpm" nicht im Arraynamen vorhanden ist
+    if (strlen (output_file_name) > strlen (".xpm"))
+    {
+        if (strncmp(&(output_file_name [strlen (output_file_name) - strlen (".xpm")]), ".xpm", strlen (".xpm")) == 0)
+        {
+            for (size_t i = 0; i < strlen (".xpm"); ++ i)
+            {
+                output_file_name [strlen (output_file_name) - 1] = '\0';
+            }
+        }
+    }
     Create_XPM_Header
     (
-        input->iupac_name,
+        output_file_name,
         x_length,
         y_length,
         COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST),
