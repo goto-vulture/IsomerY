@@ -54,8 +54,6 @@ static void
 Draw_Char_In_XPM
 (
         char** const output_data,
-        const uint_fast32_t x_length,
-        const uint_fast32_t y_length,
         uint_fast32_t* const restrict x_cursor,
         uint_fast32_t* const restrict y_cursor,
         const enum Export_To_XPM_Settings export_settings,
@@ -169,8 +167,8 @@ extern void Export_Text_Based_Drawing_To_XPM
                 break;
             }
 
-            Draw_Char_In_XPM(output_data, x_length, y_length, &output_data_x_cursor, &output_data_y_cursor,
-                    export_settings, input->drawing[x][y], tuple, COUNT_ARRAY_ELEMENTS(tuple));
+            Draw_Char_In_XPM(output_data, &output_data_x_cursor, &output_data_y_cursor, export_settings,
+                    input->drawing[x][y], tuple, COUNT_ARRAY_ELEMENTS(tuple));
             output_data_x_cursor -= char_size;
         }
 
@@ -326,8 +324,6 @@ static void
 Draw_Char_In_XPM
 (
         char** const output_data,
-        const uint_fast32_t x_length,
-        const uint_fast32_t y_length,
         uint_fast32_t* const restrict x_cursor,
         uint_fast32_t* const restrict y_cursor,
         const enum Export_To_XPM_Settings export_settings,
