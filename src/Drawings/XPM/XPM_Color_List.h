@@ -60,14 +60,14 @@ static const char* XPM_COLOR_LIST [] =
     "c	g #4D4D4D",
     "d	g #494949",
     "e	g #C8C8C8",
-    "f	c #FDFDFD",
-    "g	c #EDEDED",
-    "h	c #010101",
-    "i	c #DADADA",
-    "j	c #FCFCFC",
-    "k	c #D3D3D3",
-    "l	c #D4D4D4",
-    "m	c #F0F0F0",
+    "f	g #FDFDFD",
+    "g	g #EDEDED",
+    "h	g #010101",
+    "i	g #DADADA",
+    "j	g #FCFCFC",
+    "k	g #D3D3D3",
+    "l	g #D4D4D4",
+    "m	g #F0F0F0",
 };
 
 // ENDE C++-Kompablitaet herstellen
