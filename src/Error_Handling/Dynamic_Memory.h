@@ -118,6 +118,19 @@ extern void Show_Dynamic_Memory_Status (void);
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * @brief Der uebergebene Filestreampointer wird geschlossen und auf nullptr gesetzt.
+ */
+#ifndef FCLOSE_AND_SET_TO_NULL
+    #define FCLOSE_AND_SET_TO_NULL(pointer)                                                                           \
+        fclose (pointer);                                                                                             \
+        pointer = NULL;
+#else
+    #error "The macro \"FCLOSE_AND_SET_TO_NULL\" is already defined !"
+#endif /* FCLOSE_AND_SET_TO_NULL */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * @brief Das Loeschen eines Objektes mittels der passenden Loesch-Funktion.
  *
  * Wie fuer Makros typisch: Es ist bloss eine Textersetzung ! Wenn eine falsche Loesch-Funktion angegeben wird, dann
