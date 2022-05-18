@@ -1132,22 +1132,42 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
     Export_Text_Based_Drawing_To_XPM(result_drawing,
             EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
 
-    // Erzeugte Datei mit der Referenzdatei byteweise vergleichen
+    // Name und Pfad der Referenzdatei zusammenbauen
     char reference_file [100];
     memset(reference_file, '\0', sizeof (reference_file));
     size_t char_left = COUNT_ARRAY_ELEMENTS(reference_file) - 1;
-    strncat(reference_file, "./Expected_Results/Alkane/XPM_Pictures/", char_left);
-    char_left -= strlen ("./Expected_Results/Alkane/XPM_Pictures/");
+    strncat(reference_file, "./src/Tests/Expected_Results/Alkane/XPM_Pictures/", char_left);
+    char_left -= strlen ("./src/Tests/Expected_Results/Alkane/XPM_Pictures/");
     strncat(reference_file, iupac_name, char_left);
     char_left -= strlen (iupac_name);
     strncat(reference_file, ".xpm", char_left);
     reference_file [COUNT_ARRAY_ELEMENTS(reference_file) - 1] = '\0';
-    // char_left -= strlen (".xpm");
+
+    // Name der Testdatei zusammenbauen
+    char test_file [IUPAC_NAME_LENGTH + strlen(".xpm")];
+    memset (test_file, '\0', sizeof (test_file));
+    char_left = COUNT_ARRAY_ELEMENTS(test_file) - 1;
+    strncat (test_file, iupac_name, char_left);
+    char_left -= strlen (iupac_name);
+    strncat (test_file, ".xpm", char_left);
+    test_file [COUNT_ARRAY_ELEMENTS(test_file) - 1] = '\0';
 
     printf("\nReference file for comparison: %s\n", reference_file);
+    int_fast32_t first_error_position = 0;
+
+    // Erzeugte Datei mit der Referenzdatei byteweise vergleichen
+    const _Bool comparison_result = Compare_Two_XPM_Drawings(reference_file, test_file, &first_error_position);
 
     Delete_Text_Based_Alkane_Drawing (result_drawing);
     result_drawing = NULL;
+
+    if (! comparison_result /* == false */)
+    {
+        fprintf (stderr, "The files \"%s\" and \"%s\" are not equal ! First difference on byte %" PRIdFAST32 " !",
+                reference_file, test_file, first_error_position);
+        fflush(stderr);
+    }
+    ASSERT_EQUALS(true, comparison_result);
 
     return;
 }
