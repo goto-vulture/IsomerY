@@ -46,6 +46,12 @@
 #error "The macro \"MAX_LOOP_NESTING\" is already defined !"
 #endif /* MAX_LOOP_NESTING */
 
+#ifndef READ_BUFFER_SIZE
+#define READ_BUFFER_SIZE 100000
+#else
+#error "The macro \"READ_BUFFER_SIZE\" is already defined !"
+#endif /* READ_BUFFER_SIZE */
+
 
 
 /**
@@ -124,6 +130,17 @@ Compare_Expected_Drawing_With_Created_Drawing
         const size_t expected_drawing_dim_2,                                        // 2. Dimension erwartetes Ergebnis
         const size_t created_drawing_dim_1,                                         // 1. Dimension erzeugtes Ergebnis
         const size_t created_drawing_dim_2                                          // 2. Dimension erzeugtes Ergebnis
+);
+
+/**
+ * Zwei XPM-Dateien byteweise miteinander vergleichen.
+ */
+static _Bool
+Compare_Two_XPM_Drawings
+(
+        const char* const restrict reference_file,          // Datei 1
+        const char* const restrict test_file,               // Datei 2
+        int_fast32_t* const restrict first_error_position   // Erste Position, wo die Dateien nicht uebereinstimmen
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -1115,6 +1132,20 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
     Export_Text_Based_Drawing_To_XPM(result_drawing,
             EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
 
+    // Erzeugte Datei mit der Referenzdatei byteweise vergleichen
+    char reference_file [100];
+    memset(reference_file, '\0', sizeof (reference_file));
+    size_t char_left = COUNT_ARRAY_ELEMENTS(reference_file) - 1;
+    strncat(reference_file, "./Expected_Results/Alkane/XPM_Pictures/", char_left);
+    char_left -= strlen ("./Expected_Results/Alkane/XPM_Pictures/");
+    strncat(reference_file, iupac_name, char_left);
+    char_left -= strlen (iupac_name);
+    strncat(reference_file, ".xpm", char_left);
+    reference_file [COUNT_ARRAY_ELEMENTS(reference_file) - 1] = '\0';
+    // char_left -= strlen (".xpm");
+
+    printf("\nReference file for comparison: %s\n", reference_file);
+
     Delete_Text_Based_Alkane_Drawing (result_drawing);
     result_drawing = NULL;
 
@@ -1713,6 +1744,71 @@ Compare_Expected_Drawing_With_Created_Drawing
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Zwei XPM-Dateien byteweise miteinander vergleichen.
+ */
+static _Bool
+Compare_Two_XPM_Drawings
+(
+        const char* const restrict reference_file,          // Datei 1
+        const char* const restrict test_file,               // Datei 2
+        int_fast32_t* const restrict first_error_position   // Erste Position, wo die Dateien nicht uebereinstimmen
+)
+{
+    _Bool result = true;
+
+    char* read_buffer_1 = (char*) CALLOC(READ_BUFFER_SIZE, sizeof (char));
+    ASSERT_ALLOC(read_buffer_1, "Cannot create a buffer for reading the reference file !",
+            READ_BUFFER_SIZE * sizeof (char));
+    char* read_buffer_2 = (char*) CALLOC(READ_BUFFER_SIZE, sizeof (char));
+    ASSERT_ALLOC(read_buffer_2, "Cannot create a buffer for reading the test file !",
+            READ_BUFFER_SIZE * sizeof (char));
+
+    FILE* file_1 = fopen(reference_file, "r");
+    ASSERT_FMSG(file_1 != NULL, "Cannot open file: \"%s\" !", reference_file);
+    FILE* file_2 = fopen(test_file, "r");
+    ASSERT_FMSG(file_2 != NULL, "Cannot open file: \"%s\" !", test_file);
+
+    int setvbuf_result = setvbuf(file_1, read_buffer_1, _IOFBF, READ_BUFFER_SIZE * sizeof (char));
+    ASSERT_FMSG(setvbuf_result == 0, "Cannot use a user defined buffer for file reading. Used buffer size: %zu bytes",
+            (size_t) READ_BUFFER_SIZE * sizeof (char));
+    setvbuf_result = setvbuf(file_2, read_buffer_2, _IOFBF, READ_BUFFER_SIZE * sizeof (char));
+    ASSERT_FMSG(setvbuf_result == 0, "Cannot use a user defined buffer for file reading. Used buffer size: %zu bytes",
+            (size_t) READ_BUFFER_SIZE * sizeof (char));
+
+    // Dateien byteweise vergleichen
+    int c1 = 0;
+    int c2 = 0;
+    int_fast32_t counter = 0;
+    do
+    {
+        c1 = fgetc(file_1);
+        c2 = fgetc(file_2);
+        ++ counter;
+
+        if (c1 != c2)
+        {
+            *first_error_position = counter;
+            result = false;
+            break;
+        }
+    }
+    while (c1 != EOF && c2 != EOF);
+
+    // Gab es Fehler bei den Dateioperationen?
+    ASSERT_FMSG(ferror(file_1) == 0, "Error while reading the file \"%s\" !", reference_file);
+    ASSERT_FMSG(ferror(file_2) == 0, "Error while reading the file \"%s\" !", test_file);
+
+    FCLOSE_AND_SET_TO_NULL(file_1);
+    FCLOSE_AND_SET_TO_NULL(file_2);
+    FREE_AND_SET_TO_NULL(read_buffer_1);
+    FREE_AND_SET_TO_NULL(read_buffer_2);
+
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
 #ifdef MAX_WRONG_RESULTS
 #undef MAX_WRONG_RESULTS
 #endif /* MAX_WRONG_RESULTS */
@@ -1720,3 +1816,7 @@ Compare_Expected_Drawing_With_Created_Drawing
 #ifdef MAX_LOOP_NESTING
 #undef MAX_LOOP_NESTING
 #endif /* MAX_LOOP_NESTING */
+
+#ifdef READ_BUFFER_SIZE
+#undef READ_BUFFER_SIZE
+#endif /* READ_BUFFER_SIZE */
