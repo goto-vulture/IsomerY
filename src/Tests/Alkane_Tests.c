@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "../Alkane/Alkane.h"
 #include "../Alkane/Alkane_Branch.h"
 #include "../Alkane/Alkane_Container.h"
@@ -1156,7 +1157,9 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
     int_fast32_t first_error_position = 0;
 
     // Erzeugte Datei mit der Referenzdatei byteweise vergleichen
+    const clock_t start_time = clock ();
     const _Bool comparison_result = Compare_Two_XPM_Drawings(reference_file, test_file, &first_error_position);
+    const clock_t end_time = clock ();
 
     Delete_Text_Based_Alkane_Drawing (result_drawing);
     result_drawing = NULL;
@@ -1168,6 +1171,8 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
         fflush(stderr);
     }
     ASSERT_EQUALS(true, comparison_result);
+
+    printf("Files are equal. Done comparison in %f sec.\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
 
     return;
 }
