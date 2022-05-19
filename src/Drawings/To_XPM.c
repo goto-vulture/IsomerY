@@ -206,7 +206,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     printf("Export file name: %s\n", output_file_name);
     fflush(stdout);
 
-    FILE* result_file = fopen (output_file_name, "w");
+    FILE* result_file = FOPEN (output_file_name, "w");
     ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
 
     // Puffer fuer die Ausgabedatei
@@ -303,8 +303,8 @@ extern void Export_Text_Based_Drawing_To_XPM
     printf ("Bytes written: %8zu\n", bytes_written);
     fflush(stdout);
 
-    FCLOSE_AND_SET_TO_NULL(result_file);
-    FREE_AND_SET_TO_NULL(export_buffer);
+    FCLOSE_AND_SET_TO_NULL (result_file);
+    FREE_AND_SET_TO_NULL (export_buffer);
     // ===== ===== ===== ENDE Fertiges XPM-Bild vom Speicher in die Datei schreiben ===== ===== =====
 
     for (uint_fast32_t i = 0; i < x_length; ++ i)

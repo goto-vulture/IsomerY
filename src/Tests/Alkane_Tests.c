@@ -1778,9 +1778,9 @@ Compare_Two_XPM_Drawings
     ASSERT_ALLOC(read_buffer_2, "Cannot create a buffer for reading the test file !",
             READ_BUFFER_SIZE * sizeof (char));
 
-    FILE* file_1 = fopen(reference_file, "r");
+    FILE* file_1 = FOPEN(reference_file, "r");
     ASSERT_FMSG(file_1 != NULL, "Cannot open file: \"%s\" !", reference_file);
-    FILE* file_2 = fopen(test_file, "r");
+    FILE* file_2 = FOPEN(test_file, "r");
     ASSERT_FMSG(file_2 != NULL, "Cannot open file: \"%s\" !", test_file);
 
     int setvbuf_result = setvbuf(file_1, read_buffer_1, _IOFBF, READ_BUFFER_SIZE * sizeof (char));
