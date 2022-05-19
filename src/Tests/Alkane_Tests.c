@@ -1135,23 +1135,12 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
 
     // Name und Pfad der Referenzdatei zusammenbauen
     char reference_file [100];
-    memset(reference_file, '\0', sizeof (reference_file));
-    size_t char_left = COUNT_ARRAY_ELEMENTS(reference_file) - 1;
-    strncat(reference_file, "./src/Tests/Expected_Results/Alkane/XPM_Pictures/", char_left);
-    char_left -= strlen ("./src/Tests/Expected_Results/Alkane/XPM_Pictures/");
-    strncat(reference_file, iupac_name, char_left);
-    char_left -= strlen (iupac_name);
-    strncat(reference_file, ".xpm", char_left);
-    reference_file [COUNT_ARRAY_ELEMENTS(reference_file) - 1] = '\0';
+    Multi_strncat(reference_file, COUNT_ARRAY_ELEMENTS(reference_file) - 1, 3,
+    		"./src/Tests/Expected_Results/Alkane/XPM_Pictures/", iupac_name, ".xpm");
 
     // Name der Testdatei zusammenbauen
-    char test_file [IUPAC_NAME_LENGTH + strlen(".xpm")];
-    memset (test_file, '\0', sizeof (test_file));
-    char_left = COUNT_ARRAY_ELEMENTS(test_file) - 1;
-    strncat (test_file, iupac_name, char_left);
-    char_left -= strlen (iupac_name);
-    strncat (test_file, ".xpm", char_left);
-    test_file [COUNT_ARRAY_ELEMENTS(test_file) - 1] = '\0';
+    char test_file [IUPAC_NAME_LENGTH + 4 /*strlen(".xpm")*/];
+    Multi_strncat (test_file, COUNT_ARRAY_ELEMENTS(test_file) - 1, 2, iupac_name, ".xpm");
 
     printf("\nReference file for comparison: %s\n", reference_file);
     int_fast32_t first_error_position = 0;
