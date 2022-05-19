@@ -21,6 +21,7 @@ extern "C"
 #include <stddef.h>
 #include <inttypes.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 
 
@@ -95,6 +96,31 @@ Contain_String_Only_Null_Symbols
 (
         const char* const str,
         const size_t length
+);
+
+/**
+ * @brief Viele C-Strings gleichzeitig an einem anderen C-String anbringen.
+ *
+ * Falls die anzuhaengenden Zeichenketten zusammen laenger sind als die Zieleichenkette, dann wird beim vorletzten
+ * Zeichen der Inhalt abgetrennt.
+ *
+ * Asserts:
+ * 		destination != NULL
+ * 		destination_size > 1
+ * 		count > 0
+ * 		Jeder weitere C-String != NULL
+ *
+ * @param[in] destination Ziel-Zeichenkette
+ * @param[in] destination_size Laenge der Ziel-Zeichenkette
+ * @param[in] count Anzahl an Eingabezeichenketten
+ */
+extern size_t
+Multi_strncat
+(
+		char* const restrict destination,
+		const size_t destination_size,
+		const int count,
+		...
 );
 
 

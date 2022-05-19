@@ -177,3 +177,57 @@ Contain_String_Only_Null_Symbols
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Viele C-Strings gleichzeitig an einem anderen C-String anbringen.
+ *
+ * Falls die anzuhaengenden Zeichenketten zusammen laenger sind als die Zieleichenkette, dann wird beim vorletzten
+ * Zeichen der Inhalt abgetrennt.
+ *
+ * Asserts:
+ * 		destination != NULL
+ * 		destination_size > 1
+ * 		count > 0
+ * 		Jeder weitere C-String != NULL
+ *
+ * @param[in] destination Ziel-Zeichenkette
+ * @param[in] destination_size Laenge der Ziel-Zeichenkette
+ * @param[in] count Anzahl an Eingabezeichenketten
+ */
+extern size_t
+Multi_strncat
+(
+		char* const restrict destination,
+		const size_t destination_size,
+		const int count,
+		...
+)
+{
+	if (destination == NULL) 	{ return SIZE_MAX; }
+	if (destination_size <= 1) 	{ return SIZE_MAX; }
+	if (count <= 0)				{ return SIZE_MAX; }
+	memset (destination, '\0', destination_size * sizeof (char));
+
+	va_list valist;
+	va_start(valist, count);
+
+	size_t memory_left = destination_size - 1;
+
+	for (int i = 0; i < count; ++ i)
+	{
+		char* next_string = va_arg(valist, char*);
+		if (next_string == NULL)
+		{
+			break;
+		}
+		strncat (destination, next_string, memory_left);
+		memory_left -= strlen (next_string);
+	}
+
+	va_end(valist);
+
+	destination [destination_size - 1] = '\0';
+	return destination_size - memory_left;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
