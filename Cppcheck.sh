@@ -5,21 +5,21 @@
 # => Also ausprobieren. :)
 
 echo "--enable=warning"
-cppcheck --std=c11 --enable=warning ./src/ | grep -E "*\(warning\)*"
+cppcheck --std=c11 --enable=warning --force ./src/ | grep -E "*\(warning\)*"
 echo ""
 
 echo "--enable=performance"
-cppcheck --std=c11 --enable=performance ./src/ | grep -E "*\(performance\)*"
+cppcheck --std=c11 --enable=performance --force ./src/ | grep -E "*\(performance\)*"
 echo ""
 
 echo "--enable=portability"
-cppcheck --std=c11 --enable=portability ./src/ | grep -E "*\(portability\)*"
+cppcheck --std=c11 --enable=portability --force ./src/ | grep -E "*\(portability\)*"
 echo ""
 
 echo "--enable=unusedFunction"
-cppcheck --std=c11 --enable=unusedFunction ./src/ | grep -E "*\(unusedFunction\)*"
+cppcheck --std=c11 --enable=unusedFunction --force ./src/ | grep -E "*\(unusedFunction\)*"
 echo ""
 
 echo "--enable=missingInclude"
-cppcheck --std=c11 --enable=missingInclude ./src/ | grep -E "*\(missingInclude\)*"
+cppcheck --std=c11 --enable=missingInclude --force ./src/ | grep -E "*\(missingInclude\)*"
 echo ""
