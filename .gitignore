@@ -40,3 +40,7 @@ Documentation/
 # Programmausgaben, die in eine Datei weitergeleitet werden
 out.txt
 out_error.txt
+
+# Alle erzeugten XPM-Grafiken
+# Kann so doch nicht verwendet werden, da die Referenzdateien fuer Export-Tests ebenfalls XPM-Dateien sind :p
+#*.xpm

@@ -1,0 +1,53 @@
+const char* iupac_names [] =
+{
+        "3,3,4-Triethyl-2,4-dimethylhexan",
+        "2,2,3,3,4,4,5,5-OctaMethylDecan",
+        "4,4-DiEthyl-2,2,3,3,5,5,6,6-OctaMethylHeptan"
+};
+
+const char* const array_1 [] =
+{
+     "        C            ",
+     "        |            ",
+     "        C   C        ",
+     "        |   |        ",
+     "C - C - C - C - C - C",
+     "    |   |   |        ",
+     "    C   C   C        ",
+     "        |   |        ",
+     "        C   C        "
+};
+const char* const array_2 [] =
+{
+     "    C   C   C   C                    ",
+     "    |   |   |   |                    ",
+     "C - C - C - C - C - C - C - C - C - C",
+     "    |   |   |   |                    ",
+     "    C   C   C   C                    "
+};
+const char* const array_3 [] =
+{
+     "            C            ",
+     "            |            ",
+     "    C   C   C   C   C    ",
+     "    |   |   |   |   |    ",
+     "C - C - C - C - C - C - C",
+     "    |   |   |   |   |    ",
+     "    C   C   C   C   C    ",
+     "            |            ",
+     "            C            "
+};
+
+const char* const* expected_drawings [] =
+{
+        array_1,
+        array_2,
+        array_3
+};
+
+const size_t drawing_sizes [] =
+{
+        COUNT_ARRAY_ELEMENTS(array_1),
+        COUNT_ARRAY_ELEMENTS(array_2),
+        COUNT_ARRAY_ELEMENTS(array_3)
+};

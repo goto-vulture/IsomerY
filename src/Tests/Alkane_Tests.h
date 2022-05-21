@@ -215,6 +215,32 @@ extern void TEST_All_Possible_Tetradecan_Constitutional_Isomers (void);
 extern void TEST_Group_Compression (void);
 
 /**
+ * @brief Testen, ob der Alkan-Lexer die gewuenschen Ergebnisse erzeugt.
+ *
+ * So soll z.B. "4-(1-methylethyl)heptane" in folgende Tokens zerlegt werden:
+ * - "4"
+ * - "-"
+ * - "("
+ * - "1"
+ * - "-"
+ * - "methyl"
+ * - "ethyl"
+ * - ")"
+ * - "heptane"
+ */
+extern void TEST_Alkane_Lexer (void);
+
+/**
+ * @brief Testen, ob der Alkan-Parser seine Aufgaben richtig erledigt.
+ *
+ * Im Hintergrund wird der Alkan-Lexer verwendet. Dieser erzeugt die Tokens, die dann vom Parser ueberprueft werden.
+ * Die Tests in dieser Testfunktion beziehen sich alleine auf die des Parsers. Wenn Fehler beim Lexer auftauchen, dann
+ * koennen diese von den daraus resultierenden Fehlern des Parsers nicht unterschieden werden. Daher gibt es auch eine
+ * eigene Testfunktion fuer den Lexer (TEST_Alkane_Lexer).
+ */
+extern void TEST_Alkane_Parser (void);
+
+/**
  * @brief Das textbasierte Zeichnen eines Alkans testen. Erster Zeichnungstest.
  *
  * Es soll "4-(1-methylethyl)heptane" gezeichnet werden.
@@ -253,6 +279,46 @@ extern void TEST_IUPAC_Chain_Lexer_1 (void);
  * groesseren Namen richtig arbeitet.
  */
 extern void TEST_IUPAC_Chain_Lexer_2 (void);
+
+/**
+ * @brief Das textbasierte Zeichnen eines Alkans testen. Weiterer Zeichnungstest mit Namen ohne Verschachtelung.
+ *
+ * Es soll "3,3,4-Triethyl-2,4-dimethylhexan" gezeichnet werden. Bewusst die Wahl, wo die gleichen Positionen von
+ * verschiedenen Asttypen verwendet werden. Hier Position 4
+ *
+ * Das Ergebnis soll etwa so aussehen:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Text_Based_Alkane_Drawing_2 (void);
+
+/**
+ * @brief Diese Testfunktion ueberprueft, ob das Erstellen einer textbasierten Zeichnung und deren Export als XPM Datei
+ * funktioniert.
+ *
+ * Als Teststruktur wird "3,3,4-Triethyl-2,4-dimethylhexan" verwendet.
+ *
+ * Textbasierte Zeichnung:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void);
 
 /**
  * @brief Alle Testfunktionen ausfuehren.

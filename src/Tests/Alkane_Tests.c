@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "../Alkane/Alkane.h"
 #include "../Alkane/Alkane_Branch.h"
 #include "../Alkane/Alkane_Container.h"
@@ -22,11 +23,14 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "../Error_Handling/Assert_Msg.h"
 #include "../Drawings/Text_Based_Alkane_Drawing.h"
+#include "../Drawings/Alkane_Parser.h"
 #include "../Print_Tools.h"
 #include "../Misc.h"
 #include "../CLI_Parameter.h"
 #include "../str2int.h"
 #include "IUPAC_Chain_Lexer.h"
+#include "../String_Tools.h"
+#include "../Drawings/To_XPM.h"
 
 
 
@@ -61,7 +65,25 @@
 #error "The macro \"CALL_ALL_TEST_FUNCTIONS\" is already defined !"
 #endif /* CALL_ALL_TEST_FUNCTIONS */
 
+#ifndef READ_BUFFER_SIZE
+#define READ_BUFFER_SIZE 100000
+#else
+#error "The macro \"READ_BUFFER_SIZE\" is already defined !"
+#endif /* READ_BUFFER_SIZE */
 
+
+
+/**
+ * Einlesefunktion fuer die Auswahl der Testfunktion.
+ */
+static long int                                         // Durchgefuehrte Eingabe
+Get_Terminal_Input
+(
+    const size_t num_testfunctions,                     // Anzahl an Testfunktionen (wird fuer die Eingabeueberpruefung
+                                                        // benoetigt)
+    const long int cli_input_use_all_testfunctions      // Konstante die den Wert anzeigt, der fuer die Ausfuehrung
+                                                        // ALLER Testfunktionen verwendet wird
+);
 
 /**
  * Vergleichen eines Zahlencodes eines Akans mit einem vorgegebenen Ergebnis.
@@ -72,27 +94,6 @@ Compare_Alkane_Numbercodes
 (
         const struct Alkane* const restrict alkane,     // Alkan, dessen Zahlencode fuer den Vergleich verwendet wird
         const unsigned char numbercode []               // Zahlencode mit denen das Alkan-Objekt verglichen wird
-);
-
-/**
- * Eine Zeichenkette kopieren, in der nur Kleinbuchstaben aus der Original-Zeichenkette vorkommen.
- */
-static void
-String_To_Lower
-(
-        const char* const restrict orig_string,     // Originale Zeichenkette, die konvertiert werden soll
-        char* const restrict to_lower_string,       // Zielspeicher fuer die konvertierte Zeichenkette
-        const size_t to_lower_string_size           // Groesse des Zielspeichers
-);
-
-/**
- * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
- */
-static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
-Compare_Strings_Case_Insensitive
-(
-        const char* const restrict string_1,            // 1. C-String
-        const char* const restrict string_2             // 2. C-String
 );
 
 /**
@@ -136,7 +137,30 @@ Execute_Creation_Test_With_Expected_Results
         const size_t number_of_expected_results                 // Anzahl an erwarteten Loesungen
 );
 
+/**
+ * Erwartete textbasierte Zeichnung mit einer erzeugten Zeichnung vergleichen.
+ */
+static _Bool
+Compare_Expected_Drawing_With_Created_Drawing
+(
+        const char* const* restrict expected_drawing,                               // Erwartete textbasierte Zeichnung
+        const struct Text_Based_Alkane_Drawing* const restrict created_drawing,     // Erzeugte textbasierte Zeichnung
+        const size_t expected_drawing_dim_1,                                        // 1. Dimension erwartetes Ergebnis
+        const size_t expected_drawing_dim_2,                                        // 2. Dimension erwartetes Ergebnis
+        const size_t created_drawing_dim_1,                                         // 1. Dimension erzeugtes Ergebnis
+        const size_t created_drawing_dim_2                                          // 2. Dimension erzeugtes Ergebnis
+);
 
+/**
+ * Zwei XPM-Dateien byteweise miteinander vergleichen.
+ */
+static _Bool
+Compare_Two_XPM_Drawings
+(
+        const char* const restrict reference_file,          // Datei 1
+        const char* const restrict test_file,               // Datei 2
+        int_fast32_t* const restrict first_error_position   // Erste Position, wo die Dateien nicht uebereinstimmen
+);
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -174,7 +198,12 @@ Execute_All_Alkane_Tests
             CREATE_Test_Function_And_Their_Name(TEST_All_Possible_Tetradecan_Constitutional_Isomers),
             CREATE_Test_Function_And_Their_Name(TEST_Group_Compression),
 
+            CREATE_Test_Function_And_Their_Name(TEST_Alkane_Lexer),
+            CREATE_Test_Function_And_Their_Name(TEST_Alkane_Parser),
+
             CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_1),
+            CREATE_Test_Function_And_Their_Name(TEST_Text_Based_Alkane_Drawing_2),
+            CREATE_Test_Function_And_Their_Name(TEST_Convert_Text_Based_Alane_Drawing_To_XPM),
 
             CREATE_Test_Function_And_Their_Name(TEST_IUPAC_Chain_Lexer_1),
             CREATE_Test_Function_And_Their_Name(TEST_IUPAC_Chain_Lexer_2),
@@ -185,13 +214,16 @@ Execute_All_Alkane_Tests
     // Positionen, wo bei der Uebersicht Newlines ausgegeben werden sollen. Dies dient fuer eine bessere Uebersicht
     const uint_fast8_t newline_positions [] = { 14, 16, 18 };
 
+    #ifndef CLI_INPUT_USE_ALL_TESTFUNCTIONS
+    #define CLI_INPUT_USE_ALL_TESTFUNCTIONS COUNT_ARRAY_ELEMENTS(test_functions)
+    #else
+    #error "The macro \"CLI_INPUT_USE_ALL_TESTFUNCTIONS\" is already defined !"
+    #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
+
     // ===== ===== BEGINN CLI-Parameter: Eine bestimmte Testfunktion nach einer Auswahl ausfuehren ===== =====
     // Soll eine Testfunktion anhand einer dynamischen Auswahl ausgefuehrt werden ?
     if (GLOBAL_SELECT_TEST_FUNCTION /* == true */)
     {
-        char input_buffer [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
-        long int selected_test_function = 0;
-
         puts("===>>> Testfunctions available <<<===");
         for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(test_functions); ++ i)
         {
@@ -204,36 +236,8 @@ Execute_All_Alkane_Tests
         }
         fflush(stdout);
 
-        // ===== BEGINN Einleseschleife =====
-        while (true)
-        {
-            int c = 0;
-            printf ("(1 - %zu) => ", COUNT_ARRAY_ELEMENTS((test_functions)));
-            const int char_read = scanf ("%9s", input_buffer);
-            if (char_read == EOF)
-            {
-                puts("Got EOF ! Retry ...");
-                memset (input_buffer, '\0', sizeof(input_buffer));
-            }
-
-            // Idee von: https://stackoverflow.com/questions/28297306/how-to-limit-input-length-with-scanf
-            while ((c = fgetc(stdin)) != '\n' && c != EOF); /* Flush stdin */
-
-            // Ist die Eingabe ueberhaupt ein Integer?
-            const enum str2int_errno conversion_errno = str2int(&selected_test_function, input_buffer, 10);
-
-            if (conversion_errno == STR2INT_SUCCESS)
-            {
-                if ((selected_test_function > 0 && selected_test_function <=
-                        (long int) COUNT_ARRAY_ELEMENTS(test_functions)))
-                {
-                    break;
-                }
-            }
-            puts("Invalid input !");
-            memset (input_buffer, '\0', sizeof(input_buffer));
-        }
-        // ===== ENDE Einleseschleife =====
+        const long int selected_test_function = Get_Terminal_Input (COUNT_ARRAY_ELEMENTS(test_functions),
+                CLI_INPUT_USE_ALL_TESTFUNCTIONS);
 
         PRINTF_FFLUSH("\nUsing the test function \"%s\"\n", test_functions [selected_test_function - 1].function_name);
 
@@ -267,6 +271,15 @@ Execute_All_Alkane_Tests
                 test_functions [GLOBAL_MAX_C_ATOMS_FOR_TESTS - 1].function_name);
     }
     // ===== ===== ENDE CLI-Parameter: Konstitutionsisomere mit eingegebener Anzahl an C-Atomen erzeugen ===== =====
+    if (GLOBAL_RUN_TEST_FUNCTION_INDEX != -1)
+    {
+        RUN_2(test_functions [GLOBAL_RUN_TEST_FUNCTION_INDEX - 1].test_function,
+                test_functions [GLOBAL_RUN_TEST_FUNCTION_INDEX - 1].function_name);
+    }
+
+    #ifdef CLI_INPUT_USE_ALL_TESTFUNCTIONS
+    #undef CLI_INPUT_USE_ALL_TESTFUNCTIONS
+    #endif /* CLI_INPUT_USE_ALL_TESTFUNCTIONS */
 
     // Ergebnisse aller durchgefuehrten Tests abfragen
     return TEST_REPORT();
@@ -936,6 +949,85 @@ extern void TEST_Group_Compression (void)
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * @brief Testen, ob der Alkan-Lexer die gewuenschen Ergebnisse erzeugt.
+ *
+ * So soll z.B. "4-(1-methylethyl)heptane" in folgende Tokens zerlegt werden:
+ * - "4"
+ * - "-"
+ * - "("
+ * - "1"
+ * - "-"
+ * - "methyl"
+ * - "ethyl"
+ * - ")"
+ * - "heptane"
+ */
+extern void TEST_Alkane_Lexer (void)
+{
+    #include "Test_Data/Alkane/Alkane_Lexer.txt"
+
+    // Lexer-Test durchfuehren
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_tokens); ++ i)
+    {
+        const size_t name_length = strlen (iupac_names [i]);
+        const struct Alkane_Lexer lexer_data = Create_Alkane_Tokens (iupac_names [i], name_length);
+
+        for (uint_fast8_t i2 = 0; i2 < lexer_data.next_free_token; ++ i2)
+        {
+            ASSERT_MSG(expected_tokens [i][i2].token != NULL, "expected token is NULL ! Lexer created not enough tokens !");
+            ASSERT_STRING_CASE_INSENSITIVE_EQUALS(expected_tokens [i][i2].token, lexer_data.result_tokens [i2]);
+            ASSERT_EQUALS(expected_tokens [i][i2].type, lexer_data.token_type [i2]);
+        }
+    }
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Testen, ob der Alkan-Parser seine Aufgaben richtig erledigt.
+ *
+ * Im Hintergrund wird der Alkan-Lexer verwendet. Dieser erzeugt die Tokens, die dann vom Parser ueberprueft werden.
+ * Die Tests in dieser Testfunktion beziehen sich alleine auf die des Parsers. Wenn Fehler beim Lexer auftauchen, dann
+ * koennen diese von den daraus resultierenden Fehlern des Parsers nicht unterschieden werden. Daher gibt es auch eine
+ * eigene Testfunktion fuer den Lexer (TEST_Alkane_Lexer).
+ */
+extern void TEST_Alkane_Parser (void)
+{
+    // Als Testnamen werden die erwarteten Ergebnisse bei der Bildung der Konstitutionsisomere verwendet
+    const char* iupac_names [] =
+    {
+            #include "./Expected_Results/Alkane/Tetradecane.txt"
+            //"3,4-bis(1-methylethyl)-2,5-Dimethylhexan" // <- Prefixe, die Gruppen zusammenfassen, werden aktuell noch
+                                                         // nicht richtig verarbeitet. Solche Prefixe werden durch den
+                                                         // Lexer einfach uebersprungen. Aber auch der Parser besitzt
+                                                         // noch keine passenden Regeln fuer diese Prefixe !
+    };
+
+    size_t wrong_results = 0;
+
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(iupac_names); ++ i)
+    {
+        if (! Parse_Alkane (iupac_names [i], strlen (iupac_names [i])) /* == false */)
+        {
+            wrong_results ++;
+        }
+    }
+    if (wrong_results != 0)
+    {
+        PRINTF_FFLUSH("\nWrong parser results ! Got %zu times false from %zu test names.\n\n", wrong_results,
+                COUNT_ARRAY_ELEMENTS(iupac_names))
+    }
+
+    ASSERT_EQUALS(0, wrong_results);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * @brief Das textbasierte Zeichnen eines Alkans testen. Erster Zeichnungstest.
  *
  * Es soll "4-(1-methylethyl)heptane" gezeichnet werden.
@@ -950,62 +1042,153 @@ extern void TEST_Group_Compression (void)
  */
 extern void TEST_Text_Based_Alkane_Drawing_1 (void)
 {
-    const char test_iupac_name [] = "4-(1-methylethyl)heptane";
+    #include "Test_Data/Alkane/Drawings_With_Nestings.txt"
 
-    const char* const expected_drawing [] =
+    _Bool at_least_one_wrong_result_created = false;
+    // Alle textbasierte Zeichnung erzeugen
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawings); ++ i)
     {
-         "C - C - C - C - C - C - C",
-         "            |            ",
-         "            C - C        ",
-         "            |            ",
-         "            C            "
-    };
+        // Textbasierte Zeichnung erzeugen
+        struct Text_Based_Alkane_Drawing* result_drawing =
+                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]));
+
+        // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile miteinander verglichen
+        const _Bool wrong_result_created = Compare_Expected_Drawing_With_Created_Drawing (expected_drawings [i],
+                result_drawing, drawing_sizes [i], strlen (expected_drawings [i][0]),TEXT_BASED_ALKANE_DRAWING_DIM_1,
+                TEXT_BASED_ALKANE_DRAWING_DIM_2);
+
+        if (wrong_result_created /* == true */)
+        {
+            at_least_one_wrong_result_created = true;
+        }
+
+        Delete_Text_Based_Alkane_Drawing (result_drawing);
+        result_drawing = NULL;
+    }
+
+    // War der Test aller Zeichnungen erfolgreich ?
+    ASSERT_EQUALS (false, at_least_one_wrong_result_created);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Das textbasierte Zeichnen eines Alkans testen. Weiterer Zeichnungstest mit Namen ohne Verschachtelung.
+ *
+ * Es soll "3,3,4-Triethyl-2,4-dimethylhexan" gezeichnet werden. Bewusst die Wahl, wo die gleichen Positionen von
+ * verschiedenen Asttypen verwendet werden. Hier Position 4
+ *
+ * Das Ergebnis soll etwa so aussehen:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Text_Based_Alkane_Drawing_2 (void)
+{
+    #include "Test_Data/Alkane/Drawings_Without_Nestings.txt"
+
+    _Bool at_least_one_wrong_result_created = false;
+    // Alle textbasierte Zeichnung erzeugen
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(expected_drawings); ++ i)
+    {
+        // Textbasierte Zeichnung erzeugen
+        struct Text_Based_Alkane_Drawing* result_drawing =
+                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]));
+
+        // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile miteinander verglichen
+        const _Bool wrong_result_created = Compare_Expected_Drawing_With_Created_Drawing (expected_drawings [i],
+                result_drawing, drawing_sizes [i], strlen (expected_drawings [i][0]),TEXT_BASED_ALKANE_DRAWING_DIM_1,
+                TEXT_BASED_ALKANE_DRAWING_DIM_2);
+
+        if (wrong_result_created /* == true */)
+        {
+            at_least_one_wrong_result_created = true;
+        }
+
+        Delete_Text_Based_Alkane_Drawing (result_drawing);
+        result_drawing = NULL;
+    }
+
+    // War der Test aller Zeichnungen erfolgreich ?
+    ASSERT_EQUALS (false, at_least_one_wrong_result_created);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Diese Testfunktion ueberprueft, ob das Erstellen einer textbasierten Zeichnung und deren Export als XPM Datei
+ * funktioniert.
+ *
+ * Als Teststruktur wird "3,3,4-Triethyl-2,4-dimethylhexan" verwendet.
+ *
+ * Textbasierte Zeichnung:
+ *
+ *         C
+ *         |
+ *         C   C
+ *         |   |
+ * C - C - C - C - C - C
+ *     |   |   |
+ *     C   C   C
+ *         |   |
+ *         C   C
+ */
+extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
+{
+    const char* iupac_name = "3,3,4-Triethyl-2,4-dimethylhexan";
 
     // Textbasierte Zeichnung erzeugen
     struct Text_Based_Alkane_Drawing* result_drawing =
-            Create_Text_Based_Alkane_Drawing (test_iupac_name, strlen (test_iupac_name));
+            Create_Text_Based_Alkane_Drawing (iupac_name, strlen (iupac_name));
 
-    // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
-    // das Ergebnis richtig
-    _Bool wrong_result_occured = false;
-    size_t first_wrong_result_string = SIZE_MAX;
-    size_t first_non_empty_string = 0;
-    for (size_t i = 0; i < TEXT_BASED_ALKANE_DRAWING_DIM_2; ++ i)
-    {
-        // Leere Zeilen werden ignoriert
-        if (strlen (result_drawing->drawing [i]) != 0)
-        {
-            if ((strncmp (expected_drawing [first_non_empty_string], result_drawing->drawing [i],
-                    strlen (expected_drawing [first_non_empty_string])) != 0))
-            {
-                wrong_result_occured = true;
-                break;
-            }
-            ++ first_non_empty_string;
-        }
-        else if (strlen (expected_drawing [first_non_empty_string]) != strlen (result_drawing->drawing [i]))
-        {
-            wrong_result_occured = true;
-            first_wrong_result_string = i;
-            break;
-        }
-    }
+    puts("Export image:");
+    Show_Text_Based_Alkane_Drawing(result_drawing);
+    PUTS_FFLUSH("");
 
-    // Ausgabe der erwarteten Loesung und der erzeugten Loesung
-    // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
-    puts ("Expected result:");
-    Print_2D_String_Array(expected_drawing, COUNT_ARRAY_ELEMENTS(expected_drawing), strlen (expected_drawing [0]));
-    printf ("Error in drawing line: %zu\n\n", first_wrong_result_string);
+    // Textbasierte Zeichnung exportieren
+    Export_Text_Based_Drawing_To_XPM(result_drawing,
+            EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
 
-    puts ("Created:");
-    Show_Text_Based_Alkane_Drawing (result_drawing);
-    fflush (stdout);
+    // Name und Pfad der Referenzdatei zusammenbauen
+    char reference_file [100];
+    Multi_strncat(reference_file, COUNT_ARRAY_ELEMENTS(reference_file) - 1, 3,
+    		"./src/Tests/Expected_Results/Alkane/XPM_Pictures/", iupac_name, ".xpm");
 
-    // War der Test aller Zeichenketten erfolgreich ?
-    ASSERT_EQUALS (false, wrong_result_occured);
+    // Name der Testdatei zusammenbauen
+    char test_file [IUPAC_NAME_LENGTH + 4 /*strlen(".xpm")*/];
+    Multi_strncat (test_file, COUNT_ARRAY_ELEMENTS(test_file) - 1, 2, iupac_name, ".xpm");
+
+    printf("\nReference file for comparison: %s\n", reference_file);
+    int_fast32_t first_error_position = 0;
+
+    // Erzeugte Datei mit der Referenzdatei byteweise vergleichen
+    const clock_t start_time = clock ();
+    const _Bool comparison_result = Compare_Two_XPM_Drawings(reference_file, test_file, &first_error_position);
+    const clock_t end_time = clock ();
 
     Delete_Text_Based_Alkane_Drawing (result_drawing);
     result_drawing = NULL;
+
+    if (! comparison_result /* == false */)
+    {
+        fprintf (stderr, "The files \"%s\" and \"%s\" are not equal ! First difference on byte %" PRIdFAST32 " !",
+                reference_file, test_file, first_error_position);
+        fflush(stderr);
+    }
+    ASSERT_EQUALS(true, comparison_result);
+
+    printf("Files are equal. Done comparison in %f sec.\n", (double)(end_time - start_time) / CLOCKS_PER_SEC);
 
     return;
 }
@@ -1180,6 +1363,53 @@ extern inline void TEST_Use_All_Testfunctions (void)
     return;
 }
 
+//--------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Einlesefunktion fuer die Auswahl der Testfunktion.
+ */
+static long int Get_Terminal_Input
+(
+    const size_t num_testfunctions,
+    const long int cli_input_use_all_testfunctions
+)
+{
+    char input_buffer [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+    long int selected_test_function = -1;
+
+    // Einleseschleife
+    while (true)
+    {
+        int c = 0;
+        printf ("(1 - %zu) => ", num_testfunctions);
+        const int char_read = scanf ("%9s", input_buffer);
+        if (char_read == EOF)
+        {
+            puts("Got EOF ! Retry ...");
+            memset (input_buffer, '\0', sizeof(input_buffer));
+        }
+
+        // Idee von: https://stackoverflow.com/questions/28297306/how-to-limit-input-length-with-scanf
+        while ((c = fgetc(stdin)) != '\n' && c != EOF); /* Flush stdin */
+
+        // Ist die Eingabe ueberhaupt ein Integer?
+        const enum str2int_errno conversion_errno = str2int(&selected_test_function, input_buffer, 10);
+
+        if (conversion_errno == STR2INT_SUCCESS)
+        {
+            if ((selected_test_function > 0 && selected_test_function <= (long int) num_testfunctions) ||
+                    (selected_test_function == cli_input_use_all_testfunctions))
+            {
+                break;
+            }
+        }
+        puts("Invalid input !");
+        memset (input_buffer, '\0', sizeof(input_buffer));
+    }
+
+    return selected_test_function;
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -1202,73 +1432,6 @@ Compare_Alkane_Numbercodes
     }
 
     return true;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Eine Zeichenkette kopieren, in der nur Kleinbuchstaben aus der Original-Zeichenkette vorkommen.
- */
-static void
-String_To_Lower
-(
-        const char* const restrict orig_string,     // Originale Zeichenkette, die konvertiert werden soll
-        char* const restrict to_lower_string,       // Zielspeicher fuer die konvertierte Zeichenkette
-        const size_t to_lower_string_size           // Groesse des Zielspeichers
-)
-{
-    strncpy (to_lower_string, orig_string, to_lower_string_size);
-
-    for (size_t current_char = 0;
-            (current_char < strlen (orig_string)) && (current_char < to_lower_string_size);
-            ++ current_char)
-    {
-        // Alle Zeichen der Zeichenkette in Kleinbuchstaben umwandeln.
-        // Eine Ueberpruefung, ob das aktuelle Zeichen ein Grossbuchstabe ist, ist nicht notwendig, da tolower() diesen
-        // Test bereits durchfuehrt.
-        // if (isupper (orig_string [current_char]) /* == true */)
-            to_lower_string [current_char] = (char) tolower (orig_string [current_char]);
-    }
-
-    // Nullterminierung im Zielspeicher garantieren
-    to_lower_string [strlen (orig_string)] = '\0';
-
-    return;
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-/**
- * Vergleichen zweier C-Strings OHNE Beachtung der Gross- und Kleinschreibung.
- */
-static int                                              // 0, falls die Zeichenketten uebereinstimmen, ansonsten != 0
-Compare_Strings_Case_Insensitive
-(
-        const char* const restrict string_1,            // 1. C-String
-        const char* const restrict string_2             // 2. C-String
-)
-{
-    // Wenn die Laenge der Zeichenketten nicht identisch sind, dann koennen sie - auch ohne Beachtung der Gross- und
-    // Keinschreibung - nicht gleich sein !
-    if (strlen (string_1) != strlen (string_2))
-    {
-        return -1;
-    }
-
-    char string_1_lowercase [255];
-    char string_2_lowercase [255];
-    memset (string_1_lowercase, '\0', sizeof (string_1_lowercase));
-    memset (string_2_lowercase, '\0', sizeof (string_2_lowercase));
-
-    // Alle alphabetischen Zeichen in Kleinbuchstaben konvertieren, damit spaeter ein Vergleich unabhaengig von der
-    // Gross- und Kleinschreibung stattfinden kann
-    String_To_Lower(string_1, string_1_lowercase, COUNT_ARRAY_ELEMENTS(string_1_lowercase));
-    String_To_Lower(string_2, string_2_lowercase, COUNT_ARRAY_ELEMENTS(string_2_lowercase));
-
-    // Vergleich mit den angepassten Zeichenketten durchfuehren
-    // Es gibt auch die Funktion "strncasecmp()" die vorzeichenlos Zeichenketten vergleicht. Diese ist aber leider eine
-    // GNU-Extension und daher nicht auf allen Systemen verfuegbar !
-    return strncmp (string_1_lowercase, string_2_lowercase, strlen (string_1_lowercase));
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -1708,7 +1871,140 @@ Execute_Creation_Test_With_Expected_Results
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * Erwartete textbasierte Zeichnung mit einer erzeugten Zeichnung vergleichen.
+ */
+static _Bool
+Compare_Expected_Drawing_With_Created_Drawing
+(
+        const char* const* restrict expected_drawing,                               // Erwartete textbasierte Zeichnung
+        const struct Text_Based_Alkane_Drawing* const restrict created_drawing,     // Erzeugte textbasierte Zeichnung
+        const size_t expected_drawing_dim_1,                                        // 1. Dimension erwartetes Ergebnis
+        const size_t expected_drawing_dim_2,                                        // 2. Dimension erwartetes Ergebnis
+        const size_t created_drawing_dim_1,                                         // 1. Dimension erzeugtes Ergebnis
+        const size_t created_drawing_dim_2                                          // 2. Dimension erzeugtes Ergebnis
+)
+{
+    // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile gebildet. Wenn alle Zeilen gleich sind, dann ist
+    // das Ergebnis richtig
+    _Bool wrong_result_occured                  = false;
+    size_t first_wrong_result_string            = SIZE_MAX;
+    size_t first_wrong_result_char_in_string    = SIZE_MAX;
+    // Offset, damit beim Text_Based_Alkane_Drawing die richtige Zeile verwendet wird
+    size_t line_index_offset                    = SIZE_MAX;
 
+    for (size_t i = 0; i < created_drawing_dim_1; ++ i)
+    {
+        // Leere Zeilen werden ignoriert
+        if (Contain_String_Only_Null_Symbols(created_drawing->drawing [i], created_drawing_dim_2)) { continue; }
+
+        if (line_index_offset == SIZE_MAX)
+        {
+            line_index_offset = i;
+        }
+        // Zeichen fuer Zeichen das erwartete Ergebnis mit dem erzeugten Ergebnis vergleichen
+        for (size_t i2 = 0; i2 < expected_drawing_dim_1; ++ i2)
+        {
+            for (size_t i3 = 0; i3 < expected_drawing_dim_2; ++ i3)
+            {
+                if (expected_drawing [i2][i3] != created_drawing->drawing [i2 + line_index_offset][i3])
+                {
+                    first_wrong_result_string           = i2;
+                    first_wrong_result_char_in_string   = i3;
+                    wrong_result_occured                = true;
+                    break;
+                }
+            }
+            if (wrong_result_occured /* == true */) { break; }
+        }
+        if (wrong_result_occured /* == true */) { break; }
+    }
+
+    // Ausgabe der erwarteten Loesung und der erzeugten Loesung
+    // Dies dient fuer die bessere Uebersicht, falls Fehler auftauchen
+    puts ("Expected result:");
+    Print_2D_String_Array(expected_drawing, expected_drawing_dim_1, expected_drawing_dim_2);
+    if (wrong_result_occured /* == true */)
+    {
+        printf ("Error in (%zu, %zu). ", first_wrong_result_string + 1, first_wrong_result_char_in_string + 1);
+        printf ("Expected '%c'; Got '%c'\n\n",
+                expected_drawing [first_wrong_result_string][first_wrong_result_char_in_string],
+                created_drawing->drawing [first_wrong_result_string + line_index_offset][first_wrong_result_char_in_string]);
+    }
+
+    puts ("Created:");
+    Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines (created_drawing);
+    fflush (stdout);
+
+    return wrong_result_occured;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Zwei XPM-Dateien byteweise miteinander vergleichen.
+ */
+static _Bool
+Compare_Two_XPM_Drawings
+(
+        const char* const restrict reference_file,          // Datei 1
+        const char* const restrict test_file,               // Datei 2
+        int_fast32_t* const restrict first_error_position   // Erste Position, wo die Dateien nicht uebereinstimmen
+)
+{
+    _Bool result = true;
+
+    char* read_buffer_1 = (char*) CALLOC(READ_BUFFER_SIZE, sizeof (char));
+    ASSERT_ALLOC(read_buffer_1, "Cannot create a buffer for reading the reference file !",
+            READ_BUFFER_SIZE * sizeof (char));
+    char* read_buffer_2 = (char*) CALLOC(READ_BUFFER_SIZE, sizeof (char));
+    ASSERT_ALLOC(read_buffer_2, "Cannot create a buffer for reading the test file !",
+            READ_BUFFER_SIZE * sizeof (char));
+
+    FILE* file_1 = FOPEN(reference_file, "r");
+    ASSERT_FMSG(file_1 != NULL, "Cannot open file: \"%s\" !", reference_file);
+    FILE* file_2 = FOPEN(test_file, "r");
+    ASSERT_FMSG(file_2 != NULL, "Cannot open file: \"%s\" !", test_file);
+
+    int setvbuf_result = setvbuf(file_1, read_buffer_1, _IOFBF, READ_BUFFER_SIZE * sizeof (char));
+    ASSERT_FMSG(setvbuf_result == 0, "Cannot use a user defined buffer for file reading. Used buffer size: %zu bytes",
+            (size_t) READ_BUFFER_SIZE * sizeof (char));
+    setvbuf_result = setvbuf(file_2, read_buffer_2, _IOFBF, READ_BUFFER_SIZE * sizeof (char));
+    ASSERT_FMSG(setvbuf_result == 0, "Cannot use a user defined buffer for file reading. Used buffer size: %zu bytes",
+            (size_t) READ_BUFFER_SIZE * sizeof (char));
+
+    // Dateien byteweise vergleichen
+    int c1 = 0;
+    int c2 = 0;
+    int_fast32_t counter = 0;
+    do
+    {
+        c1 = fgetc(file_1);
+        c2 = fgetc(file_2);
+        ++ counter;
+
+        if (c1 != c2)
+        {
+            *first_error_position = counter;
+            result = false;
+            break;
+        }
+    }
+    while (c1 != EOF && c2 != EOF);
+
+    // Gab es Fehler bei den Dateioperationen?
+    ASSERT_FMSG(ferror(file_1) == 0, "Error while reading the file \"%s\" !", reference_file);
+    ASSERT_FMSG(ferror(file_2) == 0, "Error while reading the file \"%s\" !", test_file);
+
+    FCLOSE_AND_SET_TO_NULL(file_1);
+    FCLOSE_AND_SET_TO_NULL(file_2);
+    FREE_AND_SET_TO_NULL(read_buffer_1);
+    FREE_AND_SET_TO_NULL(read_buffer_2);
+
+    return result;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
 
 #ifdef MAX_WRONG_RESULTS
 #undef MAX_WRONG_RESULTS
@@ -1721,3 +2017,7 @@ Execute_Creation_Test_With_Expected_Results
 #ifdef CREATE_Test_Function_And_Their_Name
 #undef CREATE_Test_Function_And_Their_Name
 #endif /* CREATE_Test_Function_And_Their_Name */
+
+#ifdef READ_BUFFER_SIZE
+#undef READ_BUFFER_SIZE
+#endif /* READ_BUFFER_SIZE */

@@ -112,6 +112,9 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Eine leere Zeile auf stdout ausgeben (mit Flush).
+ */
 #ifndef PRINT_NEWLINE
     #define PRINT_NEWLINE PUTS_FFLUSH("")
 #else
@@ -120,6 +123,9 @@ extern "C"
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief X Mal das gleiche Zeichen auf stdout ausgeben (mit Flush am Ende).
+ */
 #ifndef PRINT_X_TIMES_SAME_CHAR
     #define PRINT_X_TIMES_SAME_CHAR(character, times)                                                                   \
     for (size_t i = 0; i < times; ++ i) { printf ("%c", character); } fflush (stdout);

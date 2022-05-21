@@ -102,6 +102,7 @@
 #include "Tests/Alkane_Tests.h"
 #include "Drawings/Text_Based_Alkane_Drawing.h"
 #include "Tests/IUPAC_Chain_Lexer.h"
+#include "Drawings/Alkane_Parser.h"
 #include "str2int.h"
 #include "Print_Tools.h"
 #include "Beautiful.h"
@@ -143,6 +144,8 @@ int main (const int argc, const char* argv [])
                     "Auflistung aller Testfunktionen und Auswahl einer Funktion", NULL, 0, 0),
             OPT_BOOLEAN('T', "run_all_test_functions", &GLOBAL_RUN_ALL_TEST_FUNCTIONS,
                     "Ausfuehrung aller Testfunktionen", NULL, 0, 0),
+            OPT_INTEGER('r', "run_test_function", &GLOBAL_RUN_TEST_FUNCTION_INDEX,
+                    "Index der Testfunktion, die direkt nach Programmstart ausgefuehrt werden soll", NULL, 0, 0),
 
             OPT_END()
     };
@@ -194,6 +197,7 @@ int main (const int argc, const char* argv [])
     printf ("Sizeof Alkane_Branch_Container:    %6zu byte\n", sizeof (struct Alkane_Branch_Container));
     printf ("Sizeof Text_Based_Alkane_Drawing:  %6zu byte\n", sizeof (struct Text_Based_Alkane_Drawing));
     printf ("Sizeof IUPAC_Chain_Lexer_Result:   %6zu byte\n", sizeof (struct IUPAC_Chain_Lexer_Result));
+    printf ("Sizeof Alkane_Lexer:               %6zu byte\n", sizeof (struct Alkane_Lexer));
     PRINT_NEWLINE PRINT_NEWLINE
 
     // Alle Alkan-Tests durchfuehren

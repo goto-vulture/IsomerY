@@ -37,7 +37,7 @@ extern "C"
  * @brief Groesse der Textzeichnung 2. Dimension.
  */
 #ifndef TEXT_BASED_ALKANE_DRAWING_DIM_2
-#define TEXT_BASED_ALKANE_DRAWING_DIM_2 50
+#define TEXT_BASED_ALKANE_DRAWING_DIM_2 75
 #else
 #error "The macro \"TEXT_BASED_ALKANE_DRAWING_DIM_2\" is already defined !"
 #endif /* TEXT_BASED_ALKANE_DRAWING_DIM_2 */
@@ -169,6 +169,8 @@ struct Text_Based_Alkane_Drawing
  * - Aufspaltung des Namens an bestimmten Minuszeichnen mithilfe des Chain-Lexers, der urspruenglich fuer die
  *   Testfunktionen geschrieben wurde
  *
+ * - Ermittlung der Laenge der Hauptkette
+ *
  * - Ermittlung der tiefsten Verschachtelung
  *
  * - Zeichnung der Hauptkette in der mittleren Zeile (Anhand der tiefsten Verschachtelung wird entschieden wie gross
@@ -223,6 +225,22 @@ Show_Text_Based_Alkane_Drawing
 (
         const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
 );
+
+/**
+ * @brief Die textbasierte Zeichnung auf stdout ausgegeben. OHNE Zeilen am Anfang und am Ende, die nur aus Leerzeichen
+ * bestehen.
+ *
+ * Asserts:
+ *          text_based_drawing != NULL
+ *
+ * @param[in] Text_Based_Alkane_Drawing, wovon die Zeichenflache ausgegeben wird
+ */
+extern void
+Show_Text_Based_Alkane_Drawing_W_O_Empty_Lines
+(
+        const struct Text_Based_Alkane_Drawing* const restrict text_based_drawing
+);
+
 
 
 

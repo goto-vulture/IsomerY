@@ -49,6 +49,13 @@ str2int
     {
         return STR2INT_INCONVERTIBLE;
     }
+    for (size_t i = 0; i < strlen (input_string); ++ i)
+    {
+        if (! isdigit (input_string [i]))
+        {
+            return STR2INT_INCONVERTIBLE;
+        }
+    }
 
     errno = 0;
     const long int l = strtol (input_string, &end, base);

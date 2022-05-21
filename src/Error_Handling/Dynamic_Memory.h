@@ -37,11 +37,17 @@ extern uint_fast64_t GLOBAL_calloc_calls;   ///< Anazhl an durchgefuehrten callo
 extern uint_fast64_t GLOBAL_realloc_calls;  ///< Anazhl an durchgefuehrten realloc-Aufrufen
 extern uint_fast64_t GLOBAL_free_calls;     ///< Anazhl an durchgefuehrten free-Aufrufen
 
+// Globale Variablen fur das Zaehlen von fopen () und fclose () Aufrufe
+extern uint_fast64_t GLOBAL_fopen_calls;    ///< Anazhl an durchgefuehrten fopen-Aufrufen
+extern uint_fast64_t GLOBAL_fclose_calls;   ///< Anazhl an durchgefuehrten fclose-Aufrufen
+
 
 
 /**
  * @brief Aktuelle Anzahl der durch die Makros MALLOC, CALLOC und FREE getaetigten malloc (), calloc () und free ()
  * Aufrufe sowie die Anzahl an fehlenden free () Aufrufe ausgeben.
+ *
+ * Zusaetzlich wird die Anzahl an fopen () und fclose () Aufrufe gezaehlt.
  */
 extern void Show_Dynamic_Memory_Status (void);
 
@@ -114,6 +120,33 @@ extern void Show_Dynamic_Memory_Status (void);
 #else
     #error "The macro \"FREE_AND_SET_TO_NULL\" is already defined !"
 #endif /* FREE_AND_SET_TO_NULL */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Der uebergebene Filestreampointer wird geschlossen und auf nullptr gesetzt.
+ */
+#ifndef FOPEN
+    #define FOPEN(file_name, file_mode)                                                                               \
+        fopen (file_name, file_mode);                                                                                 \
+        ++ GLOBAL_fopen_calls;
+#else
+    #error "The macro \"FOPEN\" is already defined !"
+#endif /* FOPEN */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief Der uebergebene Filestreampointer wird geschlossen und auf nullptr gesetzt.
+ */
+#ifndef FCLOSE_AND_SET_TO_NULL
+    #define FCLOSE_AND_SET_TO_NULL(pointer)                                                                           \
+        fclose (pointer);                                                                                             \
+        pointer = NULL;                                                                                               \
+        ++ GLOBAL_fclose_calls;
+#else
+    #error "The macro \"FCLOSE_AND_SET_TO_NULL\" is already defined !"
+#endif /* FCLOSE_AND_SET_TO_NULL */
 
 //---------------------------------------------------------------------------------------------------------------------
 
