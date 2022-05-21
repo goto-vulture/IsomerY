@@ -376,6 +376,10 @@ Draw_Char_In_XPM
     }
     else
     {
+        // Ueberpruefung des Index
+        ASSERT_FMSG((size_t) tuple_index < number_of_tuple, "Invalid index ! Got: %zu; max. valid: %zu !",
+                (size_t) tuple_index, number_of_tuple);
+
         // ===== ===== ===== BEGINN Informationen ermitteln ===== ===== =====
         // Notwendige Informationen aus dem XPM Bild ermitteln (Laenge einer Zeile, Anzahl an Zeilen, Anzahl an Farben)
         char line_length_c_str [10]         = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
