@@ -33,6 +33,7 @@
 #include "IUPAC_Chain_Lexer.h"
 #include <ctype.h>
 #include "../Print_Tools.h"
+#include "../Alkane/Alkane_Info_Constitutional_Isomer.h"
 
 
 
@@ -74,8 +75,11 @@ static void Next_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data)
         lexer_data->next_free_token ++;
         End_Char_Found(lexer_data);
     }
-    else if (current_char == ')')
+    // Nur wenn alle Verschachtelungen beendet wurden, kann eine schliessende Klammer als Split-Zeichen verwendet
+    // werden !
+    else if (current_char == ')' && lexer_data->nesting_depth == 1)
     {
+        lexer_data->nesting_depth --;
         Safe_Split_Char_Found(lexer_data);
     }
     else if (current_char == '-')
@@ -94,6 +98,11 @@ static void Next_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data)
     }
     else
     {
+        if (current_char == '(')
+        {
+            lexer_data->nesting_depth ++;
+        }
+
         lexer_data->result_tokens[lexer_data->next_free_token][lexer_data->next_free_char_in_token] = current_char;
         lexer_data->current_char ++;
         lexer_data->next_free_char_in_token ++;
@@ -126,11 +135,33 @@ static void Safe_Split_Char_Found (struct IUPAC_Chain_Lexer_Result* const lexer_
 
 static void Possible_Split_Char (struct IUPAC_Chain_Lexer_Result* const lexer_data)
 {
-    const char current_char = lexer_data->orig_string [lexer_data->current_char];
-    const char current_char_plus_1 = lexer_data->orig_string [lexer_data->current_char + 1];
+    const char current_char         = lexer_data->orig_string [lexer_data->current_char];
+    const char current_char_plus_1  = lexer_data->orig_string [lexer_data->current_char + 1];
+
+    _Bool last_token_is_an_alkane_token = false;
+    for (size_t i = 0; i < NUMBER_OF_ALKAN_WORDS; ++ i)
+    {
+        const char* current_start_address = &(lexer_data->orig_string [lexer_data->current_char + 1]);
+
+        if (strncmp (current_start_address, ALKAN_WORDS_DE [i], strlen (current_start_address)) == 0)
+        {
+            last_token_is_an_alkane_token = true;
+            break;
+        }
+        if (strncmp (current_start_address, ALKAN_WORDS_EN [i], strlen (current_start_address)) == 0)
+        {
+            last_token_is_an_alkane_token = true;
+            break;
+        }
+    }
 
     // Das '-' wird NICHT in die Tokens uebernommen !
     if (isdigit (current_char_plus_1))
+    {
+        Split_Char_Confirmed(lexer_data);
+    }
+    // Wenn der restliche Originalstring ein Alkanname ist, dann wurde ebenfalls das Ende eines Tokens gefunden
+    else if (last_token_is_an_alkane_token /* == true */)
     {
         Split_Char_Confirmed(lexer_data);
     }
