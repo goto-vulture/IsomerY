@@ -350,4 +350,7 @@ clean:
 	$(RM) -rf $(DOCUMENTATION_PATH)
 	$(MKDIR) $(DOCUMENTATION_PATH)
 	@echo
+	@echo \> Delete created XPM files:
+	$(RM) -rf *.xpm
+	@echo
 	@echo IsomerY build cleaned.
