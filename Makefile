@@ -132,6 +132,12 @@ endif
 ifeq ($(OS), Windows_NT)
 	CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
 	TARGET = $(addsuffix Win, $(TEMP_1))
+else ifeq ($(OS), Windows)
+        CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
+        TARGET = $(addsuffix Win, $(TEMP_1))
+else ifeq ($(OS), WINDOWS)
+        CCFLAGS += $(ADDITIONAL_WINDOWS_FLAGS)
+        TARGET = $(addsuffix Win, $(TEMP_1))
 else
 	CCFLAGS += $(ADDITIONAL_LINUX_FLAGS)
 	TARGET = $(addsuffix Linux, $(TEMP_1))
