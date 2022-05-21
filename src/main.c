@@ -207,6 +207,10 @@ int main (const int argc, const char* argv [])
     PRINT_NEWLINE
     Show_Dynamic_Memory_Status ();
 
+    (void) Beautiful_1;
+    (void) Beautiful_2;
+    (void) Beautiful_3;
+    (void) Beautiful_4;
 //    Beautiful_1();
 //    Beautiful_2();
 //    Beautiful_3();
