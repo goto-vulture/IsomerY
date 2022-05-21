@@ -160,6 +160,15 @@ struct Text_Based_Alkane_Drawing
     enum Text_Based_Alkane_Drawing_State state; ///< Status des Objektes
 };
 
+/**
+ * @brief Einstellungsmoeglichkeiten fuer die Erstellung einer textbasierten Zeichnung aus einem Alkan-Objekt
+ */
+enum Create_Text_Based_Drawing_Settings
+{
+    CREATE_TEXT_BASED_DRAWING_DEFAULTS = 1 << 0,
+    CREATE_TEXT_BASED_DRAWING_NO_SPACES = 1 << 1
+};
+
 //=====================================================================================================================
 
 /**
@@ -188,12 +197,14 @@ struct Text_Based_Alkane_Drawing
  *
  * @param[in] iupac_name IUPAC-Name eines Alkans
  * @param[in] name_length Laenge des IUPAC-Namen
+ * @param[in] creation_settings Einstellungen fuer die Erstellung
  */
-extern struct Text_Based_Alkane_Drawing*        // Das Ergebnis (die textbasierte-Zeichnung)
+extern struct Text_Based_Alkane_Drawing*                                // Das Ergebnis (die textbasierte-Zeichnung)
 Create_Text_Based_Alkane_Drawing
 (
-        const char* const restrict iupac_name,  // IUPAC-Name, der gezeichnet werden soll
-        const size_t name_length                // Laenge des IUPAC-Namen
+        const char* const restrict iupac_name,                          // IUPAC-Name, der gezeichnet werden soll
+        const size_t name_length,                                       // Laenge des IUPAC-Namen
+        const enum Create_Text_Based_Drawing_Settings creation_settings // Einstellungen fuer die Erstellung
 );
 
 /**

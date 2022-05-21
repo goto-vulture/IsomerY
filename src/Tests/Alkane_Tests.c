@@ -1050,7 +1050,8 @@ extern void TEST_Text_Based_Alkane_Drawing_1 (void)
     {
         // Textbasierte Zeichnung erzeugen
         struct Text_Based_Alkane_Drawing* result_drawing =
-                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]));
+                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]),
+                        CREATE_TEXT_BASED_DRAWING_DEFAULTS);
 
         // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile miteinander verglichen
         const _Bool wrong_result_created = Compare_Expected_Drawing_With_Created_Drawing (expected_drawings [i],
@@ -1102,7 +1103,8 @@ extern void TEST_Text_Based_Alkane_Drawing_2 (void)
     {
         // Textbasierte Zeichnung erzeugen
         struct Text_Based_Alkane_Drawing* result_drawing =
-                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]));
+                Create_Text_Based_Alkane_Drawing (iupac_names [i], strlen (iupac_names [i]),
+                        CREATE_TEXT_BASED_DRAWING_DEFAULTS);
 
         // Beim Test, ob die Zeichnung richtig ist, wird Zeile fuer Zeile miteinander verglichen
         const _Bool wrong_result_created = Compare_Expected_Drawing_With_Created_Drawing (expected_drawings [i],
@@ -1150,7 +1152,7 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
 
     // Textbasierte Zeichnung erzeugen
     struct Text_Based_Alkane_Drawing* result_drawing =
-            Create_Text_Based_Alkane_Drawing (iupac_name, strlen (iupac_name));
+            Create_Text_Based_Alkane_Drawing (iupac_name, strlen (iupac_name), CREATE_TEXT_BASED_DRAWING_NO_SPACES);
 
     puts("Export image:");
     Show_Text_Based_Alkane_Drawing(result_drawing);
