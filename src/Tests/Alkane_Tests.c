@@ -1165,7 +1165,7 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
     // Name und Pfad der Referenzdatei zusammenbauen
     char reference_file [100];
     Multi_strncat(reference_file, COUNT_ARRAY_ELEMENTS(reference_file) - 1, 3,
-    		"./src/Tests/Expected_Results/Alkane/XPM_Pictures/", iupac_name, ".xpm");
+    		"./src/Tests/Expected_Results/Alkane/XPM_Pictures/", iupac_name, " NO_SPACES.xpm");
 
     // Name der Testdatei zusammenbauen
     char test_file [IUPAC_NAME_LENGTH + 4 /*strlen(".xpm")*/];
