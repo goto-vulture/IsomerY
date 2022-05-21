@@ -212,7 +212,7 @@ Execute_All_Alkane_Tests
     };
 
     // Positionen, wo bei der Uebersicht Newlines ausgegeben werden sollen. Dies dient fuer eine bessere Uebersicht
-    const uint_fast8_t newline_positions [] = { 14, 16, 18 };
+    const size_t newline_positions [] = { 14, 17, COUNT_ARRAY_ELEMENTS(test_functions) - 1 };
 
     #ifndef CLI_INPUT_USE_ALL_TESTFUNCTIONS
     #define CLI_INPUT_USE_ALL_TESTFUNCTIONS COUNT_ARRAY_ELEMENTS(test_functions)
