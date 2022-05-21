@@ -57,6 +57,7 @@ do
 
     SEC_TOTAL_ADDED=0
     AVERAGE_SEC=0
+    PROG_NAME=""
 
     # Programm vor Zeitmessung ohne Dokumentation neu uebersetzen
     make clean 1>> /dev/null
@@ -72,7 +73,19 @@ do
 
         echo -n "Compile Debug version (-j) ..."
         time make -j Debug=1 NO_DOCUMENTATION=1 1> /dev/null
-        printf "Done !\n\n"
+        echo "Done !"
+
+        # Linux oder Windows ?
+        if [[ -e "./IsomerY_Debug_Win" ]];
+        then
+            PROG_NAME="./IsomerY_Debug_Win"
+        elif [[ -e "./IsomerY_Debug_Linux" ]];
+        then
+            PROG_NAME="./IsomerY_Debug_Linux"
+        else
+            echo "No debug program file found !"
+            exit 1
+        fi
     fi
 
     # Release-Tests
@@ -86,45 +99,39 @@ do
 
         echo -n "Compile Release version (-j) ..."
         time make -j Release=1 NO_DOCUMENTATION=1 1> /dev/null
-        printf "Done !\n\n"
+        echo "Done !"
+
+        # Linux oder Windows ?
+        if [[ -e "./IsomerY_Release_Win" ]];
+        then
+            PROG_NAME="./IsomerY_Release_Win"
+        elif [[ -e "./IsomerY_Release_Linux" ]];
+        then
+            PROG_NAME="./IsomerY_Release_Linux"
+        else
+            echo "No release program file found !"
+            exit 1
+        fi
     fi
+
+    # Dateigroesse ermitteln
+    PROG_SIZE=$(wc -c < "${PROG_NAME}")
+    PROG_SIZE_KBYTE=$(awk "BEGIN {print ${PROG_SIZE}.0 / 1024.0}")
+    printf "Dateigroesse: %9.3f KByte\n\n" $(echo ${PROG_SIZE_KBYTE} | tr . ,)
 
     # Programm mehrmals ausfuehren und die Ausfuehrungszeit sichern
     for (( i=0; i<${TOTAL_RUNS}; i++ ))
     do
         printf "===== Program run %4d / %4d =====\n" $(( ${i} + 1 )) ${TOTAL_RUNS}
-        PROG_NAME=""
 
         # Programm starten und Zeit-Ausgabe von time sichern
         if [[ ${test} -eq 0 ]];
         then
-            # Linux oder Windows ?
-            if [[ -e "./IsomerY_Debug_Win" ]];
-            then
-                PROG_NAME="./IsomerY_Debug_Win"
-            elif [[ -e "./IsomerY_Debug_Linux" ]];
-            then
-                PROG_NAME="./IsomerY_Debug_Linux"
-            else
-                echo "No debug program file found !"
-                exit 1
-            fi
             PROGRAM_OUTPUT=$(time ( ${PROG_NAME} -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)
             last_call=${?}
         fi
         if [[ ${test} -eq 1 ]];
         then
-            # Linux oder Windows ?
-            if [[ -e "./IsomerY_Release_Win" ]];
-            then
-                PROG_NAME="./IsomerY_Release_Win"
-            elif [[ -e "./IsomerY_Release_Linux" ]];
-            then
-                PROG_NAME="./IsomerY_Release_Linux"
-            else
-                echo "No release program file found !"
-                exit 1
-            fi
             PROGRAM_OUTPUT=$(time ( ${PROG_NAME} -c ${TOTAL_NUM_C_ATOMS} ) 2>&1 1> /dev/null)
             last_call=${?}
         fi
