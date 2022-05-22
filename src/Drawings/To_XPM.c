@@ -88,6 +88,16 @@ extern void Export_Text_Based_Drawing_To_XPM
         char_size = 64;
     }
 
+    uint_fast8_t char_per_pixel = 0;
+    if ((export_settings & EXPORT_XPM_CHAR_PER_PIXEL_1) != 0)
+    {
+        char_per_pixel = 1;
+    }
+    else if ((export_settings & EXPORT_XPM_CHAR_PER_PIXEL_2) != 0)
+    {
+        char_per_pixel = 2;
+    }
+
 
     // ===== ===== ===== BEGINN Zuordnung der Konfigurationen zu den Quellbildern ===== ===== =====
     struct File_Name_And_Settings_Enum
@@ -245,7 +255,7 @@ extern void Export_Text_Based_Drawing_To_XPM
                         // enthalten
         x_length,
         COUNT_ARRAY_ELEMENTS(XPM_COLOR_LIST),
-        1,
+        char_per_pixel,
         xpm_header,
         COUNT_ARRAY_ELEMENTS(xpm_header) - 1
     );
