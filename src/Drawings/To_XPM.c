@@ -15,18 +15,22 @@
 #include "../str2int.h"
 
 // Alle XPM-Bilder, die fuer die Erzeugung zur Verfuegung stehen
+#include "XPM/C_24_24_14_1.xpm"
 #include "XPM/C_32_32_16_1.xpm"
 #include "XPM/C_64_64_16_1.xpm"
 #include "XPM/C_64_64_16_2.xpm"
 
+#include "XPM/H_24_24_8_1.xpm"
 #include "XPM/H_32_32_10_1.xpm"
 #include "XPM/H_64_64_19_1.xpm"
 #include "XPM/H_64_64_19_2.xpm"
 
+#include "XPM/Hyphen_24_24_5_1.xpm"
 #include "XPM/Hyphen_32_32_7_1.xpm"
 #include "XPM/Hyphen_64_64_13_1.xpm"
 #include "XPM/Hyphen_64_64_13_2.xpm"
 
+#include "XPM/Hyphen_Angle_90_24_24_6_1.xpm"
 #include "XPM/Hyphen_Angle_90_32_32_11_1.xpm"
 #include "XPM/Hyphen_Angle_90_64_64_13_1.xpm"
 #include "XPM/Hyphen_Angle_90_64_64_13_2.xpm"
@@ -71,7 +75,11 @@ extern void Export_Text_Based_Drawing_To_XPM
 )
 {
     uint_fast8_t char_size = 0;
-    if ((export_settings & EXPORT_XPM_CHAR_SIZE_32_32) != 0)
+    if ((export_settings & EXPORT_XPM_CHAR_SIZE_24_24) != 0)
+    {
+        char_size = 24;
+    }
+    else if ((export_settings & EXPORT_XPM_CHAR_SIZE_32_32) != 0)
     {
         char_size = 32;
     }
@@ -90,25 +98,29 @@ extern void Export_Text_Based_Drawing_To_XPM
 
     const struct File_Name_And_Settings_Enum available_files_for_configs [] =
     {
+        { C_24_24_14_1_xpm, EXPORT_XPM_CHAR_SIZE_24_24 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { C_32_32_16_1_xpm, EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { C_64_64_16_1_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { C_64_64_16_2_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_2 },
 
+        { H_24_24_8_1_xpm, EXPORT_XPM_CHAR_SIZE_24_24 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { H_32_32_10_1_xpm, EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { H_64_64_19_1_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { H_64_64_19_2_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_2 },
 
+        { Hyphen_24_24_5_1_xpm, EXPORT_XPM_CHAR_SIZE_24_24 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { Hyphen_32_32_7_1_xpm, EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { Hyphen_64_64_13_1_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { Hyphen_64_64_13_2_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_2 },
 
+        { Hyphen_Angle_90_24_24_6_1_xpm, EXPORT_XPM_CHAR_SIZE_24_24 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { Hyphen_Angle_90_32_32_11_1_xpm, EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { Hyphen_Angle_90_64_64_13_1_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_1 },
         { Hyphen_Angle_90_64_64_13_2_xpm, EXPORT_XPM_CHAR_SIZE_64_64 | EXPORT_XPM_CHAR_PER_PIXEL_2 }
     };
     const char char_order [] = { 'C', 'H', '-', '|' };
     // Offset in der Liste der Dateien, um Dateien gleicher Konfiguration (fuer andere Zeichen) erreichen zu koennen
-    const uint_fast8_t offset = 3;
+    const uint_fast8_t offset = 4;
 
     // Erste Konfiguration aus der Liste ermitteln, die der Konfig aus der Eingabe entspricht
     // Auf diesen Wert wird dann der Offset angebracht
@@ -331,7 +343,11 @@ Draw_Char_In_XPM
 )
 {
     uint_fast8_t char_size = 0;
-    if ((export_settings & EXPORT_XPM_CHAR_SIZE_32_32) != 0)
+    if ((export_settings & EXPORT_XPM_CHAR_SIZE_24_24) != 0)
+    {
+        char_size = 24;
+    }
+    else if ((export_settings & EXPORT_XPM_CHAR_SIZE_32_32) != 0)
     {
         char_size = 32;
     }
@@ -370,7 +386,7 @@ Draw_Char_In_XPM
     {
         for (uint_fast8_t i = 0; i < char_size; ++ i)
         {
-            memset(&(output_data[*x_cursor][*y_cursor]), ' ', 32 * sizeof (char));
+            memset(&(output_data[*x_cursor][*y_cursor]), ' ', char_size * sizeof (char));
             *x_cursor += 1;
         }
     }

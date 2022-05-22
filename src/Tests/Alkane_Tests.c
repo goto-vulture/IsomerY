@@ -1159,8 +1159,11 @@ extern void TEST_Convert_Text_Based_Alane_Drawing_To_XPM (void)
     PUTS_FFLUSH("");
 
     // Textbasierte Zeichnung exportieren
-    Export_Text_Based_Drawing_To_XPM(result_drawing,
-            EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
+    Export_Text_Based_Drawing_To_XPM(result_drawing, EXPORT_XPM_CHAR_SIZE_32_32 | EXPORT_XPM_CHAR_PER_PIXEL_1);
+    // Variante mit 64x64 Pixel pro Zeichen
+    // Export_Text_Based_Drawing_To_XPM(result_drawing, EXPORT_XPM_CHAR_SIZE_64_64| EXPORT_XPM_CHAR_PER_PIXEL_1);
+    // Variante mit 24+24 Pixel pro Zeichen
+    // Export_Text_Based_Drawing_To_XPM(result_drawing, EXPORT_XPM_CHAR_SIZE_24_24 | EXPORT_XPM_CHAR_PER_PIXEL_1);
 
     // Name und Pfad der Referenzdatei zusammenbauen
     char reference_file [100];
