@@ -87,6 +87,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     {
         char_size = 64;
     }
+    ASSERT_MSG(char_size != 0, "Missing char size setting ! Example option: \"EXPORT_XPM_CHAR_SIZE_32_32\".");
 
     uint_fast8_t char_per_pixel = 0;
     if ((export_settings & EXPORT_XPM_CHAR_PER_PIXEL_1) != 0)
@@ -97,6 +98,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     {
         char_per_pixel = 2;
     }
+    ASSERT_MSG(char_per_pixel != 0, "Missing char per pixel setting ! Example option: \"EXPORT_XPM_CHAR_PER_PIXEL_1\".");
 
 
     // ===== ===== ===== BEGINN Zuordnung der Konfigurationen zu den Quellbildern ===== ===== =====
