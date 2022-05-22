@@ -60,7 +60,7 @@ Draw_Char_In_XPM
         char** const output_data,
         uint_fast32_t* const restrict x_cursor,
         uint_fast32_t* const restrict y_cursor,
-        const enum Export_To_XPM_Settings export_settings,
+        const uint_fast8_t char_size,
         const char input_char,
         struct char_char_array_tuple* tuple,
         const size_t number_of_tuple
@@ -179,7 +179,7 @@ extern void Export_Text_Based_Drawing_To_XPM
                 break;
             }
 
-            Draw_Char_In_XPM(output_data, &output_data_x_cursor, &output_data_y_cursor, export_settings,
+            Draw_Char_In_XPM(output_data, &output_data_x_cursor, &output_data_y_cursor, char_size,
                     input->drawing[x][y], tuple, COUNT_ARRAY_ELEMENTS(tuple));
             output_data_x_cursor -= char_size;
         }
@@ -336,26 +336,12 @@ Draw_Char_In_XPM
         char** const output_data,
         uint_fast32_t* const restrict x_cursor,
         uint_fast32_t* const restrict y_cursor,
-        const enum Export_To_XPM_Settings export_settings,
+        const uint_fast8_t char_size,
         const char input_char,
         struct char_char_array_tuple* tuple,
         const size_t number_of_tuple
 )
 {
-    uint_fast8_t char_size = 0;
-    if ((export_settings & EXPORT_XPM_CHAR_SIZE_24_24) != 0)
-    {
-        char_size = 24;
-    }
-    else if ((export_settings & EXPORT_XPM_CHAR_SIZE_32_32) != 0)
-    {
-        char_size = 32;
-    }
-    else if ((export_settings & EXPORT_XPM_CHAR_SIZE_64_64) != 0)
-    {
-        char_size = 64;
-    }
-
     // -1 bedeutet, dass es keinen Eintrag gibt, da es sich um ein Leerzeichen in der textbasierten Zeichnung handelt
     int_fast8_t tuple_index = -1;
     switch (input_char)
