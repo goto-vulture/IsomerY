@@ -219,7 +219,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     fflush(stdout);
 
     FILE* result_file = FOPEN (output_file_name, "w");
-    ASSERT_FMSG(result_file != NULL, "Error occured while opening / creating the file \"%s\" !", output_file_name);
+    ASSERT_FMSG(result_file != NULL, "Error occurred while opening / creating the file \"%s\" !", output_file_name);
 
     // Puffer fuer die Ausgabedatei
     char* export_buffer = (char*) CALLOC(EXPORT_FILE_BUFFER_SIZE, sizeof (char));
@@ -252,7 +252,7 @@ extern void Export_Text_Based_Drawing_To_XPM
 
     size_t write_return = 0;
     write_return = fwrite(xpm_header, sizeof (char), strlen(xpm_header), result_file);
-    ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+    ASSERT_FMSG(write_return != 0, "Error while writing in the result file \"%s\" !", output_file_name);
     bytes_written += write_return;
 
     // Farbliste erzeugen
@@ -264,19 +264,19 @@ extern void Export_Text_Based_Drawing_To_XPM
         COUNT_ARRAY_ELEMENTS(xpm_color_list) - 1
     );
     write_return = fwrite(xpm_color_list, sizeof (char), strlen(xpm_color_list), result_file);
-    ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+    ASSERT_FMSG(write_return != 0, "Error while writing in the result file \"%s\" !", output_file_name);
     bytes_written += write_return;
 
     // Zeile fuer Zeile die Datei erzeugen
     for (uint_fast32_t i = 0; i < x_length; ++ i)
     {
         write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
-        ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+        ASSERT_FMSG(write_return != 0, "Error while writing in the result file \"%s\" !", output_file_name);
         bytes_written += write_return;
 
         write_return = fwrite (output_data [i], sizeof (char), y_length - 1, result_file);
         // printf (">\"%s\"<\n", output_data [i]);
-        ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+        ASSERT_FMSG(write_return != 0, "Error while writing in the result file \"%s\" !", output_file_name);
         bytes_written += write_return;
         if (write_return > longest_written_line)
         {
@@ -292,7 +292,7 @@ extern void Export_Text_Based_Drawing_To_XPM
         {
             write_return = fwrite ("\"", sizeof (char), strlen("\""), result_file);
         }
-        ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+        ASSERT_FMSG(write_return != 0, "Error while writing in the result file \"%s\" !", output_file_name);
         bytes_written += write_return;
     }
 
@@ -306,7 +306,7 @@ extern void Export_Text_Based_Drawing_To_XPM
     );
 
     write_return = fwrite(xpm_footer, sizeof (char), strlen (xpm_footer), result_file);
-    ASSERT_FMSG(write_return != 0, "Error while writeing in the result file \"%s\" !", output_file_name);
+    ASSERT_FMSG(write_return != 0, "Error while writing in the result file \"%s\" !", output_file_name);
     bytes_written += write_return;
 
     printf ("Lines written: %8zu\n", lines_written);
