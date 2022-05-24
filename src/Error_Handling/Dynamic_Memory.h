@@ -28,6 +28,7 @@ extern "C"
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include "Assert_Msg.h"
 
 
 
@@ -69,6 +70,19 @@ extern void Show_Dynamic_Memory_Status (void);
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
+ * @brief MALLOC-Aufruf mit automatischer Kontrolle des Rueckgabezeigers
+ */
+#ifndef A_MALLOC
+    #define A_MALLOC(memory_size, ptr_name, message)                                                                  \
+        MALLOC(memory_size)                                                                                           \
+        ASSERT_ALLOC(ptr_name, message, memory_size)
+#else
+    #error "The macro \"A_MALLOC\" is already defined !"
+#endif /* A_MALLOC */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
  * @brief calloc-Aufrufe mitzaehlen
  */
 #ifndef CALLOC
@@ -78,6 +92,19 @@ extern void Show_Dynamic_Memory_Status (void);
 #else
     #error "The macro \"CALLOC\" is already defined !"
 #endif /* CALLOC */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+/**
+ * @brief calloc-Aufrufe mitzaehlen
+ */
+#ifndef A_CALLOC
+    #define A_CALLOC(number_of_elements, element_size, ptr_name, message)                                             \
+        CALLOC (number_of_elements, element_size);                                                                    \
+        ASSERT_ALLOC(ptr_name, message, number_of_elements * element_size)
+#else
+    #error "The macro \"A_CALLOC\" is already defined !"
+#endif /* A_CALLOC */
 
 //---------------------------------------------------------------------------------------------------------------------
 
