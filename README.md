@@ -139,7 +139,7 @@ Um die Programmierung auf das Wesentliche zu beschränken, besitzt das Programm 
 
 ## EN
 
-### Einleitung
+### Introduction
 
 This programm creates the structural isomer (with their IUPAC names) from alkanes by given number of C-atoms.
 
