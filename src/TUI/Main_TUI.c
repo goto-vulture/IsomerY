@@ -186,14 +186,7 @@ static void Draw_Main_Window (void)
     addch(ACS_LTEE);
     for (int i = 1; i < COLS - 1; ++ i)
     {
-        if (i == (COLS / 2))
-        {
-            addch(ACS_BTEE);
-        }
-        else
-        {
-            addch(ACS_HLINE);
-        }
+        addch((i == (COLS / 2)) ? ACS_BTEE : ACS_HLINE);
     }
     addch(ACS_RTEE);
     move(LINES - 6, 1);
