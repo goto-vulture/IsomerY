@@ -10,6 +10,9 @@ MKDIR = mkdir
 DOXYGEN = doxygen
 DOXYGEN_PATH = $(shell command -v $(DOXYGEN) 2> /dev/null)
 
+# Verwendete Libs
+LIBS = -lncurses -lmenu
+
 
 # Flags, die sowohl im Debug- als auch im Release-Build, verwendet werden
 CCFLAGS = -std=c11 -pedantic -Wall -Wextra -Wconversion -fmessage-length=0
@@ -223,6 +226,9 @@ TO_XPM_C = ./src/Drawings/To_XPM.c
 
 XPM_FRAGMENTS_H = ./src/Drawings/XPM/XPM_Fragments.h
 XPM_FRAGMENTS_C = ./src/Drawings/XPM/XPM_Fragments.c
+
+MAIN_TUI_H = ./src/TUI/Main_TUI.h
+MAIN_TUI_C = ./src/TUI/Main_TUI.c
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
 
 
@@ -245,11 +251,11 @@ endif
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o
+$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o Main_TUI.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o Main_TUI.o $(LIBS)
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -343,6 +349,9 @@ To_XPM.o: $(TO_XPM_C)
 
 XPM_Fragments.o: $(XPM_FRAGMENTS_C)
 	$(CC) $(CCFLAGS) -c $(XPM_FRAGMENTS_C)
+
+Main_TUI.o: $(MAIN_TUI_C)
+	$(CC) $(CCFLAGS) -c $(MAIN_TUI_C)
 ##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen

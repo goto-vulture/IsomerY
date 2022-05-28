@@ -108,6 +108,7 @@
 #include "Beautiful.h"
 #include "argparse.h"
 #include "CLI_Parameter.h"
+#include "TUI/Main_TUI.h"
 
 
 
@@ -130,6 +131,9 @@ static inline void Show_Program_Details (void);
  */
 int main (const int argc, const char* argv [])
 {
+    TUI_Build_Main_Window(argc, argv);
+    return EXIT_SUCCESS;
+
     // ===== ===== ===== BEGINN CLI-Parameter parsen ===== ===== =====
     struct argparse_option cli_options [] =
     {
