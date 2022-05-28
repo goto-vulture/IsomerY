@@ -14,9 +14,11 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 
 
+
 ITEM** items        = NULL;
 MENU* menu          = NULL;
 WINDOW* menu_window = NULL;
+
 
 
 enum Menu_Types
@@ -83,6 +85,7 @@ TUI_Build_Main_Window
     initscr();
     curs_set(0);
     clear ();
+    noecho();
 
     start_color();
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
@@ -144,6 +147,8 @@ TUI_Build_Main_Window
 
 static void Draw_Main_Window (void)
 {
+    clear();
+
     // Komplette Umrandung des Hauptfensters
     box(stdscr, 0, 0);
 
