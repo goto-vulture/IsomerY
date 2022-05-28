@@ -2,6 +2,9 @@
 # gleichen bzw. vergleichbaren Ergebnissen
 # Sehr interessant wie die Ergebnisse sind :o
 
+# Inhalt auskommentieren, da dieser nicht verwendet wird
+.if 0
+
 .section .data
 Loop_Counter:       .int 2147483646     # INT32_MAX - 1
 Time:               .int 0
@@ -21,7 +24,7 @@ FString_add:            .string "add:                           %d\n\0"
 
 FString_xchg_1:         .string "xchg                           %d\n\0"
 FString_xchg_2:         .string "mov, mov, mov                  %d\n\0"
- 
+
 FString_xadd_1:         .string "xadd                           %d\n\0"
 FString_xadd_2:         .string "mov, mov, mov, add             %d\n\0"
 
@@ -83,7 +86,7 @@ FString_pusha:          .string "pusha:                         %d\n\0"
     pushl $\format_string
     call printf
     leave
-    
+
     fflush_call
 .endm
 
@@ -93,10 +96,10 @@ FString_pusha:          .string "pusha:                         %d\n\0"
     pushl $FString_Newline
     call printf
     leave
-    
+
     fflush_call
-.endm   
-    
+.endm
+
 
 .section .text
 .extern printf
@@ -106,7 +109,7 @@ FString_pusha:          .string "pusha:                         %d\n\0"
 .global main
 main:
     movl %esp, %ebp # for correct debugging
-    
+
     xorl %eax, %eax
     xorl %ebx, %ebx
     xorl %ecx, %ecx
@@ -114,16 +117,16 @@ main:
     xorl %esi, %esi
     xorl %edi, %edi
     xorl %ebp, %ebp
-    
+
     # ------------------------------------------------------------------------------
-    
-    first_clock Time    
+
+    first_clock Time
     movl (Loop_Counter), %ecx
     l:
         loop l
     second_clock Time
     print_d FString_Loop_1 Time
-    
+
     first_clock Time
     movl (Loop_Counter), %ecx
     l_2:
@@ -131,9 +134,9 @@ main:
         jnz l_2
     second_clock Time
     print_d FString_Loop_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -144,7 +147,7 @@ main:
         jle l_3
     second_clock Time
     print_d FString_inc Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     movl (Loop_Counter), %eax
@@ -154,9 +157,9 @@ main:
         jle l_4
     second_clock Time
     print_d FString_add Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     movl $11111, %ebx
@@ -170,7 +173,7 @@ main:
         jle l_21
     second_clock Time
     print_d FString_xchg_1 Time
-    
+
     first_clock Time
     movl $11111, %ebx
     movl $22222, %edx
@@ -185,9 +188,9 @@ main:
         jle l_22
     second_clock Time
     print_d FString_xchg_2 Time
-    
+
     #-------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     movl $11111, %ebx
@@ -201,7 +204,7 @@ main:
         jle l_23
     second_clock Time
     print_d FString_xadd_1 Time
-    
+
     first_clock Time
     movl $11111, %ebx
     movl $22222, %edx
@@ -217,9 +220,9 @@ main:
         jle l_24
     second_clock Time
     print_d FString_xadd_2 Time
-        
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -231,7 +234,7 @@ main:
         jle l_13
     second_clock Time
     print_d FString_bound_1 Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     movl $0, %edx
@@ -246,9 +249,9 @@ main:
         jge l_14
     second_clock Time
     print_d FString_bound_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -261,7 +264,7 @@ main:
         jle l_15
     second_clock Time
     print_d FString_enter_leave_1 Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     mov (Loop_Counter), %eax
@@ -277,9 +280,9 @@ main:
         jle l_16
     second_clock Time
     print_d FString_enter_leave_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -292,7 +295,7 @@ main:
         jle l_17
     second_clock Time
     print_d FString_enter_1 Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     mov (Loop_Counter), %eax
@@ -307,9 +310,9 @@ main:
         jle l_18
     second_clock Time
     print_d FString_enter_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -325,7 +328,7 @@ main:
         jle l_19
     second_clock Time
     print_d FString_leave_1 Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     mov (Loop_Counter), %eax
@@ -341,9 +344,9 @@ main:
         jle l_20
     second_clock Time
     print_d FString_leave_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -355,7 +358,7 @@ main:
         jle l_5
     second_clock Time
     print_d FString_xor Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     movl (Loop_Counter), %eax
@@ -366,9 +369,9 @@ main:
         jle l_6
     second_clock Time
     print_d FString_mov Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     movl $1, %eax
@@ -381,14 +384,14 @@ main:
         jle l_7
     second_clock Time
     print_d FString_shift_l Time
-    
+
     first_clock Time
     movl $1, %eax
     movl $2, %esi
     xorl %ecx, %ecx
     movl (Loop_Counter), %ebx
     l_8:
-        mull %esi # mul verwendet edx:eax als implizite Ergebnisregister, sodass man keine 
+        mull %esi # mul verwendet edx:eax als implizite Ergebnisregister, sodass man keine
                   # der beiden fuer den Schleifenzaehler oder fuer die Schleifengrenze
                   # verwenden kann !
         incl %ecx
@@ -396,9 +399,9 @@ main:
         jle l_8
     second_clock Time
     print_d FString_mul_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     movl $2, %eax
@@ -416,7 +419,7 @@ main:
         jle l_9
     second_clock Time
     print_d FString_shift_r Time
-    
+
     first_clock Time
     movl $2, %eax
     movl $2, %esi
@@ -424,7 +427,7 @@ main:
     xorl %edx, %edx
     movl (Loop_Counter), %ebx
     l_10:
-        divl %esi # div verwendet edx:eax als implizite Ergebnisregister, sodass man keine 
+        divl %esi # div verwendet edx:eax als implizite Ergebnisregister, sodass man keine
                   # der beiden fuer den Schleifenzaehler oder fuer die Schleifengrenze
                   # verwenden kann !
         movl $2, %eax   # Damit es keine Ausnahme wegen einer Nulldivison gibt, muss immer
@@ -434,9 +437,9 @@ main:
         jle l_10
     second_clock Time
     print_d FString_div_2 Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     newline
     first_clock Time
     xorl %ecx, %ecx
@@ -450,14 +453,14 @@ main:
         pushl %ebp
         pushl %esi
         pushl %edi
-        
+
         addl $32, %esp # Stack Pointer wieder zuruecksetzen
         incl %ecx
         cmpl %eax, %ecx
         jne l_11
     second_clock Time
     print_d FString_push Time
-    
+
     first_clock Time
     xorl %ecx, %ecx
     movl (Loop_Counter), %eax
@@ -469,9 +472,10 @@ main:
         jne l_12
     second_clock Time
     print_d FString_pusha Time
-    
+
     # ------------------------------------------------------------------------------
-    
+
     xorl %eax, %eax
     ret
-    
+
+.endif
