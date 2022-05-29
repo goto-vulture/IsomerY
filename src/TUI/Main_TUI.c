@@ -293,6 +293,40 @@ Update_Menu
                     }
             },
             {
+                    .menu               = CREATION_MENU,
+                    .menu_name          = "CREATION MENU",
+                    .menu_position      = "Main menu > Creation menu",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            "2.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
+                            "Setup calculation",
+                            "Back",
+                            NULL
+                    }
+            },
+            {
+                    .menu               = GENERAL_INFO_MENU,
+                    .menu_name          = "GENERAL INFOS",
+                    .menu_position      = "Main menu > General infos",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            "2.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
+                            "...",
+                            "Back",
+                            NULL
+                    }
+            },
+            {
                     .menu               = ABOUT_MENU,
                     .menu_name          = "ABOUT",
                     .menu_position      = "Main menu > About",
@@ -404,9 +438,11 @@ Exec_Menu_Entry
         const void* function_input [ALLOCATED_MENU_ENTRIES];
     };
 
-    static const enum Menu_Types main_menu  = MAIN_MENU;
-    static const enum Menu_Types about_menu = ABOUT_MENU;
-    static const int exit_input             = 0;
+    static const enum Menu_Types main_menu          = MAIN_MENU;
+    static const enum Menu_Types about_menu         = ABOUT_MENU;
+    static const enum Menu_Types general_info_menu  = GENERAL_INFO_MENU;
+    static const enum Menu_Types creation_menu      = CREATION_MENU;
+    static const int exit_input                     = 0;
 
     const struct Menu_Functions menu_functions [] =
     {
@@ -414,18 +450,48 @@ Exec_Menu_Entry
                     .menu           = MAIN_MENU,
                     .function       =
                     {
-                            &Exit_Wrapper,
-                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
+                            &Update_Menu_Wrapper,
                             &Update_Menu_Wrapper,
                             &Exit_Wrapper,
                             NULL
                     },
                     .function_input =
                     {
-                            &exit_input,
-                            &exit_input,
+                            &creation_menu,
+                            &general_info_menu,
                             &about_menu,
                             &exit_input,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_MENU,
+                    .function       =
+                    {
+                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &exit_input,
+                            &main_menu,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = CREATION_MENU,
+                    .function       =
+                    {
+                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &exit_input,
+                            &main_menu,
                             NULL
                     }
             },
