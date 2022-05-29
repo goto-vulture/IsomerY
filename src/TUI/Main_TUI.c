@@ -21,6 +21,24 @@
 #error "The marco \"ALLOCATED_MENU_ENTRIES\" is already defined !"
 #endif /* ALLOCATED_MENU_ENTRIES */
 
+#ifndef INFORMATION_LINE_OFFSET
+#define INFORMATION_LINE_OFFSET 15
+#else
+#error "The macro \"INFORMATION_LINE_OFFSET\" is already defined !"
+#endif /* INFORMATION_LINE_OFFSET */
+
+#ifndef MENU_POSITION_OFFSET
+#define MENU_POSITION_OFFSET 7
+#else
+#error "The macro \"MENU_POSITION_OFFSET\" is already defined !"
+#endif /* MENU_POSITION_OFFSET */
+
+#ifndef STATUS_OFFSET
+#define STATUS_OFFSET 5
+#else
+#error "The macro \"STATUS_OFFSET\" is already defined !"
+#endif /* STATUS_OFFSET */
+
 
 
 enum Menu_Types
@@ -208,34 +226,34 @@ static void Draw_Main_Window
     }
 
     // Flaeche mit optionalen Informationen zum aktuell markierten Menuepunkt zeichnen
-    move(LINES - 15, 0);
+    move(LINES - INFORMATION_LINE_OFFSET, 0);
     addch(ACS_LTEE);
     for (int i = 1; i < COLS / 2; ++ i)
     {
         addch(ACS_HLINE);
     }
     addch(ACS_RTEE);
-    move(LINES - 14, 1);
+    move(LINES - INFORMATION_LINE_OFFSET + 1, 1);
     attrset(A_BOLD);
     addstr("Information:");
     attrset(A_NORMAL);
 
     // Die beiden Flaechen am unteren Ende des Fensters zeichnen
-    move(LINES - 7, 0);
+    move(LINES - MENU_POSITION_OFFSET, 0);
     addch(ACS_LTEE);
     for (int i = 1; i < COLS - 1; ++ i)
     {
         addch((i == (COLS / 2)) ? ACS_BTEE : ACS_HLINE);
     }
     addch(ACS_RTEE);
-    move(LINES - 6, 1);
+    move(LINES - MENU_POSITION_OFFSET + 1, 1);
     attrset(A_BOLD);
     addstr("Menu position:");
     attrset(A_NORMAL);
     addch(' ');
     addstr(menue_position_string);
 
-    move(LINES - 5, 0);
+    move(LINES - STATUS_OFFSET, 0);
     addch(ACS_LTEE);
     for (int i = 1; i < COLS - 1; ++ i)
     {
@@ -243,7 +261,7 @@ static void Draw_Main_Window
     }
     addch(ACS_RTEE);
 
-    move(LINES - 4, 1);
+    move(LINES - STATUS_OFFSET + 1, 1);
     attrset(A_BOLD);
     addstr("Status:");
     attrset(A_NORMAL);
@@ -333,12 +351,10 @@ Update_Menu
                     .item_first_string  =
                     {
                             "1.",
-                            "2.",
                             NULL
                     },
                     .item_second_string =
                     {
-                            "Show something",
                             "Back (Esc)",
                             NULL
                     }
@@ -499,13 +515,11 @@ Exec_Menu_Entry
                     .menu           = ABOUT_MENU,
                     .function       =
                     {
-                            &Exit_Wrapper,
                             &Update_Menu_Wrapper,
                             NULL
                     },
                     .function_input =
                     {
-                            &exit_input,
                             &main_menu,
                             NULL
                     }
@@ -530,3 +544,15 @@ Exec_Menu_Entry
 #ifdef ALLOCATED_MENU_ENTRIES
 #undef ALLOCATED_MENU_ENTRIES
 #endif /* ALLOCATED_MENU_ENTRIES */
+
+#ifdef INFORMATION_LINE_OFFSET
+#undef INFORMATION_LINE_OFFSET
+#endif /* INFORMATION_LINE_OFFSET */
+
+#ifdef MENU_POSITION_OFFSET
+#undef MENU_POSITION_OFFSET
+#endif /* MENU_POSITION_OFFSET */
+
+#ifdef STATUS_OFFSET
+#undef STATUS_OFFSET
+#endif /* STATUS_OFFSET */
