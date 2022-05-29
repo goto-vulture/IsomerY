@@ -224,7 +224,8 @@ static void Draw_Main_Window
     wclear(info_window);
     wclear(status_window);
     wclear(pos_window);
-    wclear(menu_window);
+    // Muss auskommentiert werden, damit der Name des aktuellen Menus nicht ausgeblendet wird
+    // wclear(menu_window);
 
     // Komplette Umrandung des Hauptfensters
     box(stdscr, 0, 0);
