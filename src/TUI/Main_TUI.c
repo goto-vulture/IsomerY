@@ -51,9 +51,12 @@ enum Menu_Types
 
 
 
-ITEM** items        = NULL;
-MENU* menu          = NULL;
-WINDOW* menu_window = NULL;
+ITEM** items            = NULL;
+MENU* menu              = NULL;
+WINDOW* menu_window     = NULL;
+WINDOW* info_window     = NULL;
+WINDOW* pos_window      = NULL;
+WINDOW* status_window   = NULL;
 
 enum Menu_Types current_menue = MAIN_MENU;
 
@@ -68,6 +71,12 @@ static void
 Update_Menu
 (
         const enum Menu_Types chosen_menu
+);
+
+static void
+Update_Window_Data
+(
+        const enum Menu_Types current_menu
 );
 
 static void
@@ -138,6 +147,12 @@ TUI_Build_Main_Window
     cbreak();
     keypad(stdscr, TRUE);
 
+    // Fenster mit den allgemeinen Informationen zum ausgewaehlten Menuepunkt
+    info_window     = newwin(INFORMATION_LINE_OFFSET - MENU_POSITION_OFFSET, COLS / 2 + 1, LINES - INFORMATION_LINE_OFFSET, 0);
+    // Fenster mit der aktuellen Menueposition
+    pos_window      = newwin(MENU_POSITION_OFFSET - STATUS_OFFSET + 1, COLS, LINES - MENU_POSITION_OFFSET - 1, 0);
+    // Fenster mit aktuellen Statusinformationen
+    status_window   = newwin(STATUS_OFFSET + 1, COLS, LINES - STATUS_OFFSET - 1, 0);
     Draw_Main_Window("Main menu");
 
     items = (ITEM**) CALLOC(ALLOCATED_MENU_ENTRIES, sizeof(ITEM*));
@@ -161,6 +176,12 @@ TUI_Build_Main_Window
     // Hauptmenue erzeugen
     Update_Menu(current_menue);
 
+    refresh();
+    wrefresh(menu_window);
+    wrefresh(info_window);
+    wrefresh(pos_window);
+    wrefresh(status_window);
+
     while (1)
     {
         switch (getch())
@@ -179,6 +200,9 @@ TUI_Build_Main_Window
         }
         refresh();
         wrefresh(menu_window);
+        wrefresh(info_window);
+        wrefresh(pos_window);
+        wrefresh(status_window);
     }
 
     return;
@@ -226,45 +250,66 @@ static void Draw_Main_Window
     }
 
     // Flaeche mit optionalen Informationen zum aktuell markierten Menuepunkt zeichnen
-    move(LINES - INFORMATION_LINE_OFFSET, 0);
-    addch(ACS_LTEE);
-    for (int i = 1; i < COLS / 2; ++ i)
-    {
-        addch(ACS_HLINE);
-    }
-    addch(ACS_RTEE);
-    move(LINES - INFORMATION_LINE_OFFSET + 1, 1);
-    attrset(A_BOLD);
-    addstr("Information:");
-    attrset(A_NORMAL);
+    wattrset(info_window, A_BOLD);
+    mvwaddnstr(info_window, 1, 1, "Information:", strlen ("Information:"));
+    wattrset(info_window, A_NORMAL);
+    mvwaddnstr(info_window, 2, 1, "N/A", strlen ("N/A"));
+    box(info_window, 0, 0);
 
-    // Die beiden Flaechen am unteren Ende des Fensters zeichnen
-    move(LINES - MENU_POSITION_OFFSET, 0);
-    addch(ACS_LTEE);
-    for (int i = 1; i < COLS - 1; ++ i)
+    // Zeile mit dem Inhalt der Menueposition komplett leeren
+    wmove(pos_window, 1, 1);
+    for (int i = 0; i < COLS - 2; ++ i)
     {
-        addch((i == (COLS / 2)) ? ACS_BTEE : ACS_HLINE);
+        waddch(pos_window, ' ');
     }
-    addch(ACS_RTEE);
-    move(LINES - MENU_POSITION_OFFSET + 1, 1);
-    attrset(A_BOLD);
-    addstr("Menu position:");
-    attrset(A_NORMAL);
-    addch(' ');
-    addstr(menue_position_string);
 
-    move(LINES - STATUS_OFFSET, 0);
-    addch(ACS_LTEE);
-    for (int i = 1; i < COLS - 1; ++ i)
-    {
-        addch(ACS_HLINE);
-    }
-    addch(ACS_RTEE);
+    wattrset(pos_window, A_BOLD);
+    mvwaddnstr(pos_window, 1, 1, "Menu position:", strlen("Menu position:"));
+    wattrset(pos_window, A_NORMAL);
+    mvwaddnstr(pos_window, 1, strlen("Menu position:") + 2, menue_position_string, (int) strlen (menue_position_string));
+    box(pos_window, 0, 0);
 
-    move(LINES - STATUS_OFFSET + 1, 1);
-    attrset(A_BOLD);
-    addstr("Status:");
-    attrset(A_NORMAL);
+    wattrset(status_window, A_BOLD);
+    mvwaddnstr(status_window, 1, 1, "Status:", strlen("Status:"));
+    wattrset(status_window, A_NORMAL);
+    mvwaddnstr(status_window, 2, 1, "N/A", strlen ("N/A"));
+    box(status_window, 0, 0);
+
+    // "Merge" Zeichen an den Ecken der Fenster einbauen
+    int status_window_lines = 0;
+    int status_window_cols = 0;
+    (void) status_window_lines;
+    getmaxyx(status_window, status_window_lines, status_window_cols);
+    wmove(status_window, 0, 0);
+    waddch(status_window, ACS_LTEE);
+    wmove(status_window, 0, status_window_cols - 1);
+    waddch(status_window, ACS_RTEE);
+
+    int info_window_lines = 0;
+    int info_window_cols = 0;
+    (void) info_window_lines;
+    getmaxyx(info_window, info_window_lines, info_window_cols);
+    wmove(info_window, 0, 0);
+    waddch(info_window, ACS_LTEE);
+    wmove(info_window, 0, info_window_cols - 1);
+    waddch(info_window, ACS_RTEE);
+
+    int pos_window_lines = 0;
+    int pos_window_cols = 0;
+    (void) pos_window_lines;
+    getmaxyx(pos_window, pos_window_lines, pos_window_cols);
+    wmove(pos_window, 0, 0);
+    waddch(pos_window, ACS_LTEE);
+    wmove(pos_window, 0, pos_window_cols - 1);
+    waddch(pos_window, ACS_RTEE);
+    wmove(pos_window, 0, pos_window_cols / 2);
+    waddch(pos_window, ACS_BTEE);
+
+    refresh();
+    wrefresh(menu_window);
+    wrefresh(info_window);
+    wrefresh(pos_window);
+    wrefresh(status_window);
 
     return;
 }
@@ -376,10 +421,8 @@ Update_Menu
 
     int menu_window_lines = 0;
     int menu_window_cols = 0;
-    int menu_window_cursor_x = 0;
-    int menu_window_cursor_y = 0;
+    (void) menu_window_lines;
     getmaxyx(menu_window, menu_window_lines, menu_window_cols);
-    getyx (menu_window, menu_window_cursor_x, menu_window_cursor_y);
 
     // Menunamenzeile komplett leeren
     for (int i = 0; i < menu_window_cols - 4; ++ i)
@@ -417,9 +460,24 @@ Update_Menu
 
     post_menu(menu);
     box(menu_window, 0, 0);
+
     refresh();
     wrefresh(menu_window);
+    wrefresh(info_window);
+    wrefresh(pos_window);
+    wrefresh(status_window);
 
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void
+Update_Window_Data
+(
+        const enum Menu_Types current_menu
+)
+{
     return;
 }
 
