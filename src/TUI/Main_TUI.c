@@ -25,8 +25,12 @@ enum Menu_Types
 {
     MAIN_MENUE = 0,
     CREATION_MENUE,
+    GENERAL_INFO_MENUE,
     ABOUT_MENUE
 };
+
+
+#define ALLOCATED_MENU_ENTRIES 16
 
 
 static void Draw_Main_Window (void);
@@ -50,10 +54,13 @@ extern void At_Exit_Function (void)
     free_menu(menu);
     menu = NULL;
 
-    for (int i = 0; i < 4; i ++)
+    for (int i = 0; i < ALLOCATED_MENU_ENTRIES; i ++)
     {
-        free_item(items [i]);
-        items [i] = NULL;
+        if (items [i] != NULL)
+        {
+            free_item(items [i]);
+            items [i] = NULL;
+        }
     }
     FREE_AND_SET_TO_NULL(items);
 
@@ -97,21 +104,26 @@ TUI_Build_Main_Window
 
     Draw_Main_Window();
 
-    items = (ITEM**) CALLOC(4, sizeof(ITEM*));
-    ASSERT_ALLOC(items, "Cannot allocate memory for the TUI main menu !", 4 * sizeof (ITEM*));
-    items [0] = new_item ("1: ", "Eintrag 1");
-    items [1] = new_item ("2: ", "Eintrag 2");
-    items [2] = new_item ("3: ", "ENDE 3");
-    items [3] = NULL;
+    items = (ITEM**) CALLOC(ALLOCATED_MENU_ENTRIES, sizeof(ITEM*));
+    ASSERT_ALLOC(items, "Cannot allocate memory for the TUI main menu !", ALLOCATED_MENU_ENTRIES * sizeof (ITEM*));
+    SET_POINTER_ARRAY_TO_NULL(items, ALLOCATED_MENU_ENTRIES);
+    items [0] = new_item ("1:", "Eintrag 1");
+    items [1] = new_item ("3:", "ENDE 3");
+    items [2] = new_item ("2:", "Eintrag 2");
+    items [3] = new_item ("4:", "ENDE 4");
+    items [4] = NULL;
     menu = new_menu (items);
 
-    menu_window = newwin(8, 30, 2, 2);
+    //Update_Menu(MAIN_MENUE);
+
+    menu_window = newwin(15, 30, 2, 2);
     set_menu_win(menu, menu_window);
-    set_menu_sub (menu, derwin(menu_window, 4, 28, 3, 2));
+    set_menu_sub (menu, derwin(menu_window, 6, 28, 3, 2));
     box(menu_window, 0, 0);
     mvwaddstr(menu_window, 1, 2, "> TEST <");
     wbkgd(menu_window, COLOR_PAIR(1));
 
+    set_menu_format(menu, ALLOCATED_MENU_ENTRIES - 1, 1);
     set_menu_mark(menu, "> ");
     set_menu_fore(menu, COLOR_PAIR(1)|A_REVERSE);
     set_menu_back(menu, COLOR_PAIR(1));
@@ -131,12 +143,14 @@ TUI_Build_Main_Window
             menu_driver(menu, REQ_UP_ITEM);
             break;
         case '\n':
-            if(item_index(current_item(menu)) == 2)
+            Update_Menu(MAIN_MENUE);
+            if(item_index(current_item(menu)) == 1)
                 exit(0);
             break;
         default:
             break;
         }
+        refresh();
         wrefresh(menu_window);
     }
 
@@ -214,7 +228,42 @@ Update_Menu
         const enum Menu_Types chosen_menu
 )
 {
+    for (int i = 0; i < ALLOCATED_MENU_ENTRIES; i ++)
+    {
+        if (items [i] != NULL)
+        {
+            free_item(items [i]);
+            items [i] = NULL;
+        }
+    }
 
+    unpost_menu(menu);
+
+    switch (chosen_menu)
+    {
+    case MAIN_MENUE:
+        mvwaddstr(menu_window, 1, 2, "> MAIN MENU <");
+        items [0] = new_item ("1:", "Calculations");
+        items [1] = new_item ("2:", "General info");
+        items [2] = new_item ("3:", "About");
+        items [3] = new_item ("3:", "Exit");
+        items [4] = NULL;
+        set_menu_items(menu, items);
+        break;
+    case CREATION_MENUE:
+        break;
+    case GENERAL_INFO_MENUE:
+        break;
+    case ABOUT_MENUE:
+        break;
+
+    default:
+        ASSERT_MSG(false, "Default path executed !");
+    }
+
+    post_menu(menu);
+    box(menu_window, 0, 0);
+    wrefresh(menu_window);
 
     return;
 }
