@@ -115,18 +115,12 @@ TUI_Build_Main_Window
     ASSERT_ALLOC(items, "Cannot allocate memory for the TUI main menu !", ALLOCATED_MENU_ENTRIES * sizeof (ITEM*));
     SET_POINTER_ARRAY_TO_NULL(items, ALLOCATED_MENU_ENTRIES);
 
-    items [0] = new_item ("1:", "Calculations");
-    items [1] = new_item ("2:", "General info");
-    items [2] = new_item ("3:", "About");
-    items [3] = new_item ("4:", "Exit");
-    items [4] = NULL;
     menu = new_menu (items);
 
     menu_window = newwin(15, 30, 2, 2);
     set_menu_win(menu, menu_window);
     set_menu_sub (menu, derwin(menu_window, 6, 28, 3, 2));
     box(menu_window, 0, 0);
-    mvwaddstr(menu_window, 1, 2, "MAIN MENU");
     wbkgd(menu_window, COLOR_PAIR(1));
 
     set_menu_format(menu, ALLOCATED_MENU_ENTRIES - 1, 1);
@@ -135,8 +129,8 @@ TUI_Build_Main_Window
     set_menu_back(menu, COLOR_PAIR(1));
     post_menu(menu);
 
-    refresh();
-    wrefresh(menu_window);
+    // Hauptmenue erzeugen
+    Update_Menu(MAIN_MENU);
 
     while (1)
     {
