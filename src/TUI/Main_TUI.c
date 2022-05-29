@@ -207,6 +207,19 @@ static void Draw_Main_Window
         addch(ACS_VLINE);
     }
 
+    // Flaeche mit optionalen Informationen zum aktuell markierten Menuepunkt zeichnen
+    move(LINES - 15, 0);
+    addch(ACS_LTEE);
+    for (int i = 1; i < COLS / 2; ++ i)
+    {
+        addch(ACS_HLINE);
+    }
+    addch(ACS_RTEE);
+    move(LINES - 14, 1);
+    attrset(A_BOLD);
+    addstr("Information:");
+    attrset(A_NORMAL);
+
     // Die beiden Flaechen am unteren Ende des Fensters zeichnen
     move(LINES - 7, 0);
     addch(ACS_LTEE);
