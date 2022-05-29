@@ -23,10 +23,10 @@ WINDOW* menu_window = NULL;
 
 enum Menu_Types
 {
-    MAIN_MENUE = 0,
-    CREATION_MENUE,
-    GENERAL_INFO_MENUE,
-    ABOUT_MENUE
+    MAIN_MENU = 0,
+    CREATION_MENU,
+    GENERAL_INFO_MENU,
+    ABOUT_MENU
 };
 
 
@@ -114,8 +114,6 @@ TUI_Build_Main_Window
     items [3] = new_item ("3:", "Exit");
     items [4] = NULL;
     menu = new_menu (items);
-
-    //Update_Menu(MAIN_MENUE);
 
     menu_window = newwin(15, 30, 2, 2);
     set_menu_win(menu, menu_window);
@@ -241,7 +239,7 @@ Update_Menu
 
     switch (chosen_menu)
     {
-    case MAIN_MENUE:
+    case MAIN_MENU:
         mvwaddstr(menu_window, 1, 2, "> MAIN MENU <");
         items [0] = new_item ("1:", "Calculations");
         items [1] = new_item ("2:", "General info");
@@ -250,11 +248,11 @@ Update_Menu
         items [4] = NULL;
         set_menu_items(menu, items);
         break;
-    case CREATION_MENUE:
+    case CREATION_MENU:
         break;
-    case GENERAL_INFO_MENUE:
+    case GENERAL_INFO_MENU:
         break;
-    case ABOUT_MENUE:
+    case ABOUT_MENU:
         break;
 
     default:
