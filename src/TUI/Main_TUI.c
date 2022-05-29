@@ -74,9 +74,10 @@ Update_Menu
 );
 
 static void
-Update_Window_Data
+Update_Window_Information
 (
-        const enum Menu_Types current_menu
+        const enum Menu_Types current_menu,
+        const int selected_menu_entry
 );
 
 static void
@@ -175,6 +176,7 @@ TUI_Build_Main_Window
 
     // Hauptmenue erzeugen
     Update_Menu(current_menue);
+    Update_Window_Information(current_menue, 0);
 
     refresh();
     wrefresh(menu_window);
@@ -188,9 +190,11 @@ TUI_Build_Main_Window
         {
         case KEY_DOWN:
             menu_driver(menu, REQ_DOWN_ITEM);
+            Update_Window_Information(current_menue, item_index(current_item(menu)));
             break;
         case KEY_UP:
             menu_driver(menu, REQ_UP_ITEM);
+            Update_Window_Information(current_menue, item_index(current_item(menu)));
             break;
         case '\n':
             Exec_Menu_Entry(current_menue, item_index(current_item(menu)));
@@ -216,6 +220,10 @@ static void Draw_Main_Window
 )
 {
     clear();
+    wclear(info_window);
+    wclear(status_window);
+    wclear(pos_window);
+    wclear(menu_window);
 
     // Komplette Umrandung des Hauptfensters
     box(stdscr, 0, 0);
@@ -400,7 +408,7 @@ Update_Menu
                     },
                     .item_second_string =
                     {
-                            "Back (Esc)",
+                            "Back",
                             NULL
                     }
             }
@@ -461,23 +469,84 @@ Update_Menu
     post_menu(menu);
     box(menu_window, 0, 0);
 
-    refresh();
-    wrefresh(menu_window);
-    wrefresh(info_window);
-    wrefresh(pos_window);
-    wrefresh(status_window);
-
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
 static void
-Update_Window_Data
+Update_Window_Information
 (
-        const enum Menu_Types current_menu
+        const enum Menu_Types current_menu,
+        const int selected_menu_entry
 )
 {
+    struct Window_Information
+    {
+        const enum Menu_Types menu;
+        const char* string [ALLOCATED_MENU_ENTRIES];
+    };
+    const struct Window_Information window_information [] =
+    {
+            {
+                    .menu = MAIN_MENU,
+                    .string =
+                    {
+                            "Start calculations",
+                            "General information about this program and the whole project",
+                            "About",
+                            "Exit program",
+                            NULL
+                    }
+            },
+            {
+                    .menu = ABOUT_MENU,
+                    .string =
+                    {
+                            "Back to upper menu",
+                            NULL
+                    }
+            }
+    };
+
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(window_information); ++ i)
+    {
+        if (window_information [i].menu == current_menu)
+        {
+            wclear(info_window);
+
+            wattrset(info_window, A_BOLD);
+            mvwaddnstr(info_window, 1, 1, "Information:", strlen ("Information:"));
+            wattrset(info_window, A_NORMAL);
+            box(info_window, 0, 0);
+
+            int info_window_lines = 0;
+            int info_window_cols = 0;
+            (void) info_window_lines;
+            getmaxyx(info_window, info_window_lines, info_window_cols);
+            wmove(info_window, 0, 0);
+            waddch(info_window, ACS_LTEE);
+            wmove(info_window, 0, info_window_cols - 1);
+            waddch(info_window, ACS_RTEE);
+
+            int pos_window_lines = 0;
+            int pos_window_cols = 0;
+            (void) pos_window_lines;
+            getmaxyx(pos_window, pos_window_lines, pos_window_cols);
+            wmove(pos_window, 0, 0);
+            waddch(pos_window, ACS_LTEE);
+            wmove(pos_window, 0, pos_window_cols - 1);
+            waddch(pos_window, ACS_RTEE);
+            wmove(pos_window, 0, pos_window_cols / 2);
+            waddch(pos_window, ACS_BTEE);
+
+            wmove(info_window, 2, 1);
+            mvwaddnstr(info_window, 2, 1, window_information [i].string [selected_menu_entry],
+                    (int) strlen (window_information [i].string [selected_menu_entry]));
+            break;
+        }
+    }
+
     return;
 }
 
