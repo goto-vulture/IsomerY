@@ -37,7 +37,10 @@ enum Menu_Types
     ABOUT_MENU
 };
 
-static void Draw_Main_Window (void);
+static void Draw_Main_Window
+(
+        const char* menue_position_string
+);
 
 static void
 Update_Menu
@@ -106,7 +109,7 @@ TUI_Build_Main_Window
     cbreak();
     keypad(stdscr, TRUE);
 
-    Draw_Main_Window();
+    Draw_Main_Window("Main menu");
 
     items = (ITEM**) CALLOC(ALLOCATED_MENU_ENTRIES, sizeof(ITEM*));
     ASSERT_ALLOC(items, "Cannot allocate memory for the TUI main menu !", ALLOCATED_MENU_ENTRIES * sizeof (ITEM*));
@@ -115,7 +118,7 @@ TUI_Build_Main_Window
     items [0] = new_item ("1:", "Calculations");
     items [1] = new_item ("2:", "General info");
     items [2] = new_item ("3:", "About");
-    items [3] = new_item ("3:", "Exit");
+    items [3] = new_item ("4:", "Exit");
     items [4] = NULL;
     menu = new_menu (items);
 
@@ -123,7 +126,7 @@ TUI_Build_Main_Window
     set_menu_win(menu, menu_window);
     set_menu_sub (menu, derwin(menu_window, 6, 28, 3, 2));
     box(menu_window, 0, 0);
-    mvwaddstr(menu_window, 1, 2, "> MAIN MENU <");
+    mvwaddstr(menu_window, 1, 2, "MAIN MENU");
     wbkgd(menu_window, COLOR_PAIR(1));
 
     set_menu_format(menu, ALLOCATED_MENU_ENTRIES - 1, 1);
@@ -148,6 +151,8 @@ TUI_Build_Main_Window
         case '\n':
             if(item_index(current_item(menu)) == 1)
                 exit(0);
+            if(item_index(current_item(menu)) == 3)
+                Update_Menu(ABOUT_MENU);
             break;
         default:
             break;
@@ -161,7 +166,10 @@ TUI_Build_Main_Window
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Draw_Main_Window (void)
+static void Draw_Main_Window
+(
+        const char* menue_position_string
+)
 {
     clear();
 
@@ -206,7 +214,11 @@ static void Draw_Main_Window (void)
     }
     addch(ACS_RTEE);
     move(LINES - 6, 1);
+    attrset(A_BOLD);
     addstr("Menu position:");
+    attrset(A_NORMAL);
+    addch(' ');
+    addstr(menue_position_string);
 
     move(LINES - 5, 0);
     addch(ACS_LTEE);
@@ -217,7 +229,9 @@ static void Draw_Main_Window (void)
     addch(ACS_RTEE);
 
     move(LINES - 4, 1);
+    attrset(A_BOLD);
     addstr("Status:");
+    attrset(A_NORMAL);
 
     return;
 }
@@ -230,6 +244,59 @@ Update_Menu
         const enum Menu_Types chosen_menu
 )
 {
+    struct Menu_Content
+    {
+        const enum Menu_Types menu;
+        const char* menu_name;
+        const char* menu_position;
+        const char* item_first_string [ALLOCATED_MENU_ENTRIES];
+        const char* item_second_string [ALLOCATED_MENU_ENTRIES];
+    };
+
+    // "Datenbank" mit allen Infos, die fuer die Menuerstellung benoetigt werden
+    const struct Menu_Content menu_content [] =
+    {
+            {
+                    .menu               = MAIN_MENU,
+                    .menu_name          = "MAIN MENU",
+                    .menu_position      = "Main menu",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            "2.",
+                            "3.",
+                            "4.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
+                            "Calculations",
+                            "General info",
+                            "About",
+                            "Exit",
+                            NULL
+                    }
+            },
+            {
+                    .menu               = ABOUT_MENU,
+                    .menu_name          = "ABOUT",
+                    .menu_position      = "Main menu > About",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            "2.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
+                            "Show something",
+                            "Back (Esc)",
+                            NULL
+                    }
+            }
+    };
+
+    // Komplette Menuestruktur loeschen
     for (int i = 0; i < ALLOCATED_MENU_ENTRIES; i ++)
     {
         if (items [i] != NULL)
@@ -239,32 +306,50 @@ Update_Menu
         }
     }
 
-    unpost_menu(menu);
+    int menu_window_lines = 0;
+    int menu_window_cols = 0;
+    int menu_window_cursor_x = 0;
+    int menu_window_cursor_y = 0;
+    getmaxyx(menu_window, menu_window_lines, menu_window_cols);
+    getyx (menu_window, menu_window_cursor_x, menu_window_cursor_y);
 
-    switch (chosen_menu)
+    // Menunamenzeile komplett leeren
+    for (int i = 0; i < menu_window_cols - 4; ++ i)
     {
-    case MAIN_MENU:
-        mvwaddstr(menu_window, 1, 2, "> MAIN MENU <");
-        items [0] = new_item ("1:", "Calculations");
-        items [1] = new_item ("2:", "General info");
-        items [2] = new_item ("3:", "About");
-        items [3] = new_item ("3:", "Exit");
-        items [4] = NULL;
-        set_menu_items(menu, items);
-        break;
-    case CREATION_MENU:
-        break;
-    case GENERAL_INFO_MENU:
-        break;
-    case ABOUT_MENU:
-        break;
-
-    default:
-        ASSERT_MSG(false, "Default path executed !");
+        mvwaddch(menu_window, 1, 2 + i, ' ');
     }
+
+    // Menueinhalt anpassen
+    const char* menu_position_string = NULL;
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(menu_content); ++ i)
+    {
+        if (menu_content [i].menu == chosen_menu)
+        {
+            int counter = 0;
+            while (menu_content [i].item_first_string [counter] != NULL &&
+                    menu_content [i].item_second_string [counter] != NULL)
+            {
+                items [counter] = new_item (menu_content [i].item_first_string [counter],
+                        menu_content [i].item_second_string [counter]);
+                ++ counter;
+            }
+            items [counter] = NULL;
+
+            mvwaddnstr(menu_window, 1, 2, menu_content [i].menu_name, menu_window_cols - 4);
+            menu_position_string = menu_content [i].menu_position;
+
+            break;
+        }
+    }
+
+    // Anzeigen aktuallisieren (Hauptfenster, Menue-Fenster, Umrandung des Menue-Fensters)
+    Draw_Main_Window(menu_position_string);
+    unpost_menu(menu);
+    set_menu_items(menu, items);
 
     post_menu(menu);
     box(menu_window, 0, 0);
+    refresh();
     wrefresh(menu_window);
 
     return;
