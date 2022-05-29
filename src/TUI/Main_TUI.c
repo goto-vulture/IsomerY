@@ -485,13 +485,13 @@ Update_Window_Information
     struct Window_Information
     {
         const enum Menu_Types menu;
-        const char* string [ALLOCATED_MENU_ENTRIES];
+        const char* description [ALLOCATED_MENU_ENTRIES];
     };
     const struct Window_Information window_information [] =
     {
             {
-                    .menu = MAIN_MENU,
-                    .string =
+                    .menu           = MAIN_MENU,
+                    .description    =
                     {
                             "Start calculations",
                             "General information about this program and the whole project",
@@ -501,8 +501,8 @@ Update_Window_Information
                     }
             },
             {
-                    .menu = CREATION_MENU,
-                    .string =
+                    .menu           = CREATION_MENU,
+                    .description    =
                     {
                             "Setup calculations for further operations",
                             "Back to upper menu",
@@ -510,8 +510,8 @@ Update_Window_Information
                     }
             },
             {
-                    .menu = GENERAL_INFO_MENU,
-                    .string =
+                    .menu           = GENERAL_INFO_MENU,
+                    .description    =
                     {
                             "...",
                             "Back to upper menu",
@@ -519,8 +519,8 @@ Update_Window_Information
                     }
             },
             {
-                    .menu = ABOUT_MENU,
-                    .string =
+                    .menu           = ABOUT_MENU,
+                    .description    =
                     {
                             "Back to upper menu",
                             NULL
@@ -560,8 +560,8 @@ Update_Window_Information
             waddch(pos_window, ACS_BTEE);
 
             wmove(info_window, 2, 1);
-            mvwaddnstr(info_window, 2, 1, window_information [i].string [selected_menu_entry],
-                    (int) strlen (window_information [i].string [selected_menu_entry]));
+            mvwaddnstr(info_window, 2, 1, window_information [i].description [selected_menu_entry],
+                    (int) strlen (window_information [i].description [selected_menu_entry]));
 
             wrefresh(info_window);
 
