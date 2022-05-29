@@ -341,7 +341,7 @@ Update_Menu
         const char* item_second_string [ALLOCATED_MENU_ENTRIES];
     };
 
-    // "Datenbank" mit allen Infos, die fuer die Menuerstellung benoetigt werden
+    // ===== ===== ===== BEGINN "Datenbank" mit allen Infos, die fuer die Menuerstellung benoetigt werden ===== ===== =====
     const struct Menu_Content menu_content [] =
     {
             {
@@ -415,6 +415,7 @@ Update_Menu
                     }
             }
     };
+    // ===== ===== ===== ENDE "Datenbank" mit allen Infos, die fuer die Menuerstellung benoetigt werden ===== ===== =====
 
     // Globale Menue-Information anpassen
     current_menue = chosen_menu;
@@ -488,6 +489,7 @@ Update_Window_Information
         const enum Menu_Types menu;
         const char* description [ALLOCATED_MENU_ENTRIES];
     };
+    // ===== ===== ===== BEGINN Daten fuer die Information-Box ===== ===== =====
     const struct Window_Information window_information [] =
     {
             {
@@ -528,6 +530,7 @@ Update_Window_Information
                     }
             }
     };
+    // ===== ===== ===== ENDE Daten fuer die Information-Box ===== ===== =====
 
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(window_information); ++ i)
     {
