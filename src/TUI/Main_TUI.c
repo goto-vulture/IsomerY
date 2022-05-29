@@ -15,6 +15,14 @@
 
 
 
+#ifndef ALLOCATED_MENU_ENTRIES
+#define ALLOCATED_MENU_ENTRIES 16
+#else
+#error "The marco \"ALLOCATED_MENU_ENTRIES\" is already defined !"
+#endif /* ALLOCATED_MENU_ENTRIES */
+
+
+
 ITEM** items        = NULL;
 MENU* menu          = NULL;
 WINDOW* menu_window = NULL;
@@ -28,10 +36,6 @@ enum Menu_Types
     GENERAL_INFO_MENU,
     ABOUT_MENU
 };
-
-
-#define ALLOCATED_MENU_ENTRIES 16
-
 
 static void Draw_Main_Window (void);
 
@@ -267,3 +271,7 @@ Update_Menu
 }
 
 //---------------------------------------------------------------------------------------------------------------------
+
+#ifdef ALLOCATED_MENU_ENTRIES
+#undef ALLOCATED_MENU_ENTRIES
+#endif /* ALLOCATED_MENU_ENTRIES */
