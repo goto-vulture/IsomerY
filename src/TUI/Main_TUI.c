@@ -198,6 +198,7 @@ TUI_Build_Main_Window
             break;
         case '\n':
             Exec_Menu_Entry(current_menue, item_index(current_item(menu)));
+            Update_Window_Information(current_menue, 0);
             break;
         default:
             break;
@@ -500,6 +501,24 @@ Update_Window_Information
                     }
             },
             {
+                    .menu = CREATION_MENU,
+                    .string =
+                    {
+                            "Setup calculations for further operations",
+                            "Back to upper menu",
+                            NULL
+                    }
+            },
+            {
+                    .menu = GENERAL_INFO_MENU,
+                    .string =
+                    {
+                            "...",
+                            "Back to upper menu",
+                            NULL
+                    }
+            },
+            {
                     .menu = ABOUT_MENU,
                     .string =
                     {
@@ -543,6 +562,9 @@ Update_Window_Information
             wmove(info_window, 2, 1);
             mvwaddnstr(info_window, 2, 1, window_information [i].string [selected_menu_entry],
                     (int) strlen (window_information [i].string [selected_menu_entry]));
+
+            wrefresh(info_window);
+
             break;
         }
     }
