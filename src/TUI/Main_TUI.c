@@ -23,12 +23,6 @@
 
 
 
-ITEM** items        = NULL;
-MENU* menu          = NULL;
-WINDOW* menu_window = NULL;
-
-
-
 enum Menu_Types
 {
     MAIN_MENU = 0,
@@ -36,6 +30,16 @@ enum Menu_Types
     GENERAL_INFO_MENU,
     ABOUT_MENU
 };
+
+
+
+ITEM** items        = NULL;
+MENU* menu          = NULL;
+WINDOW* menu_window = NULL;
+
+enum Menu_Types current_menue = MAIN_MENU;
+
+
 
 static void Draw_Main_Window
 (
@@ -46,6 +50,13 @@ static void
 Update_Menu
 (
         const enum Menu_Types chosen_menu
+);
+
+static void
+Exec_Menu_Entry
+(
+        const enum Menu_Types current_menu,
+        const int selected_menu_entry
 );
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -130,7 +141,7 @@ TUI_Build_Main_Window
     post_menu(menu);
 
     // Hauptmenue erzeugen
-    Update_Menu(MAIN_MENU);
+    Update_Menu(current_menue);
 
     while (1)
     {
@@ -143,10 +154,7 @@ TUI_Build_Main_Window
             menu_driver(menu, REQ_UP_ITEM);
             break;
         case '\n':
-            if(item_index(current_item(menu)) == 1)
-                exit(0);
-            if(item_index(current_item(menu)) == 3)
-                Update_Menu(ABOUT_MENU);
+            Exec_Menu_Entry(current_menue, item_index(current_item(menu)));
             break;
         default:
             break;
@@ -290,6 +298,9 @@ Update_Menu
             }
     };
 
+    // Globale Menue-Information anpassen
+    current_menue = chosen_menu;
+
     // Komplette Menuestruktur loeschen
     for (int i = 0; i < ALLOCATED_MENU_ENTRIES; i ++)
     {
@@ -345,6 +356,92 @@ Update_Menu
     box(menu_window, 0, 0);
     refresh();
     wrefresh(menu_window);
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Exit_Wrapper (const void* input);
+static void Exit_Wrapper (const void* input)
+{
+    exit(*(int*) input);
+    return;
+}
+static void Update_Menu_Wrapper (const void* input);
+static void Update_Menu_Wrapper (const void* input)
+{
+    Update_Menu(*(enum Menu_Types*) input);
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void
+Exec_Menu_Entry
+(
+        const enum Menu_Types current_menu,
+        const int selected_menu_entry
+)
+{
+    struct Menu_Functions
+    {
+        const enum Menu_Types menu;
+        void (*function [ALLOCATED_MENU_ENTRIES]) (const void*);
+        const void* function_input [ALLOCATED_MENU_ENTRIES];
+    };
+
+    static const enum Menu_Types main_menu  = MAIN_MENU;
+    static const enum Menu_Types about_menu = ABOUT_MENU;
+    static const int exit_input             = 0;
+
+    const struct Menu_Functions menu_functions [] =
+    {
+            {
+                    .menu           = MAIN_MENU,
+                    .function       =
+                    {
+                            &Exit_Wrapper,
+                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
+                            &Exit_Wrapper,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &exit_input,
+                            &exit_input,
+                            &about_menu,
+                            &exit_input,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = ABOUT_MENU,
+                    .function       =
+                    {
+                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &exit_input,
+                            &main_menu,
+                            NULL
+                    }
+            }
+    };
+
+    for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(menu_functions); ++ i)
+    {
+        if (menu_functions [i].menu == current_menu)
+        {
+            // Passende Funktion mit den hinterlegten Parameter aufrufen
+            menu_functions [i].function [selected_menu_entry] (menu_functions [i].function_input [selected_menu_entry]);
+            break;
+        }
+    }
 
     return;
 }
