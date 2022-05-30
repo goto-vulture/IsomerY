@@ -13,6 +13,7 @@
 #include "../Misc.h"
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "About_TUI.h"
+#include "General_Info_TUI.h"
 
 
 
@@ -874,9 +875,9 @@ Exec_Menu_Entry
                     },
                     .function_2     =
                     {
-                            NULL,
-                            NULL,
-                            NULL,
+                            &TUI_Build_General_Info_Initial_Situation_Left_Side,
+                            &TUI_Build_General_Info_Problem_Left_Side,
+                            &TUI_Build_General_Info_Solution_Ideas_Left_Side,
                             NULL,
                             NULL
                     },
