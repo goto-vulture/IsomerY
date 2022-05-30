@@ -741,14 +741,14 @@ Exec_Menu_Entry
         const void* const function_input [ALLOCATED_MENU_ENTRIES];
     };
 
-    static const enum Menu_Types main_menu          = MAIN_MENU;
-    static const enum Menu_Types about_menu         = ABOUT_MENU;
-    static const enum Menu_Types general_info_menu  = GENERAL_INFO_MENU;
+    static const enum Menu_Types main_menu                                  = MAIN_MENU;
+    static const enum Menu_Types about_menu                                 = ABOUT_MENU;
+    static const enum Menu_Types general_info_menu                          = GENERAL_INFO_MENU;
     static const enum Menu_Types general_info_deeper_initial_situation_menu = GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU;
-    static const enum Menu_Types general_info_deeper_problem_menu = GENERAL_INFO_DEEPER_PROBLEM_MENU;
-    static const enum Menu_Types general_info_deeper_solution_ideas_menu = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU;
-    static const enum Menu_Types creation_menu      = CREATION_MENU;
-    static const int exit_input                     = 0;
+    static const enum Menu_Types general_info_deeper_problem_menu           = GENERAL_INFO_DEEPER_PROBLEM_MENU;
+    static const enum Menu_Types general_info_deeper_solution_ideas_menu    = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU;
+    static const enum Menu_Types creation_menu                              = CREATION_MENU;
+    static const int exit_input                                             = 0;
 
     const struct Menu_Functions menu_functions [] =
     {
