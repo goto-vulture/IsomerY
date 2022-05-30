@@ -366,10 +366,10 @@ Update_Menu
     struct Menu_Content
     {
         const enum Menu_Types menu;
-        const char* menu_name;
-        const char* menu_position;
-        const char* item_first_string [ALLOCATED_MENU_ENTRIES];
-        const char* item_second_string [ALLOCATED_MENU_ENTRIES];
+        const char* const menu_name;
+        const char* const menu_position;
+        const char* const item_first_string [ALLOCATED_MENU_ENTRIES];
+        const char* const item_second_string [ALLOCATED_MENU_ENTRIES];
     };
 
     // ===== ===== ===== BEGINN "Datenbank" mit allen Infos, die fuer die Menuerstellung benoetigt werden ===== ===== =====
@@ -518,7 +518,7 @@ Update_Window_Information
     struct Window_Information
     {
         const enum Menu_Types menu;
-        const char* description [ALLOCATED_MENU_ENTRIES];
+        const char* const description [ALLOCATED_MENU_ENTRIES];
     };
     // ===== ===== ===== BEGINN Daten fuer die Information-Box ===== ===== =====
     const struct Window_Information window_information [] =
@@ -609,16 +609,16 @@ Update_Window_Information
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Exit_Wrapper (const void* input);
-static void Exit_Wrapper (const void* input)
+static void Exit_Wrapper (const void* const input);
+static void Exit_Wrapper (const void* const input)
 {
-    exit(*(int*) input);
+    exit(*(const int* const) input);
     return;
 }
-static void Update_Menu_Wrapper (const void* input);
-static void Update_Menu_Wrapper (const void* input)
+static void Update_Menu_Wrapper (const void* const input);
+static void Update_Menu_Wrapper (const void* const input)
 {
-    Update_Menu(*(enum Menu_Types*) input);
+    Update_Menu(*(const enum Menu_Types* const) input);
     return;
 }
 
@@ -634,9 +634,9 @@ Exec_Menu_Entry
     struct Menu_Functions
     {
         const enum Menu_Types menu;
-        void (*function [ALLOCATED_MENU_ENTRIES]) (const void*);
-        void (*function_2 [ALLOCATED_MENU_ENTRIES]) (const void*);
-        const void* function_input [ALLOCATED_MENU_ENTRIES];
+        void (*function [ALLOCATED_MENU_ENTRIES]) (const void* const);
+        void (*function_2 [ALLOCATED_MENU_ENTRIES]) (const void* const);
+        const void* const function_input [ALLOCATED_MENU_ENTRIES];
     };
 
     static const enum Menu_Types main_menu          = MAIN_MENU;
