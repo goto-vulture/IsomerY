@@ -59,6 +59,9 @@ enum Menu_Types
     MAIN_MENU = 0,
     CREATION_MENU,
     GENERAL_INFO_MENU,
+    GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU,
+    GENERAL_INFO_DEEPER_PROBLEM_MENU,
+    GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU,
     ABOUT_MENU
 };
 
@@ -413,7 +416,7 @@ Update_Menu
                     .item_second_string =
                     {
                             "Calculations",
-                            "General info",
+                            "General infos",
                             "About",
                             "Exit",
                             NULL
@@ -444,11 +447,60 @@ Update_Menu
                     {
                             "1.",
                             "2.",
+                            "3.",
+                            "4.",
                             NULL
                     },
                     .item_second_string =
                     {
-                            "...",
+                            "Initial situation",
+                            "The problem",
+                            "Solution ideas",
+                            "Back",
+                            NULL
+                    }
+            },
+            {
+                    .menu               = GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU,
+                    .menu_name          = "INITIAL SITUATION",
+                    .menu_position      = "Main menu > General infos > Initial situation",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
+                            "Back",
+                            NULL
+                    }
+            },
+            {
+                    .menu               = GENERAL_INFO_DEEPER_PROBLEM_MENU,
+                    .menu_name          = "THE PROBLEM",
+                    .menu_position      = "Main menu > General infos > The problem",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
+                            "Back",
+                            NULL
+                    }
+            },
+            {
+                    .menu               = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU,
+                    .menu_name          = "SOLUTION IDEAS",
+                    .menu_position      = "Main menu > General infos > Solution ideas",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
                             "Back",
                             NULL
                     }
@@ -571,7 +623,33 @@ Update_Window_Information
                     .menu           = GENERAL_INFO_MENU,
                     .description    =
                     {
-                            "...",
+                            "Infos about the initial situation",
+                            "Description of the problem",
+                            "The solution ideas",
+                            "Back to upper menu",
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU,
+                    .description    =
+                    {
+                            "Back to upper menu",
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_DEEPER_PROBLEM_MENU,
+                    .description    =
+                    {
+                            "Back to upper menu",
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU,
+                    .description    =
+                    {
                             "Back to upper menu",
                             NULL
                     }
@@ -666,6 +744,9 @@ Exec_Menu_Entry
     static const enum Menu_Types main_menu          = MAIN_MENU;
     static const enum Menu_Types about_menu         = ABOUT_MENU;
     static const enum Menu_Types general_info_menu  = GENERAL_INFO_MENU;
+    static const enum Menu_Types general_info_deeper_initial_situation_menu = GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU;
+    static const enum Menu_Types general_info_deeper_problem_menu = GENERAL_INFO_DEEPER_PROBLEM_MENU;
+    static const enum Menu_Types general_info_deeper_solution_ideas_menu = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU;
     static const enum Menu_Types creation_menu      = CREATION_MENU;
     static const int exit_input                     = 0;
 
@@ -702,7 +783,9 @@ Exec_Menu_Entry
                     .menu           = GENERAL_INFO_MENU,
                     .function       =
                     {
-                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
+                            &Update_Menu_Wrapper,
+                            &Update_Menu_Wrapper,
                             &Update_Menu_Wrapper,
                             NULL
                     },
@@ -710,12 +793,70 @@ Exec_Menu_Entry
                     {
                             NULL,
                             NULL,
+                            NULL,
+                            NULL,
                             NULL
                     },
                     .function_input =
                     {
-                            &exit_input,
+                            &general_info_deeper_initial_situation_menu,
+                            &general_info_deeper_problem_menu,
+                            &general_info_deeper_solution_ideas_menu,
                             &main_menu,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU,
+                    .function       =
+                    {
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &general_info_menu,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_DEEPER_PROBLEM_MENU,
+                    .function       =
+                    {
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &general_info_menu,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU,
+                    .function       =
+                    {
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &general_info_menu,
                             NULL
                     }
             },
