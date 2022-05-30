@@ -80,19 +80,40 @@ enum Menu_Types current_menue = MAIN_MENU;
 
 
 
+/**
+ * @brief Hauptfenster zeichnen.
+ *
+ * @param[in] menue_position_string String, der die aktuelle Position im Menue angibt
+ */
 static void Draw_Main_Window
 (
         const char* menue_position_string
 );
 
+/**
+ * @brief Alle Boxen / ncurses-Windows auffrischen (moegliche Aenderungen auf dem Bildschirm anzeigen).
+ */
 static int Refresh_All_Boxes (void);
 
+/**
+ * @brief Menue-Struktur aktuallisieren und auf dem Bildschirm anzeigen.
+ *
+ * @param[in] chosen_menu Menue, deren hinterlegte Struktur gezeichnet werden soll
+ */
 static void
 Update_Menu
 (
         const enum Menu_Types chosen_menu
 );
 
+/**
+ * @brief Fensterinformationen aktuallisieren.
+ *
+ * Die Funktion aktuallisiert den Informationsstring des aktuell ausgewaehlten bzw. markierten Menuepunktes.
+ *
+ * @param[in] current_menu Aktuelles Menue
+ * @param[in] selected_menu_entry Innerhalb des aktuellen Menues den ausgewaehlten Eintrag
+ */
 static void
 Update_Window_Information
 (
@@ -161,21 +182,25 @@ TUI_Build_Main_Window
 
     atexit(At_Exit_Function);
 
-    // Diese Funktionen haben keine Error-Code als Rueckgabewert
-    initscr();
-    ERR_CHECK(curs_set(0));
-    ERR_CHECK(clear ());
-    ERR_CHECK(noecho());
+    // ===== ===== ===== BEGINN Grundlegende Einstellungen der TUI durchfuehren ===== ===== =====
+    NULL_CHECK(initscr());              // Anzeige initialisieren
+    ERR_CHECK(curs_set(0));             // Cursor auf den Ursprung setzen
+    ERR_CHECK(clear ());                // Sicherheitshalber den kompletten Bildschirm leeren
+    ERR_CHECK(noecho());                // Tastatureingaben werden auf den Bildschirm nicht angezeigt
 
     // Diese Funktionen haben ebenfalls keinen Error-Code als Rueckgabewert
-    ERR_CHECK(start_color());
+    ERR_CHECK(start_color());           // Das Anzeigen von Farben aktivieren
+    // Zwei Farbpaare erzeugen (Vordergrundfarbe, Hintergrundfarbe)
     ERR_CHECK(init_pair(1, COLOR_WHITE, COLOR_BLACK));
     ERR_CHECK(init_pair(2, COLOR_BLACK, COLOR_WHITE));
-    ERR_CHECK(bkgd(COLOR_PAIR(1)));
+    ERR_CHECK(bkgd(COLOR_PAIR(1)));     // Ein Farbpaar fuer das Standardfenster waehlen
 
-    ERR_CHECK(cbreak())
-    ERR_CHECK(keypad(stdscr, TRUE));
+    ERR_CHECK(cbreak())                 // Eingabepufferung deaktivieren (Tastatureingaben sollen sofort verarbeitet
+                                        // werden)
+    ERR_CHECK(keypad(stdscr, TRUE));    // Die Eingabe mittels Tastatur aktivieren
+    // ===== ===== ===== ENDE Grundlegende Einstellungen der TUI durchfuehren ===== ===== =====
 
+    // ===== ===== ===== BEGINN Alle Fenster der TUI erzeugen ===== ===== =====
     // Fenster mit den allgemeinen Informationen zum ausgewaehlten Menuepunkt
     info_window     = newwin(INFORMATION_LINE_OFFSET - MENU_POSITION_OFFSET, COLS / 2 + 1, LINES - INFORMATION_LINE_OFFSET, 0);
     NULL_CHECK(info_window);
@@ -191,12 +216,11 @@ TUI_Build_Main_Window
     NULL_CHECK(left_window);
     right_window    = newwin(LINES - MENU_POSITION_OFFSET - 3, COLS / 2 - 2, 2, COLS / 2 + 1);
     NULL_CHECK(right_window);
-    // box(left_window, 0, 0);
-    // box(right_window, 0, 0);
-
+    // ===== ===== ===== ENDE Alle Fenster der TUI erzeugen ===== ===== =====
 
     Draw_Main_Window("Main menu");
 
+    // ===== ===== ===== BEGINN Eingabemenue erzeugen, initialisieren und anzeigen ===== ===== =====
     items = (ITEM**) CALLOC(ALLOCATED_MENU_ENTRIES, sizeof(ITEM*));
     ASSERT_ALLOC(items, "Cannot allocate memory for the TUI main menu !", ALLOCATED_MENU_ENTRIES * sizeof (ITEM*));
     SET_POINTER_ARRAY_TO_NULL(items, ALLOCATED_MENU_ENTRIES);
@@ -216,6 +240,7 @@ TUI_Build_Main_Window
     ERR_CHECK(set_menu_fore(menu, COLOR_PAIR(1) | A_REVERSE));
     ERR_CHECK(set_menu_back(menu, COLOR_PAIR(1)));
     ERR_CHECK(post_menu(menu));
+    // ===== ===== ===== ENDE Eingabemenue erzeugen, initialisieren und anzeigen ===== ===== =====
 
     // Hauptmenue erzeugen
     Update_Menu(current_menue);
@@ -224,10 +249,13 @@ TUI_Build_Main_Window
     ERR_CHECK(refresh());
     Refresh_All_Boxes();
 
+    // ===== ===== ===== BEGINN "GUI"-Schleife ===== ===== =====
     while (1)
     {
+        // Direkte Reaktion auf der naechsten Tastatureingabe
         switch (getch())
         {
+            // UP + DOWN fuehren zu der Aktuallisierung des Informations-Eintrages zu dem neu markierten Menuepunkt
         case KEY_DOWN:
             ERR_CHECK(menu_driver(menu, REQ_DOWN_ITEM));
             Update_Window_Information(current_menue, item_index(current_item(menu)));
@@ -236,6 +264,8 @@ TUI_Build_Main_Window
             ERR_CHECK(menu_driver(menu, REQ_UP_ITEM));
             Update_Window_Information(current_menue, item_index(current_item(menu)));
             break;
+
+            // Enter-Taste: Auswahl des aktuell markierten Menuepunktes und der dafuer hinterlegten Callback-Funktion
         case '\n':
             Exec_Menu_Entry(current_menue, item_index(current_item(menu)));
             Update_Window_Information(current_menue, 0);
@@ -246,12 +276,18 @@ TUI_Build_Main_Window
         ERR_CHECK(refresh());
         ERR_CHECK(Refresh_All_Boxes());
     }
+    // ===== ===== ===== ENDE "GUI"-Schleife ===== ===== =====
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Hauptfenster zeichnen.
+ *
+ * @param[in] menue_position_string String, der die aktuelle Position im Menue angibt
+ */
 static void Draw_Main_Window
 (
         const char* menue_position_string
@@ -362,6 +398,9 @@ static void Draw_Main_Window
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Alle Boxen / ncurses-Windows auffrischen (moegliche Aenderungen auf dem Bildschirm anzeigen).
+ */
 static int Refresh_All_Boxes (void)
 {
     int error_value = OK;
@@ -383,6 +422,11 @@ static int Refresh_All_Boxes (void)
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Menue-Struktur aktuallisieren und auf dem Bildschirm anzeigen.
+ *
+ * @param[in] chosen_menu Menue, deren hinterlegte Struktur gezeichnet werden soll
+ */
 static void
 Update_Menu
 (
@@ -584,6 +628,14 @@ Update_Menu
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Fensterinformationen aktuallisieren.
+ *
+ * Die Funktion aktuallisiert den Informationsstring des aktuell ausgewaehlten bzw. markierten Menuepunktes.
+ *
+ * @param[in] current_menu Aktuelles Menue
+ * @param[in] selected_menu_entry Innerhalb des aktuellen Menues den ausgewaehlten Eintrag
+ */
 static void
 Update_Window_Information
 (
@@ -711,12 +763,35 @@ Update_Window_Information
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Wrapper-Funktion fuer die exit-Funktion.
+ *
+ * Diese Wrapper-Funktion ist notwendig, damit die Eingabeparameter void* Zeiger sind. Vor dem Aufruf von exit werden
+ * die Eingabedaten passend gecastet.
+ *
+ * Damit innerhalb der Funktion "Exec_Menu_Entry" eine "Datenbank" mit den Callback-Funktionen angelegt werden kann,
+ * muessen alle Callback-Funkionen die gleiche Signatur besitzen. Daher dieser Umweg.
+ *
+ * @param[in] input Eingabedateien fuer die exit-Funktion
+ */
 static void Exit_Wrapper (const void* const input);
 static void Exit_Wrapper (const void* const input)
 {
     exit(*(const int* const) input);
     return;
 }
+
+/**
+ * @brief Wrapper-Funktion fuer die Update_Menu-Funktion.
+ *
+ * Diese Wrapper-Funktion ist notwendig, damit die Eingabeparameter void* Zeiger sind. Vor dem Aufruf von Update_Menu
+ * werden die Eingabedaten passend gecastet.
+ *
+ * Damit innerhalb der Funktion "Exec_Menu_Entry" eine "Datenbank" mit den Callback-Funktionen angelegt werden kann,
+ * muessen alle Callback-Funkionen die gleiche Signatur besitzen. Daher dieser Umweg.
+ *
+ * @param[in] input Eingabedateien fuer die Update_Menu-Funktion
+ */
 static void Update_Menu_Wrapper (const void* const input);
 static void Update_Menu_Wrapper (const void* const input)
 {
@@ -726,6 +801,14 @@ static void Update_Menu_Wrapper (const void* const input)
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Funktion, die die Callback-Funkionen fuer alle Menuepunkte enthaelt.
+ *
+ * Die Callback-Funktionen werden ausgefuehrt, wenn der Menueeintrag mittels Enter ausgewaelt wird.
+ *
+ * @param[in] current_menu Aktuelles Menue
+ * @param[in] selected_menu_entry Innerhalb des aktuellen Menues den ausgewaehlten Eintrag
+ */
 static void
 Exec_Menu_Entry
 (
