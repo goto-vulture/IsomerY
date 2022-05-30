@@ -12,6 +12,7 @@
 #include <menu.h>
 #include "../Misc.h"
 #include "../Error_Handling/Dynamic_Memory.h"
+#include "About_TUI.h"
 
 
 
@@ -39,6 +40,18 @@
 #error "The macro \"STATUS_OFFSET\" is already defined !"
 #endif /* STATUS_OFFSET */
 
+#ifndef MENU_NUM_WINDOW_LINES
+#define MENU_NUM_WINDOW_LINES 15
+#else
+#error "The macro \"MENU_NUM_WINDOW_LINES\" is already defined !"
+#endif /* MENU_NUM_WINDOW_LINES */
+
+#ifndef MENU_NUM_WINDOW_COLS
+#define MENU_NUM_WINDOW_COLS 30
+#else
+#error "The macro \"MENU_NUM_WINDOW_COLS\" is already defined !"
+#endif /* MENU_NUM_WINDOW_COLS */
+
 
 
 enum Menu_Types
@@ -57,6 +70,8 @@ WINDOW* menu_window     = NULL;
 WINDOW* info_window     = NULL;
 WINDOW* pos_window      = NULL;
 WINDOW* status_window   = NULL;
+WINDOW* left_window     = NULL;
+WINDOW* right_window    = NULL;
 
 enum Menu_Types current_menue = MAIN_MENU;
 
@@ -66,6 +81,8 @@ static void Draw_Main_Window
 (
         const char* menue_position_string
 );
+
+static void Refresh_All_Boxes (void);
 
 static void
 Update_Menu
@@ -154,6 +171,14 @@ TUI_Build_Main_Window
     pos_window      = newwin(MENU_POSITION_OFFSET - STATUS_OFFSET + 1, COLS, LINES - MENU_POSITION_OFFSET - 1, 0);
     // Fenster mit aktuellen Statusinformationen
     status_window   = newwin(STATUS_OFFSET + 1, COLS, LINES - STATUS_OFFSET - 1, 0);
+    // Linkes und rechtes Fenster fuer die "Nutzdaten" erzeugen
+    left_window     = newwin(LINES - INFORMATION_LINE_OFFSET - MENU_NUM_WINDOW_LINES - 2,
+            COLS / 2 - 1, 1 + MENU_NUM_WINDOW_LINES + 1, 1);
+    right_window    = newwin(LINES - MENU_POSITION_OFFSET - 3, COLS / 2 - 2, 2, COLS / 2 + 1);
+    box(left_window, 0, 0);
+    box(right_window, 0, 0);
+
+
     Draw_Main_Window("Main menu");
 
     items = (ITEM**) CALLOC(ALLOCATED_MENU_ENTRIES, sizeof(ITEM*));
@@ -162,9 +187,9 @@ TUI_Build_Main_Window
 
     menu = new_menu (items);
 
-    menu_window = newwin(15, 30, 2, 2);
+    menu_window = newwin(MENU_NUM_WINDOW_LINES, MENU_NUM_WINDOW_COLS, 2, 2);
     set_menu_win(menu, menu_window);
-    set_menu_sub (menu, derwin(menu_window, 6, 28, 3, 2));
+    set_menu_sub (menu, derwin(menu_window, MENU_NUM_WINDOW_LINES / 2, MENU_NUM_WINDOW_COLS - 2, 3, 2));
     box(menu_window, 0, 0);
     wbkgd(menu_window, COLOR_PAIR(1));
 
@@ -179,10 +204,7 @@ TUI_Build_Main_Window
     Update_Window_Information(current_menue, 0);
 
     refresh();
-    wrefresh(menu_window);
-    wrefresh(info_window);
-    wrefresh(pos_window);
-    wrefresh(status_window);
+    Refresh_All_Boxes();
 
     while (1)
     {
@@ -204,10 +226,7 @@ TUI_Build_Main_Window
             break;
         }
         refresh();
-        wrefresh(menu_window);
-        wrefresh(info_window);
-        wrefresh(pos_window);
-        wrefresh(status_window);
+        Refresh_All_Boxes();
     }
 
     return;
@@ -226,6 +245,9 @@ static void Draw_Main_Window
     wclear(pos_window);
     // Muss auskommentiert werden, damit der Name des aktuellen Menus nicht ausgeblendet wird
     // wclear(menu_window);
+
+    box(left_window, 0, 0);
+    box(right_window, 0, 0);
 
     // Komplette Umrandung des Hauptfensters
     box(stdscr, 0, 0);
@@ -316,10 +338,20 @@ static void Draw_Main_Window
     waddch(pos_window, ACS_BTEE);
 
     refresh();
+
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static void Refresh_All_Boxes (void)
+{
     wrefresh(menu_window);
     wrefresh(info_window);
     wrefresh(pos_window);
     wrefresh(status_window);
+    wrefresh(left_window);
+    wrefresh(right_window);
 
     return;
 }
@@ -709,3 +741,11 @@ Exec_Menu_Entry
 #ifdef STATUS_OFFSET
 #undef STATUS_OFFSET
 #endif /* STATUS_OFFSET */
+
+#ifdef MENU_NUM_WINDOW_LINES
+#undef MENU_NUM_WINDOW_LINES
+#endif /* MENU_NUM_WINDOW_LINES */
+
+#ifdef MENU_NUM_WINDOW_COLS
+#undef MENU_NUM_WINDOW_COLS
+#endif /* MENU_NUM_WINDOW_COLS */
