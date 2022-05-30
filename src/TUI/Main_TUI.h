@@ -16,6 +16,15 @@ extern "C"
 
 
 
+#include <ncurses.h>
+
+
+
+extern WINDOW* left_window;
+extern WINDOW* right_window;
+
+
+
 /**
  * @brief Funktion fuer die Lib-Funktion atexit().
  *

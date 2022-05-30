@@ -175,8 +175,8 @@ TUI_Build_Main_Window
     left_window     = newwin(LINES - INFORMATION_LINE_OFFSET - MENU_NUM_WINDOW_LINES - 2,
             COLS / 2 - 1, 1 + MENU_NUM_WINDOW_LINES + 1, 1);
     right_window    = newwin(LINES - MENU_POSITION_OFFSET - 3, COLS / 2 - 2, 2, COLS / 2 + 1);
-    box(left_window, 0, 0);
-    box(right_window, 0, 0);
+    // box(left_window, 0, 0);
+    // box(right_window, 0, 0);
 
 
     Draw_Main_Window("Main menu");
@@ -243,11 +243,10 @@ static void Draw_Main_Window
     wclear(info_window);
     wclear(status_window);
     wclear(pos_window);
+    wclear(left_window);
+    wclear(right_window);
     // Muss auskommentiert werden, damit der Name des aktuellen Menus nicht ausgeblendet wird
     // wclear(menu_window);
-
-    box(left_window, 0, 0);
-    box(right_window, 0, 0);
 
     // Komplette Umrandung des Hauptfensters
     box(stdscr, 0, 0);
@@ -636,6 +635,7 @@ Exec_Menu_Entry
     {
         const enum Menu_Types menu;
         void (*function [ALLOCATED_MENU_ENTRIES]) (const void*);
+        void (*function_2 [ALLOCATED_MENU_ENTRIES]) (const void*);
         const void* function_input [ALLOCATED_MENU_ENTRIES];
     };
 
@@ -657,6 +657,14 @@ Exec_Menu_Entry
                             &Exit_Wrapper,
                             NULL
                     },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL,
+                            &TUI_Build_About_Left_Side,
+                            NULL,
+                            NULL
+                    },
                     .function_input =
                     {
                             &creation_menu,
@@ -674,6 +682,12 @@ Exec_Menu_Entry
                             &Update_Menu_Wrapper,
                             NULL
                     },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL,
+                            NULL
+                    },
                     .function_input =
                     {
                             &exit_input,
@@ -687,6 +701,12 @@ Exec_Menu_Entry
                     {
                             &Exit_Wrapper,
                             &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL,
                             NULL
                     },
                     .function_input =
@@ -703,6 +723,11 @@ Exec_Menu_Entry
                             &Update_Menu_Wrapper,
                             NULL
                     },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL
+                    },
                     .function_input =
                     {
                             &main_menu,
@@ -717,6 +742,10 @@ Exec_Menu_Entry
         {
             // Passende Funktion mit den hinterlegten Parameter aufrufen
             menu_functions [i].function [selected_menu_entry] (menu_functions [i].function_input [selected_menu_entry]);
+            if (menu_functions [i].function_2 [selected_menu_entry] != NULL)
+            {
+                menu_functions [i].function_2 [selected_menu_entry] (NULL);
+            }
             break;
         }
     }
