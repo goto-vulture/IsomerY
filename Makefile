@@ -232,6 +232,9 @@ MAIN_TUI_C = ./src/TUI/Main_TUI.c
 
 ABOUT_TUI_H = ./src/TUI/About_TUI.h
 ABOUT_TUI_C = ./src/TUI/About_TUI.c
+
+GENERAL_INFO_TUI_H = ./src/TUI/General_Info_TUI.h
+GENERAL_INFO_TUI_C = ./src/TUI/General_Info_TUI.c
 ##### ##### ##### ENDE Uebersetzungseinheiten ##### ##### #####
 
 
@@ -254,11 +257,11 @@ endif
 	@echo
 	@echo IsomerY build completed !
 
-$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o Main_TUI.o About_TUI.o
+$(TARGET): main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o Main_TUI.o About_TUI.o General_Info_TUI.o
 	@echo
 	@echo Linking object files ...
 	@echo
-	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o Main_TUI.o About_TUI.o $(LIBS)
+	$(CC) $(CCFLAGS) -o $(TARGET) main.o str2int.o int2str.o Dynamic_Memory.o Alkane_Branch_Container.o Alkane_Branch.o Alkane_Container.o Alkane.o Alkane_Info_Constitutional_Isomer.o Alkane_Create_Constitutional_Isomer.o Alkane_To_IUPAC_Name.o tinytest.o Alkane_Tests.o Alkane_Chain_To_IUPAC_Name.o Path_Data.o Path_Data_Container.o Beautiful.o argparse.o CLI_Parameter.o IUPAC_Chain_Lexer.o Text_Based_Alkane_Drawing.o Print_Tools.o String_Tools.o Alkane_Parser.o To_XPM.o XPM_Fragments.o Main_TUI.o About_TUI.o General_Info_TUI.o $(LIBS)
 
 ##### BEGINN Die einzelnen Uebersetzungseinheiten #####
 main.o: $(MAIN_C)
@@ -358,6 +361,9 @@ Main_TUI.o: $(MAIN_TUI_C)
 
 About_TUI.o: $(ABOUT_TUI_C)
 	$(CC) $(CCFLAGS) -c $(ABOUT_TUI_C)
+
+General_Info_TUI.o: $(GENERAL_INFO_TUI_C)
+	$(CC) $(CCFLAGS) -c $(GENERAL_INFO_TUI_C)
 ##### ENDE Die einzelnen Uebersetzungseinheiten #####
 
 # Alles wieder aufraeumen
