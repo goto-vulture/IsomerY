@@ -1,6 +1,8 @@
 /**
  * @file Main_TUI.h
  *
+ * @brief Dokumentation von ncurses: https://pubs.opengroup.org/onlinepubs/7908799/xcurses/curses.h.html
+ *
  * @date 28.05.2022
  * @author: am1
  */
