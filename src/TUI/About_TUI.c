@@ -13,7 +13,7 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-extern void TUI_Build_About_Left_Side (const void* input)
+extern void TUI_Build_About_Left_Side (const void* const input)
 {
     (void) input;
 
@@ -43,7 +43,7 @@ extern void TUI_Build_About_Left_Side (const void* input)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-extern void TUI_Build_About_Right_Side (const void* input)
+extern void TUI_Build_About_Right_Side (const void* const input)
 {
     (void) input;
     return;
