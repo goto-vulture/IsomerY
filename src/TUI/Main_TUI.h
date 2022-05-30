@@ -19,6 +19,7 @@ extern "C"
 
 
 #include <ncurses.h>
+#include "../Error_Handling/Assert_Msg.h"
 
 
 
@@ -46,6 +47,34 @@ TUI_Build_Main_Window
         const int argc,
         const char* argv []
 );
+
+//---------------------------------------------------------------------------------------------------------------------
+
+#ifndef ERR_CHECK
+#define ERR_CHECK(test_value)                                                                                         \
+    if ((test_value) == ERR)                                                                                          \
+    {                                                                                                                 \
+        At_Exit_Function();                                                                                           \
+        ASSERT_MSG(false, "ERR as return value in ncurses function call !");                                          \
+    }
+#else
+#error "The macro \"ERR_CHECK\" is already defined !"
+#endif /* ERR_CHECK */
+
+//---------------------------------------------------------------------------------------------------------------------
+
+#ifndef NULL_CHECK
+#define NULL_CHECK(test_value)                                                                                        \
+    if ((test_value) == NULL)                                                                                         \
+    {                                                                                                                 \
+        At_Exit_Function();                                                                                           \
+        ASSERT_MSG(false, "NULL as return value in ncurses function call !");                                         \
+    }
+#else
+#error "The macro \"NULL_CHECK\" is already defined !"
+#endif /* NULL_CHECK */
+
+//---------------------------------------------------------------------------------------------------------------------
 
 
 

@@ -82,7 +82,7 @@ static void Draw_Main_Window
         const char* menue_position_string
 );
 
-static void Refresh_All_Boxes (void);
+static int Refresh_All_Boxes (void);
 
 static void
 Update_Menu
@@ -113,21 +113,27 @@ Exec_Menu_Entry
  */
 extern void At_Exit_Function (void)
 {
-    unpost_menu(menu);
-    free_menu(menu);
+    if (menu != NULL)
+    {
+        unpost_menu(menu);
+        free_menu(menu);
+    }
     menu = NULL;
 
-    for (int i = 0; i < ALLOCATED_MENU_ENTRIES; i ++)
+    if (items != NULL)
     {
-        if (items [i] != NULL)
+        for (int i = 0; i < ALLOCATED_MENU_ENTRIES; i ++)
         {
-            free_item(items [i]);
-            items [i] = NULL;
+            if (items [i] != NULL)
+            {
+                free_item(items [i]);
+                items [i] = NULL;
+            }
         }
-    }
-    FREE_AND_SET_TO_NULL(items);
+        FREE_AND_SET_TO_NULL(items);
 
-    endwin();
+        endwin();
+    }
 
     return;
 }
@@ -152,29 +158,36 @@ TUI_Build_Main_Window
 
     atexit(At_Exit_Function);
 
+    // Diese Funktionen haben keine Error-Code als Rueckgabewert
     initscr();
-    curs_set(0);
-    clear ();
-    noecho();
+    ERR_CHECK(curs_set(0));
+    ERR_CHECK(clear ());
+    ERR_CHECK(noecho());
 
-    start_color();
-    init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    init_pair(2, COLOR_BLACK, COLOR_WHITE);
-    bkgd(COLOR_PAIR(1));
+    // Diese Funktionen haben ebenfalls keinen Error-Code als Rueckgabewert
+    ERR_CHECK(start_color());
+    ERR_CHECK(init_pair(1, COLOR_WHITE, COLOR_BLACK));
+    ERR_CHECK(init_pair(2, COLOR_BLACK, COLOR_WHITE));
+    ERR_CHECK(bkgd(COLOR_PAIR(1)));
 
-    cbreak();
-    keypad(stdscr, TRUE);
+    ERR_CHECK(cbreak())
+    ERR_CHECK(keypad(stdscr, TRUE));
 
     // Fenster mit den allgemeinen Informationen zum ausgewaehlten Menuepunkt
     info_window     = newwin(INFORMATION_LINE_OFFSET - MENU_POSITION_OFFSET, COLS / 2 + 1, LINES - INFORMATION_LINE_OFFSET, 0);
+    NULL_CHECK(info_window);
     // Fenster mit der aktuellen Menueposition
     pos_window      = newwin(MENU_POSITION_OFFSET - STATUS_OFFSET + 1, COLS, LINES - MENU_POSITION_OFFSET - 1, 0);
+    NULL_CHECK(pos_window);
     // Fenster mit aktuellen Statusinformationen
     status_window   = newwin(STATUS_OFFSET + 1, COLS, LINES - STATUS_OFFSET - 1, 0);
+    NULL_CHECK(status_window);
     // Linkes und rechtes Fenster fuer die "Nutzdaten" erzeugen
     left_window     = newwin(LINES - INFORMATION_LINE_OFFSET - MENU_NUM_WINDOW_LINES - 2,
             COLS / 2 - 1, 1 + MENU_NUM_WINDOW_LINES + 1, 1);
+    NULL_CHECK(left_window);
     right_window    = newwin(LINES - MENU_POSITION_OFFSET - 3, COLS / 2 - 2, 2, COLS / 2 + 1);
+    NULL_CHECK(right_window);
     // box(left_window, 0, 0);
     // box(right_window, 0, 0);
 
@@ -186,24 +199,26 @@ TUI_Build_Main_Window
     SET_POINTER_ARRAY_TO_NULL(items, ALLOCATED_MENU_ENTRIES);
 
     menu = new_menu (items);
+    NULL_CHECK(menu);
 
     menu_window = newwin(MENU_NUM_WINDOW_LINES, MENU_NUM_WINDOW_COLS, 2, 2);
-    set_menu_win(menu, menu_window);
-    set_menu_sub (menu, derwin(menu_window, MENU_NUM_WINDOW_LINES / 2, MENU_NUM_WINDOW_COLS - 2, 3, 2));
-    box(menu_window, 0, 0);
-    wbkgd(menu_window, COLOR_PAIR(1));
+    NULL_CHECK(menu_window);
+    ERR_CHECK(set_menu_win(menu, menu_window));
+    ERR_CHECK(set_menu_sub (menu, derwin(menu_window, MENU_NUM_WINDOW_LINES / 2, MENU_NUM_WINDOW_COLS - 2, 3, 2)));
+    ERR_CHECK(box(menu_window, 0, 0));
+    ERR_CHECK(wbkgd(menu_window, COLOR_PAIR(1)));
 
-    set_menu_format(menu, ALLOCATED_MENU_ENTRIES - 1, 1);
-    set_menu_mark(menu, "> ");
-    set_menu_fore(menu, COLOR_PAIR(1)|A_REVERSE);
-    set_menu_back(menu, COLOR_PAIR(1));
-    post_menu(menu);
+    ERR_CHECK(set_menu_format(menu, ALLOCATED_MENU_ENTRIES - 1, 1));
+    ERR_CHECK(set_menu_mark(menu, "> "));
+    ERR_CHECK(set_menu_fore(menu, COLOR_PAIR(1) | A_REVERSE));
+    ERR_CHECK(set_menu_back(menu, COLOR_PAIR(1)));
+    ERR_CHECK(post_menu(menu));
 
     // Hauptmenue erzeugen
     Update_Menu(current_menue);
     Update_Window_Information(current_menue, 0);
 
-    refresh();
+    ERR_CHECK(refresh());
     Refresh_All_Boxes();
 
     while (1)
@@ -211,11 +226,11 @@ TUI_Build_Main_Window
         switch (getch())
         {
         case KEY_DOWN:
-            menu_driver(menu, REQ_DOWN_ITEM);
+            ERR_CHECK(menu_driver(menu, REQ_DOWN_ITEM));
             Update_Window_Information(current_menue, item_index(current_item(menu)));
             break;
         case KEY_UP:
-            menu_driver(menu, REQ_UP_ITEM);
+            ERR_CHECK(menu_driver(menu, REQ_UP_ITEM));
             Update_Window_Information(current_menue, item_index(current_item(menu)));
             break;
         case '\n':
@@ -225,8 +240,8 @@ TUI_Build_Main_Window
         default:
             break;
         }
-        refresh();
-        Refresh_All_Boxes();
+        ERR_CHECK(refresh());
+        ERR_CHECK(Refresh_All_Boxes());
     }
 
     return;
@@ -239,17 +254,17 @@ static void Draw_Main_Window
         const char* menue_position_string
 )
 {
-    clear();
-    wclear(info_window);
-    wclear(status_window);
-    wclear(pos_window);
-    wclear(left_window);
-    wclear(right_window);
+    ERR_CHECK(clear());
+    ERR_CHECK(wclear(info_window));
+    ERR_CHECK(wclear(status_window));
+    ERR_CHECK(wclear(pos_window));
+    ERR_CHECK(wclear(left_window));
+    ERR_CHECK(wclear(right_window));
     // Muss auskommentiert werden, damit der Name des aktuellen Menus nicht ausgeblendet wird
     // wclear(menu_window);
 
     // Komplette Umrandung des Hauptfensters
-    box(stdscr, 0, 0);
+    ERR_CHECK(box(stdscr, 0, 0));
 
     char window_title [25];
     memset(window_title, '\0', sizeof (window_title));
@@ -271,7 +286,7 @@ static void Draw_Main_Window
     // Fenstertitel erzeugen und zeichnen
     const int title_length = snprintf(window_title, COUNT_ARRAY_ELEMENTS(window_title), " IsomerY v.%s %s ",
             version, type);
-    mvprintw(0, (COLS / 2) - (title_length / 2), "%s", window_title);
+    ERR_CHECK(mvprintw(0, (COLS / 2) - (title_length / 2), "%s", window_title));
 
     // Vertikale Linie durch's Fenster
     for (int i = 2; i < LINES - 6; ++ i)
@@ -281,78 +296,86 @@ static void Draw_Main_Window
     }
 
     // Flaeche mit optionalen Informationen zum aktuell markierten Menuepunkt zeichnen
-    wattrset(info_window, A_BOLD);
-    mvwaddnstr(info_window, 1, 1, "Information:", strlen ("Information:"));
-    wattrset(info_window, A_NORMAL);
-    mvwaddnstr(info_window, 2, 1, "N/A", strlen ("N/A"));
-    box(info_window, 0, 0);
+    ERR_CHECK(wattrset(info_window, A_BOLD));
+    ERR_CHECK(mvwaddnstr(info_window, 1, 1, "Information:", strlen ("Information:")));
+    ERR_CHECK(wattrset(info_window, A_NORMAL));
+    ERR_CHECK(mvwaddnstr(info_window, 2, 1, "N/A", strlen ("N/A")));
+    ERR_CHECK(box(info_window, 0, 0));
 
     // Zeile mit dem Inhalt der Menueposition komplett leeren
-    wmove(pos_window, 1, 1);
+    ERR_CHECK(wmove(pos_window, 1, 1));
     for (int i = 0; i < COLS - 2; ++ i)
     {
-        waddch(pos_window, ' ');
+        ERR_CHECK(waddch(pos_window, ' '));
     }
 
-    wattrset(pos_window, A_BOLD);
-    mvwaddnstr(pos_window, 1, 1, "Menu position:", strlen("Menu position:"));
-    wattrset(pos_window, A_NORMAL);
-    mvwaddnstr(pos_window, 1, strlen("Menu position:") + 2, menue_position_string, (int) strlen (menue_position_string));
-    box(pos_window, 0, 0);
+    ERR_CHECK(wattrset(pos_window, A_BOLD));
+    ERR_CHECK(mvwaddnstr(pos_window, 1, 1, "Menu position:", strlen("Menu position:")));
+    ERR_CHECK(wattrset(pos_window, A_NORMAL));
+    ERR_CHECK(mvwaddnstr(pos_window, 1, strlen("Menu position:") + 2, menue_position_string,
+            (int) strlen (menue_position_string)));
+    ERR_CHECK(box(pos_window, 0, 0));
 
-    wattrset(status_window, A_BOLD);
-    mvwaddnstr(status_window, 1, 1, "Status:", strlen("Status:"));
-    wattrset(status_window, A_NORMAL);
-    mvwaddnstr(status_window, 2, 1, "N/A", strlen ("N/A"));
-    box(status_window, 0, 0);
+    ERR_CHECK(wattrset(status_window, A_BOLD));
+    ERR_CHECK(mvwaddnstr(status_window, 1, 1, "Status:", strlen("Status:")));
+    ERR_CHECK(wattrset(status_window, A_NORMAL));
+    ERR_CHECK(mvwaddnstr(status_window, 2, 1, "N/A", strlen ("N/A")));
+    ERR_CHECK(box(status_window, 0, 0));
 
     // "Merge" Zeichen an den Ecken der Fenster einbauen
     int status_window_lines = 0;
     int status_window_cols = 0;
     (void) status_window_lines;
-    getmaxyx(status_window, status_window_lines, status_window_cols);
-    wmove(status_window, 0, 0);
-    waddch(status_window, ACS_LTEE);
-    wmove(status_window, 0, status_window_cols - 1);
-    waddch(status_window, ACS_RTEE);
+    ERR_CHECK(getmaxyx(status_window, status_window_lines, status_window_cols));
+    ERR_CHECK(wmove(status_window, 0, 0));
+    ERR_CHECK(waddch(status_window, ACS_LTEE));
+    ERR_CHECK(wmove(status_window, 0, status_window_cols - 1));
+    ERR_CHECK(waddch(status_window, ACS_RTEE));
 
     int info_window_lines = 0;
     int info_window_cols = 0;
     (void) info_window_lines;
-    getmaxyx(info_window, info_window_lines, info_window_cols);
-    wmove(info_window, 0, 0);
-    waddch(info_window, ACS_LTEE);
-    wmove(info_window, 0, info_window_cols - 1);
-    waddch(info_window, ACS_RTEE);
+    ERR_CHECK(getmaxyx(info_window, info_window_lines, info_window_cols));
+    ERR_CHECK(wmove(info_window, 0, 0));
+    ERR_CHECK(waddch(info_window, ACS_LTEE));
+    ERR_CHECK(wmove(info_window, 0, info_window_cols - 1));
+    ERR_CHECK(waddch(info_window, ACS_RTEE));
 
     int pos_window_lines = 0;
     int pos_window_cols = 0;
     (void) pos_window_lines;
-    getmaxyx(pos_window, pos_window_lines, pos_window_cols);
-    wmove(pos_window, 0, 0);
-    waddch(pos_window, ACS_LTEE);
-    wmove(pos_window, 0, pos_window_cols - 1);
-    waddch(pos_window, ACS_RTEE);
-    wmove(pos_window, 0, pos_window_cols / 2);
-    waddch(pos_window, ACS_BTEE);
+    ERR_CHECK(getmaxyx(pos_window, pos_window_lines, pos_window_cols));
+    ERR_CHECK(wmove(pos_window, 0, 0));
+    ERR_CHECK(waddch(pos_window, ACS_LTEE));
+    ERR_CHECK(wmove(pos_window, 0, pos_window_cols - 1));
+    ERR_CHECK(waddch(pos_window, ACS_RTEE));
+    ERR_CHECK(wmove(pos_window, 0, pos_window_cols / 2));
+    ERR_CHECK(waddch(pos_window, ACS_BTEE));
 
-    refresh();
+    ERR_CHECK(refresh());
 
     return;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-static void Refresh_All_Boxes (void)
+static int Refresh_All_Boxes (void)
 {
-    wrefresh(menu_window);
-    wrefresh(info_window);
-    wrefresh(pos_window);
-    wrefresh(status_window);
-    wrefresh(left_window);
-    wrefresh(right_window);
+    int error_value = OK;
+    error_value = wrefresh(menu_window);
+    if (error_value == ERR) { return error_value; }
+    error_value = wrefresh(info_window);
+    if (error_value == ERR) { return error_value; }
+    error_value = wrefresh(pos_window);
+    if (error_value == ERR) { return error_value; }
+    error_value = wrefresh(status_window);
+    if (error_value == ERR) { return error_value; }
+    error_value = wrefresh(left_window);
+    if (error_value == ERR) { return error_value; }
+    error_value = wrefresh(right_window);
+    if (error_value == ERR) { return error_value; }
 
-    return;
+    return error_value;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -456,7 +479,7 @@ Update_Menu
     {
         if (items [i] != NULL)
         {
-            free_item(items [i]);
+            ERR_CHECK(free_item(items [i]));
             items [i] = NULL;
         }
     }
@@ -464,12 +487,12 @@ Update_Menu
     int menu_window_lines = 0;
     int menu_window_cols = 0;
     (void) menu_window_lines;
-    getmaxyx(menu_window, menu_window_lines, menu_window_cols);
+    ERR_CHECK(getmaxyx(menu_window, menu_window_lines, menu_window_cols));
 
     // Menunamenzeile komplett leeren
     for (int i = 0; i < menu_window_cols - 4; ++ i)
     {
-        mvwaddch(menu_window, 1, 2 + i, ' ');
+        ERR_CHECK(mvwaddch(menu_window, 1, 2 + i, ' '));
     }
 
     // Menueinhalt anpassen
@@ -484,11 +507,12 @@ Update_Menu
             {
                 items [counter] = new_item (menu_content [i].item_first_string [counter],
                         menu_content [i].item_second_string [counter]);
+                NULL_CHECK(items [counter]);
                 ++ counter;
             }
             items [counter] = NULL;
 
-            mvwaddnstr(menu_window, 1, 2, menu_content [i].menu_name, menu_window_cols - 4);
+            ERR_CHECK(mvwaddnstr(menu_window, 1, 2, menu_content [i].menu_name, menu_window_cols - 4));
             menu_position_string = menu_content [i].menu_position;
 
             break;
@@ -497,11 +521,11 @@ Update_Menu
 
     // Anzeigen aktuallisieren (Hauptfenster, Menue-Fenster, Umrandung des Menue-Fensters)
     Draw_Main_Window(menu_position_string);
-    unpost_menu(menu);
-    set_menu_items(menu, items);
+    ERR_CHECK(unpost_menu(menu));
+    ERR_CHECK(set_menu_items(menu, items));
 
-    post_menu(menu);
-    box(menu_window, 0, 0);
+    ERR_CHECK(post_menu(menu));
+    ERR_CHECK(box(menu_window, 0, 0));
 
     return;
 }
@@ -567,38 +591,38 @@ Update_Window_Information
     {
         if (window_information [i].menu == current_menu)
         {
-            wclear(info_window);
+            ERR_CHECK(wclear(info_window));
 
-            wattrset(info_window, A_BOLD);
-            mvwaddnstr(info_window, 1, 1, "Information:", strlen ("Information:"));
-            wattrset(info_window, A_NORMAL);
-            box(info_window, 0, 0);
+            ERR_CHECK(wattrset(info_window, A_BOLD));
+            ERR_CHECK(mvwaddnstr(info_window, 1, 1, "Information:", strlen ("Information:")));
+            ERR_CHECK(wattrset(info_window, A_NORMAL));
+            ERR_CHECK(box(info_window, 0, 0));
 
             int info_window_lines = 0;
             int info_window_cols = 0;
             (void) info_window_lines;
-            getmaxyx(info_window, info_window_lines, info_window_cols);
-            wmove(info_window, 0, 0);
-            waddch(info_window, ACS_LTEE);
-            wmove(info_window, 0, info_window_cols - 1);
-            waddch(info_window, ACS_RTEE);
+            ERR_CHECK(getmaxyx(info_window, info_window_lines, info_window_cols));
+            ERR_CHECK(wmove(info_window, 0, 0));
+            ERR_CHECK(waddch(info_window, ACS_LTEE));
+            ERR_CHECK(wmove(info_window, 0, info_window_cols - 1));
+            ERR_CHECK(waddch(info_window, ACS_RTEE));
 
             int pos_window_lines = 0;
             int pos_window_cols = 0;
             (void) pos_window_lines;
-            getmaxyx(pos_window, pos_window_lines, pos_window_cols);
-            wmove(pos_window, 0, 0);
-            waddch(pos_window, ACS_LTEE);
-            wmove(pos_window, 0, pos_window_cols - 1);
-            waddch(pos_window, ACS_RTEE);
-            wmove(pos_window, 0, pos_window_cols / 2);
-            waddch(pos_window, ACS_BTEE);
+            ERR_CHECK(getmaxyx(pos_window, pos_window_lines, pos_window_cols));
+            ERR_CHECK(wmove(pos_window, 0, 0));
+            ERR_CHECK(waddch(pos_window, ACS_LTEE));
+            ERR_CHECK(wmove(pos_window, 0, pos_window_cols - 1));
+            ERR_CHECK(waddch(pos_window, ACS_RTEE));
+            ERR_CHECK(wmove(pos_window, 0, pos_window_cols / 2));
+            ERR_CHECK(waddch(pos_window, ACS_BTEE));
 
-            wmove(info_window, 2, 1);
-            mvwaddnstr(info_window, 2, 1, window_information [i].description [selected_menu_entry],
-                    (int) strlen (window_information [i].description [selected_menu_entry]));
+            ERR_CHECK(wmove(info_window, 2, 1));
+            ERR_CHECK(mvwaddnstr(info_window, 2, 1, window_information [i].description [selected_menu_entry],
+                    (int) strlen (window_information [i].description [selected_menu_entry])));
 
-            wrefresh(info_window);
+            ERR_CHECK(wrefresh(info_window));
 
             break;
         }

@@ -17,26 +17,58 @@ extern void TUI_Build_About_Left_Side (const void* const input)
 {
     (void) input;
 
-    mvwaddnstr(left_window, 1, 1, "Created by: goto-vulture", (int) strlen("Created by: goto-vulture"));
-    mvwaddnstr(left_window, 3, 1, "For questions: Contact me on github.",
-            (int) strlen("For questions: Contact me on github."));
+    // Anzahl der verwendbaren Zeilen ermitteln
+    int usable_lines = 0;
+    int usable_cols = 0;
+    (void) usable_cols;
+    ERR_CHECK(getmaxyx(left_window, usable_lines, usable_cols));
 
-    mvwaddnstr(left_window, 5, 1,  "          .-..-.__",        (int) strlen("          .-..-.__"));
-    mvwaddnstr(left_window, 6, 1,  "        /`  |\\_( \"\\__",  (int) strlen("        /`  |\\_( \"\\__"));
-    mvwaddnstr(left_window, 7, 1,  "        |   / __/`'--)",    (int) strlen("        |   / __/`'--)"));
-    mvwaddnstr(left_window, 8, 1,  "        |  /  | |",         (int) strlen("        |  /  | |"));
-    mvwaddnstr(left_window, 9, 1,  "        /_/ _/_/",          (int) strlen("        /_/ _/_/"));
-    mvwaddnstr(left_window, 10, 1, " jgs  `|/))))",             (int) strlen(" jgs  `|/))))"));
+    int effective_line = 1;
 
-    wattrset(left_window, A_BOLD);
-    mvwaddnstr(left_window, 12, 1, "For me, a vulture is more desirable than money.",
-            (int) strlen("For me, a vulture is more desirable than money."));
-    wattrset(left_window, A_NORMAL);
+    ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Created by: goto-vulture", (int) strlen("Created by: goto-vulture")));
+    effective_line += 2;
+    if (usable_lines >= 10)
+    {
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "For questions: Contact me on github.",
+                (int) strlen("For questions: Contact me on github.")));
+        effective_line += 2;
+    }
 
-    mvwaddnstr(left_window, 14, 1, "If you have practical experience with these brids, please let me know.",
-            (int) strlen("If you have practical experience with these brids, please let me know."));
-    mvwaddnstr(left_window, 15, 1, "My goal is to get in touch with them.",
-            (int) strlen("My goal is to get in touch with them."));
+    // Das wichtigste soll wenn es irgendwie geht, immer angezeigt werden
+    if (usable_lines >= 8)
+    {
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1,  "          .-..-.__",        (int) strlen("          .-..-.__")));
+        ++ effective_line;
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1,  "        /`  |\\_( \"\\__",  (int) strlen("        /`  |\\_( \"\\__")));
+        ++ effective_line;
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1,  "        |   / __/`'--)",    (int) strlen("        |   / __/`'--)")));
+        ++ effective_line;
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1,  "        |  /  | |",         (int) strlen("        |  /  | |")));
+        ++ effective_line;
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1,  "        /_/ _/_/",          (int) strlen("        /_/ _/_/")));
+        ++ effective_line;
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, " jgs  `|/))))",             (int) strlen(" jgs  `|/))))")));
+        effective_line += 2;
+    }
+
+
+    if (usable_lines >= 13)
+    {
+        ERR_CHECK(wattrset(left_window, A_BOLD));
+        ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "For me, a vulture is more desirable than money.",
+                (int) strlen("For me, a vulture is more desirable than money.")));
+        ERR_CHECK(wattrset(left_window, A_NORMAL));
+        effective_line += 2;
+    }
+
+    if (usable_lines >= 15)
+    {
+        ERR_CHECK(mvwaddnstr(left_window, 14, 1, "If you have practical experience with these brids, please let me know.",
+                (int) strlen("If you have practical experience with these brids, please let me know.")));
+        ++ effective_line;
+        ERR_CHECK(mvwaddnstr(left_window, 15, 1, "My goal is to get in touch with them.",
+                (int) strlen("My goal is to get in touch with them.")));
+    }
 
     return;
 }
