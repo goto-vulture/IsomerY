@@ -251,12 +251,12 @@ TUI_Build_Main_Window
     Update_Menu(current_menue);
     Update_Window_Information(current_menue, 0);
 
-    ERR_CHECK(refresh());
-    Refresh_All_Boxes();
-
     // ===== ===== ===== BEGINN "GUI"-Schleife ===== ===== =====
     while (1)
     {
+        ERR_CHECK(refresh());
+        Refresh_All_Boxes();
+
         // Direkte Reaktion auf der naechsten Tastatureingabe
         switch (getch())
         {
@@ -278,8 +278,6 @@ TUI_Build_Main_Window
         default:
             break;
         }
-        ERR_CHECK(refresh());
-        ERR_CHECK(Refresh_All_Boxes());
     }
     // ===== ===== ===== ENDE "GUI"-Schleife ===== ===== =====
 
