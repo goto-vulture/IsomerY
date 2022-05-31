@@ -56,6 +56,9 @@
 
 
 
+/**
+ * @brief Konstanten, fuer die Menues und den Untermenues
+ */
 enum Menu_Types
 {
     MAIN_MENU = 0,
@@ -72,16 +75,16 @@ enum Menu_Types
 
 
 
-ITEM** items            = NULL;
-MENU* menu              = NULL;
-WINDOW* menu_window     = NULL;
-WINDOW* info_window     = NULL;
-WINDOW* pos_window      = NULL;
-WINDOW* status_window   = NULL;
-WINDOW* left_window     = NULL;
-WINDOW* right_window    = NULL;
+ITEM** items            = NULL;             // Die einzelnen Menueeintrage
+MENU* menu              = NULL;             // Das Menue an sich
+WINDOW* menu_window     = NULL;             // Fenster fuer das Menue
+WINDOW* info_window     = NULL;             // Fenster fuer die Info-Box
+WINDOW* pos_window      = NULL;             // Fenster fuer die Angabe der aktuellen Menueposition
+WINDOW* status_window   = NULL;             // Fenster fuer die Anzege des aktuellen Berechnuns-Status
+WINDOW* left_window     = NULL;             // Linkes Fenster fuer unterschiedlichste Ausgaben
+WINDOW* right_window    = NULL;             // Rechtes Fenster fuer unterschiedlichste Ausgaben
 
-enum Menu_Types current_menue = MAIN_MENU;
+enum Menu_Types current_menue = MAIN_MENU;  // Aktuelle Position im Auswahlmenue
 
 
 

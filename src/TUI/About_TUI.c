@@ -14,6 +14,11 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Funktion, die den Inhalt des linken Fensters fuellt.
+ *
+ * @param[in] input Optionaler Parameter fuer Eingabeinformationen
+ */
 extern void TUI_Build_About_Left_Side (const void* const input)
 {
     (void) input;
@@ -110,6 +115,13 @@ extern void TUI_Build_About_Left_Side (const void* const input)
 
 //---------------------------------------------------------------------------------------------------------------------
 
+/**
+ * @brief Funktion, die den Inhalt des rechten Fensters fuellt.
+ *
+ * Aktuell hat diese Funktion keinen Inhalt; sie ist hauptsaechlich der Vollstaendigkeit halber da.
+ *
+ * @param[in] input Optionaler Parameter fuer Eingabeinformationen
+ */
 extern void TUI_Build_About_Right_Side (const void* const input)
 {
     (void) input;
