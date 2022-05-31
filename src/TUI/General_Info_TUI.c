@@ -22,6 +22,8 @@ extern void TUI_Build_General_Info_Initial_Situation_Left_Side (const void* cons
     int usable_cols = 0;
     (void) usable_cols;
     ERR_CHECK(getmaxyx(left_window, usable_lines, usable_cols));
+    ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
+            usable_lines);
 
     int effective_line = 1;
 
@@ -51,6 +53,8 @@ extern void TUI_Build_General_Info_Problem_Left_Side (const void* const input)
     int usable_cols = 0;
     (void) usable_cols;
     ERR_CHECK(getmaxyx(left_window, usable_lines, usable_cols));
+    ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
+            usable_lines);
 
     int effective_line = 1;
 
@@ -80,6 +84,8 @@ extern void TUI_Build_General_Info_Solution_Ideas_Left_Side (const void* const i
     int usable_cols = 0;
     (void) usable_cols;
     ERR_CHECK(getmaxyx(left_window, usable_lines, usable_cols));
+    ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
+            usable_lines);
 
     int effective_line = 1;
 
