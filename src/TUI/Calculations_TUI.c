@@ -29,7 +29,7 @@ extern void TUI_Build_Calculations_Left_Side (const void* const input)
     ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
             usable_lines);
 
-    int effective_line = 1;
+    int effective_line = (usable_lines <= 1) ? 0 : 1;
 
     ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Placeholder for Calculations.",
             (int) strlen("Placeholder for Calculations.")));

@@ -29,7 +29,7 @@ extern void TUI_Build_About_Left_Side (const void* const input)
     (void) usable_cols;
     ERR_CHECK(getmaxyx(left_window, usable_lines, usable_cols));
 
-    int effective_line = 1;
+    int effective_line = (usable_lines <= 1) ? 0 : 1;
 
     // Zeichenkette mit den wichtigsten Informationen erstellen
     char main_infos [50];
@@ -64,9 +64,15 @@ extern void TUI_Build_About_Left_Side (const void* const input)
     ERR_CHECK(wattrset(left_window, A_BOLD));
     ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, main_infos, (int) (COUNT_ARRAY_ELEMENTS(main_infos) - char_left)));
     ERR_CHECK(wattrset(left_window, A_NORMAL));
-    effective_line += 2;
-    ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Created by: goto-vulture", (int) strlen("Created by: goto-vulture")));
-    effective_line += 2;
+    if (usable_lines >= 4)
+    {
+		effective_line += 2;
+		ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Created by: goto-vulture", (int) strlen("Created by: goto-vulture")));
+		if (usable_lines >= 5)
+		{
+			effective_line += 2;
+		}
+    }
 
     // Das wichtigste soll wenn es irgendwie geht, immer angezeigt werden
     if (usable_lines >= 10)

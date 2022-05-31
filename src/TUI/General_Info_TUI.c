@@ -30,7 +30,7 @@ extern void TUI_Build_General_Info_Initial_Situation_Left_Side (const void* cons
     ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
             usable_lines);
 
-    int effective_line = 1;
+    int effective_line = (usable_lines <= 1) ? 0 : 1;
 
     ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Placeholder for initial situation.",
             (int) strlen("Placeholder for initial situation.")));
@@ -73,7 +73,7 @@ extern void TUI_Build_General_Info_Problem_Left_Side (const void* const input)
     ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
             usable_lines);
 
-    int effective_line = 1;
+    int effective_line = (usable_lines <= 1) ? 0 : 1;
 
     ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Placeholder for the problems.",
             (int) strlen("Placeholder for the problems.")));
@@ -116,7 +116,7 @@ extern void TUI_Build_General_Info_Solution_Ideas_Left_Side (const void* const i
     ASSERT_FMSG(usable_lines > 0, "Got invalid number of usable lines (%d) ! Expect at least one usable line !",
             usable_lines);
 
-    int effective_line = 1;
+    int effective_line = (usable_lines <= 1) ? 0 : 1;
 
     ERR_CHECK(mvwaddnstr(left_window, effective_line, 1, "Placeholder for solution ideas.",
             (int) strlen("Placeholder for solution ideas.")));
