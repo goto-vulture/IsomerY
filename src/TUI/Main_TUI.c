@@ -367,6 +367,7 @@ static void Draw_Main_Window
     ERR_CHECK(box(status_window, 0, 0));
 
     // "Merge" Zeichen an den Ecken der Fenster einbauen
+    // Dies dient dazu, dass die Eckelemente der Boxen von den einzelnen Fenstern besser aussehen
     int status_window_lines = 0;
     int status_window_cols = 0;
     (void) status_window_lines;
@@ -605,7 +606,7 @@ Update_Menu
     (void) menu_window_lines;
     ERR_CHECK(getmaxyx(menu_window, menu_window_lines, menu_window_cols));
 
-    // Menunamenzeile komplett leeren
+    // Menuenamenzeile komplett leeren
     for (int i = 0; i < menu_window_cols - 4; ++ i)
     {
         ERR_CHECK(mvwaddch(menu_window, 1, 2 + i, ' '));
@@ -745,6 +746,7 @@ Update_Window_Information
     };
     // ===== ===== ===== ENDE Daten fuer die Information-Box ===== ===== =====
 
+    // Passenden Eintrag in der "Datenbank" fuer die Information-Box suchen
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(window_information); ++ i)
     {
         if (window_information [i].menu == current_menu)
@@ -756,6 +758,8 @@ Update_Window_Information
             ERR_CHECK(wattrset(info_window, A_NORMAL));
             ERR_CHECK(box(info_window, 0, 0));
 
+            // Nach dem Loeschen der Box muessen einige Eckelemente angepasst werden, damit die Zeichnung auf der TUI
+            // besser aussieht
             int info_window_lines = 0;
             int info_window_cols = 0;
             (void) info_window_lines;
@@ -776,6 +780,7 @@ Update_Window_Information
             ERR_CHECK(wmove(pos_window, 0, pos_window_cols / 2));
             ERR_CHECK(waddch(pos_window, ACS_BTEE));
 
+            // Hinterlegten String fuer die Informationen zu dem aktuellen Menue-Eintrag anzeigen
             ERR_CHECK(wmove(info_window, 2, 1));
             ERR_CHECK(mvwaddnstr(info_window, 2, 1, window_information [i].description [selected_menu_entry],
                     (int) strlen (window_information [i].description [selected_menu_entry])));
@@ -862,6 +867,7 @@ Exec_Menu_Entry
     static const enum Menu_Types calculations_setup_calculations_menu       = CALCULATIONS_SETUP_CALCULATIONS_MENU;
     static const int exit_input                                             = 0;
 
+    // ===== ===== ===== BEGINN "Datenbank" mit den Callback Funktionen und deren Parametern ===== ===== =====
     const struct Menu_Functions menu_functions [] =
     {
             {
@@ -1030,13 +1036,16 @@ Exec_Menu_Entry
                     }
             }
     };
+    // ===== ===== ===== ENDE "Datenbank" mit den Callback Funktionen und deren Parametern ===== ===== =====
 
+    // Passenden Eintrag in der "Datenbank" suchen
     for (size_t i = 0; i < COUNT_ARRAY_ELEMENTS(menu_functions); ++ i)
     {
         if (menu_functions [i].menu == current_menu)
         {
             // Passende Funktion mit den hinterlegten Parameter aufrufen
             menu_functions [i].function [selected_menu_entry] (menu_functions [i].function_input [selected_menu_entry]);
+            // Die zweite Funktion ist optional -> NULL Check erforderlich !
             if (menu_functions [i].function_2 [selected_menu_entry] != NULL)
             {
                 menu_functions [i].function_2 [selected_menu_entry] (NULL);
