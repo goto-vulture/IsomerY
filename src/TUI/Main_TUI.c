@@ -14,6 +14,7 @@
 #include "../Error_Handling/Dynamic_Memory.h"
 #include "About_TUI.h"
 #include "General_Info_TUI.h"
+#include "Calculations_TUI.h"
 
 
 
@@ -59,10 +60,13 @@ enum Menu_Types
 {
     MAIN_MENU = 0,
     CREATION_MENU,
+
     GENERAL_INFO_MENU,
     GENERAL_INFO_DEEPER_INITIAL_SITUATION_MENU,
     GENERAL_INFO_DEEPER_PROBLEM_MENU,
     GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU,
+
+    CALCULATIONS_SETUP_CALCULATIONS_MENU,
     ABOUT_MENU
 };
 
@@ -470,7 +474,7 @@ Update_Menu
             {
                     .menu               = CREATION_MENU,
                     .menu_name          = "CREATION MENU",
-                    .menu_position      = "Main menu > Creation menu",
+                    .menu_position      = "Main menu > Calculations",
                     .item_first_string  =
                     {
                             "1.",
@@ -480,6 +484,21 @@ Update_Menu
                     .item_second_string =
                     {
                             "Setup calculation",
+                            "Back",
+                            NULL
+                    }
+            },
+            {
+                    .menu               = CALCULATIONS_SETUP_CALCULATIONS_MENU,
+                    .menu_name          = "SETUP CALCULATIONS",
+                    .menu_position      = "Main menu > Creation menu > Setup Calculations",
+                    .item_first_string  =
+                    {
+                            "1.",
+                            NULL
+                    },
+                    .item_second_string =
+                    {
                             "Back",
                             NULL
                     }
@@ -673,6 +692,14 @@ Update_Window_Information
                     }
             },
             {
+                    .menu           = CALCULATIONS_SETUP_CALCULATIONS_MENU,
+                    .description    =
+                    {
+                            "Back to upper menu",
+                            NULL
+                    }
+            },
+            {
                     .menu           = GENERAL_INFO_MENU,
                     .description    =
                     {
@@ -832,6 +859,7 @@ Exec_Menu_Entry
     static const enum Menu_Types general_info_deeper_problem_menu           = GENERAL_INFO_DEEPER_PROBLEM_MENU;
     static const enum Menu_Types general_info_deeper_solution_ideas_menu    = GENERAL_INFO_DEEPER_SOLUTION_IDEAS_MENU;
     static const enum Menu_Types creation_menu                              = CREATION_MENU;
+    static const enum Menu_Types calculations_setup_calculations_menu       = CALCULATIONS_SETUP_CALCULATIONS_MENU;
     static const int exit_input                                             = 0;
 
     const struct Menu_Functions menu_functions [] =
@@ -860,6 +888,24 @@ Exec_Menu_Entry
                             &general_info_menu,
                             &about_menu,
                             &exit_input,
+                            NULL
+                    }
+            },
+            {
+                    .menu           = CALCULATIONS_SETUP_CALCULATIONS_MENU,
+                    .function       =
+                    {
+                            &Update_Menu_Wrapper,
+                            NULL
+                    },
+                    .function_2     =
+                    {
+                            NULL,
+                            NULL
+                    },
+                    .function_input =
+                    {
+                            &creation_menu,
                             NULL
                     }
             },
@@ -948,19 +994,19 @@ Exec_Menu_Entry
                     .menu           = CREATION_MENU,
                     .function       =
                     {
-                            &Exit_Wrapper,
+                            &Update_Menu_Wrapper,
                             &Update_Menu_Wrapper,
                             NULL
                     },
                     .function_2     =
                     {
-                            NULL,
+                            &TUI_Build_Calculations_Left_Side,
                             NULL,
                             NULL
                     },
                     .function_input =
                     {
-                            &exit_input,
+                            &calculations_setup_calculations_menu,
                             &main_menu,
                             NULL
                     }
