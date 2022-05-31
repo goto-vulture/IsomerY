@@ -25,7 +25,7 @@
 #endif /* ALLOCATED_MENU_ENTRIES */
 
 #ifndef INFORMATION_LINE_OFFSET
-#define INFORMATION_LINE_OFFSET 15
+#define INFORMATION_LINE_OFFSET 12
 #else
 #error "The macro \"INFORMATION_LINE_OFFSET\" is already defined !"
 #endif /* INFORMATION_LINE_OFFSET */
