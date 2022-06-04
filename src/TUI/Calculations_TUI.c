@@ -14,6 +14,12 @@
 #include "../int2str.h"
 
 
+
+uint_fast8_t GLOBAL_selected_type               = UINT_FAST8_MAX;
+uint_fast8_t GLOBAL_selected_number_of_c_atoms  = UINT_FAST8_MAX;
+
+
+
 //---------------------------------------------------------------------------------------------------------------------
 
 /**
@@ -113,6 +119,7 @@ extern void TUI_Choose_Type (const void* const input)
             // Enter-Taste: Auswahl des aktuell markierten Menuepunktes und der dafuer hinterlegten Callback-Funktion
         case '\n':
             //*((int*) input) = item_index(current_item(menu));
+            GLOBAL_selected_type = (uint_fast8_t) item_index(current_item(menu));
             got_newline = true;
             break;
         default:
@@ -216,6 +223,7 @@ extern void TUI_Choose_Number_Of_C_Atoms (const void* const input)
         break;
             // Enter-Taste: Auswahl des aktuell markierten Menuepunktes und der dafuer hinterlegten Callback-Funktion
         case '\n':
+            GLOBAL_selected_number_of_c_atoms = (uint_fast8_t) item_index(current_item(menu));
             got_newline = true;
             break;
         default:

@@ -16,6 +16,15 @@ extern "C"
 
 
 
+#include <inttypes.h>
+
+
+
+extern uint_fast8_t GLOBAL_selected_type;
+extern uint_fast8_t GLOBAL_selected_number_of_c_atoms;
+
+
+
 /**
  * @brief Funktion, die den Inhalt des linken Fensters fuellt.
  *

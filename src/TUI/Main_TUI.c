@@ -15,6 +15,7 @@
 #include "About_TUI.h"
 #include "General_Info_TUI.h"
 #include "Calculations_TUI.h"
+#include "../int2str.h"
 
 
 
@@ -1112,6 +1113,55 @@ Exec_Menu_Entry
                 Draw_Vertical_Line();
             }
             break;
+        }
+    }
+
+    // Gibt es Informationen fuer den Status
+    if (GLOBAL_selected_type != UINT_FAST8_MAX)
+    {
+        const char* selected_type_string = NULL;
+        const uint_fast8_t BACK_ENTRY = 3;
+
+        switch (GLOBAL_selected_type)
+        {
+        case 0:
+            selected_type_string = "Alkane";
+            break;
+        case 1:
+            selected_type_string = "Alkene";
+            break;
+        case 2:
+            selected_type_string = "Alkine";
+            break;
+        // Back-Eintrag
+        case 3:
+            break;
+        default:
+            ASSERT_MSG(false, "Default path executed !")
+        }
+
+        if (GLOBAL_selected_type != BACK_ENTRY)
+        {
+            ERR_CHECK(mvwaddnstr(status_window, 2, 1, "Selected type: ", (int) strlen("Selected type: ")));
+            ERR_CHECK(wattrset(status_window, A_BOLD));
+            ERR_CHECK(mvwaddnstr(status_window, 2, 1 + strlen("Selected type: "), selected_type_string,
+                    (int) strlen(selected_type_string)));
+            ERR_CHECK(wattrset(status_window, A_NORMAL));
+        }
+    }
+    if (GLOBAL_selected_number_of_c_atoms != UINT_FAST8_MAX)
+    {
+        if (GLOBAL_selected_number_of_c_atoms < 40)
+        {
+            char int_to_str [10] = { '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0' };
+            int2str(int_to_str, COUNT_ARRAY_ELEMENTS(int_to_str), GLOBAL_selected_number_of_c_atoms + 1);
+
+            ERR_CHECK(mvwaddnstr(status_window, 3, 1, "Selected number of C atoms: ",
+                        (int) strlen("Selected number of C atoms: ")));
+            ERR_CHECK(wattrset(status_window, A_BOLD));
+            ERR_CHECK(mvwaddnstr(status_window, 3, 1 + strlen ("Selected number of C atoms: "), int_to_str,
+                    (int) strlen (int_to_str)));
+            ERR_CHECK(wattrset(status_window, A_NORMAL));
         }
     }
 
