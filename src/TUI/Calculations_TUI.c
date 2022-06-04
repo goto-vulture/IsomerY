@@ -80,7 +80,7 @@ extern void TUI_Choose_Type (const void* const input)
     WINDOW* menu_window = newwin(LINES / 3, COLS / 3, LINES / 3, COLS / 3);
     NULL_CHECK(menu_window);
     ERR_CHECK(set_menu_win(menu, menu_window));
-    ERR_CHECK(set_menu_sub(menu, derwin(menu_window, 15, 15, 3, 2)));
+    ERR_CHECK(set_menu_sub(menu, derwin(menu_window, LINES / 3 - 3, COLS / 3 - 3, 3, 2)));
     ERR_CHECK(box(menu_window, 0, 0));
     ERR_CHECK(wbkgd(menu_window, COLOR_PAIR(1)));
 
@@ -182,7 +182,7 @@ extern void TUI_Choose_Number_Of_C_Atoms (const void* const input)
     ERR_CHECK(box(menu_window, 0, 0));
     ERR_CHECK(wbkgd(menu_window, COLOR_PAIR(1)));
 
-    ERR_CHECK(set_menu_format(menu, (MAX_NUMBER_OF_C_ATOMS / 4) + 1, 4));
+    ERR_CHECK(set_menu_format(menu, (MAX_NUMBER_OF_C_ATOMS / 6) + 1, 6));
     ERR_CHECK(set_menu_mark(menu, "> "));
     ERR_CHECK(set_menu_fore(menu, COLOR_PAIR(1) | A_REVERSE));
     ERR_CHECK(set_menu_back(menu, COLOR_PAIR(1)));
