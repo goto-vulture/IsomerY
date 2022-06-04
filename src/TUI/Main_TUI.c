@@ -517,12 +517,14 @@ Update_Menu
                             "1.",
                             "2.",
                             "3.",
+                            "4.",
                             NULL
                     },
                     .item_second_string =
                     {
                             "Type",
                             "Number of C atoms",
+                            "> Start calculation <",
                             "Back",
                             NULL
                     }
@@ -645,9 +647,30 @@ Update_Menu
             while (menu_content [i].item_first_string [counter] != NULL &&
                     menu_content [i].item_second_string [counter] != NULL)
             {
+
                 items [counter] = new_item (menu_content [i].item_first_string [counter],
                         menu_content [i].item_second_string [counter]);
                 NULL_CHECK(items [counter]);
+
+                // Kann man den Eintrag fuer das Starten der Berechnung auswaehlbar machen (Sind alle Daten da ?)
+                /* if (menu_content [i].menu == CALCULATIONS_SETUP_CALCULATIONS_MENU)
+                {
+                    if (GLOBAL_selected_type != UINT_FAST8_MAX && GLOBAL_selected_number_of_c_atoms != UINT_FAST8_MAX)
+                    {
+                        if (counter == 2)
+                        {
+                            ERR_CHECK(item_opts_on(items [counter], O_SELECTABLE));
+                        }
+                    }
+                    else
+                    {
+                        if (counter == 2)
+                        {
+                            ERR_CHECK(item_opts_off(items [counter], O_SELECTABLE));
+                        }
+                    }
+                }*/
+
                 ++ counter;
             }
             items [counter] = NULL;
@@ -721,6 +744,7 @@ Update_Window_Information
                     {
                             "Choose type",
                             "Choose number of C atoms",
+                            "Start calculation with selected input",
                             "Back to upper menu",
                             NULL
                     }
@@ -955,6 +979,7 @@ Exec_Menu_Entry
                             &Update_Menu_Wrapper,
                             &Update_Menu_Wrapper,
                             &Update_Menu_Wrapper,
+                            &Update_Menu_Wrapper,
                             NULL
                     },
                     .function_2     =
@@ -962,10 +987,12 @@ Exec_Menu_Entry
                             &TUI_Choose_Type,
                             &TUI_Choose_Number_Of_C_Atoms,
                             NULL,
+                            NULL,
                             NULL
                     },
                     .function_input =
                     {
+                            &calculations_setup_calculations_menu,
                             &calculations_setup_calculations_menu,
                             &calculations_setup_calculations_menu,
                             &creation_menu,
