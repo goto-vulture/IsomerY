@@ -34,6 +34,8 @@ extern void TUI_Build_Calculations_Right_Side (const void* const input);
 
 extern void TUI_Choose_Type (const void* const input);
 
+extern void TUI_Choose_Number_Of_C_Atoms (const void* const input);
+
 
 
 // ENDE C++-Kompablitaet herstellen

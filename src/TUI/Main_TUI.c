@@ -503,11 +503,13 @@ Update_Menu
                     {
                             "1.",
                             "2.",
+                            "3.",
                             NULL
                     },
                     .item_second_string =
                     {
                             "Type",
+                            "Number of C atoms",
                             "Back",
                             NULL
                     }
@@ -705,6 +707,7 @@ Update_Window_Information
                     .description    =
                     {
                             "Choose type",
+                            "Choose number of C atoms",
                             "Back to upper menu",
                             NULL
                     }
@@ -938,16 +941,19 @@ Exec_Menu_Entry
                     {
                             &Update_Menu_Wrapper,
                             &Update_Menu_Wrapper,
+                            &Update_Menu_Wrapper,
                             NULL
                     },
                     .function_2     =
                     {
                             &TUI_Choose_Type,
+                            &TUI_Choose_Number_Of_C_Atoms,
                             NULL,
                             NULL
                     },
                     .function_input =
                     {
+                            &calculations_setup_calculations_menu,
                             &calculations_setup_calculations_menu,
                             &creation_menu,
                             NULL
