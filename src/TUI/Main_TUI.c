@@ -129,6 +129,10 @@ Update_Window_Information
         const int selected_menu_entry
 );
 
+static inline void Draw_Vertical_Line (void);
+
+static inline void Clear_Vertical_Line (void);
+
 static void
 Exec_Menu_Entry
 (
@@ -334,11 +338,12 @@ static void Draw_Main_Window
     ERR_CHECK(mvprintw(0, (COLS / 2) - (title_length / 2), "%s", window_title));
 
     // Vertikale Linie durch's Fenster
-    for (int i = 2; i < LINES - 6; ++ i)
+    Draw_Vertical_Line();
+    /*for (int i = 2; i < LINES - 6; ++ i)
     {
         move(i, COLS / 2);
         addch(ACS_VLINE);
-    }
+    }*/
 
     // Flaeche mit optionalen Informationen zum aktuell markierten Menuepunkt zeichnen
     ERR_CHECK(wattrset(info_window, A_BOLD));
@@ -497,10 +502,12 @@ Update_Menu
                     .item_first_string  =
                     {
                             "1.",
+                            "2.",
                             NULL
                     },
                     .item_second_string =
                     {
+                            "Type",
                             "Back",
                             NULL
                     }
@@ -697,6 +704,7 @@ Update_Window_Information
                     .menu           = CALCULATIONS_SETUP_CALCULATIONS_MENU,
                     .description    =
                     {
+                            "Choose type",
                             "Back to upper menu",
                             NULL
                     }
@@ -792,6 +800,32 @@ Update_Window_Information
         }
     }
 
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static inline void Draw_Vertical_Line (void)
+{
+    for (int i = 2; i < LINES - 6; ++ i)
+    {
+        move(i, COLS / 2);
+        addch(ACS_VLINE);
+    }
+    refresh();
+    return;
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+static inline void Clear_Vertical_Line (void)
+{
+    for (int i = 2; i < LINES - 6; ++ i)
+    {
+        move(i, COLS / 2);
+        addch(' ');
+    }
+    refresh();
     return;
 }
 
@@ -903,15 +937,18 @@ Exec_Menu_Entry
                     .function       =
                     {
                             &Update_Menu_Wrapper,
+                            &Update_Menu_Wrapper,
                             NULL
                     },
                     .function_2     =
                     {
+                            &TUI_Choose_Type,
                             NULL,
                             NULL
                     },
                     .function_input =
                     {
+                            &calculations_setup_calculations_menu,
                             &creation_menu,
                             NULL
                     }
@@ -1049,7 +1086,9 @@ Exec_Menu_Entry
             // Die zweite Funktion ist optional -> NULL Check erforderlich !
             if (menu_functions [i].function_2 [selected_menu_entry] != NULL)
             {
+                Clear_Vertical_Line();
                 menu_functions [i].function_2 [selected_menu_entry] (NULL);
+                Draw_Vertical_Line();
             }
             break;
         }
