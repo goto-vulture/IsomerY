@@ -75,14 +75,18 @@ enum Menu_Types
 
 
 
-ITEM** items            = NULL;             // Die einzelnen Menueeintrage
-MENU* menu              = NULL;             // Das Menue an sich
-WINDOW* menu_window     = NULL;             // Fenster fuer das Menue
-WINDOW* info_window     = NULL;             // Fenster fuer die Info-Box
-WINDOW* pos_window      = NULL;             // Fenster fuer die Angabe der aktuellen Menueposition
-WINDOW* status_window   = NULL;             // Fenster fuer die Anzege des aktuellen Berechnuns-Status
-WINDOW* left_window     = NULL;             // Linkes Fenster fuer unterschiedlichste Ausgaben
-WINDOW* right_window    = NULL;             // Rechtes Fenster fuer unterschiedlichste Ausgaben
+ITEM** items                = NULL;             // Die einzelnen Menueeintrage
+MENU* menu                  = NULL;             // Das Menue an sich
+WINDOW* menu_window         = NULL;             // Fenster fuer das Menue
+WINDOW* info_window         = NULL;             // Fenster fuer die Info-Box
+WINDOW* pos_window          = NULL;             // Fenster fuer die Angabe der aktuellen Menueposition
+WINDOW* status_window       = NULL;             // Fenster fuer die Anzege des aktuellen Berechnuns-Status
+WINDOW* left_window         = NULL;             // Linkes Fenster fuer unterschiedlichste Ausgaben
+WINDOW* right_window        = NULL;             // Rechtes Fenster fuer unterschiedlichste Ausgaben
+// Dieses Fenster nimmt den Platz rechts neben dem Menue bis zur Mitte ein
+// Je nach Terminalgroesse koennen sich dort Zeichen befinden, die von keinem anderen Fenster erfasst werden; und
+// daher auch nicht geloescht werden koennen
+WINDOW* right_menu_window   = NULL;
 
 enum Menu_Types current_menue = MAIN_MENU;  // Aktuelle Position im Auswahlmenue
 
@@ -228,6 +232,13 @@ TUI_Build_Main_Window
     NULL_CHECK(left_window);
     right_window    = newwin(LINES - MENU_POSITION_OFFSET - 3, COLS / 2 - 2, 2, COLS / 2 + 1);
     NULL_CHECK(right_window);
+
+    // Dieses Fenster nimmt den Platz rechts neben dem Menue bis zur Mitte ein
+    // Je nach Terminalgroesse koennen sich dort Zeichen befinden, die von keinem anderen Fenster erfasst werden; und
+    // daher auch nicht geloescht werden koennen
+    right_menu_window = newwin(MENU_NUM_WINDOW_LINES, (COLS / 2) - MENU_NUM_WINDOW_COLS - 2, 2, MENU_NUM_WINDOW_COLS + 2);
+    // box(right_menu_window, 0, 0);
+    NULL_CHECK(right_menu_window);
     // ===== ===== ===== ENDE Alle Fenster der TUI erzeugen ===== ===== =====
 
     Draw_Main_Window("Main menu");
@@ -428,6 +439,7 @@ static int Refresh_All_Boxes (void)
     if (error_value == ERR) { return error_value; }
     error_value = wrefresh(right_window);
     if (error_value == ERR) { return error_value; }
+    wrefresh(right_menu_window);
 
     return error_value;
 }
@@ -1094,6 +1106,9 @@ Exec_Menu_Entry
             {
                 Clear_Vertical_Line();
                 menu_functions [i].function_2 [selected_menu_entry] (NULL);
+                // Rechte Flaeche neben dem Menue bis zur Mittellinie leeren
+                // Je nach Terminalgroesse koennen sich dort Zeichen nach den Unterauswahlmenues befinden
+                wclear(right_menu_window);
                 Draw_Vertical_Line();
             }
             break;
