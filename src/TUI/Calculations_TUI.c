@@ -72,6 +72,7 @@ extern void TUI_Choose_Type (const void* const input)
     items [1] = new_item("2.", "Alkene");
     items [2] = new_item("3.", "Alkine");
     items [3] = new_item("4.", "Back");
+    items [NUMBER_OF_TYPES - 1] = NULL;
 
     MENU* menu = new_menu (items);
     NULL_CHECK(menu);
